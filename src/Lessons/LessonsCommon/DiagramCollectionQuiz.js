@@ -7,8 +7,6 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../js/diagram/Element';
 
-// import CommonDiagramCollection from './DiagramCollection';
-
 export type TypeMessages = {
   _correct: DiagramElementPrimative;
   _incorrect: DiagramElementPrimative;
@@ -19,19 +17,33 @@ export type TypeMessages = {
 const CommonQuizMixin = superclass => class extends superclass {
   _check: DiagramElementPrimative;
   _newProblem: DiagramElementPrimative;
+  _showAnotherAnswer: DiagramElementPrimative;
   +_messages: TypeMessages;
+  answers: any;
+  answer: any;
+  answerIndex: number;
 
   tryAgain() {
     this._messages.hideAll();
     this._check.show();
     this.hasTouchableElements = true;
+    if (this._intput != null) {
+      this._input.enable();
+      this._input.setValue('');
+    }
     this.diagram.animateNextFrame();
   }
 
   newProblem() {
     this._messages.hideAll();
     this._newProblem.hide();
+    if (this._input != null) {
+      this._input.enable();
+      this._input.setValue('');
+    }
+    this._showAnotherAnswer.hide();
     this.hasTouchableElements = true;
+    this.answerIndex = -1;
     this.diagram.animateNextFrame();
   }
 
@@ -67,6 +79,14 @@ const CommonQuizMixin = superclass => class extends superclass {
     this._messages.hideAll();
     this._check.hide();
     this._newProblem.show();
+    if (this._input != null) {
+      this._input.disable();
+      this._input.setValue(this.answer);
+    }
+    this.answerIndex = (this.answerIndex + 1) % this.answers.length;
+    if (this.answers.length > 1) {
+      this._showAnotherAnswer.show();
+    }
   }
 
   constructor(
@@ -80,7 +100,11 @@ const CommonQuizMixin = superclass => class extends superclass {
     this.add('check', this.makeCheckButton(id));
     this.add('newProblem', this.makeNewProblemButton(id));
     this.add('messages', this.makeQuizAnswerMessages(id, messages));
+    this.add('showAnotherAnswer', this.makeShowAnotherAnswerButton(id));
     this._messages.hideAll();
+    this.answers = [];
+    this.answer = '';
+    // this.answerIndex = -1;
   }
 
   makeAnswerBox(
@@ -161,16 +185,16 @@ const CommonQuizMixin = superclass => class extends superclass {
     return collection;
   }
 
-  makeCheckButton(id: string) {
-    const check = document.createElement('div');
-    check.classList.add('lesson__quiz__button');
-    check.innerHTML = 'Check';
-    check.onclick = this.checkAnswer.bind(this);
+  makeButton(id: string, label: string, callback: Function, position: Point) {
+    const button = document.createElement('div');
+    button.classList.add('lesson__quiz__button');
+    button.innerHTML = label;
+    button.onclick = callback;
     const html = this.diagram.shapes.htmlElement(
-      check,
-      `id__related_angles_check_${id}`,
+      button,
+      `id__lesson_quiz_button_${id}`,
       '',
-      this.layout.quiz.check,
+      position,
       'middle',
       'center',
     );
@@ -178,20 +202,38 @@ const CommonQuizMixin = superclass => class extends superclass {
     return html;
   }
 
-  makeNewProblemButton(id: string) {
-    const newProblem = document.createElement('div');
-    newProblem.classList.add('lesson__quiz__button');
-    newProblem.innerHTML = 'New Problem';
-    newProblem.onclick = this.newProblem.bind(this);
-    const html = this.diagram.shapes.htmlElement(
-      newProblem,
-      `id__related_angles_new_problem_${id}`,
-      '',
-      this.layout.quiz.newProblem,
-      'middle',
-      'center',
+  makeCheckButton(id: string) {
+    return this.makeButton(
+      `check__${id}`, 'Check', this.checkAnswer.bind(this), this.layout.quiz.check,
     );
-    return html;
+  }
+
+  makeNewProblemButton(id: string) {
+    return this.makeButton(
+      `new_problem__${id}`, 'New Problem', this.newProblem.bind(this),
+      this.layout.quiz.newProblem,
+    );
+  }
+
+  makeShowAnotherAnswerButton(id: string) {
+    return this.makeButton(
+      `show_another_answer__${id}`, 'Show Another Answer', this.showAnswer.bind(this),
+      this.layout.quiz.showAnotherAnswer,
+    );
+  }
+
+  addInput(
+    id: string,
+    defaultText: string = '',
+    numDigits: number = 10,
+    decimalPlaces: number = 0,
+  ) {
+    this.add('input', this.makeEntryBox('input1', defaultText, numDigits, decimalPlaces));
+    if (this.layout.quiz) {
+      if (this.layout.quiz.input) {
+        this._input.setPosition(this.layout.quiz.input);
+      }
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -199,6 +241,7 @@ const CommonQuizMixin = superclass => class extends superclass {
     id: string,
     placeholder: string = '',
     numDigits: number = 10,
+    decimalPlaces: number = 0,
   ) {
     const container = document.createElement('div');
     container.classList.add('lesson__quiz_input_container');
@@ -216,13 +259,30 @@ const CommonQuizMixin = superclass => class extends superclass {
     input.oninput = () => {
       const str = input.value.slice();
       let validStr = '';
+      let decimalCount = 0;
+      let decimal = false;
       for (let i = 0; i < str.length; i += 1) {
         if (validStr.length >= numDigits) {
           i = str.length;
         } else {
           const char = str.charAt(i);
-          if (char >= '0' && char <= '9') {
-            validStr = `${validStr}${char}`;
+          if (
+            (char >= '0' && char <= '9')
+            || (char === '.' && decimalPlaces > 0)) {
+            let valid = true;
+            if (decimal === false && char === '.') {
+              decimal = true;
+            } else if (decimal === true && char === '.') {
+              valid = false;
+            } else if (decimal === true) {
+              decimalCount += 1;
+              if (decimalCount > decimalPlaces) {
+                valid = false;
+              }
+            }
+            if (valid) {
+              validStr = `${validStr}${char}`;
+            }
           }
         }
       }
@@ -339,7 +399,7 @@ const CommonQuizMixin = superclass => class extends superclass {
       'top',
     );
     html.enable = (doEnable: boolean = true) => {
-      const { element } = html.vertices;
+      const { element } = html.drawingObject;
       const classStr = 'lesson__quiz_multiple_choice_box_answer__disable';
       if (doEnable) {
         element.classList.remove(classStr);

@@ -245,16 +245,31 @@ class ShapesCollection extends DiagramElementCollection {
     const pent = makePent(shapes, locations.pent.center);
     this.add('pent', pent);
 
-    const anchor = shapes.polygonFilled(
-      12, 0.5, 0,
-      12, cornerColor, new Point(0, 0),
-    );
+    const anchor = shapes.polygon({
+      fill: true,
+      sides: 12,
+      radius: 0.5,
+      color: cornerColor,
+      point: new Point(0, 0),
+    });
     anchor.isTouchable = true;
     anchor.isMovable = true;
     this.add('anchor', anchor);
 
-    const s1 = shapes.polygonFilled(8, 0.3, 0, 8, lineColor, new Point(0, 0));
-    const s2 = shapes.polygonFilled(8, 0.2, 0, 8, lineColor, new Point(0.4, 0.4));
+    const s1 = shapes.polygon({
+      fill: true,
+      radius: 8,
+      width: 0.3,
+      color: lineColor,
+      point: new Point(0, 0),
+    });
+    const s2 = shapes.polygon({
+      fill: true,
+      sides: 8,
+      radius: 0.2,
+      color: lineColor,
+      point: new Point(0.4, 0.4),
+    });
     s1.isTouchable = true;
     s2.isTouchable = true;
     const c = shapes.collection(new Point(-1, -1));

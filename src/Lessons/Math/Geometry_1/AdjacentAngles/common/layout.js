@@ -18,7 +18,7 @@ export default function commonLessonLayout() {
   layout.colors = getCssColors(cssColorNames);
   // layout.position = new Point(0, -0.6);
   layout.equationPosition = new Point(-0.2, 0.85);
-  layout.equationScale = 1.4;
+  layout.equationScale = 1;
   layout.units = {
     position: new Point(2, -1.6),
   };

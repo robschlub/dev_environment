@@ -261,7 +261,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         circle.setPosition(layout.circle.right);
         diag._angleText.showAll();
-        diag._angleText._units.vertices.element.innerHTML = 'portions';
+        diag._angleText._units.drawingObject.element.innerHTML = 'portions';
         diag._angleText.transform.updateTranslation(layout.angleEqualsText.left);
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
         onClickId('id_12p', diag.toggler, [diag, 0]);

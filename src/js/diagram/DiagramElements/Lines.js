@@ -10,6 +10,7 @@ import WebGLInstance from '../webgl/webgl';
 function Lines(
   webgl: WebGLInstance,
   linePairs: Array<Array<Point>>,
+  numLinesThick: number,
   color: Array<number>,
   transformOrLocation: Transform | Point,
   diagramLimits: Rect,
@@ -17,6 +18,7 @@ function Lines(
   const vertexLine = new VertexLines(
     webgl,
     linePairs,
+    numLinesThick,
   );
   let transform = new Transform();
   if (transformOrLocation instanceof Point) {

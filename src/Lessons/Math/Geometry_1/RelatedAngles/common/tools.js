@@ -84,11 +84,14 @@ export function makeSupplementaryAngle(
   layout: Object,
 ) {
   const arcLayout = layout.angle.arc;
-  const arc = diagram.shapes.polygon(
-    arcLayout.sides, arcLayout.radius, arcLayout.width * 2,
-    0, 1, arcLayout.sides / 2, layout.colors.supplementary,
-    new Transform().rotate(0).translate(0, 0),
-  );
+  const arc = diagram.shapes.polygon({
+    sides: arcLayout.sides,
+    radius: arcLayout.radius,
+    width: arcLayout.width * 2,
+    sidesToDraw: arcLayout.sides / 2,
+    color: layout.colors.supplementary,
+    transform: new Transform().rotate(0).translate(0, 0),
+  });
 
   arc.scaleAndDisolve = () => {
     arc.stop();

@@ -120,8 +120,8 @@ class AngleCircle extends DiagramElementCollection {
     radius.isMovable = true;
     radius.pulse.transformMethod = s => new Transform().scale(1, s);
 
-    for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
-      radius.vertices.border[0][i].y *= 10;
+    for (let i = 0; i < radius.drawingObject.border[0].length; i += 1) {
+      radius.drawingObject.border[0][i].y *= 10;
     }
     return radius;
   }
@@ -150,25 +150,43 @@ class AngleCircle extends DiagramElementCollection {
   }
 
   makeArc(radius: number, lineWidth: number = this.layout.arc.lineWidth) {
-    return this.shapes.polygon(
-      this.layout.anglePoints, radius, lineWidth, 0, 1,
-      this.layout.circlePoints, this.colors.arc, new Point(0, 0),
-    );
+    return this.shapes.polygon({
+      sides: this.layout.anglePoints,
+      radius,
+      width: lineWidth,
+      color: this.colors.arc,
+      point: new Point(0, 0),
+    });
+    //   this.layout.anglePoints, radius, lineWidth, 0, 1,
+    //   this.layout.circlePoints, this.colors.arc, new Point(0, 0),
+    // );
   }
 
   makeCircumference() {
-    return this.shapes.polygon(
-      this.layout.anglePoints, this.layout.radius,
-      this.layout.circumference.lineWidth, 0, 1,
-      this.layout.circlePoints, this.colors.arcLight, new Point(0, 0),
-    );
+    return this.shapes.polygon({
+      sides: this.layout.anglePoints,
+      radius: this.layout.radius,
+      width: this.layout.circumference.lineWidth,
+      color: this.colors.arcLight,
+      point: new Point(0, 0),
+    });
+    //   this.layout.anglePoints, this.layout.radius,
+    //   this.layout.circumference.lineWidth, 0, 1,
+    //   this.layout.circlePoints, this.colors.arcLight, new Point(0, 0),
+    // );
   }
 
   makeAnchor() {
-    return this.shapes.polygonFilled(
-      this.layout.anchorPoints, this.layout.linewidth * 2, 0,
-      this.layout.anchorPoints, this.colors.anchor, new Point(0, 0),
-    );
+    return this.shapes.polygon({
+      sides: this.layout.anchorPoints,
+      radius: this.layout.linewidth * 2,
+      fill: true,
+      color: this.colors.anchor,
+      point: new Point(0, 0),
+    });
+    //   this.layout.anchorPoints, this.layout.linewidth * 2, 0,
+    //   this.layout.anchorPoints, this.colors.anchor, new Point(0, 0),
+    // );
   }
 
   makeAngleLine() {
@@ -247,11 +265,17 @@ class AngleCircle extends DiagramElementCollection {
       label = angleText;
     }
 
-    const arc = this.shapes.polygon(
-      layout.arc.sides, layout.arc.radius, layout.arc.lineWidth, angleStart, 1,
-      layout.arc.sides, color,
-      new Transform(),
-    );
+    const arc = this.shapes.polygon({
+      sides: layout.arc.sides,
+      radius: layout.arc.radius,
+      width: layout.arc.lineWidth,
+      rotation: angleStart,
+      color,
+    });
+    //   layout.arc.sides, layout.arc.radius, layout.arc.lineWidth, angleStart, 1,
+    //   layout.arc.sides, color,
+    //   new Transform(),
+    // );
 
     const angleAnnotation = this.shapes.collection(new Transform()
       .scale(1, 1).rotate(0));
@@ -330,10 +354,10 @@ class AngleCircle extends DiagramElementCollection {
       } else {
         angleText._units.transform.updateTranslation(this.layout.angleEqualsText.units.text, 0);
       }
-      angleText._units.vertices.element.innerHTML = units;
+      angleText._units.drawingObject.element.innerHTML = units;
     };
     angleText.setText = (newText: string) => {
-      angleText._text.vertices.element.innerHTML = newText;
+      angleText._text.drawingObject.element.innerHTML = newText;
     };
     return angleText;
   }
@@ -456,7 +480,7 @@ class AngleCircle extends DiagramElementCollection {
       angleInSections = angleInSections.toFixed(1);
     }
     // $FlowFixMe
-    this._angleText._angle.vertices.element.innerHTML = `${angleInSections}`;
+    this._angleText._angle.drawingObject.element.innerHTML = `${angleInSections}`;
   }
 
   pulseAngle() {

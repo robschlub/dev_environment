@@ -151,16 +151,16 @@ describe('Math tools testing', () => {
   describe('easein', () => {
     test('0', () => { expect(easein(0)).toBe(0); });
     test('1', () => { expect(easein(1)).toBe(1); });
-    test('0.5', () => { expect(round(easein(0.5), 2)).toBe(0.29); });
-    test('0.25', () => { expect(round(easein(0.25), 2)).toBe(0.09); });
-    test('0.75', () => { expect(round(easein(0.75), 2)).toBe(0.61); });
+    test('0.5', () => { expect(round(easein(0.5), 2)).toBe(0.2); });
+    test('0.25', () => { expect(round(easein(0.25), 2)).toBe(0.04); });
+    test('0.75', () => { expect(round(easein(0.75), 2)).toBe(0.53); });
   });
   describe('easeout', () => {
     test('0', () => { expect(easeout(0)).toBe(0); });
     test('1', () => { expect(easeout(1)).toBe(1); });
-    test('0.5', () => { expect(round(easeout(0.5), 2)).toBe(0.71); });
-    test('0.25', () => { expect(round(easeout(0.25), 2)).toBe(0.39); });
-    test('0.75', () => { expect(round(easeout(0.75), 2)).toBe(0.91); });
+    test('0.5', () => { expect(round(easeout(0.5), 2)).toBe(0.8); });
+    test('0.25', () => { expect(round(easeout(0.25), 2)).toBe(0.47); });
+    test('0.75', () => { expect(round(easeout(0.75), 2)).toBe(0.96); });
   });
   describe('sinusoid', () => {
     test('0', () => {

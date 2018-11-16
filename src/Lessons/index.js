@@ -30,6 +30,51 @@ export default function getLessonIndex() {
     true,
   ));
   lessonIndex.push(new LessonDescription(
+    'Area and Rectangles',
+    '/Lessons/Math/Geometry_1/Area',
+    'area_introduction',
+    [
+      '1',
+      'dev',
+      'quiz',
+      'summary',
+    ],
+    [
+      'quadrangles',
+    ],
+    true,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Area of a Circle',
+    '/Lessons/Math/Geometry_1/AreaCircle',
+    'area_circle',
+    [
+      '1',
+      'dev',
+      'quiz',
+      'summary',
+    ],
+    [
+      'area_triangle',
+    ],
+    true,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Area of a Triangle',
+    '/Lessons/Math/Geometry_1/AreaTriangle',
+    'area_triangle',
+    [
+      '1',
+      'dev',
+      'quiz',
+      'summary',
+    ],
+    [
+      'area_introduction',
+    ],
+    true,
+  ));
+  lessonIndex.push(new LessonDescription(
     'Circles',
     '/Lessons/Math/Geometry_1/Circle',
     'circles',
@@ -136,18 +181,6 @@ export default function getLessonIndex() {
     true,
   ));
   lessonIndex.push(new LessonDescription(
-    'Area',
-    '/Lessons/Math/Geometry_1/ToDo/Area',
-    'area_introduction',
-    [
-      '1',
-    ],
-    [
-      'quadrangles',
-    ],
-    false,
-  ));
-  lessonIndex.push(new LessonDescription(
     'Calculating Pi',
     '/Lessons/Math/Geometry_1/ToDo/Calculating Pi',
     'calculating_pi',
@@ -192,7 +225,7 @@ export default function getLessonIndex() {
     ],
     [
       'important_triangles',
-      'area_introduction',
+      'area_triangle',
     ],
     false,
   ));

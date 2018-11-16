@@ -9,8 +9,7 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import { makeLabeledAngle, makeSupplementaryAngle } from './tools';
-import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
-import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 import type { TypeLabeledAngle, TypeSupplementaryAngle } from './tools';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
@@ -21,8 +20,8 @@ export default class OppositeCollection extends CommonDiagramCollection {
   layout: Object;
   colors: Object;
   diagram: Diagram;
-  _line1: TypeLabeledLine;
-  _line2: TypeLabeledLine;
+  _line1: TypeLine;
+  _line2: TypeLine;
   _angleA: TypeLabeledAngle;
   _angleB: TypeLabeledAngle;
   _angleC: TypeLabeledAngle;
@@ -44,15 +43,20 @@ export default class OppositeCollection extends CommonDiagramCollection {
     eqn: Equation;
   } & DiagramElementCollection;
 
-  makeLine(labelText: string) {
-    const line = makeLabeledLine(
-      this.diagram, this.layout.parallelLine,
-      this.layout.colors.line, labelText,
-    );
+  makeLine() {
+    const lay = this.layout.parallelLine;
+    const line = this.diagram.objects.line({
+      vertexSpaceStart: 'center',
+      length: lay.length.full,
+      width: lay.width,
+      color: this.layout.colors.line,
+    });
+    line.setMovable(true, 'rotation');
     line.setTransformCallback = (t: Transform) => {
-      line.updateTransform(t);
+      line.updateMoveTransform(t);
       this.updateOppositeAngles();
     };
+    line.interactiveLocation = lay.interactive;
     return line;
   }
 
@@ -96,20 +100,22 @@ export default class OppositeCollection extends CommonDiagramCollection {
     eqn.setElem('c', this.layout.colors.angleC);
     eqn.setElem('d', this.layout.colors.angleD);
 
-    eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', '_180', 'deg']);
-    eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', 'pi'], 'rad');
+    const deg = { formType: 'deg' };
+    const rad = { formType: 'rad' };
+    eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', '_180'], deg);
+    eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', 'pi'], rad);
 
-    eqn.addForm('b', ['b', 'equals', '_180', 'minus', 'a1'], 'deg');
-    eqn.addForm('b', ['b', 'equals', 'pi', 'minus', 'a1'], 'rad');
+    eqn.addForm('b', ['b', 'equals', '_180', 'minus', 'a1'], deg);
+    eqn.addForm('b', ['b', 'equals', 'pi', 'minus', 'a1'], rad);
 
-    eqn.addForm('c', ['c', 'equals', '_180', 'minus', 'b'], 'deg');
-    eqn.addForm('c', ['c', 'equals', 'pi', 'minus', 'b'], 'rad');
-    eqn.addForm('c_equals_a_full', ['c', 'equals', '_180', 'minus', 'lb', '_1801', 'minus1', 'a', 'rb'], 'deg');
-    eqn.addForm('c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a', 'rb'], 'rad');
+    eqn.addForm('c', ['c', 'equals', '_180', 'minus', 'b'], deg);
+    eqn.addForm('c', ['c', 'equals', 'pi', 'minus', 'b'], rad);
+    eqn.addForm('c_equals_a_full', ['c', 'equals', '_180', 'minus', 'lb', '_1801', 'minus1', 'a', 'rb'], deg);
+    eqn.addForm('c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a', 'rb'], rad);
     eqn.addForm('c_equals_a', ['c', 'equals', 'a']);
 
-    eqn.addForm('d', ['d', 'equals', '_180', 'minus', 'a'], 'deg');
-    eqn.addForm('d', ['d', 'equals', 'pi', 'minus', 'a'], 'rad');
+    eqn.addForm('d', ['d', 'equals', '_180', 'minus', 'a'], deg);
+    eqn.addForm('d', ['d', 'equals', 'pi', 'minus', 'a'], rad);
 
     eqn.addForm('d_equals_b', ['d', 'equals', 'b']);
 
@@ -124,17 +130,22 @@ export default class OppositeCollection extends CommonDiagramCollection {
     this._equation1.eqn.setUnits(units);
     this._equation2.eqn.setUnits(units);
     this._equation3.eqn.setUnits(units);
+    // console.log(this._equation1.eqn)
     if (this._angleA.label) {
       this._angleA.label.eqn.setUnits(units);
+      this._angleA.updateLabel();
     }
     if (this._angleB.label) {
       this._angleB.label.eqn.setUnits(units);
+      this._angleB.updateLabel();
     }
     if (this._angleC.label) {
       this._angleC.label.eqn.setUnits(units);
+      this._angleC.updateLabel();
     }
     if (this._angleD.label) {
       this._angleD.label.eqn.setUnits(units);
+      this._angleD.updateLabel();
     }
   }
 
@@ -145,14 +156,16 @@ export default class OppositeCollection extends CommonDiagramCollection {
       ? arcLayout.radius : arcLayout.radius * 1.0;
     const angle = makeLabeledAngle(this.diagram, this.layout, radius, color);
 
-    angle.label.eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
-    angle.label.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
-    angle.label.eqn.addForm('b_silent', ['_180', 'minus', 'a'], 'deg');
-    angle.label.eqn.addForm('b_silent', ['pi', 'minus', 'a'], 'rad');
-    angle.label.eqn.addForm('d_silent', ['_180', 'minus', 'a'], 'deg');
-    angle.label.eqn.addForm('d_silent', ['pi', 'minus', 'a'], 'rad');
-    angle.label.eqn.addForm('d_equals', ['d', 'equals', '_180', 'minus', 'a'], 'deg');
-    angle.label.eqn.addForm('d_equals', ['d', 'equals', 'pi', 'minus', 'a'], 'rad');
+    const deg = { formType: 'deg' };
+    const rad = { formType: 'rad' };
+    angle.label.eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], deg);
+    angle.label.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], rad);
+    angle.label.eqn.addForm('b_silent', ['_180', 'minus', 'a'], deg);
+    angle.label.eqn.addForm('b_silent', ['pi', 'minus', 'a'], rad);
+    angle.label.eqn.addForm('d_silent', ['_180', 'minus', 'a'], deg);
+    angle.label.eqn.addForm('d_silent', ['pi', 'minus', 'a'], rad);
+    angle.label.eqn.addForm('d_equals', ['d', 'equals', '_180', 'minus', 'a'], deg);
+    angle.label.eqn.addForm('d_equals', ['d', 'equals', 'pi', 'minus', 'a'], rad);
     angle.label.eqn.addForm('c_equals', ['c', 'equals', 'a']);
     angle.label.eqn.showForm(name);
     angle.setPosition(this.layout.line1.opposite.position);
@@ -168,9 +181,9 @@ export default class OppositeCollection extends CommonDiagramCollection {
     // this.diagram = diagram;
     // this.layout = layout;
     this.setPosition(this.layout.position);
-    this.add('line1', this.makeLine('1'));
+    this.add('line1', this.makeLine());
     this._line1.setPosition(this.layout.line1.opposite.position.x, 0);
-    this.add('line2', this.makeLine('2'));
+    this.add('line2', this.makeLine());
     this._line2.setPosition(this.layout.line2.opposite.position.x, 0);
     this.add('angleA', this.makeAngle('a'));
     this.add('angleB', this.makeAngle('b'));

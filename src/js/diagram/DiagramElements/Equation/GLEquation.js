@@ -1,6 +1,6 @@
 // @flow
 import {
-  Point, Rect, Transform, Line,
+  Point, Rect, Transform, Line, getMoveTime,
 } from '../../tools/g2';
 import { roundNum } from '../../tools/mathtools';
 import { RGBToArray, duplicateFromTo } from '../../../tools/tools';
@@ -18,9 +18,26 @@ import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 // Equation is a class that takes a set of drawing objects (TextObjects,
 // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
 // and arranges their size in a )
+class BlankElement {
+  ascent: number;
+  descent: number;
+  width: number;
+  height: number;
+
+  constructor(width: number = 0.03, ascent: number = 0, descent: number = 0) {
+    this.width = width;
+    this.ascent = ascent;
+    this.descent = descent;
+    this.height = this.ascent + this.descent;
+  }
+
+  _dup() {
+    return new BlankElement(this.width, this.ascent, this.descent);
+  }
+}
 
 class Element {
-  content: DiagramElementPrimative | DiagramElementCollection;
+  content: DiagramElementPrimative | DiagramElementCollection | BlankElement;
   ascent: number;
   descent: number;
   width: number;
@@ -28,7 +45,7 @@ class Element {
   height: number;
   scale: number;
 
-  constructor(content: DiagramElementPrimative | DiagramElementCollection) {
+  constructor(content: DiagramElementPrimative | DiagramElementCollection | BlankElement) {
     this.content = content;
     this.ascent = 0;
     this.descent = 0;
@@ -39,6 +56,14 @@ class Element {
 
   calcSize(location: Point, scale: number) {
     const { content } = this;
+    if (content instanceof BlankElement) {
+      this.width = content.width * scale;
+      this.height = content.height * scale;
+      this.ascent = content.ascent * scale;
+      this.descent = content.descent * scale;
+      this.location = location._dup();
+      this.scale = scale;
+    }
     if (content instanceof DiagramElementCollection
         || content instanceof DiagramElementPrimative) {
       // Update translation and scale
@@ -61,8 +86,15 @@ class Element {
     }
   }
 
-  _dup(namedCollection: Object) {
-    const c = new Element(namedCollection[this.content.name]);
+  _dup(namedCollection?: Object) {
+    let c;
+    if (this.content instanceof BlankElement) {
+      c = new Element(this.content);
+    } else if (namedCollection) {
+      c = new Element(namedCollection[this.content.name]);
+    } else {
+      c = new Element(this.content);
+    }
     c.ascent = this.ascent;
     c.descent = this.descent;
     c.width = this.width;
@@ -73,6 +105,9 @@ class Element {
   }
 
   getAllElements() {
+    if (this.content instanceof BlankElement) {
+      return [];
+    }
     return [this.content];
   }
 
@@ -115,8 +150,9 @@ class Elements {
     this.height = 0;
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     const contentCopy = [];
+    // console.log("Asdf", this.content, namedCollection)
     this.content.forEach(element => contentCopy.push(element._dup(namedCollection)));
     const c = new Elements(contentCopy);
     duplicateFromTo(this, c, ['content']);
@@ -138,6 +174,11 @@ class Elements {
         asc = element.ascent;
       }
     });
+    // if (this.content.length === 4 && this.content[0] instanceof Fraction) {
+    //   console.log(this.content)
+    //   console.log(this.content[0].location, this.content[1].location)
+    //   // debugger;
+    // }
     this.width = loc.x - location.x;
     this.ascent = asc;
     this.descent = des;
@@ -148,11 +189,11 @@ class Elements {
   getAllElements() {
     let elements = [];
     this.content.forEach((e) => {
-      if (e instanceof Element) {
-        elements.push(e.content);
-      } else {
-        elements = [...elements, ...e.getAllElements()];
-      }
+      // if (e instanceof Element && !(e.content instanceof BlankElement)) {
+      //   elements.push(e.content);
+      // } else {
+      elements = [...elements, ...e.getAllElements()];
+      // }
     });
     return elements;
   }
@@ -170,6 +211,14 @@ class Elements {
     });
   }
 }
+
+// class Phrase extends Elements {
+//   constructor(
+//     mainContent: Elements,
+//   ) {
+//     super([mainContent]);
+//   }
+// }
 
 class Fraction extends Elements {
   numerator: Elements;
@@ -208,9 +257,9 @@ class Fraction extends Elements {
     this.vinculumScale = new Point(1, 0.01);
   }
 
-  _dup(namedCollection: Object) {
-    let vinculum = null;
-    if (this.vinculum != null) {
+  _dup(namedCollection?: Object) {
+    let { vinculum } = this;
+    if (this.vinculum != null && namedCollection) {
       vinculum = namedCollection[this.vinculum.name];
     }
     const fractionCopy = new Fraction(
@@ -233,9 +282,9 @@ class Fraction extends Elements {
     const xNumerator = (this.width - this.numerator.width) / 2;
     const xDenominator = (this.width - this.denominator.width) / 2;
     this.vSpaceNum = scale * 0.05;
-    this.vSpaceDenom = scale * 0.02;
+    this.vSpaceDenom = scale * 0.05;
     this.lineVAboveBaseline = scale * 0.07 / this.scaleModifier;
-    this.lineWidth = scale * 0.01;
+    this.lineWidth = Math.max(scale * 0.01, 0.008);
 
     const yNumerator = this.numerator.descent
                         + this.vSpaceNum + this.lineVAboveBaseline;
@@ -337,10 +386,12 @@ class StrikeOut extends Elements {
     this.strikeInSize = strikeInSize;
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     let strike = null;
-    if (this.strike != null) {
+    if (this.strike != null && namedCollection) {
       strike = namedCollection[this.strike.name];
+    } else {
+      ({ strike } = this);
     }
     const strikeOutCopy = new StrikeOut(
       this.mainContent._dup(namedCollection),
@@ -355,7 +406,7 @@ class StrikeOut extends Elements {
     this.location = location._dup();
     this.mainContent.calcSize(location, scale);
     this.lineWidth = scale * 0.02;
-    const lineExtension = this.lineWidth * 2;
+    const lineExtension = this.lineWidth * 1;
     const bottomLeft = new Point(
       location.x,
       location.y - this.mainContent.descent,
@@ -560,7 +611,7 @@ class Annotation extends Elements {
     }
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     // const annotationsCopy = [];
     const annotationsCopy =
       this.annotations.map(annotationInfo => new AnnotationInformation(
@@ -732,7 +783,7 @@ class SuperSub extends Elements {
     this.xBias = xBias;
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     const superscript = this.superscript == null ? null : this.superscript._dup(namedCollection);
     const subscript = this.subscript == null ? null : this.subscript._dup(namedCollection);
     const superSubCopy = new SuperSub(
@@ -758,7 +809,7 @@ class SuperSub extends Elements {
     if (superscript !== null) {
       const superLoc = new Point(
         this.location.x + this.mainContent.width + this.xBias,
-        this.location.y + this.mainContent.ascent - scale / 3,
+        this.location.y + this.mainContent.ascent * 0.7,
       );
       superscript.calcSize(superLoc, scale / 2);
       w = Math.max(
@@ -777,12 +828,14 @@ class SuperSub extends Elements {
 
     const { subscript } = this;
     if (subscript !== null) {
+      // TODO - y location should be minus the height of an "m" or "a" not
+      // the height of the main content.
       const subLoc = new Point(
         this.location.x + this.mainContent.width - this.subscriptXBias + this.xBias,
-        this.location.y - this.mainContent.descent,
+        this.location.y - this.mainContent.height * 0.5,
       );
       subscript.calcSize(subLoc, scale / 2);
-      w = Math.min(
+      w = Math.max(
         w,
         subLoc.x - this.location.x + subscript.width,
       );
@@ -869,11 +922,17 @@ class Integral extends Elements {
     this.glyphScale = 1;
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     const limitMin = this.limitMin == null ? null : this.limitMin._dup(namedCollection);
     const limitMax = this.limitMax == null ? null : this.limitMax._dup(namedCollection);
     const content = this.mainContent == null ? null : this.mainContent._dup(namedCollection);
-    const glyph = this.integralGlyph == null ? null : namedCollection[this.integralGlyph.name];
+    let glyph = null;
+    if (this.integralGlyph != null && namedCollection) {
+      glyph = namedCollection[this.integralGlyph.name];
+    } else {
+      glyph = this.integralGlyph;
+    }
+
     const integralCopy = new Integral(
       limitMin,
       limitMax,
@@ -998,13 +1057,13 @@ class Integral extends Elements {
       );
       this.glyphLocation = integralSymbolLocation;
       this.glyphScale = height;
-      const bounds = integralGlyph.vertices
+      const bounds = integralGlyph.drawingObject
         .getRelativeVertexSpaceBoundingRect();
         // .getRelativeGLBoundingRect(integralGlyph.transform.matrix());
-      integralGlyphBounds.width = bounds.width;
-      integralGlyphBounds.height = -bounds.bottom + bounds.top;
-      integralGlyphBounds.ascent = bounds.top;
-      integralGlyphBounds.descent = -bounds.bottom;
+      integralGlyphBounds.width = (bounds.width) * height;
+      integralGlyphBounds.height = (-bounds.bottom + bounds.top) * height;
+      integralGlyphBounds.ascent = bounds.top * height;
+      integralGlyphBounds.descent = (-bounds.bottom) * height;
     }
 
     const minLimitLocation = new Point(
@@ -1054,6 +1113,297 @@ class Integral extends Elements {
   }
 }
 
+
+class Brackets extends Elements {
+  mainContent: Elements | null;
+  glyph: DiagramElementPrimative | DiagramElementCollection | null;
+  rightGlyph: DiagramElementPrimative | DiagramElementCollection | null;
+  glyphLocation: Point;
+  rightGlyphLocation: Point;
+  glyphScale: number;
+  space: number;
+
+  constructor(
+    content: Elements | null,
+    glyph: DiagramElementPrimative | null | DiagramElementCollection,
+    rightGlyph: DiagramElementPrimative | null | DiagramElementCollection,
+    space: number = 0.03,
+  ) {
+    const left = glyph !== null ? new Element(glyph) : null;
+    const right = rightGlyph !== null ? new Element(rightGlyph) : null;
+    super([left, content, right]);
+    this.glyph = glyph;
+    this.rightGlyph = rightGlyph;
+    this.mainContent = content;
+    this.glyphLocation = new Point(0, 0);
+    this.rightGlyphLocation = new Point(0, 0);
+    this.glyphScale = 1;
+    this.space = space;
+  }
+
+  _dup(namedCollection?: Object) {
+    const content = this.mainContent == null ? null : this.mainContent._dup(namedCollection);
+    let lglyph = this.glyph;
+    if (this.glyph != null && namedCollection) {
+      lglyph = namedCollection[this.glyph.name];
+    }
+    let rglyph = this.rightGlyph;
+    if (this.rightGlyph != null && namedCollection) {
+      rglyph = namedCollection[this.rightGlyph.name];
+    }
+    const bracketCopy = new Brackets(
+      content,
+      lglyph,
+      rglyph,
+      this.space,
+    );
+    duplicateFromTo(
+      this, bracketCopy,
+      ['content', 'glyph', 'rightGlyph'],
+    );
+    // console.log(this.glyph.getPosition()._dup(), this.rightGlyph.getPosition()._dup());
+    return bracketCopy;
+  }
+
+  getAllElements() {
+    let elements = [];
+    if (this.mainContent) {
+      elements = [...elements, ...this.mainContent.getAllElements()];
+    }
+    if (this.glyph) {
+      elements = [...elements, this.glyph];
+    }
+    if (this.rightGlyph) {
+      elements = [...elements, this.rightGlyph];
+    }
+    // console.log(this.glyph.getPosition()._dup(), this.rightGlyph.getPosition()._dup());
+    return elements;
+  }
+
+  setPositions() {
+    const { glyph, rightGlyph } = this;
+    if (glyph != null) {
+      glyph.transform.updateScale(this.glyphScale, this.glyphScale);
+      glyph.transform.updateTranslation(
+        this.glyphLocation.x,
+        this.glyphLocation.y,
+      );
+    }
+    if (rightGlyph != null) {
+      rightGlyph.transform.updateScale(this.glyphScale, this.glyphScale);
+      rightGlyph.transform.updateTranslation(
+        this.rightGlyphLocation.x,
+        this.rightGlyphLocation.y,
+      );
+    }
+    if (this.mainContent) {
+      this.mainContent.setPositions();
+    }
+  }
+
+  offsetLocation(offset: Point = new Point(0, 0)) {
+    this.location = this.location.add(offset);
+    const { glyph, rightGlyph } = this;
+    if (glyph != null) {
+      this.glyphLocation = this.glyphLocation.add(offset);
+    }
+    if (rightGlyph != null) {
+      this.rightGlyphLocation = this.rightGlyphLocation.add(offset);
+    }
+    if (this.mainContent) {
+      this.mainContent.offsetLocation(offset);
+    }
+    // console.log(this.glyph.getPosition()._dup(), this.rightGlyph.getPosition()._dup());
+  }
+
+  calcSize(location: Point, scale: number) {
+    this.location = location._dup();
+    const loc = location._dup();
+    const contentBounds = new Bounds();
+    const glyphBounds = new Bounds();
+    const rightGlyphBounds = new Bounds();
+
+    const { mainContent } = this;
+    if (mainContent instanceof Elements) {
+      mainContent.calcSize(loc._dup(), scale);
+      contentBounds.width = mainContent.width;
+      contentBounds.height = mainContent.ascent + mainContent.descent;
+      contentBounds.ascent = mainContent.ascent;
+      contentBounds.descent = mainContent.descent;
+    }
+
+    const heightScale = 1.4;
+    const height = contentBounds.height * heightScale;
+    const bracketScale = height;
+
+    const glyphDescent = contentBounds.descent
+        + contentBounds.height * (heightScale - 1) / 1.8;
+    const leftSymbolLocation = new Point(
+      loc.x + this.space * scale,
+      loc.y - glyphDescent,
+    );
+    const { glyph } = this;
+    if (glyph instanceof DiagramElementPrimative) {
+      glyph.show();
+      glyph.transform.updateScale(
+        bracketScale,
+        bracketScale,
+      );
+      glyph.transform.updateTranslation(
+        leftSymbolLocation.x,
+        leftSymbolLocation.y,
+      );
+      this.glyphLocation = leftSymbolLocation;
+      this.glyphScale = bracketScale;
+      const bounds = glyph.drawingObject
+        .getRelativeVertexSpaceBoundingRect();
+      glyphBounds.width = bounds.width * bracketScale;
+      glyphBounds.height = (-bounds.bottom + bounds.top) * bracketScale;
+      glyphBounds.ascent = (bounds.top) * bracketScale;
+      glyphBounds.descent = (-bounds.bottom) * bracketScale;
+    }
+
+    const rightSymbolLocation = new Point(
+      loc.x + contentBounds.width + glyphBounds.width
+        + this.space * 3 * scale,
+      leftSymbolLocation.y,
+    );
+    const { rightGlyph } = this;
+    if (rightGlyph instanceof DiagramElementPrimative) {
+      rightGlyph.show();
+      rightGlyph.transform.updateScale(
+        bracketScale,
+        bracketScale,
+      );
+      rightGlyph.transform.updateTranslation(
+        rightSymbolLocation.x,
+        rightSymbolLocation.y,
+      );
+      this.rightGlyphLocation = rightSymbolLocation;
+      const bounds = rightGlyph.drawingObject
+        .getRelativeVertexSpaceBoundingRect();
+      rightGlyphBounds.width = bounds.width * bracketScale;
+      rightGlyphBounds.height = (-bounds.bottom + bounds.top) * bracketScale;
+      rightGlyphBounds.ascent = (bounds.top) * bracketScale;
+      rightGlyphBounds.descent = (-bounds.bottom) * bracketScale;
+    }
+    const contentLocation = new Point(
+      this.location.x + glyphBounds.width + this.space * scale * 2,
+      this.location.y,
+    );
+
+    if (mainContent instanceof Elements) {
+      mainContent.offsetLocation(contentLocation.sub(mainContent.location));
+    }
+
+    this.width = glyphBounds.width + contentBounds.width
+      + rightGlyphBounds.width + this.space * scale * 4;
+    this.ascent = glyphBounds.height - glyphDescent;
+    this.descent = glyphDescent;
+    this.height = this.descent + this.ascent;
+    // console.log(this.glyphLocation, this.rightGlyphLocation)
+    // console.log(this.glyph.getPosition()._dup(), this.rightGlyph.getPosition()._dup());
+  }
+}
+
+class Bar extends Brackets {
+  barPosition: 'top' | 'bottom';
+  outsideSpace: number;
+
+  constructor(
+    content: Elements | null,
+    barGlyph: DiagramElementPrimative | null | DiagramElementCollection,
+    space: number = 0.03,
+    outsideSpace: number = 0.03,
+    barPosition: 'top' | 'bottom' = 'top',
+  ) {
+    super(content, barGlyph, null, space);
+    this.barPosition = barPosition;
+    this.outsideSpace = outsideSpace;
+  }
+
+  calcSize(location: Point, scale: number) {
+    this.location = location._dup();
+    const loc = location._dup();
+    const contentBounds = new Bounds();
+    const glyphBounds = new Bounds();
+
+    const { mainContent } = this;
+    if (mainContent instanceof Elements) {
+      mainContent.calcSize(loc._dup(), scale);
+      contentBounds.width = mainContent.width;
+      contentBounds.height = mainContent.ascent + mainContent.descent;
+      contentBounds.ascent = mainContent.ascent;
+      contentBounds.descent = mainContent.descent;
+    }
+
+    const widthScale = 1;
+    const width = contentBounds.width * widthScale;
+    const bracketScale = width;
+
+    const leftSymbolLocation = new Point(
+      loc.x - (widthScale - 1) * width / 2,
+      loc.y + contentBounds.ascent + this.space * scale,
+    );
+    if (this.barPosition === 'bottom') {
+      leftSymbolLocation.y = loc.y - contentBounds.descent - this.space * scale;
+    }
+    const { glyph } = this;
+    if (glyph instanceof DiagramElementPrimative) {
+      glyph.show();
+      glyph.transform.updateScale(
+        bracketScale,
+        bracketScale,
+      );
+      glyph.transform.updateTranslation(
+        leftSymbolLocation.x,
+        leftSymbolLocation.y,
+      );
+      this.glyphLocation = leftSymbolLocation;
+      this.glyphScale = bracketScale;
+      const bounds = glyph.drawingObject
+        .getRelativeVertexSpaceBoundingRect();
+      glyphBounds.width = bounds.width * bracketScale;
+      glyphBounds.height = (-bounds.bottom + bounds.top) * bracketScale;
+      glyphBounds.ascent = (bounds.top) * bracketScale;
+      glyphBounds.descent = (-bounds.bottom) * bracketScale;
+    }
+    this.width = contentBounds.width;
+    if (this.barPosition === 'top') {
+      this.ascent = contentBounds.ascent + glyphBounds.height
+        + this.space * scale + this.outsideSpace * scale;
+      this.descent = contentBounds.descent;
+    } else {
+      this.ascent = contentBounds.ascent;
+      this.descent = contentBounds.descent + glyphBounds.height
+        + this.space * scale + this.outsideSpace * scale;
+    }
+    this.height = this.descent + this.ascent;
+  }
+
+  // Must make a dup method in a subclass or else the parent class will
+  // create a new copy of its own class type
+  _dup(namedCollection?: Object) {
+    const content = this.mainContent == null ? null : this.mainContent._dup(namedCollection);
+    let { glyph } = this;
+    if (this.glyph != null && namedCollection) {
+      glyph = namedCollection[this.glyph.name];
+    }
+    const barCopy = new Bar(
+      content,
+      glyph,
+      this.space,
+      this.outsideSpace,
+      this.barPosition,
+    );
+    duplicateFromTo(
+      this, barCopy,
+      ['content', 'glyph'],
+    );
+    return barCopy;
+  }
+}
+
 export function getDiagramElement(
   collection: DiagramElementCollection,
   name: string | DiagramElementPrimative | DiagramElementCollection,
@@ -1083,6 +1433,15 @@ export function createEquationElements(
   }
   let font = new DiagramFont(
     'Times New Roman',
+    'normal',
+    0.2,
+    '200',
+    'left',
+    'alphabetic',
+    color,
+  );
+  let fontItalic = new DiagramFont(
+    'Times New Roman',
     'italic',
     0.2,
     '200',
@@ -1091,7 +1450,10 @@ export function createEquationElements(
     color,
   );
   if (colorOrFont instanceof DiagramFont) {
-    font = colorOrFont;
+    font = colorOrFont._dup();
+    font.style = 'normal';
+    fontItalic = colorOrFont._dup();
+    fontItalic.style = 'italic';
     if (font.color != null) {
       color = RGBToArray(font.color);
     }
@@ -1101,8 +1463,18 @@ export function createEquationElements(
     new Transform('Equation Elements Collection').scale(1, 1).rotate(0).translate(0, 0),
     diagramLimits,
   );
-  const makeElem = (text) => {
-    const dT = new DiagramText(new Point(0, 0), text, font);
+  const makeElem = (text: string, fontOrStyle: DiagramFont | string | null) => {
+    let fontToUse: DiagramFont = font;
+    if (fontOrStyle instanceof DiagramFont) {
+      fontToUse = fontOrStyle;
+    } else if (fontOrStyle === 'italic') {
+      fontToUse = fontItalic;
+    } else if (fontOrStyle === 'normal') {
+      fontToUse = font;
+    } else if (text.match(/[A-Z,a-z]/)) {
+      fontToUse = fontItalic;
+    }
+    const dT = new DiagramText(new Point(0, 0), text, fontToUse);
     const to = new TextObject(drawContext2D, [dT]);
     const p = new DiagramElementPrimative(
       to,
@@ -1114,15 +1486,9 @@ export function createEquationElements(
   };
   Object.keys(elems).forEach((key) => {
     if (typeof elems[key] === 'string') {
-      // const dT = new DiagramText(new Point(0, 0), elems[key], font);
-      // const to = new TextObject(drawContext2D, [dT]);
-      // const p = new DiagramElementPrimative(
-      //   to,
-      //   new Transform('Equation Element').scale(1, 1).translate(0, 0),
-      //   color,
-      //   diagramLimits,
-      // );
-      collection.add(key, makeElem(elems[key]));
+      if (!key.startsWith('space')) {
+        collection.add(key, makeElem(elems[key], null));
+      }
     }
     if (elems[key] instanceof DiagramElementPrimative) {
       collection.add(key, elems[key]);
@@ -1131,8 +1497,8 @@ export function createEquationElements(
       collection.add(key, elems[key]);
     }
     if (Array.isArray(elems[key])) {
-      const [text, col, isTouchable, onClick] = elems[key];
-      const elem = makeElem(text);
+      const [text, col, isTouchable, onClick, direction, mag, fontOrStyle] = elems[key];
+      const elem = makeElem(text, fontOrStyle);
       if (col) {
         elem.setColor(col);
       }
@@ -1142,13 +1508,16 @@ export function createEquationElements(
       if (onClick) {
         elem.onClick = onClick;
       }
-      // const elem = makeElem(elems[key][0]);
-      // if (elems[key].length > 1) {
-      //   elem.setColor(elems[key][1]);
-      // }
-      // if (elems[key].length > 2) {
-      //   elem.isTouchable = elems[key][2];
-      // }
+      if (direction) {
+        elem.animate.transform.translation.style = 'curved';
+        elem.animate.transform.translation.options.direction = direction;
+      }
+
+      if (mag) {
+        elem.animate.transform.translation.style = 'curved';
+        elem.animate.transform.translation.options.magnitude = mag;
+      }
+
       collection.add(key, elem);
     }
   });
@@ -1164,7 +1533,11 @@ export function contentToElement(
 ): Elements {
   // If input is alread an Elements object, then return it
   if (content instanceof Elements) {
-    return content;
+    // const namedElements = {};
+    // collection.getAllElements().forEach((element) => {
+    //   namedElements[element.name] = element;
+    // });
+    return content._dup();
   }
 
   // If it is not an Elements object, then create an Element(s) array
@@ -1174,18 +1547,28 @@ export function contentToElement(
   // If the content is a string, then find the corresponding
   // DiagramElement associated with the string
   if (typeof content === 'string') {
-    const diagramElement = getDiagramElement(collection, content);
-    if (diagramElement) {
-      elementArray.push(new Element(diagramElement));
+    if (content.startsWith('space')) {
+      const spaceNum = parseFloat(content.replace(/space[_]*/, '')) || 0.03;
+      elementArray.push(new Element(new BlankElement(spaceNum)));
+    } else {
+      const diagramElement = getDiagramElement(collection, content);
+      if (diagramElement) {
+        elementArray.push(new Element(diagramElement));
+      }
     }
   // Otherwise, if the input content is an array, then process each element
   // and add it to the ElementArray
   } else if (Array.isArray(content)) {
     content.forEach((c) => {
       if (typeof c === 'string') {
-        const diagramElement = getDiagramElement(collection, c);
-        if (diagramElement) {
-          elementArray.push(new Element(diagramElement));
+        if (c.startsWith('space')) {
+          const spaceNum = parseFloat(c.replace(/space[_]*/, '')) || 0.03;
+          elementArray.push(new Element(new BlankElement(spaceNum)));
+        } else {
+          const diagramElement = getDiagramElement(collection, c);
+          if (diagramElement) {
+            elementArray.push(new Element(diagramElement));
+          }
         }
       } else if (c !== null) {
         elementArray.push(c);
@@ -1210,7 +1593,7 @@ export type TypeEquationForm = {
   ) => void;
   dissolveElements: (
     Array<DiagramElementPrimative | DiagramElementCollection>,
-    boolean, number, number, ?(?mixed)) => void;
+    boolean, number, number, ?(?boolean)) => void;
   getElementsToShowAndHide: () => void;
   showHide: (number, number, ?(?mixed)) => void;
   hideShow: (number, number, ?(?mixed)) => void;
@@ -1224,6 +1607,8 @@ export type TypeEquationForm = {
   description: string | null;
   modifiers: Object;
   type: string;
+  elementMods: Object;
+  time: number | null;
 } & Elements;
 
 export class EquationForm extends Elements {
@@ -1232,12 +1617,24 @@ export class EquationForm extends Elements {
   type: string;
   description: string | null;
   modifiers: Object;
+  elementMods: Object;
+  time: number | null;
 
   constructor(collection: DiagramElementCollection) {
     super([]);
     this.collection = collection;
     this.description = null;
     this.modifiers = {};
+    this.elementMods = {};
+    this.time = null;
+  }
+
+  getNamedElements() {
+    const namedElements = {};
+    this.collection.getAllElements().forEach((element) => {
+      namedElements[element.name] = element;
+    });
+    return namedElements;
   }
 
   _dup(collection: DiagramElementCollection = this.collection) {
@@ -1246,6 +1643,7 @@ export class EquationForm extends Elements {
 
     // const allCollectionElements = collection.getAllElements();
     const namedElements = {};
+    // getAllPrimatives?
     collection.getAllElements().forEach((element) => {
       namedElements[element.name] = element;
     });
@@ -1263,12 +1661,17 @@ export class EquationForm extends Elements {
     const elements = [];
     content.forEach((c) => {
       if (typeof c === 'string') {
-        const diagramElement = getDiagramElement(this.collection, c);
-        if (diagramElement) {
-          elements.push(new Element(diagramElement));
+        if (c.startsWith('space')) {
+          const spaceNum = parseFloat(c.replace(/space[_]*/, '')) || 0.03;
+          elements.push(new Element(new BlankElement(spaceNum)));
+        } else {
+          const diagramElement = getDiagramElement(this.collection, c);
+          if (diagramElement) {
+            elements.push(new Element(diagramElement));
+          }
         }
       } else {
-        elements.push(c);
+        elements.push(c._dup());
       }
       this.content = elements;
     });
@@ -1355,62 +1758,40 @@ export class EquationForm extends Elements {
   // eslint-disable-next-line class-methods-use-this
   dissolveElements(
     elements: Array<DiagramElementPrimative | DiagramElementCollection>,
-    appear: boolean = true,
+    disolve: 'in' | 'out' = 'in',
     delay: number = 0.01,
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ) {
-    let callbackToUse = callback;
     if (elements.length === 0) {
       if (callback) {
-        callback();
+        callback(false);
+        return;
       }
     }
-    // console.log(delay, appear)
-    // const delayToUse = delay === 0 ? 0.001 : delay;
-    elements.forEach((e) => {
-      // console.log(e.name, e.color.slice())
-      if (appear) {
-        if (delay > 0 || time > 0) {
-          e.disolveInWithDelay(delay, time, callbackToUse);
-          callbackToUse = null;
-        } else if (e instanceof DiagramElementPrimative) {
-          e.show();
-        } else {
-          e.showAll();
+    const count = elements.length;
+    let completed = 0;
+    const end = (cancelled: boolean) => {
+      completed += 1;
+      if (completed === count) {
+        if (callback) {
+          callback(cancelled);
         }
-      } else if (delay > 0 || time > 0) {
-        e.disolveOutWithDelay(delay, time, callbackToUse);
-        callbackToUse = null;
-      } else {
-        e.hide();
       }
+    };
+    elements.forEach((e) => {
+      e.disolveWithDelay(delay, time, disolve, end);
     });
-    if (callbackToUse != null) {
-      callbackToUse();
-    }
   }
 
   getElementsToShowAndHide() {
     const allElements = this.collection.getAllElements();
     const elementsShown = allElements.filter(e => e.isShown);
-    const elementsShownTargetWithoutCollectionElements = this.getAllElements();
-    const elementsShownTarget = [];
-    elementsShownTargetWithoutCollectionElements.forEach((e) => {
-      if (e instanceof DiagramElementPrimative) {
-        elementsShownTarget.push(e);
-      } else {
-        const collectionElements = e.getAllElements();
-        collectionElements.forEach((ce) => {
-          elementsShownTarget.push(ce);
-        });
-      }
-    });
+    const elementsShownTarget = this.getAllElements();
     const elementsToHide =
       elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
     const elementsToShow =
       elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
-
     return {
       show: elementsToShow,
       hide: elementsToHide,
@@ -1432,20 +1813,21 @@ export class EquationForm extends Elements {
     const { show, hide } = this.getElementsToShowAndHide();
     if (showTime === 0) {
       show.forEach((e) => {
-        if (e instanceof DiagramElementCollection) {
-          e.showAll();
-        } else {
-          e.show();
-        }
+        e.showAll();
+        // if (e instanceof DiagramElementCollection) {
+        //   e.showAll();
+        // } else {
+        //   e.show();
+        // }
       });
     } else {
-      this.dissolveElements(show, true, 0.01, showTime, null);
+      this.dissolveElements(show, 'in', 0.01, showTime, null);
     }
 
     if (hideTime === 0) {
       hide.forEach(e => e.hide());
     } else {
-      this.dissolveElements(hide, false, showTime, hideTime, callback);
+      this.dissolveElements(hide, 'out', showTime, hideTime, callback);
     }
   }
 
@@ -1460,29 +1842,117 @@ export class EquationForm extends Elements {
     if (hideTime === 0) {
       hide.forEach(e => e.hide());
     } else {
-      this.dissolveElements(hide, false, 0.01, hideTime, null);
+      this.dissolveElements(hide, 'out', 0.01, hideTime, null);
     }
     if (showTime === 0) {
       show.forEach((e) => {
-        if (e instanceof DiagramElementCollection) {
-          e.showAll();
-        } else {
-          e.show();
-        }
+        e.showAll();
+        // if (e instanceof DiagramElementCollection) {
+        //   e.showAll();
+        // } else {
+        //   e.show();
+        // }
       });
       if (callback != null) {
         callback();
       }
     } else {
-      this.dissolveElements(show, true, hideTime, showTime, callback);
+      this.dissolveElements(show, 'in', hideTime, showTime, callback);
     }
   }
+
+  allHideShow(
+    delay: number = 0,
+    hideTime: number = 0.5,
+    blankTime: number = 0.5,
+    showTime: number = 0.5,
+    callback: ?(boolean) => void = null,
+  ) {
+    this.collection.stop();
+    const allElements = this.collection.getAllElements();
+    const elementsShown = allElements.filter(e => e.isShown);
+    const elementsToShow = this.getAllElements();
+    const elementsToDelayShowing = elementsToShow.filter(e => !e.isShown);
+    const elementsToShowAfterDisolve = elementsToShow.filter(e => e.isShown);
+    let cumTime = delay;
+
+    if (elementsToShow.length === 0 && elementsShown.length === 0) {
+      if (callback != null) {
+        callback(false);
+        return;
+      }
+    }
+    // disolve out
+    // set positions
+    // disolve in
+
+    let disolveOutCallback = () => {
+      this.setPositions();
+    };
+    if (elementsToShow.length === 0) {
+      disolveOutCallback = (cancelled: boolean) => {
+        this.setPositions();
+        if (callback != null) {
+          callback(cancelled);
+        }
+      };
+    }
+
+    if (elementsShown.length > 0) {
+      this.dissolveElements(
+        elementsShown, 'out', delay, hideTime, disolveOutCallback,
+      );
+      cumTime += hideTime;
+    } else {
+      this.setPositions();
+    }
+
+    const count = elementsToShow.length;
+    let completed = 0;
+    const end = (cancelled: boolean) => {
+      completed += 1;
+      if (completed === count - 1) {
+        if (callback) {
+          callback(cancelled);
+        }
+      }
+    };
+    elementsToDelayShowing.forEach((e) => {
+      e.disolveWithDelay(cumTime + blankTime, showTime, 'in', end);
+    });
+    elementsToShowAfterDisolve.forEach((e) => {
+      e.disolveWithDelay(blankTime, showTime, 'in', end);
+    });
+  }
+
+  // setColors() {
+  //   Object.keys(this.elementMods).forEach((elementName) => {
+  //     const mods = this.elementMods[elementName];
+  //     const {
+  //       element, color, style, direction, mag,
+  //     } = mods;
+  //     if (element != null) {
+  //       if (color != null) {
+  //         element.animateColorToWithDelay(color, cumTime, moveTimeToUse);
+  //       }
+  //       if (style != null) {
+  //         element.animate.transform.translation.style = style;
+  //       }
+  //       if (direction != null) {
+  //         element.animate.transform.translation.options.direction = direction;
+  //       }
+  //       if (mag != null) {
+  //         element.animate.transform.translation.options.magnitude = mag;
+  //       }
+  //     }
+  //   });
+  // }
 
   animatePositionsTo(
     // location: Point,
     delay: number,
     disolveOutTime: number,
-    moveTime: number,
+    moveTime: number | null,
     disolveInTime: number,
     // time: number = 1,
     callback: ?(?mixed) => void = null,
@@ -1500,25 +1970,74 @@ export class EquationForm extends Elements {
     this.setPositions();
     const animateToTransforms = this.collection.getElementTransforms();
 
+    const elementsToMove = [];
+    const toMoveStartTransforms = [];
+    const toMoveStopTransforms = [];
+    Object.keys(animateToTransforms).forEach((key) => {
+      const currentT = currentTransforms[key];
+      const nextT = animateToTransforms[key];
+      if (!currentT.isEqualTo(nextT)) {
+        elementsToMove.push(key);
+        toMoveStartTransforms.push(currentT);
+        toMoveStopTransforms.push(nextT);
+      }
+    });
+
+    // Find move time to use. If moveTime is null, then a velocity is used.
+    let moveTimeToUse;
+    if (moveTime === null) {
+      moveTimeToUse = getMoveTime(
+        toMoveStartTransforms, toMoveStopTransforms, 0,
+        new Point(0.35, 0.35),      // 0.25 diagram space per s
+        2 * Math.PI / 6,            // 60º per second
+        new Point(0.4, 0.4),            // 100% per second
+      );
+    } else {
+      moveTimeToUse = moveTime;
+    }
     this.collection.setElementTransforms(currentTransforms);
     let cumTime = delay;
 
     let moveCallback = null;
     let disolveInCallback = null;
+    let disolveOutCallback = null;
 
-    if (elementsToShow.length === 0) {
+    if (elementsToMove.length === 0 && elementsToShow.length === 0) {
+      disolveOutCallback = callback;
+    } else if (elementsToShow.length === 0) {
       moveCallback = callback;
     } else {
       disolveInCallback = callback;
     }
 
     if (elementsToHide.length > 0) {
-      this.dissolveElements(elementsToHide, false, delay, disolveOutTime, null);
+      this.dissolveElements(elementsToHide, 'out', delay, disolveOutTime, disolveOutCallback);
       cumTime += disolveOutTime;
     }
+
+    Object.keys(this.elementMods).forEach((elementName) => {
+      const mods = this.elementMods[elementName];
+      const {
+        element, color, style, direction, mag,
+      } = mods;
+      if (element != null) {
+        if (color != null) {
+          element.animateColorToWithDelay(color, cumTime, moveTimeToUse);
+        }
+        if (style != null) {
+          element.animate.transform.translation.style = style;
+        }
+        if (direction != null) {
+          element.animate.transform.translation.options.direction = direction;
+        }
+        if (mag != null) {
+          element.animate.transform.translation.options.magnitude = mag;
+        }
+      }
+    });
     const t = this.collection.animateToTransforms(
       animateToTransforms,
-      moveTime,
+      moveTimeToUse,
       cumTime,
       0,
       moveCallback,
@@ -1526,8 +2045,9 @@ export class EquationForm extends Elements {
     if (t > 0) {
       cumTime = t;
     }
+
     if (elementsToShow.length > 0) {
-      this.dissolveElements(elementsToShow, true, cumTime, disolveInTime, disolveInCallback);
+      this.dissolveElements(elementsToShow, 'in', cumTime, disolveInTime, disolveInCallback);
       cumTime += disolveInTime + 0.001;
     }
     return cumTime;
@@ -1556,11 +2076,12 @@ export class EquationForm extends Elements {
     this.arrange(scale, xAlign, yAlign, fixElement);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
-    this.dissolveElements(elementsToHide, false, 0.001, 0.01, null);
+    this.dissolveElements(elementsToHide, 'out', 0.001, 0.01, null);
     this.collection.animateToTransforms(animateToTransforms, time, 0);
-    this.dissolveElements(elementsToShow, true, time, 0.5, callback);
+    this.dissolveElements(elementsToShow, 'in', time, 0.5, callback);
   }
 
+  // deprecate
   sfrac(
     numerator: TypeEquationInput,
     denominator: TypeEquationInput,
@@ -1572,6 +2093,7 @@ export class EquationForm extends Elements {
     return f;
   }
 
+  // deprecate
   frac(
     numerator: TypeEquationInput,
     denominator: TypeEquationInput,
@@ -1584,6 +2106,7 @@ export class EquationForm extends Elements {
     );
   }
 
+  // deprecate
   sub(
     content: TypeEquationInput,
     subscript: TypeEquationInput,
@@ -1595,6 +2118,7 @@ export class EquationForm extends Elements {
     );
   }
 
+  // deprecate
   sup(
     content: TypeEquationInput,
     superscript: TypeEquationInput,
@@ -1606,6 +2130,7 @@ export class EquationForm extends Elements {
     );
   }
 
+  // deprecate
   supsub(
     content: TypeEquationInput,
     superscript: TypeEquationInput,
@@ -1618,6 +2143,7 @@ export class EquationForm extends Elements {
     );
   }
 
+  // deprecate
   int(
     limitMin: TypeEquationInput,
     limitMax: TypeEquationInput,
@@ -1841,22 +2367,72 @@ export class Equation {
   addForm(
     name: string,
     content: Array<Elements | Element | string>,
-    formType: string = 'base',
-    addToSeries: boolean = true,
-    description: string = '',
-    modifiers: Object = {},
+    options: {
+      formType?: string,
+      addToSeries?: boolean,
+      elementMods?: Object,
+      time?: number | null | { fromPrev?: number, fromNext?: number },
+      description?: string,
+      modifiers?: Object,
+    } = {},
   ) {
     if (!(name in this.form)) {
       this.form[name] = {};
     }
-
+    const defaultOptions = {
+      formType: 'base',
+      addToSeries: true,
+      elementMods: {},
+      animationTime: null,          // use velocities instead of time
+      description: '',
+      modifiers: {},
+    };
+    let optionsToUse = defaultOptions;
+    if (options) {
+      optionsToUse = Object.assign({}, defaultOptions, options);
+    }
+    const {
+      formType, description, modifiers,
+      animationTime, elementMods, addToSeries,
+    } = optionsToUse;
+    const time = animationTime;
     this.form[name][formType] = new EquationForm(this.collection);
     this.form[name].name = name;
     this.form[name][formType].name = name;
     this.form[name][formType].description = description;
     this.form[name][formType].modifiers = modifiers;
     this.form[name][formType].type = formType;
-
+    this.form[name][formType].elementMods = {};
+    if (typeof time === 'number') {
+      this.form[name][formType].time = {
+        fromPrev: time, fromNext: time, fromAny: time,
+      };
+    } else {
+      this.form[name][formType].time = time;
+    }
+    Object.keys(elementMods).forEach((elementName) => {
+      const diagramElement = getDiagramElement(this.collection, elementName);
+      if (diagramElement) {
+        let color;
+        let style;
+        let direction;
+        let mag;
+        if (Array.isArray(elementMods[elementName])) {
+          [color, style, direction, mag] = elementMods[elementName];
+        } else {
+          ({
+            color, style, direction, mag,
+          } = elementMods[elementName]);
+        }
+        this.form[name][formType].elementMods[elementName] = {
+          element: diagramElement,
+          color,
+          style,
+          direction,
+          mag,
+        };
+      }
+    });
     const form = this.form[name][formType];
     form.createEq(content);
     form.type = formType;
@@ -1875,7 +2451,9 @@ export class Equation {
     // make the first form added also equal to the base form as always
     // need a base form for some functions
     if (this.form[name].base === undefined) {
-      this.addForm(name, content, 'base', false, description, modifiers);
+      const baseOptions = Object.assign({}, options);
+      baseOptions.formType = 'base';
+      this.addForm(name, content, baseOptions);
     }
   }
 
@@ -1946,7 +2524,7 @@ export class Equation {
     return index;
   }
 
-  prevForm(time: number, delay: number = 0) {
+  prevForm(time: number | null = null, delay: number = 0) {
     const currentForm = this.getCurrentForm();
     if (currentForm == null) {
       return;
@@ -1957,11 +2535,12 @@ export class Equation {
       if (index < 0) {
         index = this.formSeries.length - 1;
       }
-      this.goToForm(index, time, delay);
+      this.goToForm(index, time, delay, 'fromNext');
     }
   }
 
-  nextForm(time: number = 1, delay: number = 0) {
+  nextForm(time: number | null = null, delay: number = 0) {
+    let animate = true;
     const currentForm = this.getCurrentForm();
     if (currentForm == null) {
       return;
@@ -1971,8 +2550,9 @@ export class Equation {
       index += 1;
       if (index > this.formSeries.length - 1) {
         index = 0;
+        animate = false;
       }
-      this.goToForm(index, time, delay);
+      this.goToForm(index, time, delay, 'fromPrev', animate);
     }
   }
 
@@ -1996,8 +2576,10 @@ export class Equation {
 
   goToForm(
     name: ?string | number = null,
-    time: number = 2,
+    time: number | null = null,
     delay: number = 0,
+    fromWhere: 'fromPrev' | 'fromNext' | 'fromAny' = 'fromAny',
+    animate: boolean = true,
   ) {
     if (this.isAnimating) {
       this.collection.stop(true, true);
@@ -2009,7 +2591,6 @@ export class Equation {
       }
       return;
     }
-
     this.collection.stop();
     this.collection.stop();
     this.isAnimating = false;
@@ -2054,7 +2635,15 @@ export class Equation {
         const end = () => {
           this.isAnimating = false;
         };
-        form.animatePositionsTo(delay, 1, time, 0.5, end);
+        if (animate) {
+          let timeToUse = null;
+          if (form.time != null && form.time[fromWhere] != null) {
+            timeToUse = form.time[fromWhere];
+          }
+          form.animatePositionsTo(delay, 0.4, timeToUse, 0.4, end);
+        } else {
+          form.allHideShow(delay, 0.5, 0.2, 0.5, end);
+        }
         this.setCurrentForm(form);
       }
       this.updateDescription();
@@ -2069,7 +2658,7 @@ export class Equation {
   ) {
     const form = this.getForm(formOrName, formType);
     if (form != null) {
-      form.description = description;
+      form.description = `${description}`;
       form.modifiers = modifiers;
     }
   }
@@ -2100,7 +2689,7 @@ export class Equation {
       return;
     }
 
-    const drawingObject = element.vertices;
+    const { drawingObject } = element;
     if (drawingObject instanceof HTMLObject) {
       drawingObject.change(
         html.applyModifiers(form.description, form.modifiers),
@@ -2156,6 +2745,7 @@ export class Equation {
     formOrName: EquationForm | string,
     formType: ?string = null,
   ) {
+    this.collection.show();
     let form = formOrName;
     if (typeof formOrName === 'string') {
       form = this.getForm(formOrName, formType);
@@ -2173,6 +2763,7 @@ export class Equation {
     if (formOrName instanceof EquationForm) {
       return formOrName;
     }
+    // console.log(formType, this.form[formOrName])
     if (formOrName in this.form) {
       let formTypeToUse = formType;
       if (formTypeToUse == null) {
@@ -2188,6 +2779,10 @@ export class Equation {
       }
     }
     return null;
+  }
+
+  phrase(content: TypeEquationInput) {
+    return new Elements([contentToElement(this.collection, content)]);
   }
 
   frac(
@@ -2216,12 +2811,12 @@ export class Equation {
 
   annotation(
     content: TypeEquationInput,
-    annotationOrAnnotationArray: Array<AnnotationInformation>,
+    annotationArray: Array<AnnotationInformation>,
     annotationInSize: boolean = false,
   ) {
     return new Annotation(
       contentToElement(this.collection, content),
-      annotationOrAnnotationArray,
+      annotationArray,
       annotationInSize,
     );
   }
@@ -2253,5 +2848,109 @@ export class Equation {
     const f = this.frac(numerator, denominator, vinculum);
     f.scaleModifier = scaleModifier;
     return f;
+  }
+
+  sub(
+    content: TypeEquationInput,
+    subscript: TypeEquationInput,
+  ) {
+    return new SuperSub(
+      contentToElement(this.collection, content),
+      null,
+      contentToElement(this.collection, subscript),
+    );
+  }
+
+  sup(
+    content: TypeEquationInput,
+    superscript: TypeEquationInput,
+  ) {
+    return new SuperSub(
+      contentToElement(this.collection, content),
+      contentToElement(this.collection, superscript),
+      null,
+    );
+  }
+
+  supsub(
+    content: TypeEquationInput,
+    superscript: TypeEquationInput,
+    subscript: TypeEquationInput,
+  ) {
+    return new SuperSub(
+      contentToElement(this.collection, content),
+      contentToElement(this.collection, superscript),
+      contentToElement(this.collection, subscript),
+    );
+  }
+
+  brac(
+    content: TypeEquationInput,
+    leftBracket: DiagramElementPrimative | DiagramElementCollection | string,
+    rightBracket: DiagramElementPrimative | DiagramElementCollection | string,
+    space: number = 0.03,
+  ) {
+    return new Brackets(
+      contentToElement(this.collection, content),
+      getDiagramElement(this.collection, leftBracket),
+      getDiagramElement(this.collection, rightBracket),
+      space,
+    );
+  }
+
+  topBar(
+    content: TypeEquationInput,
+    bar: DiagramElementPrimative | DiagramElementCollection | string,
+    space: number = 0.03,
+    outsideSpace: number = 0.03,
+  ) {
+    return new Bar(
+      contentToElement(this.collection, content),
+      getDiagramElement(this.collection, bar),
+      space,
+      outsideSpace,
+      'top',
+    );
+  }
+
+  bottomBar(
+    content: TypeEquationInput,
+    bar: DiagramElementPrimative | DiagramElementCollection | string,
+    space: number = 0.03,
+    outsideSpace: number = 0.03,
+  ) {
+    return new Bar(
+      contentToElement(this.collection, content),
+      getDiagramElement(this.collection, bar),
+      space,
+      outsideSpace,
+      'bottom',
+    );
+  }
+
+  topComment(
+    content: TypeEquationInput,
+    comment: TypeEquationInput,
+    bar: DiagramElementPrimative | DiagramElementCollection | string,
+    space: number = 0.03,
+    outsideSpace: number = 0.03,
+  ) {
+    return this.annotation(
+      this.topBar(content, bar, space, outsideSpace),
+      [this.ann(comment, 'center', 'top', 'center', 'bottom')],
+    );
+  }
+
+  bottomComment(
+    content: TypeEquationInput,
+    comment: TypeEquationInput,
+    bar: DiagramElementPrimative | DiagramElementCollection | string,
+    space: number = 0.0,
+    outsideSpace: number = 0.03,
+  ) {
+    return this.annotation(
+      this.bottomBar(content, bar, space, outsideSpace),
+      [this.ann(comment, 'center', 'bottom', 'center', 'top')],
+    );
   }
 }

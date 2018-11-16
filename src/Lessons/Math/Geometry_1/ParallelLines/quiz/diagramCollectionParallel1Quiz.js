@@ -13,9 +13,7 @@ import {
   checkElementsForParallel, checkValuesForParallel, makeAnglesClose,
   randomizeParallelLine,
 } from '../common/tools';
-import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
-import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
-
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import type { TypeMessages } from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
@@ -23,8 +21,8 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagramCollection) {
 // export default class QuizParallel1Collection extends CommonQuizDiagramCollection {
   diagram: LessonDiagram;
-  _line1: MoveableLineType;
-  _line2: MoveableLineType;
+  _line1: TypeLine;
+  _line2: TypeLine;
   _messages: {
     _touching: DiagramElementPrimative;
     _rotation: DiagramElementPrimative;
@@ -44,12 +42,16 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
   }
 
   makeLine() {
-    const line = makeMoveableLine(
-      this.diagram, this.layout.line,
-      this.layout.colors.line,
-    );
+    const lay = this.layout.line;
+    const line = this.diagram.objects.line({
+      vertexSpaceStart: 'center',
+      length: lay.length.full,
+      width: lay.width,
+      color: this.layout.colors.line,
+    });
+    line.setMovable(true, 'centerTranslateEndRotation', 0.33, lay.boundary);
     line.setTransformCallback = (t: Transform) => {
-      line.updateTransform(t);
+      line.updateMoveTransform(t);
       this.normalizeAngle(line);
     };
     return line;

@@ -41,6 +41,7 @@ export default function commonLessonLayout() {
     },
     width: 0.02,
     boundary: new Rect(-1.5, -1.7, 3, 3),
+    interactive: new Point(-len / 3, 0),
   };
   layout.threeLines = {
     position: layout.position,
@@ -57,6 +58,7 @@ export default function commonLessonLayout() {
     },
     width: 0.02,
     boundary: new Rect(-1.5, -1.7, 3, 3),
+    interactive: new Point(0, 0),
   };
 
   layout.line1 = {

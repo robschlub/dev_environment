@@ -43,7 +43,7 @@ export default function lessonLayout() {
   };
 
   layout.circEquation = {
-    leftBottom: new Point(-1.6, -1.1),
+    leftBottom: new Point(-1.6, -1.4),
     twoPiOffset: new Point(0.08, 0),
     summary: new Point(-1.55, -1.75),
     summaryScale: 0.8,
