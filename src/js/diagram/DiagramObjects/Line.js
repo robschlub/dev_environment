@@ -254,14 +254,14 @@ export class DiagramObjectLine extends DiagramElementCollection {
   // line methods
   setLength: (number) => void;
   setEndPoints: (Point, Point, ?number) => void;
-  animateLengthTo: (number, number, boolean, ?() => void) => void;
-  grow: (number, number, boolean, ?() => void) => void;
-  setMovable: (?boolean, ?('translation' | 'rotation' | 'centerTranslateEndRotation'), ?number, ?Rect) => void;
-  addArrow1: (number, number) => void;
-  addArrow2: (number, number) => void;
-  addArrowStart: (number, number) => void;
-  addArrowEnd: (number, number) => void;
-  addArrow: (number, number, number) => void;
+  animateLengthTo: (?number, ?number, ?boolean, ?() => void) => void;
+  grow: (?number, ?number, ?boolean, ?() => void) => void;
+  setMovable: (?boolean, ?('translation' | 'rotation' | 'centerTranslateEndRotation' | 'scaleX' | 'scaleY' | 'scale'), ?number, ?Rect) => void;
+  addArrow1: (?number, ?number) => void;
+  addArrow2: (?number, ?number) => void;
+  addArrowStart: (?number, ?number) => void;
+  addArrowEnd: (?number, ?number) => void;
+  addArrow: (number, ?number, ?number) => void;
   pulseWidth: () => void;
   updateLabel: (?number) => {};
   addLabel: (string | Equation | Array<string>, number, ?TypeLineLabelLocation,

@@ -29,7 +29,7 @@ export type TypeLabelOptions = {
 
 export default class EquationLabel {
   eqn: Equation;
-  updateRotation: (number, Point, number, number) => void;
+  updateRotation: (number, Point, ?number, ?number) => void;
   setText: (string) => {};
   getText: void => string;
 

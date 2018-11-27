@@ -19,7 +19,7 @@ class HTMLObject extends DrawingObject {
   show: boolean;
 
   copy: () => HTMLObject;
-  +change: (string | HTMLObject, Array<number>) => void;
+  +change: (string | HTMLElement, Array<number>) => void;
 
   constructor(
     parentDiv: HTMLElement,
