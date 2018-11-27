@@ -29,6 +29,7 @@ ADD jest.config.js .
 # Packaging
 ADD containers/dev/webpack.config.js .
 ADD containers/dev/getLessons.js .
+ADD containers/dev/setFilesForBuild.js .
 ADD containers/dev/update_paths.py .
 ADD .babelrc .
 
