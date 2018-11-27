@@ -450,14 +450,14 @@ class Line {
     return this.p1;
   }
 
-  getX(x: number) {
+  getYFromX(x: number) {
     if (this.B !== 0) {
       return (this.C - this.A * x) / this.B;
     }
     return null;
   }
 
-  getY(y: number) {
+  getXFromY(y: number) {
     if (this.A !== 0) {
       return (this.C - this.B * y) / this.A;
     }
