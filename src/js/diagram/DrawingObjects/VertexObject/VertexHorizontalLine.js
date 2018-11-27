@@ -16,35 +16,31 @@ class VertexHorizontalLine extends VertexObject {
     rotation: number = 0,
   ): void {
     super(webgl);
-    this.glPrimative = this.gl.TRIANGLE_STRIP;
-
     const cx = 0;
     const cy = 0 - width / 2.0;
-    this.points = [
-      cx, cy,
-      cx, cy + width,
-      cx + length, cy,
-      cx + length, cy + width,
-    ];
-    // rotate points
-    const t = new Transform().rotate(rotation).translate(start.x, start.y);
-    for (let i = 0; i < this.points.length; i += 2) {
-      const p = (new Point(this.points[i], this.points[i + 1]))
-        .transformBy(t.matrix());
-      this.points[i] = p.x;
-      this.points[i + 1] = p.y;
-    }
+    const points = [];
+    this.glPrimative = this.gl.TRIANGLE_STRIP;
+    points.push(new Point(cx, cy));
+    points.push(new Point(cx, cy + width));
+    points.push(new Point(cx + length, cy));
+    points.push(new Point(cx + length, cy + width));
 
-    const p = this.points;
+    // transform points
+    const t = new Transform().rotate(rotation).translate(start.x, start.y);
+    const transformedPoints = points.map(p => p.transformBy(t.matrix()));
+
+    transformedPoints.forEach((p) => {
+      this.points.push(p.x);
+      this.points.push(p.y);
+    });
+
     this.border[0] = [
-      new Point(p[0], p[1]),
-      new Point(p[2], p[3]),
-      new Point(p[6], p[7]),
-      new Point(p[4], p[5]),
+      transformedPoints[0],
+      transformedPoints[1],
+      transformedPoints[transformedPoints.length - 1],
+      transformedPoints[transformedPoints.length - 2],
     ];
-    // for (let i = 0; i < this.points.length; i += 2) {
-    //   this.border[0].push(new Point(this.points[i], this.points[i + 1]));
-    // }
+
     this.border[0].push(this.border[0][0]._dup());
     this.setupBuffer();
   }

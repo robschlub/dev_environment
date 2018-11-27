@@ -2,18 +2,18 @@
 import {
   LessonContent,
 } from '../../../../../js/Lesson/LessonContent';
-import {
-  click,
-} from '../../../../../js/tools/htmlGenerator';
+// import {
+//   click,
+// } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
-import Definition from '../../../../LessonsCommon/tools/definition';
+// import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
 import imgLinkGrey from '../tile-grey.png';
 import details from '../details';
 
 const layout = lessonLayout();
-const { colors } = layout;
+// const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
@@ -27,7 +27,7 @@ class Content extends LessonContent {
   }
 
   addSections() {
-    const diag = this.diagram.elements;
+    // const diag = this.diagram.elements;
 
     this.addSection({
     });

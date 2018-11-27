@@ -7,9 +7,9 @@ import {
   DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
 
 export default class QuadCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -40,11 +40,14 @@ export default class QuadCollection extends CommonDiagramCollection {
 
   addLines() {
     const makeL = (p1, p2) => {
-      const l = makeLine(
-        this.diagram, 'end', 1, this.layout.lineWidth / 2,
-        this.layout.colors.lines,
-      );
-      l.setEndPoints(p1, p2);
+      const l = this.diagram.objects.line({
+        vertexSpaceStart: 'start',
+        p1,
+        p2,
+        width: this.layout.lineWidth / 2,
+        color: this.layout.colors.lines,
+      });
+      // l.setEndPoints(p1, p2);
       return l;
     };
     const lay = this.layout.quads;

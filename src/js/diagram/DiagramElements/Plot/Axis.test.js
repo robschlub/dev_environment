@@ -112,30 +112,30 @@ describe('Axis', () => {
       -0.0035355339059327372,
       0.003535533905932738,
     ];
-    expect(round(axis._line.vertices.points)).toEqual(round(points));
+    expect(round(axis._line.drawingObject.points)).toEqual(round(points));
   });
   test('Major Tick points', () => {
     // eslint-disable-next-line max-len
     const points = [-0.00566, -0.00566, 0.00566, 0.00566, -0.0297, 0.04101, -0.00566, -0.00566, -0.0297, 0.04101, -0.04101, 0.0297, 0.3479, 0.3479, 0.35921, 0.35921, 0.32385, 0.39457, 0.3479, 0.3479, 0.32385, 0.39457, 0.31254, 0.38325, 0.70145, 0.70145, 0.71276, 0.71276, 0.67741, 0.74812, 0.70145, 0.70145, 0.67741, 0.74812, 0.66609, 0.73681];
-    expect(round(axis._majorTicks.vertices.points)).toEqual(round(points));
+    expect(round(axis._majorTicks.drawingObject.points)).toEqual(round(points));
   });
 
   test('Minor Tick points', () => {
     // eslint-disable-next-line max-len
     const points = [-0.00283, -0.00283, 0.00283, 0.00283, -0.01131, 0.01697, -0.00283, -0.00283, -0.01131, 0.01697, -0.01697, 0.01131, 0.17395, 0.17395, 0.17961, 0.17961, 0.16546, 0.19375, 0.17395, 0.17395, 0.16546, 0.19375, 0.15981, 0.18809, 0.35072, 0.35072, 0.35638, 0.35638, 0.34224, 0.37052, 0.35072, 0.35072, 0.34224, 0.37052, 0.33658, 0.36487, 0.5275, 0.5275, 0.53316, 0.53316, 0.51902, 0.5473, 0.5275, 0.5275, 0.51902, 0.5473, 0.51336, 0.54164, 0.70428, 0.70428, 0.70994, 0.70994, 0.69579, 0.72408, 0.70428, 0.70428, 0.69579, 0.72408, 0.69014, 0.71842];
-    expect(round(axis._minorTicks.vertices.points)).toEqual(round(points));
+    expect(round(axis._minorTicks.drawingObject.points)).toEqual(round(points));
   });
   test('Major Grid points', () => {
     // eslint-disable-next-line max-len
     const points = [-0.00283, -0.00283, 0.00283, 0.00283, -0.70428, 0.70994, -0.00283, -0.00283, -0.70428, 0.70994, -0.70994, 0.70428, 0.35072, 0.35072, 0.35638, 0.35638, -0.35072, 1.06349, 0.35072, 0.35072, -0.35072, 1.06349, -0.35638, 1.05783, 0.70428, 0.70428, 0.70994, 0.70994, 0.00283, 1.41704, 0.70428, 0.70428, 0.00283, 1.41704, -0.00283, 1.41139];
 
-    expect(round(axis._majorGrid.vertices.points)).toEqual(round(points));
+    expect(round(axis._majorGrid.drawingObject.points)).toEqual(round(points));
   });
 
   test('Minor Grid points', () => {
     // eslint-disable-next-line max-len
     const points = [-0.00283, -0.00283, 0.00283, 0.00283, -0.70428, 0.70994, -0.00283, -0.00283, -0.70428, 0.70994, -0.70994, 0.70428, 0.17395, 0.17395, 0.17961, 0.17961, -0.5275, 0.88671, 0.17395, 0.17395, -0.5275, 0.88671, -0.53316, 0.88106, 0.35072, 0.35072, 0.35638, 0.35638, -0.35072, 1.06349, 0.35072, 0.35072, -0.35072, 1.06349, -0.35638, 1.05783, 0.5275, 0.5275, 0.53316, 0.53316, -0.17395, 1.24027, 0.5275, 0.5275, -0.17395, 1.24027, -0.17961, 1.23461, 0.70428, 0.70428, 0.70994, 0.70994, 0.00283, 1.41704, 0.70428, 0.70428, 0.00283, 1.41704, -0.00283, 1.41139];
 
-    expect(round(axis._minorGrid.vertices.points)).toEqual(round(points));
+    expect(round(axis._minorGrid.drawingObject.points)).toEqual(round(points));
   });
 });

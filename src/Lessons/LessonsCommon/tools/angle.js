@@ -48,12 +48,12 @@ export function makeAngle(
   sides: number,
   color: Array<number>,
 ) {
-  const curve = diagram.shapes.polygon(
-    sides, radius, lineWidth,
-    0, 1, sides, color,
-    new Transform(),
-  );
-  // curve.angleToDraw = 0;
+  const curve = diagram.shapes.polygon({
+    sides,
+    radius,
+    width: lineWidth,
+    color,
+  });
   const right = diagram.shapes.collection();
   const rightLength = radius / Math.sqrt(2);
   right.add('line1', diagram.shapes.horizontalLine(
@@ -140,7 +140,7 @@ export function makeAngle(
     angle.currentAngle = size;
     if (angle.showRealAngle) {
       const angleText = roundNum(size * 180 / Math.PI, angle.realAngleDecimals).toString();
-      angle._label._base.vertices.setText(`${angleText}º`);
+      angle._label._base.drawingObject.setText(`${angleText}º`);
       angle.label.eqn.reArrangeCurrentForm();
     }
     if (angle.autoRightAngle

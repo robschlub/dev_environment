@@ -253,7 +253,7 @@ export class SinCosCircle extends AngleCircle {
 
     // eslint-disable-next-line
     symmetry.setSineText = (newText: string) => {
-      // sine._label._sine.vertices.element.innerHTML = newText;
+      // sine._label._sine.drawingObject.element.innerHTML = newText;
     };
     return symmetry;
   }
@@ -266,15 +266,29 @@ export class SinCosCircle extends AngleCircle {
     direction: -1 | 1 = 1,
     textOffset: number = 0.15,
   ) {
+    let clockwise = false;
+    if (direction === -1) {
+      clockwise = true;
+    }
     const angle = this.shapes.collection(new Transform().translate(0, 0));
-    const arc = this.shapes.polygon(
-      this.layout.anglePoints,
-      radius, this.layout.quadAngles.lineWidth,
-      startAngle, direction, this.layout.anglePoints,
-      this.layout.colors.quadAngles, new Transform()
+    const arc = this.shapes.polygon({
+      sides: this.layout.anglePoints,
+      radius,
+      width: this.layout.quadAngles.lineWidth,
+      rotation: startAngle,
+      clockwise,
+      color: this.layout.colors.quadAngles,
+      transform: new Transform()
         .rotate(0)
         .translate(0, 0),
-    );
+    });
+    //   this.layout.anglePoints,
+    //   radius, this.layout.quadAngles.lineWidth,
+    //   startAngle, direction, this.layout.anglePoints,
+    //   this.layout.colors.quadAngles, new Transform()
+    //     .rotate(0)
+    //     .translate(0, 0),
+    // );
 
     const text = this.shapes.htmlText(
       label, `id_diagram_quadAngles_${name}`, 'diagram__quad_angles',
@@ -316,7 +330,7 @@ export class SinCosCircle extends AngleCircle {
       }
     };
     angle.setAngleText = (newText: string) => {
-      angle._text.vertices.element.innerHTML = newText;
+      angle._text.drawingObject.element.innerHTML = newText;
     };
     return angle;
   }
@@ -338,25 +352,26 @@ export class SinCosCircle extends AngleCircle {
     ));
 
     sineText.setText = (newText: string) => {
-      sineText._text.vertices.element.innerHTML = newText;
+      sineText._text.drawingObject.element.innerHTML = newText;
     };
     sineText.updateRotation = (r: number) => {
       const value = Math.sin(r);
-      sineText._value.vertices.element.innerHTML = value.toFixed(2);
+      sineText._value.drawingObject.element.innerHTML = value.toFixed(2);
     };
     return sineText;
   }
 
   makeMainAngle() {
     const angle = this.shapes.collection(new Transform().translate(0, 0));
-    const arc = this.shapes.polygon(
-      this.layout.anglePoints,
-      this.layout.mainAngle.radius, this.layout.mainAngle.lineWidth,
-      0, 1, this.layout.anglePoints,
-      this.layout.colors.angle, new Transform()
+    const arc = this.shapes.polygon({
+      sides: this.layout.anglePoints,
+      radius: this.layout.mainAngle.radius,
+      width: this.layout.mainAngle.lineWidth,
+      color: this.layout.colors.angle,
+      transform: new Transform()
         .rotate(0)
         .translate(0, 0),
-    );
+    });
 
     const text = this.shapes.htmlText(
       'θ', 'id_diagram_main_angle_theta', '',
@@ -387,7 +402,7 @@ export class SinCosCircle extends AngleCircle {
     };
 
     angle.setText = (newText: string) => {
-      angle._text.vertices.element.innerHTML = newText;
+      angle._text.drawingObject.element.innerHTML = newText;
     };
     return angle;
   }
@@ -410,12 +425,6 @@ export class SinCosCircle extends AngleCircle {
   }
 
   makeQuad(num: number = 0) {
-    // return this.shapes.polygonFilled(
-    //   this.layout.anglePoints, this.layout.radius, 0,
-    //   this.layout.anglePoints / 4, this.colors.angleArea, new Transform()
-    //     .translate(0, 0)
-    //     .rotate((num - 1) * Math.PI / 2),
-    // );
     let xSign = 1;
     let ySign = 1;
     if (num === 1 || num === 2) {
@@ -426,15 +435,18 @@ export class SinCosCircle extends AngleCircle {
     }
     const color = this.colors.quadrant.slice();
     color[3] = 0.6;
-    return this.shapes.polygonFilled(
-      4, this.layout.radius / 2 * Math.sqrt(2), 0,
-      4, color, new Transform()
+    return this.shapes.polygon({
+      fill: true,
+      sides: 4,
+      radius: this.layout.radius / 2 * Math.sqrt(2),
+      color,
+      transform: new Transform()
         .rotate(Math.PI / 4)
         .translate(
           xSign * this.layout.radius / 2,
           ySign * this.layout.radius / 2,
         ),
-    );
+    });
   }
 
   makeAxesAndGrid() {
@@ -507,7 +519,7 @@ export class SinCosCircle extends AngleCircle {
   //     }
   //   };
   //   sine.setText = (newText: string) => {
-  //     sine._text.vertices.element.innerHTML = newText;
+  //     sine._text.drawingObject.element.innerHTML = newText;
   //   };
   //   return sine;
   // }
@@ -545,7 +557,7 @@ export class SinCosCircle extends AngleCircle {
   //     }
   //   };
   //   cosine.setText = (newText: string) => {
-  //     cosine._text.vertices.element.innerHTML = newText;
+  //     cosine._text.drawingObject.element.innerHTML = newText;
   //   };
   //   return cosine;
   // }
@@ -599,7 +611,7 @@ export class SinCosCircle extends AngleCircle {
       }
     };
     sineCosine.setText = (newText: string) => {
-      sineCosine._label._text.vertices.text[0].text = newText;
+      sineCosine._label._text.drawingObject.text[0].text = newText;
       sineCosine._label.layout();
     };
     return sineCosine;

@@ -9,7 +9,6 @@ export default function getLessonIndex() {
     'adjacent_angles',
     [
       '1',
-      'dev',
       'summary',
     ],
     [
@@ -26,6 +25,48 @@ export default function getLessonIndex() {
     ],
     [
       'circles',
+    ],
+    true,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Area and Rectangles',
+    '/Lessons/Math/Geometry_1/Area',
+    'area_introduction',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'quadrangles',
+    ],
+    true,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Area of a Circle',
+    '/Lessons/Math/Geometry_1/AreaCircle',
+    'area_circle',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'area_triangle',
+    ],
+    true,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Area of a Triangle',
+    '/Lessons/Math/Geometry_1/AreaTriangle',
+    'area_triangle',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'area_introduction',
     ],
     true,
   ));
@@ -47,7 +88,6 @@ export default function getLessonIndex() {
     'congruent_triangles',
     [
       '1',
-      'dev',
       'quiz',
       'summary',
     ],
@@ -111,7 +151,6 @@ export default function getLessonIndex() {
     'quadrangles',
     [
       '1',
-      'dev',
       'quiz',
       'summary',
     ],
@@ -126,7 +165,6 @@ export default function getLessonIndex() {
     'related_angles',
     [
       '1',
-      'dev',
       'quiz',
       'summary',
     ],
@@ -134,18 +172,6 @@ export default function getLessonIndex() {
       'parallel_lines',
     ],
     true,
-  ));
-  lessonIndex.push(new LessonDescription(
-    'Area',
-    '/Lessons/Math/Geometry_1/ToDo/Area',
-    'area_introduction',
-    [
-      '1',
-    ],
-    [
-      'quadrangles',
-    ],
-    false,
   ));
   lessonIndex.push(new LessonDescription(
     'Calculating Pi',
@@ -192,7 +218,7 @@ export default function getLessonIndex() {
     ],
     [
       'important_triangles',
-      'area_introduction',
+      'area_triangle',
     ],
     false,
   ));
@@ -214,7 +240,6 @@ export default function getLessonIndex() {
     'triangle_introduction',
     [
       '1',
-      'dev',
       'quiz',
       'summary',
     ],

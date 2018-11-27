@@ -59,6 +59,11 @@ then
   MODE=stage
 fi
 
+# From https://github.com/travis-ci/travis-ci/issues/4704 to fix an issue 
+# where Travis errors out if too much information goes on stdout and some
+# npm package is blocking stdout.
+python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
+
 # Run a container while binding the appropriate volumes
 docker_run() {
   echo "${bold}${cyan}" $1 "Starting${reset}"

@@ -25,15 +25,14 @@ export default function baseLayout() {
       y: 1.7,
     },
 
-    // selectorFont: new DiagramFont(
-    //   'helvetica, sans-serif',
-    //   'normal',
-    //   0.12,
-    //   '600',
-    //   'center',
-    //   'middle',
-    //   colors.diagram.text.base,
-    // ),
+    quiz: {
+      check: new Point(0, -1.7),
+      position: new Point(0, 0),
+      answer: new Point(0, -1.7),
+      nextSteps: new Point(0, -1.9),
+      newProblem: new Point(0, -1.7),
+      showAnotherAnswer: new Point(-1, -1.7),
+    },
 
     defaultFont: new DiagramFont(
       'helvetica, sans-serif',

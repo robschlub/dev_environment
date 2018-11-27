@@ -1,7 +1,7 @@
 // @flow
-import {
-  Point,
-} from '../../../../../js/diagram/tools/g2';
+// import {
+//   Point,
+// } from '../../../../../js/diagram/tools/g2';
 import Diagram from '../../../../../js/diagram/Diagram';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -37,7 +37,6 @@ export type TypeABEquation = {
 
 export function makeABEquation(diagram: Diagram, layout: Object) {
   const eqn = diagram.equation.makeEqn();
-  const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
   const strikeColor = layout.colors.diagram.disabledDark;
 
   const colAngle = layout.colors.angles;
@@ -69,8 +68,8 @@ export function makeABEquation(diagram: Diagram, layout: Object) {
       calc90: '90º',
     },
     layout.colors.diagram.text.base,
-    eqnDescription,
-    new Point(0.9, -0.052).add(layout.rectEqnPosition),
+    // eqnDescription,
+    // new Point(0.9, -0.052).add(layout.rectEqnPosition),
   );
   eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
@@ -189,15 +188,15 @@ export function makeABEquation(diagram: Diagram, layout: Object) {
     'mr', 'ar',
   ]);
 
-  const nextForm = () => {
-    eqn.nextForm(2);
-    diagram.animateNextFrame();
-  };
+  // const nextForm = () => {
+  //   eqn.nextForm(2);
+  //   diagram.animateNextFrame();
+  // };
 
-  eqn.collection.onClick = nextForm.bind(this);
-  eqn.collection.isTouchable = true;
-  eqn.collection.touchInBoundingRect = true;
-  eqn.collection.setPosition(layout.rectEqnPosition);
+  // eqn.collection.onClick = nextForm.bind(this);
+  // eqn.collection.isTouchable = true;
+  // eqn.collection.touchInBoundingRect = true;
+  // eqn.collection.setPosition(layout.rectEqnPosition);
   eqn.setCurrentForm('0');
   return eqn;
 }
@@ -223,7 +222,6 @@ export type TypeADEquation = {
 
 export function makeADEquation(diagram: Diagram, layout: Object) {
   const eqn = diagram.equation.makeEqn();
-  const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
   const strikeColor = layout.colors.diagram.disabledDark;
 
   const colAngle = layout.colors.angles;
@@ -245,8 +243,8 @@ export function makeADEquation(diagram: Diagram, layout: Object) {
       strike2: diagram.equation.xStrike(strikeColor),
     },
     layout.colors.diagram.text.base,
-    eqnDescription,
-    new Point(0.9, -0.052).add(layout.rectEqnPosition),
+    // eqnDescription,
+    // new Point(0.9, -0.052).add(layout.rectEqnPosition),
   );
   eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
@@ -301,15 +299,15 @@ export function makeADEquation(diagram: Diagram, layout: Object) {
     '_90', 'mr', 'ar',
   ]);
 
-  const nextForm = () => {
-    eqn.nextForm(2);
-    diagram.animateNextFrame();
-  };
+  // const nextForm = () => {
+  //   eqn.nextForm(2);
+  //   diagram.animateNextFrame();
+  // };
 
-  eqn.collection.onClick = nextForm.bind(this);
-  eqn.collection.isTouchable = true;
-  eqn.collection.touchInBoundingRect = true;
-  eqn.collection.setPosition(layout.rectEqnPosition);
+  // eqn.collection.onClick = nextForm.bind(this);
+  // eqn.collection.isTouchable = true;
+  // eqn.collection.touchInBoundingRect = true;
+  // eqn.collection.setPosition(layout.rectEqnPosition);
   eqn.setCurrentForm('0');
   return eqn;
 }
@@ -340,7 +338,6 @@ export type TypeBCEquation = {
 
 export function makeBCEquation(diagram: Diagram, layout: Object) {
   const eqn = diagram.equation.makeEqn();
-  const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
   const strikeColor = layout.colors.diagram.disabledDark;
 
   const colAngle = layout.colors.angles;
@@ -370,8 +367,8 @@ export function makeBCEquation(diagram: Diagram, layout: Object) {
       strike2: diagram.equation.xStrike(strikeColor),
     },
     layout.colors.diagram.text.base,
-    eqnDescription,
-    new Point(0.9, -0.052).add(layout.rectEqnPosition),
+    // eqnDescription,
+    // new Point(0.9, -0.052).add(layout.rectEqnPosition),
   );
   eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
@@ -526,15 +523,15 @@ export function makeBCEquation(diagram: Diagram, layout: Object) {
     'ra',
   ]);
 
-  const nextForm = () => {
-    eqn.nextForm(2);
-    diagram.animateNextFrame();
-  };
+  // const nextForm = () => {
+  //   eqn.nextForm(2);
+  //   diagram.animateNextFrame();
+  // };
 
-  eqn.collection.onClick = nextForm.bind(this);
-  eqn.collection.isTouchable = true;
-  eqn.collection.touchInBoundingRect = true;
-  eqn.collection.setPosition(layout.rectEqnPosition);
+  // eqn.collection.onClick = nextForm.bind(this);
+  // eqn.collection.isTouchable = true;
+  // eqn.collection.touchInBoundingRect = true;
+  // eqn.collection.setPosition(layout.rectEqnPosition);
   eqn.setCurrentForm('0');
   return eqn;
 }

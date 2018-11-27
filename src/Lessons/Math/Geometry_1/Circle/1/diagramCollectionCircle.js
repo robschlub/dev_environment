@@ -36,42 +36,61 @@ function makeLine(
 }
 
 function makeWheel(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.circlePoints, layout.wheel.radius, 0,
-    layout.circlePoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0.3333, 0, 0.2222, 0.2222),
-  );
+  return shapes.polygon({
+    sides: layout.circlePoints,
+    radius: layout.wheel.radius,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0.3333, 0, 0.2222, 0.2222),
+    fill: true,
+  });
 }
 
 function makeBall(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.circlePoints, layout.ball.radius, 0,
-    layout.circlePoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0.5555, 0, 0.1667, 0.1667),
-  );
+  return shapes.polygon({
+    sides: layout.circlePoints,
+    radius: layout.ball.radius,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0.5555, 0, 0.1667, 0.1667),
+    fill: true,
+  });
 }
 
 function makeMoon(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.circlePoints, layout.moon.radius, 0,
-    layout.circlePoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0, 0, 0.3333, 0.3333),
-  );
+  return shapes.polygon({
+    sides: layout.circlePoints,
+    radius: layout.moon.radius,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0, 0, 0.3333, 0.3333),
+    fill: true,
+  });
 }
 
 function makeRing(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.circlePoints, layout.ring.radius, 0,
-    layout.circlePoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0.7222, 0.1481, 0.1481, 0.1481),
-  );
+  return shapes.polygon({
+    sides: layout.circlePoints,
+    radius: layout.ring.radius,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0.7222, 0.1481, 0.1481, 0.1481),
+    fill: true,
+  });
 }
 
 function makeCircleShape(shapes: Object, radius) {
-  return shapes.polygon(
-    layout.circlePoints, radius, layout.linewidth, 0, 1,
-    layout.circlePoints, colors.circle, new Transform().scale(1, 1).translate(0, 0),
-  );
+  return shapes.polygon({
+    sides: layout.circlePoints,
+    radius,
+    width: layout.linewidth,
+    color: colors.circle,
+    transform: new Transform().scale(1, 1).translate(0, 0),
+  });
 }
 
 
@@ -84,8 +103,8 @@ function makeRadius(shapes: Object) {
   radius.isMovable = true;
   radius.pulse.transformMethod = s => new Transform().scale(1, s);
 
-  for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
-    radius.vertices.border[0][i].y *= 20;
+  for (let i = 0; i < radius.drawingObject.border[0].length; i += 1) {
+    radius.drawingObject.border[0][i].y *= 20;
   }
   return radius;
 }
@@ -109,31 +128,40 @@ function makeDiameter(shapes: Object) {
   diameter.isTouchable = true;
   diameter.isMovable = true;
   diameter.touchInBoundingRect = true;
-  for (let i = 0; i < diameter._radius2.vertices.border[0].length; i += 1) {
-    diameter._radius1.vertices.border[0][i].y *= 10;
-    diameter._radius2.vertices.border[0][i].y *= 10;
+  for (let i = 0; i < diameter._radius2.drawingObject.border[0].length; i += 1) {
+    diameter._radius1.drawingObject.border[0][i].y *= 10;
+    diameter._radius2.drawingObject.border[0][i].y *= 10;
   }
   return diameter;
 }
 function makeArc(shapes: Object) {
-  return shapes.polygon(
-    layout.circlePoints, layout.circle.radius, layout.linewidth, 0, 1,
-    layout.circlePoints, colors.circle, new Point(0, 0),
-  );
+  return shapes.polygon({
+    sides: layout.circlePoints,
+    radius: layout.circle.radius,
+    width: layout.linewidth,
+    color: colors.circle,
+    point: new Point(0, 0),
+  });
 }
 
 function makeCircumference(shapes: Object, radius: number) {
-  return shapes.polygon(
-    layout.circlePoints, radius, layout.linewidth, 0, 1,
-    layout.circlePoints, colors.circle, new Point(0, 0),
-  );
+  return shapes.polygon({
+    sides: layout.circlePoints,
+    radius,
+    width: layout.linewidth,
+    color: colors.circle,
+    point: new Point(0, 0),
+  });
 }
 
 function makeAnchor(shapes: Object, radius: number = layout.linewidth * 2) {
-  return shapes.polygonFilled(
-    layout.anchorPoints, radius, 0,
-    layout.anchorPoints, colors.anchor, new Point(0, 0),
-  );
+  return shapes.polygon({
+    sides: layout.anchorPoints,
+    radius,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    fill: true,
+  });
 }
 
 type circleCollectionType = {
@@ -222,18 +250,27 @@ function makeStraightCircumference(shapes: Object) {
     shapes, new Point(0, -layout.linewidth / 2), layout.circle.radius * Math.PI, layout.linewidth,
     color, new Transform().scale(1, 1).rotate(Math.PI).translate(0, -layout.circle.radius),
   );
-  const leftArc = shapes.polygon(
-    layout.circlePoints, layout.circle.radius, layout.linewidth, 0, -1,
-    layout.circlePoints / 2, color, new Transform()
+  const leftArc = shapes.polygon({
+    sides: layout.circlePoints,
+    radius: layout.circle.radius,
+    width: layout.linewidth,
+    clockwise: true,
+    sidesToDraw: layout.circlePoints / 2,
+    color,
+    transform: new Transform()
       .scale(1, 1).rotate(-Math.PI / 2)
       .translate(0, 0),
-  );
-  const rightArc = shapes.polygon(
-    layout.circlePoints, layout.circle.radius, layout.linewidth, 0, 1,
-    layout.circlePoints / 2, color, new Transform()
+  });
+  const rightArc = shapes.polygon({
+    sides: layout.circlePoints,
+    radius: layout.circle.radius,
+    width: layout.linewidth,
+    sidesToDraw: layout.circlePoints / 2,
+    color,
+    transform: new Transform()
       .scale(1, 1).rotate(-Math.PI / 2)
       .translate(0, 0),
-  );
+  });
 
   const dullCircle = makeCircumference(shapes, layout.circle.radius);
   dullCircle.color = colors.grid;
@@ -551,13 +588,13 @@ class CircleCollection extends DiagramElementCollection {
       const diameterText = (newRadius * 2).toFixed(2);
       const circumferenceText = tools.roundNum(newRadius * 2 * Math.PI, 2).toFixed(2);
       // $FlowFixMe
-      this._grid._radiusText._value.vertices.element.innerHTML =
+      this._grid._radiusText._value.drawingObject.element.innerHTML =
         `${radiusText}`;
       // $FlowFixMe
-      this._grid._diameterText._value.vertices.element.innerHTML =
+      this._grid._diameterText._value.drawingObject.element.innerHTML =
         `${diameterText}`;
       // $FlowFixMe
-      this._grid._circumferenceText._value.vertices.element.innerHTML =
+      this._grid._circumferenceText._value.drawingObject.element.innerHTML =
         `${circumferenceText}`;
 
       this.varState.scaledRadius = scale * layout.circle.radius;
@@ -577,10 +614,10 @@ class CircleCollection extends DiagramElementCollection {
     const s = this._circle.transform.s();
     if (t) {
       // $FlowFixMe
-      this._grid._locationText._x.vertices.element.innerHTML =
+      this._grid._locationText._x.drawingObject.element.innerHTML =
         `${tools.roundNum((t.x - layout.grid.position.x) / layout.grid.width * layout.grid.range.width, 1).toFixed(1)}`;
       // $FlowFixMe
-      this._grid._locationText._y.vertices.element.innerHTML =
+      this._grid._locationText._y.drawingObject.element.innerHTML =
         `${tools.roundNum((t.y - layout.grid.position.y) / layout.grid.height * layout.grid.range.height, 1).toFixed(1)}`;
 
       this._straightCircumference.transform.updateTranslation(
@@ -599,12 +636,15 @@ class CircleCollection extends DiagramElementCollection {
     if (s) {
       currentPercent = s.x;
     }
-
     if (!this.varState.straightening || this.varState.percentStraight === 0) {
-      this.animateCustomTo(this.straighten.bind(this), 2, currentPercent);
+      this.animateCustomToWithDelay(
+        0, this.straighten.bind(this), 5, currentPercent, null, false,
+      );
       this.varState.straightening = true;
     } else {
-      this.animateCustomTo(this.bend.bind(this), 2, 1 - currentPercent);
+      this.animateCustomToWithDelay(
+        0, this.bend.bind(this), 5, 1 - currentPercent, null, false,
+      );
       this.varState.straightening = false;
     }
     this.diagram.animateNextFrame();
