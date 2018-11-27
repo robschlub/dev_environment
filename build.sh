@@ -59,6 +59,8 @@ then
   MODE=stage
 fi
 
+python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
+
 # Run a container while binding the appropriate volumes
 docker_run() {
   echo "${bold}${cyan}" $1 "Starting${reset}"
