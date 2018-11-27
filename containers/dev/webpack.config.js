@@ -147,6 +147,9 @@ module.exports = (env) => {
       path: buildPath,
       filename: '[name].js',
     },
+    externals: {
+            'react': 'React',
+          },
     module: {
       rules: [
         {
@@ -242,11 +245,12 @@ module.exports = (env) => {
           //   minSize: 10,
           //   priority: -20,
           // },
-          vendors: {
-            test: /[\\/]node_modules[\\/]/,
-            priority: -10,
-            name: 'vendors',
-          },
+          
+          // vendors: {
+          //   test: /[\\/]node_modules[\\/]/,
+          //   priority: -10,
+          //   name: 'vendors',
+          // },
         },
       },
     },
