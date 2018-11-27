@@ -11,14 +11,18 @@ $np_button-hspace: 4;
 // Page / Goto button
 $goto_button-width: 9;
 $goto_button-height: 4;
-$goto_button-font-size: 1.4;
+$goto_button-font-size: 1;
 
 // Content area aspect ratio
 $diagram_ratio: 1.5;
 
+$title_bar_space_high: 120px;
+$title_bar_space_low: 90px;
+
 // Default variable values
 @media (min-aspect-ratio: 1/100) {
   :root {
+    --lesson__title_space: #{$title_bar_space_high};
     --lesson__container-width: 90vw;
     --lesson__container-height: calc(var(--lesson__container-width) / #{$diagram_ratio});
     --lesson__title-height: calc(#{$title-height} * 1vw);
@@ -28,8 +32,8 @@ $diagram_ratio: 1.5;
     --lesson__np_button-hspace: calc(#{$np_button-hspace} * 1vw);
     --lesson__text-margin: 1em;
     --lesson__text-p-spacing: calc(#{$text-p-top-margin} * 1vw);
-    --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw * 1.5);
-    --lesson__goto_button-height: calc(#{$goto_button-height} * 1vw * 1.5);
+    --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw * 1);
+    --lesson__goto_button-height: calc(#{$goto_button-height} * 1vw * 1);
     --lesson__goto_button-font-size: calc(#{$goto_button-font-size} * 1vw);
   }
 }
@@ -195,35 +199,35 @@ $diagram_ratio: 1.5;
 }
 
 .lesson__button-next-enabled {
-  border-left: var(--lesson__np_button-width) solid color('navbar', 'button');
+  border-left: var(--lesson__np_button-width) solid color('lesson', 'button');
 }
 
 .lesson__button-next-enabled:hover {
-  border-left: var(--lesson__np_button-width) solid lighten(color('navbar', 'button'), 20);
+  border-left: var(--lesson__np_button-width) solid lighten(color('lesson', 'button'), 20);
 }
 
 .lesson__button-next-disabled {
-  border-left: var(--lesson__np_button-width) solid darken(color('navbar', 'button'), 40);
+  border-left: var(--lesson__np_button-width) solid darken(color('lesson', 'button'), 40);
 }
 
 .lesson__button-next-disabled:hover {
-  border-left: var(--lesson__np_button-width) solid darken(color('navbar', 'button'), 40);
+  border-left: var(--lesson__np_button-width) solid darken(color('lesson', 'button'), 40);
 }
 
 .lesson__button-prev-enabled {
-  border-right: var(--lesson__np_button-width) solid color('navbar', 'button');
+  border-right: var(--lesson__np_button-width) solid color('lesson', 'button');
 }
 
 .lesson__button-prev-enabled:hover {
-  border-right: var(--lesson__np_button-width) solid lighten(color('navbar', 'button'), 20);
+  border-right: var(--lesson__np_button-width) solid lighten(color('lesson', 'button'), 20);
 }
 
 .lesson__button-prev-disabled {
-  border-right: var(--lesson__np_button-width) solid darken(color('navbar', 'button'), 40);
+  border-right: var(--lesson__np_button-width) solid darken(color('lesson', 'button'), 40);
 }
 
 .lesson__button-prev-disabled:hover {
-  border-right: var(--lesson__np_button-width) solid darken(color('navbar', 'button'), 40);
+  border-right: var(--lesson__np_button-width) solid darken(color('lesson', 'button'), 40);
 }
 
 .lesson__button-goto_container {
@@ -233,20 +237,30 @@ $diagram_ratio: 1.5;
   top: calc(100% - (100% - var(--lesson__content-height)) / 2 - var(--lesson__goto_button-height) / 2);
   height: var(--lesson__goto_button-height);
   width: var(--lesson__goto_button-width);
-}
-
-.lesson__button-goto {
-  position: absolute;
-  border: 0;
-  background-color: color('diagram', 'background');
   font-size: var(--lesson__goto_button-font-size);
   color: color('lesson', 'text');
-  width: var(--lesson__goto_button-width);
+  background-color: color('diagram', 'background');
+  border-radius: 0.3em;
+  font-weight: 200;
 }
 
-#lesson__button-goto:hover {
+.lesson__button-goto_container:hover {
   background-color: color('diagram', 'background', 'darker');
 }
+
+// .lesson__button-goto {
+//   position: absolute;
+//   border: 0;
+//   background-color: color('diagram', 'background');
+//   font-size: var(--lesson__goto_button-font-size);
+//   color: color('lesson', 'text');
+//   width: var(--lesson__goto_button-width);
+//   border-radius: 0.3em;
+// }
+
+// #lesson__button-goto:hover {
+//   background-color: color('diagram', 'background', 'darker');
+// }
 
 // #lesson__page_number {
 //   position: absolute;
@@ -300,7 +314,7 @@ $diagram_ratio: 1.5;
 
   .lesson__button-goto_container {
     left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
-    top: calc(85% + var(--lesson__goto_button-font-size) * 2);
+    top: calc(93% - var(--lesson__goto_button-height) / 2);
   }
 }
 
@@ -421,13 +435,13 @@ $diagram_ratio: 1.5;
   width: 100%;
 }
 
-.lesson__title {
-  height: 145px;
-  text-align: center;
-  // font-weight: bold;
-  width: 100%;
-  background-color: color('lesson', 'title-background');
-}
+// .lesson__title {
+//   height: var(--lesson__title_space);
+//   text-align: center;
+//   // font-weight: bold;
+//   width: 100%;
+//   background-color: color('lesson', 'title-background');
+// }
 
 @media screen and (min-width: $mobile) {
   :root {
@@ -446,11 +460,12 @@ $diagram_ratio: 1.5;
     --lesson__title_tile_font_size: 20px;
     --lesson__title_tile_border_radius: 22px;
     --lesson__title_tile_top: 20px;
+    --lesson__title_space: #{$title_bar_space_low};
   }
 
-  .lesson__title {
-    height: 90px;
-  }
+  // .lesson__title {
+  //   height: 90px;
+  // }
 }
 
 .lesson__title_tile {
@@ -523,7 +538,7 @@ $diagram_ratio: 1.5;
 
 .lesson__white_spacer {
   width: 100%;
-  height: 100px;
+  height: 40px;
   background-color: white;
   z-index: -2;
 }
@@ -556,3 +571,4 @@ $diagram_ratio: 1.5;
 @import './lesson/star';
 @import './lesson/interactiveItemButton';
 @import './lesson/pathTile';
+@import './lesson/equationNavigator';

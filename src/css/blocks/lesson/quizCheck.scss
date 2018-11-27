@@ -35,18 +35,19 @@
 }
 
 .lesson__quiz__button {
-  border-radius: 5px;
+  border-radius: calc(var(--lesson__diagram-font-size) * 0.2);
   background-color: color('diagram', 'primary');
   text-align: center;
   cursor: pointer;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 10px;
-  padding: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
+  // margin-left: auto;
+  // margin-right: auto;
+  // margin-bottom: 10px;
+  margin: 10px;
+  padding: calc(var(--lesson__diagram-font-size) * 0.2);
+  padding-left: calc(var(--lesson__diagram-font-size) * 0.5);
+  padding-right: calc(var(--lesson__diagram-font-size) * 0.5);
   color: color('white');
-  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
 }
 
 .lesson__quiz__button_fixed_size {
@@ -56,7 +57,7 @@
 @media screen and (min-width: $tablet) {
   .lesson__quiz__button {
     display: inline-block;
-    margin: 10px;
+    // margin: 10px;
   }
 
   .lesson__quiz__button_fixed_size {
@@ -65,26 +66,46 @@
 }
 
 .lesson__quiz__button:hover {
-  border-radius: 5px;
+  // border-radius: 5px;
   background-color: color('diagram', 'primary', 'light');
   color: color('white');
 }
 
 .lesson__quiz_input {
   border: 0;
-  border-radius: 5px;
-  color: white;
+  margin: 10px;
+  padding: calc(var(--lesson__diagram-font-size) * 0.2);
+  border-radius: calc(var(--lesson__diagram-font-size) * 0.2);
+  color: color('diagram', 'disabled', 'darker');
   text-align: center;
-  background-color: color('diagram', 'disabled', 'darker');
-  font-size: calc(var(--lesson__diagram-font-size) * 0.8);
+  background-color: color('white', 'base');
+  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
+  font-weight: 200;
+}
+
+.lesson__quiz_input::placeholder {
+  color: color('diagram', 'disabled', 'lighter');
+  opacity: 1; /* Firefox */
+}
+
+.lesson__quiz_input::-ms-input-placeholder { /* Microsoft Edge */
+  color: color('diagram', 'disabled', 'lighter');
+}
+
+.lesson__quiz_input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: color('diagram', 'disabled', 'lighter');
 }
 
 .lesson__quiz_input:hover {
-  background-color: color('diagram', 'disabled', 'dark');
+  background-color: color('white', 'base');
+}
+
+.lesson__quiz_input_disabled {
+  background-color: color('diagram', 'disabled', 'lighter');
 }
 
 .lesson__quiz_input_disabled:hover {
-  background-color: color('diagram', 'disabled', 'darker');
+  background-color: color('diagram', 'disabled', 'lighter');
 }
 
 // ******************************************************

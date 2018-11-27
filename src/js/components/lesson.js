@@ -1,14 +1,15 @@
 // @flow
 
 import * as React from 'react';
-import '../../css/style.scss';
+// import '../../css/style.scss';
 import Lesson from '../Lesson/Lesson';
 import Button from './button';
 import LessonNavigator from './lessonNavigator';
 import LessonTilePath from './lessonPathTile';
-import LessonTile from './lessonTile';
+import LessonTitle from './lessonTitle';
 import getLessonIndex from '../../Lessons/index';
 import LessonDescription from '../../Lessons/lessonDescription';
+import DropDownButton from './dropDownButton';
 
 type Props = {
   lesson: Lesson;
@@ -20,7 +21,11 @@ type State = {
   htmlText: string,
   numPages: number,
   page: number,
-  listOfSections: Array<React.Node>,
+  listOfSections: Array<{
+    label: string;
+    link: Function | string;
+    active?: boolean;
+  }>;
 };
 
 function getLessonDescription(uid: string) {
@@ -79,6 +84,10 @@ export default class LessonComponent extends React.Component
   }
 
   refreshText(htmlText: string, page: number, callback: ?() => void = null) {
+    // this.setState({
+    //   listOfSections: this.addListOfSections(),
+    // });
+    this.updateGoToButtonListHighlight();
     if (htmlText !== this.state.htmlText || page !== this.state.page) {
       this.componentUpdateCallback = callback;
       this.setState({ htmlText, page });
@@ -174,68 +183,68 @@ export default class LessonComponent extends React.Component
     this.centerLesson();
   }
 
-  showHideNavigator() {
-    if (this.showNavigator) {
-      if (this.lessonNavigator) {
-        this.lessonNavigator.selectTitle();
-      }
-      this.showNavigator = false;
-    } else {
-      if (this.lessonNavigator) {
-        this.lessonNavigator.showNavigator();
-      }
-      this.showNavigator = true;
-    }
-  }
+  // showHideNavigator() {
+  //   if (this.showNavigator) {
+  //     if (this.lessonNavigator) {
+  //       this.lessonNavigator.selectTitle();
+  //     }
+  //     this.showNavigator = false;
+  //   } else {
+  //     if (this.lessonNavigator) {
+  //       this.lessonNavigator.showNavigator();
+  //     }
+  //     this.showNavigator = true;
+  //   }
+  // }
 
-  test() {
-    const { lessonNavigator } = this;
-    if (lessonNavigator) {
-      lessonNavigator.selectTitle();
-      setTimeout(() => { lessonNavigator.showNavigator(); }, 2000);
-      // this.lessonNavigator.zoomInSelected();
-    }
-    // console.log("1");
-  }
+  // test() {
+  //   const { lessonNavigator } = this;
+  //   if (lessonNavigator) {
+  //     lessonNavigator.selectTitle();
+  //     setTimeout(() => { lessonNavigator.showNavigator(); }, 2000);
+  //     // this.lessonNavigator.zoomInSelected();
+  //   }
+  //   // console.log("1");
+  // }
 
-  // eslint-disable-next-line class-methods-use-this
-  titleScaleDown() {
-    const title = document.getElementById('id_lesson__title_tile');
-    if (title) {
-      title.style.borderRadius = '13px';
-      title.style.width = '180px';
-      title.style.height = '40px';
-      title.style.fontSize = '12px';
-      title.style.left = 'calc(50% - 90px)';
-    }
-  }
+  // // eslint-disable-next-line class-methods-use-this
+  // titleScaleDown() {
+  //   const title = document.getElementById('id_lesson__title_tile');
+  //   if (title) {
+  //     title.style.borderRadius = '13px';
+  //     title.style.width = '180px';
+  //     title.style.height = '40px';
+  //     title.style.fontSize = '12px';
+  //     title.style.left = 'calc(50% - 90px)';
+  //   }
+  // }
 
-  // eslint-disable-next-line class-methods-use-this
-  titleToNav() {
-    this.titleScaleDown();
-    setTimeout(this.expandLessonNavigator, 1000);
-    const nav = document.getElementById('id_navigator__scroll_container');
-    // const title_container = document.getElementById('id_lesson__title_container');
-    // const title = document.getElementById('id_lesson__title_tile');
-    if (this.lessonNavigator && nav) {
-      const { x, y } = this.lessonNavigator.selectedLesson.location;
-      nav.scrollTop = y;
-      nav.scrollLeft = x - nav.clientWidth / 2 + 90;
-      // title.style.height = '0';
-      // title_container.style.height = '0';
-    }
-  }
+  // // eslint-disable-next-line class-methods-use-this
+  // titleToNav() {
+  //   this.titleScaleDown();
+  //   setTimeout(this.expandLessonNavigator, 1000);
+  //   const nav = document.getElementById('id_navigator__scroll_container');
+  //   // const title_container = document.getElementById('id_lesson__title_container');
+  //   // const title = document.getElementById('id_lesson__title_tile');
+  //   if (this.lessonNavigator && nav) {
+  //     const { x, y } = this.lessonNavigator.selectedLesson.location;
+  //     nav.scrollTop = y;
+  //     nav.scrollLeft = x - nav.clientWidth / 2 + 90;
+  //     // title.style.height = '0';
+  //     // title_container.style.height = '0';
+  //   }
+  // }
 
-  // eslint-disable-next-line class-methods-use-this
-  expandLessonNavigator() {
-    const nav = document.getElementById('master_containter');
-    const container =
-      document.getElementById('id_lesson__title_navigator_container');
-    if (nav && container) {
-      nav.style.height = '30vh';
-      container.style.height = '30vh';
-    }
-  }
+  // // eslint-disable-next-line class-methods-use-this
+  // expandLessonNavigator() {
+  //   const nav = document.getElementById('master_containter');
+  //   const container =
+  //     document.getElementById('id_lesson__title_navigator_container');
+  //   if (nav && container) {
+  //     nav.style.height = '30vh';
+  //     container.style.height = '30vh';
+  //   }
+  // }
 
   orientationChange() {
     const doc = document.documentElement;
@@ -335,13 +344,15 @@ export default class LessonComponent extends React.Component
   }
 
   addGoToButton() {
-    return <div className="dropdown lesson__button-goto_container">
-      <button className="btn btn-secondary dropdown-toggle lesson__button-goto" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {`${this.state.page + 1} / ${this.state.numPages}`}
-      </button>
-      <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-      {this.state.listOfSections}
-      </div>
+    return <div
+      className="lesson__button-goto_container"
+      id="id__lesson__button-goto_container">
+      <DropDownButton
+      id="id__lesson__goto_button"
+      label={`${this.state.page + 1} / ${this.state.numPages}`}
+      direction="up"
+      xAlign="right"
+      list={this.state.listOfSections}/>
     </div>;
   }
 
@@ -361,22 +372,48 @@ export default class LessonComponent extends React.Component
     this.lesson.goToSection(index);
   }
 
+  updateGoToButtonListHighlight() {
+    const activeItems = document.getElementsByClassName('drop_down_button_list_item_active');
+    [].forEach.call(activeItems, item => item.classList.remove('drop_down_button_list_item_active'));
+    const listItems = document.getElementById('id__lesson__goto_button_list');
+    const activeSection = this.belongsTo(this.lesson.currentSectionIndex);
+    const titleIndeces = this.lesson.content.sections.map((section, index) => {
+      if (section.title) {
+        return index;
+      }
+      return -1;
+    }).filter(index => index !== -1);
+    const listIndex = titleIndeces.indexOf(activeSection);
+
+    if (listItems) {
+      const { children } = listItems;
+      if (children.length > 0) {
+        children[listIndex].classList.add('drop_down_button_list_item_active');
+      }
+    }
+  }
+
   addListOfSections() {
     const output = [];
     const activeSection = this.belongsTo(this.lesson.currentSectionIndex);
     this.lesson.content.sections.forEach((section, index) => {
       if (section.title) {
-        let classNames = 'dropdown-item';
+        let isActive = false;
         if (index === activeSection) {
-          classNames += ' active';
+          isActive = true;
         }
         this.key += 1;
-        output.push(<div
-          className={classNames}
-          onClick={this.clickList.bind(this, index)}
-          key={this.key}>
-            {section.title}
-          </div>);
+        output.push({
+          label: section.title,
+          link: this.clickList.bind(this, index),
+          active: isActive,
+        });
+        // <div
+        // className={classNames}
+        // onClick={this.clickList.bind(this, index)}
+        // key={this.key}>
+        //   {section.title}
+        // </div>);
       }
     });
     return output;
@@ -437,6 +474,21 @@ export default class LessonComponent extends React.Component
     return output;
   }
 
+  calcTitleHeight() {
+    const { lessonDescription } = this;
+    let count = 0;
+    if (lessonDescription != null) {
+      count = lessonDescription.paths.length;
+    }
+    if (count === 1) {
+      return ' lesson__title_bar_force_low';
+    }
+    if (count > 8) {
+      return ' lesson__title_bar_force_high';
+    }
+    return '';
+  }
+
   addLessonPaths() {
     const output = [];
     const { lessonDescription } = this;
@@ -476,69 +528,9 @@ export default class LessonComponent extends React.Component
     return output;
   }
 
-  // addLessonPaths() {
-  //   const output = [];
-  //   const { lessonDescription } = this;
-  //   if (lessonDescription != null) {
-  //     let remainingPaths = lessonDescription.paths.slice();
-  //     const quiz = remainingPaths.indexOf('quiz');
-  //     const summary = remainingPaths.indexOf('summary');
-  //     if (summary !== -1) {
-  //       this.key += 1;
-  //       output.push(
-  //         <LessonTilePath
-  //           id='id_lesson__tile_path_summary'
-  //           link={`${lessonDescription.link}/summary`}
-  //           key={this.key}
-  //           label='Summary'
-  //           state=''
-  //           right={true}/>,
-  //       );
-  //       remainingPaths = remainingPaths.splice(summary, 1);
-  //     }
-  //     if (quiz !== -1) {
-  //       this.key += 1;
-  //       output.push(
-  //         <LessonTilePath
-  //           id='id_lesson__tile_path_quiz'
-  //           link={`${lessonDescription.link}/quiz`}
-  //           key={this.key}
-  //           label='Quiz'
-  //           state=''
-  //           right={true}/>,
-  //       );
-  //       remainingPaths = remainingPaths.splice(quiz, 1);
-  //     }
-  //     remainingPaths = remainingPaths.sort((a, b) => {
-  //       const upperA = a.toUpperCase();
-  //       const upperB = b.toUpperCase();
-  //       if (upperA < upperB) {
-  //         return -1;
-  //       }
-  //       if (upperA > upperB) {
-  //         return 1;
-  //       }
-  //       return 0;
-  //     });
-  //     remainingPaths.forEach((path) => {
-  //       this.key += 1;
-  //       output.push(
-  //         <LessonTilePath
-  //           id={`id_lesson__tile_path_${path}`}
-  //           link={`${lessonDescription.link}/${path}`}
-  //           key={this.key}
-  //           label={path}
-  //           state='selected'
-  //           right={false}/>,
-  //       );
-  //     });
-  //   }
-  // }
-
   render() {
-    // console.log(this.lesson.content.iconLink)
     return <div>
-      <div className='lesson__title'>
+      <div className={`lesson__title_bar${this.calcTitleHeight()}`}>
         <div className="lesson__path_container">
           <div className="lesson__path_left_tiles">
             {this.addLessonPaths()}
@@ -547,13 +539,11 @@ export default class LessonComponent extends React.Component
             {this.addQuizSummary()}
           </div>
         </div>
-        <LessonTile
-          id={'id_lesson__title_container'}
-          link={`/${this.lesson.content.iconLink.replace(/\/tile.png/, '')}`}
-          imgLink={`/${this.lesson.content.iconLink}`}
+        <LessonTitle
+          imgLink={`/${this.lesson.content.iconLinkGrey}`}
           key='1'
           label={this.lesson.content.title}
-          state={'selected'}/>
+          />
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">
@@ -577,9 +567,11 @@ export default class LessonComponent extends React.Component
               {this.addInteractiveElementButton()}
         </div>
       </div>
+
       <div className='lesson__white_spacer'/>
       <LessonNavigator
           selected={this.lesson.content.title}
+          topic={'Geometry_1'}
           ref={(lessonNavigator) => { this.lessonNavigator = lessonNavigator; }}
         />
       <div className='lesson__white_spacer'/>
