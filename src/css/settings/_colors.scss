@@ -48,4 +48,3 @@ body {
   @include to_vars(map-get($_color_theme, palette), '--palette');
   @include to_vars(convertToColors($diagram-map), '--diagram');
 }
-
