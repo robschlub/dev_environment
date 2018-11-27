@@ -1,6 +1,6 @@
 // @flow
 
-const roundNum = (value: number, precision: number = 5) => {
+const roundNum = (value: number, precision: number = 5): number => {
   const multiplier = 10 ** precision;
   let result = Math.round(value * multiplier) / multiplier;
   if (Object.is(result, -0)) {
@@ -9,18 +9,20 @@ const roundNum = (value: number, precision: number = 5) => {
   return result;
 };
 
-const round = (arrayOrValue: number | Array<number>, precision: number = 5) => {
+function round<T: number | Array<number>>(
+  arrayOrValue: T,
+  precision: number = 5,
+): T {
   let result = 0;
-  if (arrayOrValue instanceof Array) {
-    // $FlowFixMe
+  if (Array.isArray(arrayOrValue)) {
     result = arrayOrValue.map(elem => round(elem, precision));
-  // } else if (arrayOrValue.constructor == d2.point(0,0).constructor){
-  //     result = roundPoint(arrayOrValue, precision);
-  } else {
+  }
+  if (typeof arrayOrValue === 'number') {
     result = roundNum(arrayOrValue, precision);
   }
+  // $FlowFixMe
   return result;
-};
+}
 
 
 // // clipValue clips a value to either 0 if it's small enough, or to a max value
@@ -185,24 +187,47 @@ const decelerate = function getPositionVelocityFromDecAndTime(
 };
 
 
-const linear = (percentTime: number) => percentTime;
+const linear = (percentTime: number, invert: ?boolean = false) => {
+  if (invert) {
+    return percentTime;
+  }
+  return percentTime;
+};
 
-const easeinout = (percentTime: number) => {
+const easeinout = (percentTime: number, invert: ?boolean = false) => {
+  if (invert) {
+    const a = percentTime;
+    return (2 * a - Math.sqrt(-4 * a * a + 4 * a)) / (4 * a - 2);
+  }
   const x = percentTime;
   const percentDistance = (x ** 2) / ((x ** 2) + ((1 - x) ** 2));
   return percentDistance;
 };
 
-function easeout(percentTime: number) {
+// TODO fix invert
+function easeout(percentTime: number, invert: ?boolean = false) {
+  if (invert) {
+    const a = percentTime;
+    const b = (2 * a - Math.sqrt(-4 * a * a + 4 * a)) / (4 * a - 2);
+    // return (b - 0.5) * 2;
+    return b;
+  }
   const x = 0.5 + percentTime / 2;
-  const power = 1.6;
+  const power = 2;
   const percentDistance = (x ** power) / ((x ** power) + ((1 - x) ** power));
   return (percentDistance - 0.5) * 2;
 }
 
-function easein(percentTime: number) {
+// TODO fix invert
+function easein(percentTime: number, invert: ?boolean = false) {
+  if (invert) {
+    const a = percentTime;
+    const b = (2 * a - Math.sqrt(-4 * a * a + 4 * a)) / (4 * a - 2);
+    // return (b - 0.5) * 2;
+    return b;
+  }
   const x = percentTime / 2;
-  const power = 1.6;
+  const power = 2;
   const percentDistance = (x ** power) / ((x ** power) + ((1 - x) ** power));
   return percentDistance * 2;
 }
@@ -226,7 +251,7 @@ function sinusoid(
 //     }
 // }
 
-function range(start: number, stop: number, step: number) {
+function range(start: number, stop: number, step: number = 1) {
   const out = [];
   for (let i = start; i <= stop + step * 0.5; i += step) {
     out.push(i);

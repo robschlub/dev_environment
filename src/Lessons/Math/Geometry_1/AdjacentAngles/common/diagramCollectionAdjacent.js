@@ -12,8 +12,8 @@ import {
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
-import { makeLine } from '../../../../LessonsCommon/tools/line';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 
 import { makeAngle, showAngles } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
@@ -50,14 +50,12 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   angleType: TypeAdjacentAngle;
 
   makeAdjacentLine(index: number, color: Array<number>) {
-    const line = makeLine(
-      this.diagram,
-      'end',
-      this.layout.line.length,
-      this.layout.line.width,
+    const line = this.diagram.objects.line({
+      vertexSpaceStart: 'start',
+      length: this.layout.line.length,
+      width: this.layout.line.width,
       color,
-      true,
-    );
+    });
     line.setMovable();
     line.move.type = 'rotation';
     if (index > 1) {

@@ -74,7 +74,7 @@ export default class SASCollection extends CommonDiagramCollection {
     corner.side1 = newP1.sub(p2).distance();
     // eslint-disable-next-line no-param-reassign
     corner.side2 = newP3.sub(p2).distance();
-    corner._line.vertices.change([newP1, p2, newP3]);
+    corner._line.drawingObject.change([newP1, p2, newP3]);
     // corner.points = [newP1, p2, newP3];
     const rotation = corner.transform.r();
     if (rotation != null) {

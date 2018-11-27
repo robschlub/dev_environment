@@ -7,9 +7,9 @@ import {
   DiagramElementCollection,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
@@ -34,23 +34,32 @@ export default class SquareCollection extends CommonDiagramCollection {
   }
 
   addSquareLines() {
-    const makeL = (p1, p2, labelText, show) => {
-      const line = makeLine(
-        this.diagram, 'end', 1, this.layout.lineWidth,
-        this.layout.colors.lines, show,
-      );
-      line.setEndPoints(p1, p2);
-      line.setPosition(p1);
-      line.addLabel('A', 0.05, 'inside', 'top', 'horizontal');
+    const makeL = (p1, p2, labelText) => {
+      const line = this.diagram.objects.line({
+        p1,
+        p2,
+        width: this.layout.lineWidth,
+        color: this.layout.colors.lines,
+        label: {
+          text: 'A',
+          offset: 0.05,
+          location: 'inside',
+          subLocation: 'top',
+          orientation: 'horizontal',
+        },
+      });
+      //   p1, p2, this.layout.lineWidth, this.layout.colors.lines,
+      //   'A', 0.05, 'inside', 'top', 'horizontal',
+      // );
       const name = Array.isArray(labelText) ? labelText[0] : labelText;
       this._square.add(`line${name}`, line);
     };
     const { points } = this.layout.square;
     const halfLine = this.layout.lineWidth / 2;
-    makeL(points[2].sub(0, halfLine), points[3].add(0, halfLine), 'C', true);
-    makeL(points[3].add(halfLine, 0), points[0].sub(halfLine, 0), 'D', true);
-    makeL(points[0].add(0, halfLine), points[1].sub(0, halfLine), 'A', true);
-    makeL(points[1].sub(halfLine, 0), points[2].add(halfLine, 0), 'B', true);
+    makeL(points[2].sub(0, halfLine), points[3].add(0, halfLine), 'C');
+    makeL(points[3].add(halfLine, 0), points[0].sub(halfLine, 0), 'D');
+    makeL(points[0].add(0, halfLine), points[1].sub(0, halfLine), 'A');
+    makeL(points[1].sub(halfLine, 0), points[2].add(halfLine, 0), 'B');
   }
 
   addRightAngles() {

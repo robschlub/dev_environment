@@ -12,15 +12,13 @@ import {
 import {
   checkElementsForParallel, checkValuesForParallel, randomizeParallelLine,
 } from '../common/tools';
-import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
-import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
-
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
 type TypeSelectableLine = {
   selected: boolean;
-} & MoveableLineType;
+} & TypeLine;
 
 
 export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagramCollection) {
@@ -47,17 +45,25 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
   }
 
   makeLine() {
-    const line: Object = makeMoveableLine(
-      this.diagram, this.layout.line,
-      this.layout.colors.line,
-    );
+    const lay = this.layout.line;
+    // $FlowFixMe
+    const line: TypeSelectableLine = this.diagram.objects.line({
+      vertexSpaceStart: 'center',
+      length: lay.length.full,
+      width: lay.width,
+      color: this.layout.colors.line,
+    });
+    line.setMovable(true, 'centerTranslateEndRotation', 0.33, lay.boundary);
     line.setTransformCallback = (t: Transform) => {
-      line.updateTransform(t);
+      line.updateMoveTransform(t);
       this.normalizeAngle(line);
     };
-    line._mid.move.type = 'translation';
-    line._end1.move.type = 'translation';
-    line._end2.move.type = 'translation';
+    if (line._midLine) {
+      line._midLine.move.type = 'translation';
+    }
+    if (line._line) {
+      line._line.move.type = 'translation';
+    }
     line.selected = false;
     line.onClick = () => {
       line.selected = !line.selected;
@@ -67,7 +73,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
         line.setColor(this.layout.colors.line);
       }
     };
-    return (line: TypeSelectableLine);
+    return line;
   }
 
   constructor(

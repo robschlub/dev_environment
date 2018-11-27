@@ -58,10 +58,10 @@ class Content extends LessonContent {
           <li>Click |Opposite Angles| to see the other pair of angles.</li>
           </ul>
       `,
-      interactiveElementsRemove: [
-        opp._line1._mid,
-        opp._line2._mid,
-      ],
+      // interactiveElementsRemove: [
+      //   opp._line1._mid,
+      //   opp._line2._mid,
+      // ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
         opp._angleA.setColor(layout.colors.angleA);
@@ -75,17 +75,17 @@ class Content extends LessonContent {
         opp,
         opp._angleA,
         opp._angleC,
-        opp._line1,
-        opp._line1._end1,
-        opp._line1._end2,
-        opp._line1._mid,
-        opp._line2,
-        opp._line2._end1,
-        opp._line2._end2,
-        opp._line2._mid,
+        // opp._line1,
+        // opp._line1._end1,
+        // opp._line1._end2,
+        // opp._line1._mid,
+        // opp._line2,
+        // opp._line2._end1,
+        // opp._line2._end2,
+        // opp._line2._mid,
       ],
       show: [
-        diag._selector,
+        diag._selector, opp._line1, opp._line2,
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
@@ -131,11 +131,11 @@ class Content extends LessonContent {
           <li>Touch |Corresponding Angles| to change the angle pair.</li>
           </ul>
       `,
-      interactiveElementsRemove: [
-        threeLines._line3._mid,
-        threeLines._line1._mid,
-        threeLines._line2._mid,
-      ],
+      // interactiveElementsRemove: [
+      //   threeLines._line3._mid,
+      //   threeLines._line1._mid,
+      //   threeLines._line2._mid,
+      // ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('corresponding');
         if (opp.isShown) {
@@ -148,21 +148,22 @@ class Content extends LessonContent {
       },
       showOnly: [
         threeLines,
-        threeLines._line1,
-        threeLines._line1._end1,
-        threeLines._line1._end2,
-        threeLines._line1._mid,
-        threeLines._line2,
-        threeLines._line2._end1,
-        threeLines._line2._end2,
-        threeLines._line2._mid,
-        threeLines._line3,
-        threeLines._line3._end1,
-        threeLines._line3._end2,
-        threeLines._line3._mid,
+        // threeLines._line1,
+        // threeLines._line1._end1,
+        // threeLines._line1._end2,
+        // threeLines._line1._mid,
+        // threeLines._line2,
+        // threeLines._line2._end1,
+        // threeLines._line2._end2,
+        // threeLines._line2._mid,
+        // threeLines._line3,
+        // threeLines._line3._end1,
+        // threeLines._line3._end2,
+        // threeLines._line3._mid,
       ],
       show: [
         diag._selector,
+        threeLines._line1, threeLines._line2, threeLines._line3,
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
@@ -208,11 +209,11 @@ class Content extends LessonContent {
           <li>Touch |Alternate Angles| to change the angle pair.</li>
           </ul>
       `,
-      interactiveElementsRemove: [
-        threeLines._line3._mid,
-        threeLines._line1._mid,
-        threeLines._line2._mid,
-      ],
+      // interactiveElementsRemove: [
+      //   threeLines._line3._mid,
+      //   threeLines._line1._mid,
+      //   threeLines._line2._mid,
+      // ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('alternate');
         if (opp.isShown) {
@@ -226,21 +227,22 @@ class Content extends LessonContent {
       },
       showOnly: [
         threeLines,
-        threeLines._line1,
-        threeLines._line1._end1,
-        threeLines._line1._end2,
-        threeLines._line1._mid,
-        threeLines._line2,
-        threeLines._line2._end1,
-        threeLines._line2._end2,
-        threeLines._line2._mid,
-        threeLines._line3,
-        threeLines._line3._end1,
-        threeLines._line3._end2,
-        threeLines._line3._mid,
+        // threeLines._line1,
+        // threeLines._line1._end1,
+        // threeLines._line1._end2,
+        // threeLines._line1._mid,
+        // threeLines._line2,
+        // threeLines._line2._end1,
+        // threeLines._line2._end2,
+        // threeLines._line2._mid,
+        // threeLines._line3,
+        // threeLines._line3._end1,
+        // threeLines._line3._end2,
+        // threeLines._line3._mid,
       ],
       show: [
         diag._selector,
+        threeLines._line1, threeLines._line2, threeLines._line3,
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
@@ -286,11 +288,11 @@ class Content extends LessonContent {
           <li>Touch |Interior Angles| to change the angle pair.</li>
           </ul>
       `,
-      interactiveElementsRemove: [
-        threeLines._line3._mid,
-        threeLines._line1._mid,
-        threeLines._line2._mid,
-      ],
+      // interactiveElementsRemove: [
+      //   threeLines._line3._mid,
+      //   threeLines._line1._mid,
+      //   threeLines._line2._mid,
+      // ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('interior');
         if (opp.isShown) {
@@ -305,22 +307,23 @@ class Content extends LessonContent {
       },
       showOnly: [
         threeLines,
-        threeLines._line1,
-        threeLines._line1._end1,
-        threeLines._line1._end2,
-        threeLines._line1._mid,
-        threeLines._line2,
-        threeLines._line2._end1,
-        threeLines._line2._end2,
-        threeLines._line2._mid,
-        threeLines._line3,
-        threeLines._line3._end1,
-        threeLines._line3._end2,
-        threeLines._line3._mid,
+        // threeLines._line1,
+        // threeLines._line1._end1,
+        // threeLines._line1._end2,
+        // threeLines._line1._mid,
+        // threeLines._line2,
+        // threeLines._line2._end1,
+        // threeLines._line2._end2,
+        // threeLines._line2._mid,
+        // threeLines._line3,
+        // threeLines._line3._end1,
+        // threeLines._line3._end2,
+        // threeLines._line3._mid,
       ],
       show: [
         diag._selector,
         diag._unitsSelector,
+        threeLines._line1, threeLines._line2, threeLines._line3,
       ],
       transitionFromAny: (done) => {
         let time = Math.max(

@@ -14,8 +14,8 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
-import { makeLine } from '../../../../LessonsCommon/tools/line';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 
 // type TypeCorner = {
 //   _angle: TypeAngle;
@@ -38,12 +38,19 @@ export default class SSACollection extends CommonDiagramCollection {
 
   addLines() {
     const ssa = this.layout.SSAInitial;
-    const make = (length, width) => makeLine(
-      this.diagram,
-      'end',
-      length, width,
-      this.layout.colors.line, true,
-    );
+    const make = (length, width) => this.diagram.objects.line({
+      vertexSpaceStart: 'start',
+      length,
+      width,
+      color: this.layout.colors.line,
+    });
+    // const make1 = (length, width) => makeLine(
+    //   this.diagram,
+    //   'end',
+    //   length, width,
+    //   this.layout.colors.line, true,
+    // );
+
     const line1 = make(1, this.layout.corner.width);
     const line2 = make(1, this.layout.corner.width);
     const line3 = make(1, this.layout.corner.width * 0.5);

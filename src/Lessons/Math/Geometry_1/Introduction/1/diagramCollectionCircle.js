@@ -21,49 +21,71 @@ const { colors } = layout;
 const textureFile = `/static/dist/${textureMap}`;
 
 function makeWheel(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.wheelPoints, layout.wheelSize, 0,
-    layout.wheelPoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0.3333, 0.3333, 0.3333, 0.3333),
-  );
+  return shapes.polygon({
+    fill: true,
+    sides: layout.wheelPoints,
+    radius: layout.wheelSize,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0.3333, 0.3333, 0.3333, 0.3333),
+  });
 }
 
 function makeBall(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.wheelPoints, layout.wheelSize, 0,
-    layout.wheelPoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0.3333, 0.6666, 0.3333, 0.3333),
-  );
+  return shapes.polygon({
+    fill: true,
+    sides: layout.wheelPoints,
+    radius: layout.wheelSize,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0.3333, 0.6666, 0.3333, 0.3333),
+  });
 }
 
 function makeEarth(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.wheelPoints, layout.wheelSize, 0,
-    layout.wheelPoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0, 0.6666, 0.3333, 0.3333),
-  );
+  return shapes.polygon({
+    fill: true,
+    sides: layout.wheelPoints,
+    radius: layout.wheelSize,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0, 0.6666, 0.3333, 0.3333),
+  });
 }
 
 function makeClock(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.wheelPoints, layout.wheelSize, 0,
-    layout.wheelPoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0, 0.3333, 0.3333, 0.3333),
-  );
+  return shapes.polygon({
+    fill: true,
+    sides: layout.wheelPoints,
+    radius: layout.wheelSize,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0, 0.3333, 0.3333, 0.3333),
+  });
 }
 
 function makeWheelShape(shapes: Object) {
-  return shapes.polygon(
-    202, layout.wheelSize, layout.linewidth, 0, 1,
-    202, colors.circle, new Point(0, 0),
-  );
+  return shapes.polygon({
+    sides: 202,
+    radius: layout.wheelSize,
+    width: layout.linewidth,
+    color: colors.circle,
+    point: new Point(0, 0),
+  });
 }
 
 function makeShade(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.wheelPoints, layout.wheelSize, 0, layout.wheelPoints,
-    [0, 0, 0, 0.7], new Transform().rotate(0).translate(0, 0),
-  );
+  return shapes.polygon({
+    fill: true,
+    sides: layout.wheelPoints,
+    radius: layout.wheelSize,
+    color: [0, 0, 0, 0.7],
+    transform: new Transform().rotate(0).translate(0, 0),
+  });
 }
 
 function makeEarthCalculation(shapes: Object) {
@@ -144,16 +166,20 @@ function makeCircumferenceDimension(shapes: Object) {
   const arrowWidth = lineWidth * 4;
   const arrowHeightInRadians = arrowHeight / radius;
 
-  const halfCircle1 = shapes.polygon(
-    layout.wheelPoints, radius, lineWidth, 0, 1,
-    layout.wheelPoints,
-    colors.dimensions, new Transform().rotate(0).translate(0, 0),
-  );
-  const halfCircle2 = shapes.polygon(
-    layout.wheelPoints, radius, lineWidth, 0, 1,
-    layout.wheelPoints,
-    colors.dimensions, new Transform().rotate(0).translate(0, 0),
-  );
+  const halfCircle1 = shapes.polygon({
+    sides: layout.wheelPoints,
+    radius,
+    width: lineWidth,
+    color: colors.dimensions,
+    transform: new Transform().rotate(0).translate(0, 0),
+  });
+  const halfCircle2 = shapes.polygon({
+    sides: layout.wheelPoints,
+    radius,
+    width: lineWidth,
+    color: colors.dimensions,
+    transform: new Transform().rotate(0).translate(0, 0),
+  });
   const arrow1 = shapes.arrow(
     arrowWidth, 0, arrowHeight, 0,
     colors.dimensions, new Transform().rotate(0).translate(0, 0),
