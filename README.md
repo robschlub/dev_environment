@@ -105,3 +105,15 @@ To see all current rules:
 `sudo pfctl -s nat`
 
 
+
+# How to run a production build locally:
+Start dev container and run production webpack script
+ `./start_env.sh dev`
+ `webpack --env.mode=prod`
+ 
+Exit container
+
+Start production container
+ `./start_env.sh prod`
+
+Can be accessed from localhost:5000/ in the browser

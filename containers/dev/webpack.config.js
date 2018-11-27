@@ -1,5 +1,6 @@
 const path = require('path');
 const entryPoints = require('./getLessons.js');
+const setFilesForBuild = require('./setFilesForBuild.js');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
@@ -13,6 +14,7 @@ const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 const envConfig = {
   prod: {
     name: 'production',
+    shortName: 'prod',
     uglify: true,
     webpackMode: 'production',
     devtool: false,
@@ -21,6 +23,7 @@ const envConfig = {
   },
   stage: {
     name: 'stage',
+    shortName: 'stage',
     uglify: true,
     webpackMode: 'production',
     devtool: 'source-map',
@@ -29,6 +32,7 @@ const envConfig = {
   },
   dev: {
     name: 'development',
+    shortName: 'dev',
     uglify: false,
     webpackMode: 'development',
     devtool: 'source-map',
@@ -52,6 +56,7 @@ module.exports = (env) => {
     }
   }
   entryPoints.makeLessonIndex(e.name);
+  setFilesForBuild.setBaseHTML(e.shortName);
 
   console.log(`Building for ${e.name}`); // eslint-disable-line no-console
 
@@ -141,12 +146,20 @@ module.exports = (env) => {
     clean,
     cssMini].filter(elem => elem !== '');
 
+  let externals = {};
+  if (e.shortName === 'prod' || e.shortName === 'stage') {
+    externals = {
+      react: 'React',
+      'react-dom': 'ReactDOM',
+    };
+  }
   return {
     entry: entryPoints.entryPoints(e.name),
     output: {
       path: buildPath,
       filename: '[name].js',
     },
+    externals,
     module: {
       rules: [
         {
