@@ -1396,15 +1396,17 @@ class Transform {
       if (t != null) {
         const perpLine = new Line(t, 1, limitLine.angle() + Math.PI / 2);
         const { intersect } = perpLine.intersectsWith(limitLine);
-        if (intersect.isOnLine(limitLine, 4)) {
-          clippedTransform.updateTranslation(intersect);
-        } else {
-          const p1Dist = distance(intersect, limitLine.p1);
-          const p2Dist = distance(intersect, limitLine.p2);
-          if (p1Dist < p2Dist) {
-            clippedTransform.updateTranslation(limitLine.p1);
+        if (intersect) {
+          if (intersect.isOnLine(limitLine, 4)) {
+            clippedTransform.updateTranslation(intersect);
           } else {
-            clippedTransform.updateTranslation(limitLine.p2);
+            const p1Dist = distance(intersect, limitLine.p1);
+            const p2Dist = distance(intersect, limitLine.p2);
+            if (p1Dist < p2Dist) {
+              clippedTransform.updateTranslation(limitLine.p1);
+            } else {
+              clippedTransform.updateTranslation(limitLine.p2);
+            }
           }
         }
       }
