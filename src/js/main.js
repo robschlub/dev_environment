@@ -5,7 +5,7 @@ import homePage from './views/home/home';
 // import introPage from './views/introduction/introduction';
 // import lessonSinglePage from './views/lessonSinglePage/lessonSinglePage';
 // import lessonMultiPage from './views/lessonMultiPage/lessonMultiPage';
-
+console.log("qwer");
 homePage();
 // introPage();
 // aboutPage();

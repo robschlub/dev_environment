@@ -148,8 +148,9 @@ module.exports = (env) => {
       filename: '[name].js',
     },
     externals: {
-            'react': 'React',
-          },
+      react: 'React',
+      'react-dom': 'ReactDOM',
+    },
     module: {
       rules: [
         {
@@ -246,11 +247,11 @@ module.exports = (env) => {
           //   priority: -20,
           // },
           
-          // vendors: {
-          //   test: /[\\/]node_modules[\\/]/,
-          //   priority: -10,
-          //   name: 'vendors',
-          // },
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            name: 'vendors',
+          },
         },
       },
     },
