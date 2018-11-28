@@ -107,7 +107,7 @@ class AngleLabel extends EquationLabel {
 // The line's position and rotation is the line collection transform
 // translation and rotation respectively.
 // The line's length is the _line primative x scale.
-export class DiagramObjectAngle extends DiagramElementCollection {
+class DiagramObjectAngle extends DiagramElementCollection {
   // Diagram elements
   _curve: ?DiagramElementPrimative;
   _arrow1: ?DiagramElementPrimative;
@@ -251,79 +251,64 @@ export class DiagramObjectAngle extends DiagramElementCollection {
 
     // If the curve is to be shown (and not just a label) then make it
     this._curve = null;
-    if (optionsToUse.curve)
-    const defaultCurveOptions = {
-      width: 0.01,
-      sides: 50,
-    };
     if (optionsToUse.curve) {
-      this.curve = Object.assign({}, defaultCurveOptions, optionsToUse.curve);
-      const curve = this.shapes.polygon({
-        sides: this.curve.sides,
-        radius: this.radius,
-        width: this.curve.width,
-        sidesToDraw: Math.floor(this.angle / (Math.PI * 2) * this.curve.sides),
-        color: this.color,
-        fill: false,
-        point: this.position._dup(),
-      });
-      this.add('curve', curve);
+      this.addCurve(this.radius, optionsToUse.curve);
     }
 
-    // Label related properties
-    this.label = null;
-    // this.showRealAngle = false;
-    this._label = null;
+    // // Label related properties
+    // this.label = null;
+    // // this.showRealAngle = false;
+    // this._label = null;
 
-    // this.setLength(this.length);
+    // // this.setLength(this.length);
 
-    if (optionsToUse.p1 != null && optionsToUse.p2 != null) {
-      this.setEndPoints(optionsToUse.p1, optionsToUse.p2);
-    }
+    // if (optionsToUse.p1 != null && optionsToUse.p2 != null) {
+    //   this.setEndPoints(optionsToUse.p1, optionsToUse.p2);
+    // }
 
-    const defaultArrowOptions = {
-      width: this.width * 4,
-      height: this.width * 4,
-    };
-    if (optionsToUse.arrowStart) {
-      const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrowStart);
-      this.addArrowStart(arrowOptions.height, arrowOptions.width);
-    }
+    // const defaultArrowOptions = {
+    //   width: this.width * 4,
+    //   height: this.width * 4,
+    // };
+    // if (optionsToUse.arrowStart) {
+    //   const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrowStart);
+    //   this.addArrowStart(arrowOptions.height, arrowOptions.width);
+    // }
 
-    if (optionsToUse.arrowEnd) {
-      const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrowEnd);
-      this.addArrowEnd(arrowOptions.height, arrowOptions.width);
-    }
+    // if (optionsToUse.arrowEnd) {
+    //   const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrowEnd);
+    //   this.addArrowEnd(arrowOptions.height, arrowOptions.width);
+    // }
 
-    // Arrows overrides arrowStart or arrowEnd
-    if (optionsToUse.arrows) {
-      let arrows = {};
-      if (typeof optionsToUse.arrows === 'object') {
-        ({ arrows } = optionsToUse);
-      }
-      const arrowOptions = Object.assign({}, defaultArrowOptions, arrows);
-      this.addArrows(arrowOptions.height, arrowOptions.width);
-    }
+    // // Arrows overrides arrowStart or arrowEnd
+    // if (optionsToUse.arrows) {
+    //   let arrows = {};
+    //   if (typeof optionsToUse.arrows === 'object') {
+    //     ({ arrows } = optionsToUse);
+    //   }
+    //   const arrowOptions = Object.assign({}, defaultArrowOptions, arrows);
+    //   this.addArrows(arrowOptions.height, arrowOptions.width);
+    // }
 
-    const defaultLabelOptions = {
-      text: '',
-      offset: 0,
-      location: 'top',
-      subLocation: 'left',
-      orientation: 'horizontal',
-      linePosition: 0.5,
-    };
-    if (optionsToUse.label) {
-      const labelOptions = Object.assign({}, defaultLabelOptions, optionsToUse.label);
-      this.addLabel(
-        labelOptions.text,
-        labelOptions.offset,
-        labelOptions.location,
-        labelOptions.subLocation,
-        labelOptions.orientation,
-        labelOptions.linePosition,
-      );
-    }
+    // const defaultLabelOptions = {
+    //   text: '',
+    //   offset: 0,
+    //   location: 'top',
+    //   subLocation: 'left',
+    //   orientation: 'horizontal',
+    //   linePosition: 0.5,
+    // };
+    // if (optionsToUse.label) {
+    //   const labelOptions = Object.assign({}, defaultLabelOptions, optionsToUse.label);
+    //   this.addLabel(
+    //     labelOptions.text,
+    //     labelOptions.offset,
+    //     labelOptions.location,
+    //     labelOptions.subLocation,
+    //     labelOptions.orientation,
+    //     labelOptions.linePosition,
+    //   );
+    // }
   }
 
   addCurve(radius: number = this.radius, curveOptions: {
@@ -344,7 +329,6 @@ export class DiagramObjectAngle extends DiagramElementCollection {
       sidesToDraw: Math.floor(this.angle / (Math.PI * 2) * optionsToUse.sides),
       color: this.color,
       fill: false,
-      point: this.position._dup(),
     });
     this.add('curve', curve);
   }
@@ -463,39 +447,6 @@ export class DiagramObjectAngle extends DiagramElementCollection {
     } else {
       this.isMovable = false;
     }
-  }
-
-  setMultiMovable(middleLengthPercent: number, translationBounds: Rect) {
-    this.multiMove.vertexSpaceMidLength = middleLengthPercent * this.vertexSpaceLength;
-    const start = new Point(
-      this.vertexSpaceStart.x + this.vertexSpaceLength / 2
-      - this.multiMove.vertexSpaceMidLength / 2,
-      0,
-    );
-    const midLine = makeStraightLine(
-      this.shapes, this.multiMove.vertexSpaceMidLength, this.width,
-      start, this.color, null,
-      this.largerTouchBorder, this.isTouchDevice,
-    );
-    // console.log(midLine)
-    midLine.isTouchable = true;
-    midLine.move.type = 'translation';
-    midLine.move.element = this;
-    midLine.isMovable = true;
-    midLine.move.canBeMovedAfterLoosingTouch = true;
-    this.add('midLine', midLine);
-    if (this._line) {
-      this._line.isTouchable = true;
-      this._line.move.type = 'rotation';
-      this._line.move.element = this;
-      this._line.isMovable = true;
-      this._line.move.canBeMovedAfterLoosingTouch = true;
-    }
-    this.hasTouchableElements = true;
-    this.isTouchable = false;
-    this.isMovable = false;
-    this.multiMove.bounds = translationBounds;
-    this.setLength(this.currentLength);
   }
 
   updateMoveTransform(t: Transform) {
@@ -710,34 +661,6 @@ export class DiagramObjectAngle extends DiagramElementCollection {
     this.length = length;
     this.position = position;
     this.setLineDimensions();
-
-    // const pq = new Line(p, q);
-    // this.angle = pq.angle();
-    // this.length = pq.length();
-
-    // this.position = p;
-    // if (this.vertexOrigin === 'center') {
-    //   this.position = pq.midpoint();
-    // } else if (this.vertexOrigin === 'end') {
-    //   this.position = q;
-    // } else if (typeof this.vertexOrigin === 'number') {
-    //   this.position = p.add(polarToRect(this.vertexOrigin * this.length, this.angle));
-    // } else if (this.vertexOrigin instanceof Point) {
-    //   this.position = p.add(this.vertexOrigin);
-    // }
-    // // this.updateLineGeometry();
-
-    // // const newLength = distance(q, p);
-    // // const pq = new Line(p, q);
-    // this.transform.updateRotation(pq.angle());
-    // const offsetdelta = polarToRect(offset, pq.angle() + Math.PI / 2);
-    // // if (this.reference === 'center') {
-    // this.transform.updateTranslation(this.position.add(offsetdelta));
-    // // } else {
-    // //   this.transform.updateTranslation(p.add(offsetdelta));
-    // // }
-    // this.setLength(this.length);
-    // this.updateLabel();
   }
 
   animateLengthTo(
@@ -792,17 +715,8 @@ export class DiagramObjectAngle extends DiagramElementCollection {
   }
 }
 
-export type TypeLine = DiagramObjectLine;
+export { DiagramObjectAngle };
 
-export class MovableLine extends DiagramObjectLine {
-  // constructor(
-  //   fullLength: number,
-  //   endLength: number,
-  //   width: number,
-  //   boundary: Rect,
-  // ) {
+// export type TypeLine = DiagramObjectLine;
 
-  // }
-}
-
-export type TypeMovableLine = MovableLine;
+// export type TypeMovableLine = MovableLine;

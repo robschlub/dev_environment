@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform,
+  Transform, Point,
 } from '../../../../../js/diagram/tools/g2';
 // import {
 //   DiagramElementCollection,
@@ -23,6 +23,23 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     this.add('rightTri', rightTri);
   }
 
+  addAngles() {
+    const angle = this.diagram.objects.angle({
+      radius: 0.4,
+      p3: this.layout.equil.tri.points[0],
+      p2: this.layout.equil.tri.points[1],
+      p1: this.layout.equil.tri.points[2],
+      // position: this.layout.equil.tri.points[0],
+      rotation: 0,
+      angle: 1,
+      curve: {
+        width: 0.01,
+        sides: 100,
+      },
+    });
+    this.add('angle', angle);
+  }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -31,6 +48,8 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     super(diagram, layout, transform);
     this.setPosition(this.layout.equil.position);
     this.addTris();
+    this.addAngles();
+    // console.log(this)
     // this.hasTouchableElements = true;
   }
 }

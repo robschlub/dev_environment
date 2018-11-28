@@ -10,9 +10,9 @@ import DrawContext2D from '../DrawContext2D';
 import EquationNavigator from './EquationNavigator';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
 import { DiagramObjectLine } from './Line';
-import type {
-  TypeLineOptions,
-} from './Line';
+import { DiagramObjectAngle } from './Angle';
+import type { TypeLineOptions } from './Line';
+import type { TypeAngleOptions } from './Angle';
 import type { TypeLabelOptions } from './EquationLabel';
 import EquationLabel from './EquationLabel';
 
@@ -58,6 +58,14 @@ export default class DiagramObjects {
   line(...options: Array<TypeLineOptions>) {
     const optionsToUse = Object.assign({}, ...options);
     return new DiagramObjectLine(
+      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+      optionsToUse,
+    );
+  }
+
+  angle(...options: Array<TypeAngleOptions>) {
+    const optionsToUse = Object.assign({}, ...options);
+    return new DiagramObjectAngle(
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
       optionsToUse,
     );
