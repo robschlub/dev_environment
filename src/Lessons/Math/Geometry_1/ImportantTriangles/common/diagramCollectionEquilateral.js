@@ -9,8 +9,13 @@ import {
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-export default class XCollection extends CommonDiagramCollection {
+export default class EquilateralCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
+
+  addEquil() {
+    const tri = this.diagram.shapes.polyLineNew(this.layout.equil.tri);
+    this.add('tri', tri);
+  }
 
   constructor(
     diagram: LessonDiagram,
@@ -19,6 +24,7 @@ export default class XCollection extends CommonDiagramCollection {
   ) {
     super(diagram, layout, transform);
     // this.setPosition(this.layout.position);
+    this.addEquil();
     this.hasTouchableElements = true;
   }
 }

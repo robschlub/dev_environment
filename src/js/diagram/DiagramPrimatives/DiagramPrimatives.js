@@ -82,6 +82,43 @@ export default class DiagramPrimatives {
     );
   }
 
+  polyLineNew(...options: Array<{
+      points: Array<Point>,
+      color?: Array<number>,
+      close?: boolean,
+      width?: number,
+      borderToPoint?: TypePolyLineBorderToPoint,
+      position?: Point,
+      transform?: Transform,
+    }>) {
+    const defaultOptions = {
+      color: [1, 0, 0, 1],
+      close: true,
+      width: 0.01,
+      borderToPoint: 'never',
+      position: null,
+      transform: null,
+    };
+    const optionsToUse = Object.assign({}, defaultOptions, ...options);
+    const o = optionsToUse;
+    let { transform } = o;
+    if (transform == null && o.position != null) {
+      transform = new Transform('polyLine').translate(o.position);
+    } else if (transform == null) {
+      transform = new Transform('polyLine');
+    }
+    return PolyLine(
+      this.webgl,
+      o.points,
+      o.close,
+      o.width,
+      o.color,
+      o.borderToPoint,
+      transform,
+      this.limits,
+    );
+  }
+
   fan(...options: Array<{
     points?: Array<Point>,
     color?: Array<number>,

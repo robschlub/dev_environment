@@ -28,7 +28,7 @@ class Content extends LessonContent {
 
   addSections() {
     const diag = this.diagram.elements;
-    // const x = diag._x;
+    const equil = diag._equil;
 
     const common = {
       setContent: '',
@@ -45,6 +45,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       title: 'Enter_title_here',
       setContent: ['Enter_content_here'],
+      show: [equil],
     });
   }
 }
