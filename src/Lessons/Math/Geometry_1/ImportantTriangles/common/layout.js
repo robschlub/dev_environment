@@ -57,6 +57,11 @@ export default function commonLessonLayout() {
         sides: 100,
         width: 0.02,
       },
+      label: {
+        text: 'A',
+        radius: 0.5,
+        orientation: 'horizontal',
+      },
       // arrow1: {
       //   width: 0.08,
       //   height: 0.08,

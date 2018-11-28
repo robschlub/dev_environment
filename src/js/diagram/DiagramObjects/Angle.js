@@ -14,6 +14,7 @@ import {
 import EquationLabel from './EquationLabel';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
 
+export type TypeAngleLabelOrientation = 'horizontal' | 'tangent';
 export type TypeAngleOptions = {
   position?: Point,
   angle?: number,
@@ -48,6 +49,7 @@ export type TypeAngleOptions = {
     radius?: number,
     curvePosition?: number,
     showRealAngle?: boolean,
+    orientation?: TypeAngleLabelOrientation,
   },
   side1?: {
     length?: number,
@@ -90,27 +92,29 @@ export type TypeAngleOptions = {
 //   - p1, p2, p3
 
 class AngleLabel extends EquationLabel {
-  offset: number;
+  radius: number;
   curvePosition: number;
+  showRealAngle: boolean;
+  orientation: TypeAngleLabelOrientation;
 
   constructor(
     equation: Object,
     labelText: string | Equation | Array<string>,
     color: Array<number>,
-    offset: number,
+    radius: number,
     curvePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
+    showRealAngle: boolean = false,
+    orientation: TypeAngleLabelOrientation = 'horizontal',
   ) {
     super(equation, { label: labelText, color });
-    this.offset = offset;
+    this.radius = radius;
     this.curvePosition = curvePosition;
+    this.showRealAngle = showRealAngle;
+    this.orientation = orientation;
   }
 }
 
 
-// A line is always defined as horiztonal with length 1 in vertex space
-// The line's position and rotation is the line collection transform
-// translation and rotation respectively.
-// The line's length is the _line primative x scale.
 class DiagramObjectAngle extends DiagramElementCollection {
   // Diagram elements
   _curve: ?DiagramElementPrimative;
@@ -297,27 +301,58 @@ class DiagramObjectAngle extends DiagramElementCollection {
     }
 
     // Label
+    const defaultLabelOptions = {
+      text: '',
+      radius: 0.4,
+      curvePosition: 0.5,
+      showRealAngle: true,
+      orientation: 'horizontal',
+    };
+    if (this.curve) {
+      defaultLabelOptions.radius = this.curve.radius;
+    }
+    if (optionsToUse.label) {
+      const labelOptions = Object.assign({}, defaultLabelOptions, optionsToUse.label);
+      this.addLabel(
+        labelOptions.text,
+        labelOptions.radius,
+        labelOptions.curvePosition,
+        labelOptions.showRealAngle,
+        labelOptions.orientation,
+      );
+    }
+
     this.update();
-    // const defaultLabelOptions = {
-    //   text: '',
-    //   offset: 0,
-    //   location: 'top',
-    //   subLocation: 'left',
-    //   orientation: 'horizontal',
-    //   linePosition: 0.5,
-    // };
-    // if (optionsToUse.label) {
-    //   const labelOptions = Object.assign({}, defaultLabelOptions, optionsToUse.label);
-    //   this.addLabel(
-    //     labelOptions.text,
-    //     labelOptions.offset,
-    //     labelOptions.location,
-    //     labelOptions.subLocation,
-    //     labelOptions.orientation,
-    //     labelOptions.linePosition,
-    //   );
-    // }
   }
+
+  addLabel(
+    labelText: string | Equation | Array<string>,
+    radius: number,
+    curvePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
+    showRealAngle: boolean = false,
+    orientation: TypeAngleLabelOrientation = 'horizontal',
+  ) {
+    this.label = new AngleLabel(
+      this.equation, labelText, this.color,
+      radius, curvePosition, showRealAngle, orientation,
+    );
+    if (this.label != null) {
+      this.add('label', this.label.eqn.collection);
+    }
+    // this.updateLabel();
+  }
+
+  // updateLabel(parentRotationOffset: number = 0) {
+  //   // const start = this.transform.r();
+  //   // const size = this.currentAngle;
+  //   let labelRot = labelRotationOffset;
+  //   if (labelRot == null) {
+  //     labelRot = angle._label.transform.r();
+  //   }
+  //   if (start != null && labelRot != null) {
+  //     angle.updateAngle(start, size, -labelRot - start);
+  //   }
+  // }
 
   addCurve(curveOptions: {
     width?: number,
@@ -326,6 +361,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
     const defaultCurveOptions = {
       width: 0.01,
       sides: 50,
+      radius: 0.5,
     };
     const optionsToUse = Object.assign(
       {}, defaultCurveOptions, curveOptions,
@@ -442,9 +478,22 @@ class DiagramObjectAngle extends DiagramElementCollection {
     const { _curve, curve } = this;
     if (_curve != null && curve != null) {
       curveAngle = Math.max(curveAngle, 0);
-      console.log(curveAngle)
       _curve.angleToDraw = curveAngle;
       _curve.transform.updateRotation(rotationForArrow1);
+    }
+
+    const { _label, label } = this;
+    if (_label && label) {
+      _label.transform.updateTranslation(polarToRect(
+        label.radius,
+        this.angle * label.curvePosition,
+      ));
+      if (label.orientation === 'horizontal') {
+        _label.transform.updateRotation(-this.rotation);
+      }
+      if (label.orientation === 'tangent') {
+        _label.transform.updateRotation(this.angle * label.curvePosition - Math.PI / 2);
+      }
     }
   }
 
@@ -485,215 +534,215 @@ class DiagramObjectAngle extends DiagramElementCollection {
   //   this.addArrow2(arrowHeight, arrowWidth);
   // }
 
-  setMovable(
-    movable: boolean = true,
-    moveType: 'translation' | 'rotation' | 'centerTranslateEndRotation' | 'scaleX' | 'scaleY' | 'scale' = this.move.type,
-    middleLengthPercent: number = 0.333,
-    translationBounds: Rect = this.diagramLimits,
-  ) {
-    if (movable) {
-      if (moveType === 'translation' || moveType === 'rotation'
-        || moveType === 'scale' || moveType === 'scaleX'
-        || moveType === 'scaleY'
-      ) {
-        this.move.type = moveType;
-        this.isTouchable = true;
-        this.isMovable = true;
-        this.hasTouchableElements = true;
-        if (this._line != null) {
-          this._line.isTouchable = true;
-          this._line.isMovable = false;
-        }
-        if (this._midLine) {
-          this._midLine.isMovable = false;
-        }
-        this.multiMove.bounds = translationBounds;
-      } else {
-        this.setMultiMovable(middleLengthPercent, translationBounds);
-      }
-    } else {
-      this.isMovable = false;
-    }
-  }
+  // setMovable(
+  //   movable: boolean = true,
+  //   moveType: 'translation' | 'rotation' | 'centerTranslateEndRotation' | 'scaleX' | 'scaleY' | 'scale' = this.move.type,
+  //   middleLengthPercent: number = 0.333,
+  //   translationBounds: Rect = this.diagramLimits,
+  // ) {
+  //   if (movable) {
+  //     if (moveType === 'translation' || moveType === 'rotation'
+  //       || moveType === 'scale' || moveType === 'scaleX'
+  //       || moveType === 'scaleY'
+  //     ) {
+  //       this.move.type = moveType;
+  //       this.isTouchable = true;
+  //       this.isMovable = true;
+  //       this.hasTouchableElements = true;
+  //       if (this._line != null) {
+  //         this._line.isTouchable = true;
+  //         this._line.isMovable = false;
+  //       }
+  //       if (this._midLine) {
+  //         this._midLine.isMovable = false;
+  //       }
+  //       this.multiMove.bounds = translationBounds;
+  //     } else {
+  //       this.setMultiMovable(middleLengthPercent, translationBounds);
+  //     }
+  //   } else {
+  //     this.isMovable = false;
+  //   }
+  // }
 
-  updateMoveTransform(t: Transform) {
-    const r = t.r();
-    const { bounds } = this.multiMove;
-    if (r != null) {
-      const w = Math.abs(this.currentLength / 2 * Math.cos(r));
-      const h = Math.abs(this.currentLength / 2 * Math.sin(r));
-      this.move.maxTransform.updateTranslation(
-        bounds.right - w,
-        bounds.top - h,
-      );
-      this.move.minTransform.updateTranslation(
-        bounds.left + w,
-        bounds.bottom + h,
-      );
-      if (r > 2 * Math.PI) {
-        this.transform.updateRotation(r - 2 * Math.PI);
-      }
-      if (r < 0) {
-        this.transform.updateRotation(r + 2 * Math.PI);
-      }
-    }
-  }
+  // updateMoveTransform(t: Transform) {
+  //   const r = t.r();
+  //   const { bounds } = this.multiMove;
+  //   if (r != null) {
+  //     const w = Math.abs(this.currentLength / 2 * Math.cos(r));
+  //     const h = Math.abs(this.currentLength / 2 * Math.sin(r));
+  //     this.move.maxTransform.updateTranslation(
+  //       bounds.right - w,
+  //       bounds.top - h,
+  //     );
+  //     this.move.minTransform.updateTranslation(
+  //       bounds.left + w,
+  //       bounds.bottom + h,
+  //     );
+  //     if (r > 2 * Math.PI) {
+  //       this.transform.updateRotation(r - 2 * Math.PI);
+  //     }
+  //     if (r < 0) {
+  //       this.transform.updateRotation(r + 2 * Math.PI);
+  //     }
+  //   }
+  // }
 
-  addLabel(
-    labelText: string | Equation | Array<string>,
-    offset: number,
-    location: TypeLineLabelLocation = 'top',
-    subLocation: TypeLineLabelSubLocation = 'left',
-    orientation: TypeLineLabelOrientation = 'horizontal',
-    linePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
-  ) {
-    this.label = new LineLabel(
-      this.equation, labelText, this.color,
-      offset, location, subLocation, orientation, linePosition,
-    );
-    if (this.label != null) {
-      this.add('label', this.label.eqn.collection);
-    }
-    this.updateLabel();
-  }
+  // addLabel(
+  //   labelText: string | Equation | Array<string>,
+  //   offset: number,
+  //   location: TypeLineLabelLocation = 'top',
+  //   subLocation: TypeLineLabelSubLocation = 'left',
+  //   orientation: TypeLineLabelOrientation = 'horizontal',
+  //   linePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
+  // ) {
+  //   this.label = new LineLabel(
+  //     this.equation, labelText, this.color,
+  //     offset, location, subLocation, orientation, linePosition,
+  //   );
+  //   if (this.label != null) {
+  //     this.add('label', this.label.eqn.collection);
+  //   }
+  //   this.updateLabel();
+  // }
 
-  updateLabel(parentRotationOffset: number = 0) {
-    const { label } = this;
-    if (label == null) {
-      return;
-    }
-    const lineAngle = normAngle(this.transform.r() || 0);
-    let labelAngle = 0;
-    if (this.showRealLength && this._label) {
-      this._label._base.drawingObject.setText(roundNum(this.currentLength, 2).toString());
-      label.eqn.reArrangeCurrentForm();
-    }
-    const labelPosition = new Point(
-      this.vertexSpaceStart.x * this.currentLength + label.linePosition * this.currentLength,
-      0,
-    );
-    let labelOffsetAngle = Math.PI / 2;
-    const labelOffsetMag = label.offset;
-    if (label.location === 'end1' || label.location === 'end2') {
-      if (label.location === 'end1') {
-        labelPosition.x = this.vertexSpaceStart.x * this.currentLength - label.offset;
-        labelOffsetAngle = -Math.PI;
-      }
-      if (label.location === 'end2') {
-        labelPosition.x = this.vertexSpaceStart.x * this.currentLength
-          + this.currentLength + label.offset;
-        labelOffsetAngle = 0;
-      }
-    } else {
-      const offsetTop = Math.cos(lineAngle) < 0 ? -Math.PI / 2 : Math.PI / 2;
-      const offsetBottom = -offsetTop;
-      const offsetLeft = Math.sin(lineAngle) > 0 ? Math.PI / 2 : -Math.PI / 2;
-      const offsetRight = -offsetLeft;
+  // updateLabel(parentRotationOffset: number = 0) {
+  //   const { label } = this;
+  //   if (label == null) {
+  //     return;
+  //   }
+  //   const lineAngle = normAngle(this.transform.r() || 0);
+  //   let labelAngle = 0;
+  //   if (this.showRealLength && this._label) {
+  //     this._label._base.drawingObject.setText(roundNum(this.currentLength, 2).toString());
+  //     label.eqn.reArrangeCurrentForm();
+  //   }
+  //   const labelPosition = new Point(
+  //     this.vertexSpaceStart.x * this.currentLength + label.linePosition * this.currentLength,
+  //     0,
+  //   );
+  //   let labelOffsetAngle = Math.PI / 2;
+  //   const labelOffsetMag = label.offset;
+  //   if (label.location === 'end1' || label.location === 'end2') {
+  //     if (label.location === 'end1') {
+  //       labelPosition.x = this.vertexSpaceStart.x * this.currentLength - label.offset;
+  //       labelOffsetAngle = -Math.PI;
+  //     }
+  //     if (label.location === 'end2') {
+  //       labelPosition.x = this.vertexSpaceStart.x * this.currentLength
+  //         + this.currentLength + label.offset;
+  //       labelOffsetAngle = 0;
+  //     }
+  //   } else {
+  //     const offsetTop = Math.cos(lineAngle) < 0 ? -Math.PI / 2 : Math.PI / 2;
+  //     const offsetBottom = -offsetTop;
+  //     const offsetLeft = Math.sin(lineAngle) > 0 ? Math.PI / 2 : -Math.PI / 2;
+  //     const offsetRight = -offsetLeft;
 
-      if (label.location === 'top') {
-        labelOffsetAngle = offsetTop;
-      }
-      if (label.location === 'bottom') {
-        labelOffsetAngle = offsetBottom;
-      }
-      if (label.location === 'right') {
-        labelOffsetAngle = offsetRight;
-      }
-      if (label.location === 'left') {
-        labelOffsetAngle = offsetLeft;
-      }
-      if (roundNum(Math.sin(lineAngle), 4) === 0
-        && (label.location === 'left' || label.location === 'right')
-      ) {
-        if (label.subLocation === 'top') {
-          labelOffsetAngle = offsetTop;
-        }
-        if (label.subLocation === 'bottom') {
-          labelOffsetAngle = offsetBottom;
-        }
-      }
-      if (roundNum(Math.cos(lineAngle), 4) === 0
-        && (label.location === 'top' || label.location === 'bottom')
-      ) {
-        if (label.subLocation === 'right') {
-          labelOffsetAngle = offsetRight;
-        }
-        if (label.subLocation === 'left') {
-          labelOffsetAngle = offsetLeft;
-        }
-      }
-      if (label.location === 'inside') {
-        labelOffsetAngle = -Math.PI / 2;
-      }
-      if (label.location === 'outside') {
-        labelOffsetAngle = Math.PI / 2;
-      }
-    }
+  //     if (label.location === 'top') {
+  //       labelOffsetAngle = offsetTop;
+  //     }
+  //     if (label.location === 'bottom') {
+  //       labelOffsetAngle = offsetBottom;
+  //     }
+  //     if (label.location === 'right') {
+  //       labelOffsetAngle = offsetRight;
+  //     }
+  //     if (label.location === 'left') {
+  //       labelOffsetAngle = offsetLeft;
+  //     }
+  //     if (roundNum(Math.sin(lineAngle), 4) === 0
+  //       && (label.location === 'left' || label.location === 'right')
+  //     ) {
+  //       if (label.subLocation === 'top') {
+  //         labelOffsetAngle = offsetTop;
+  //       }
+  //       if (label.subLocation === 'bottom') {
+  //         labelOffsetAngle = offsetBottom;
+  //       }
+  //     }
+  //     if (roundNum(Math.cos(lineAngle), 4) === 0
+  //       && (label.location === 'top' || label.location === 'bottom')
+  //     ) {
+  //       if (label.subLocation === 'right') {
+  //         labelOffsetAngle = offsetRight;
+  //       }
+  //       if (label.subLocation === 'left') {
+  //         labelOffsetAngle = offsetLeft;
+  //       }
+  //     }
+  //     if (label.location === 'inside') {
+  //       labelOffsetAngle = -Math.PI / 2;
+  //     }
+  //     if (label.location === 'outside') {
+  //       labelOffsetAngle = Math.PI / 2;
+  //     }
+  //   }
 
-    if (label.orientation === 'horizontal') {
-      labelAngle = -lineAngle;
-    }
-    if (label.orientation === 'baseToLine') {
-      if (labelPosition.y < 0) {
-        labelAngle = Math.PI;
-      }
-    }
-    if (label.orientation === 'baseAway') {
-      if (labelPosition.y > 0) {
-        labelAngle = Math.PI;
-      }
-    }
-    if (label.orientation === 'baseUpright') {
-      if (Math.cos(lineAngle) < 0) {
-        labelAngle = Math.PI;
-      }
-    }
-    label.updateRotation(
-      labelAngle - parentRotationOffset,
-      labelPosition, labelOffsetMag, labelOffsetAngle,
-    );
-  }
+  //   if (label.orientation === 'horizontal') {
+  //     labelAngle = -lineAngle;
+  //   }
+  //   if (label.orientation === 'baseToLine') {
+  //     if (labelPosition.y < 0) {
+  //       labelAngle = Math.PI;
+  //     }
+  //   }
+  //   if (label.orientation === 'baseAway') {
+  //     if (labelPosition.y > 0) {
+  //       labelAngle = Math.PI;
+  //     }
+  //   }
+  //   if (label.orientation === 'baseUpright') {
+  //     if (Math.cos(lineAngle) < 0) {
+  //       labelAngle = Math.PI;
+  //     }
+  //   }
+  //   label.updateRotation(
+  //     labelAngle - parentRotationOffset,
+  //     labelPosition, labelOffsetMag, labelOffsetAngle,
+  //   );
+  // }
 
-  setLength(newLength: number) {
-    const lineStart = this.vertexSpaceStart.x * newLength;
-    const lineLength = newLength;
-    let straightLineLength = lineLength;
-    let startOffset = 0;
+  // setLength(newLength: number) {
+  //   const lineStart = this.vertexSpaceStart.x * newLength;
+  //   const lineLength = newLength;
+  //   let straightLineLength = lineLength;
+  //   let startOffset = 0;
 
-    if (this.arrow1 && this._arrow1) {
-      straightLineLength -= this.arrow1.height;
-      startOffset = this.arrow1.height;
-      this._arrow1.setPosition(lineStart);
-    }
-    if (this.arrow2 && this._arrow2) {
-      straightLineLength -= this.arrow2.height;
-      this._arrow2.setPosition(lineStart + lineLength, 0);
-    }
-    const line = this._line;
-    if (line) {
-      if (this.dashStyle) {
-        line.lengthToDraw = straightLineLength;
-        // const newStart = this.vertexSpaceStart.x * straightLineLength;
-        // const delta = lineStart + startOffset - newStart;
-        line.setPosition(lineStart + startOffset - this.vertexSpaceStart.x, 0);
-      } else {
-        line.transform.updateScale(straightLineLength, 1);
-        const newStart = this.vertexSpaceStart.x * straightLineLength;
-        const delta = lineStart + startOffset - newStart;
-        line.setPosition(delta, 0);
-      }
-    }
+  //   if (this.arrow1 && this._arrow1) {
+  //     straightLineLength -= this.arrow1.height;
+  //     startOffset = this.arrow1.height;
+  //     this._arrow1.setPosition(lineStart);
+  //   }
+  //   if (this.arrow2 && this._arrow2) {
+  //     straightLineLength -= this.arrow2.height;
+  //     this._arrow2.setPosition(lineStart + lineLength, 0);
+  //   }
+  //   const line = this._line;
+  //   if (line) {
+  //     if (this.dashStyle) {
+  //       line.lengthToDraw = straightLineLength;
+  //       // const newStart = this.vertexSpaceStart.x * straightLineLength;
+  //       // const delta = lineStart + startOffset - newStart;
+  //       line.setPosition(lineStart + startOffset - this.vertexSpaceStart.x, 0);
+  //     } else {
+  //       line.transform.updateScale(straightLineLength, 1);
+  //       const newStart = this.vertexSpaceStart.x * straightLineLength;
+  //       const delta = lineStart + startOffset - newStart;
+  //       line.setPosition(delta, 0);
+  //     }
+  //   }
 
-    const midLine = this._midLine;
-    if (midLine) {
-      midLine.transform.updateScale(newLength, 1);
-    }
+  //   const midLine = this._midLine;
+  //   if (midLine) {
+  //     midLine.transform.updateScale(newLength, 1);
+  //   }
 
-    this.length = newLength;
-    this.updateLineGeometry();
-    this.currentLength = newLength; // to deprecate?
-    this.updateLabel();
-  }
+  //   this.length = newLength;
+  //   this.updateLineGeometry();
+  //   this.currentLength = newLength; // to deprecate?
+  //   this.updateLabel();
+  // }
 
   updateLineGeometry() {
     const t = this.transform.t();
