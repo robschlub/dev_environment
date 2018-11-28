@@ -206,7 +206,7 @@ export default function makeTriangle(
     triangle.add(`point${index}`, point, 0);
   };
 
-  const line = diagram.shapes.polyLine(
+  const line = diagram.shapes.polyLineLegacy(
     [p1, p2, p3], true, lineWidth,
     color, 'onSharpAnglesOnly',
   );

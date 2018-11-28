@@ -75,7 +75,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   makeQuad() {
     const quad = this.diagram.shapes.collection(new Transform('quad')
       .rotate(0).translate(0, 0));
-    const line = this.diagram.shapes.polyLine(
+    const line = this.diagram.shapes.polyLineLegacy(
       [new Point(-1, -1), new Point(1, -1), new Point(1, 1), new Point(-1, 1)],
       true, this.layout.lineWidth,
       this.layout.colors.lines, 'onSharpAnglesOnly',

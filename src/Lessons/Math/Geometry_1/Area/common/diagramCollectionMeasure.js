@@ -146,7 +146,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
     const angleMeasure = this.diagram.shapes.collection(new Transform('angleM')
       .translate(lay.position));
     const col = this.layout.colors;
-    const line = this.diagram.shapes.polyLine([
+    const line = this.diagram.shapes.polyLineLegacy([
       new Point(lay.length, 0),
       new Point(0, 0),
       new Point(lay.length * Math.cos(lay.angle), lay.length * Math.sin(lay.angle)),
@@ -235,7 +235,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
       sideLength, lay.waveMag,
       lay.segments, new Point(-length / 2, -height / 2 - lay.waveMag),
     );
-    const hSegment = this.diagram.shapes.polyLine(
+    const hSegment = this.diagram.shapes.polyLineLegacy(
       hPoints, false, lay.width, this.layout.colors.grid,
       'never',
     );
@@ -249,7 +249,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
       sideLength, lay.waveMag,
       lay.segments, new Point(-length / 2 + lay.waveMag, -height / 2), Math.PI / 2,
     );
-    const vSegment = this.diagram.shapes.polyLine(
+    const vSegment = this.diagram.shapes.polyLineLegacy(
       vPoints, false, lay.width, this.layout.colors.grid,
       'never',
     );

@@ -1,7 +1,11 @@
 @import '../../geometry';
 
 $colors: (
-  // line:             map-get($geometry_colors, lines),
+  lines:             map-get($geometry_colors, lines),
+  //
+  // height:            color('diagram', 'construction7'),
+  // border:            color('diagram', 'construction8'),
+  // radius:            color('diagram', 'construction7'),
 );
 
 body {

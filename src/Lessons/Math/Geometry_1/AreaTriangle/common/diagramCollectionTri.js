@@ -81,7 +81,7 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     color: Array<number> = this.layout.colors.line,
   ) {
     const lay = this.layout[name];
-    const line = this.diagram.shapes.polyLine(
+    const line = this.diagram.shapes.polyLineLegacy(
       lay.points, true, lay.width, color, 'alwaysOn',
       new Transform().rotate(0).translate(0, 0),
     );
@@ -120,7 +120,7 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
 
   addRect() {
     const lay = this.layout.triRect;
-    const line = this.diagram.shapes.polyLine(
+    const line = this.diagram.shapes.polyLineLegacy(
       lay.points, true, lay.width, this.layout.colors.line,
     );
     this.add('rect', line);
@@ -130,12 +130,12 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
       lay.points[2],
       lay.points[3].add(lay.width / 6, 0),
     ];
-    const mask = this.diagram.shapes.polyLine(
+    const mask = this.diagram.shapes.polyLineLegacy(
       points, false, lay.width, this.layout.colors.grid,
     );
     this.add('rectMask', mask);
 
-    const split = this.diagram.shapes.polyLine(
+    const split = this.diagram.shapes.polyLineLegacy(
       [lay.points[1], lay.points[3]], false, lay.width, this.layout.colors.line,
     );
     this.add('rectSplit', split);
@@ -148,7 +148,7 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
       lay.points[2],
       lay.points[3],
     ];
-    const line = this.diagram.shapes.polyLine(
+    const line = this.diagram.shapes.polyLineLegacy(
       points, true, lay.width, this.layout.colors.grid,
     );
     this.add('rectMask', line);

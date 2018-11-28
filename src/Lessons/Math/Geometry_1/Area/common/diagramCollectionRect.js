@@ -102,7 +102,7 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     const lay = this.layout.rect;
     const x = lay.length / 2;
     const y = lay.height / 2;
-    const line = this.diagram.shapes.polyLine([
+    const line = this.diagram.shapes.polyLineLegacy([
       new Point(-x, -y),
       new Point(-x, y),
       new Point(x, y),
@@ -114,7 +114,7 @@ export default class RectAreaCollection extends CommonDiagramCollection {
   addSquare() {
     const lay = this.layout.rect;
     const x = lay.height / 2;
-    const line = this.diagram.shapes.polyLine([
+    const line = this.diagram.shapes.polyLineLegacy([
       new Point(-x, -x),
       new Point(-x, x),
       new Point(x, x),

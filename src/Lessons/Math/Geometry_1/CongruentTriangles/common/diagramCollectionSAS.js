@@ -33,7 +33,7 @@ export default class SASCollection extends CommonDiagramCollection {
       .scale(1, 1)
       .rotate(0)
       .translate(0, 0));
-    const line = this.diagram.shapes.polyLine(
+    const line = this.diagram.shapes.polyLineLegacy(
       this.layout.corner.points, false,
       this.layout.corner.width, this.layout.colors.line,
       'onSharpAnglesOnly',

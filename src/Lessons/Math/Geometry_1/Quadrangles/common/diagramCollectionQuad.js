@@ -21,7 +21,7 @@ export default class QuadCollection extends CommonDiagramCollection {
   _line3: TypeLine;
 
   addQuads() {
-    const makeQuad = points => this.diagram.shapes.polyLine(
+    const makeQuad = points => this.diagram.shapes.polyLineLegacy(
       points, true, this.layout.lineWidth, this.layout.colors.lines,
       'none', new Transform('quad').scale(1, 1).translate(0, 0),
     );

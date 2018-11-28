@@ -18,7 +18,7 @@ export default class TriangleExamplesCollection extends CommonDiagramCollection 
   makeTriangle(name: string) {
     const tri = this.layout.examples[name];
 
-    const line = this.diagram.shapes.polyLine(
+    const line = this.diagram.shapes.polyLineLegacy(
       tri.points, true,
       this.layout.examples.lineWidth, this.layout.colors.line,
       'onSharpAnglesOnly',

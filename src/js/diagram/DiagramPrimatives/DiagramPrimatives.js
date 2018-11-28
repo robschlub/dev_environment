@@ -68,7 +68,7 @@ export default class DiagramPrimatives {
     this.limits = limits;
   }
 
-  polyLine(
+  polyLineLegacy(
     points: Array<Point>,
     close: boolean,
     lineWidth: number,
@@ -82,7 +82,7 @@ export default class DiagramPrimatives {
     );
   }
 
-  polyLineNew(...options: Array<{
+  polyLine(...options: Array<{
       points: Array<Point>,
       color?: Array<number>,
       close?: boolean,

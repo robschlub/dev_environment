@@ -38,7 +38,7 @@ export default class SameAreaCollection extends CommonDiagramCollection {
 
   addLines() {
     const lay = this.layout.same;
-    const tri = this.diagram.shapes.polyLine(
+    const tri = this.diagram.shapes.polyLineLegacy(
       lay.points, true, lay.width, this.layout.colors.line, 'alwaysOn',
     );
     this.add('tri', tri);

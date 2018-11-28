@@ -6,11 +6,11 @@ import lessonLayout from './layout';
 import PopupBoxCollection from '../../../../LessonsCommon/DiagramCollectionPopup';
 import details from '../details';
 
-import XCollection from '../common/diagramCollectionX';
+import EquilateralCollection from '../common/diagramCollectionEquilateral';
 
 
 export default class QR_TODO extends PopupBoxCollection {
-  _collection: XCollection;
+  _collection: EquilateralCollection;
 
   constructor(
     diagram: Object,
@@ -22,7 +22,7 @@ export default class QR_TODO extends PopupBoxCollection {
       layout,
       transform,
       'collection',
-      XCollection,
+      EquilateralCollection,
     );
     this.hasTouchableElements = true;
 
