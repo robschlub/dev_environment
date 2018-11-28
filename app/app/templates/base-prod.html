@@ -8,17 +8,18 @@
     
     {% block head %}{% endblock %}
 
-    <link rel="stylesheet" href="/static/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="/static/vendors/bootstrap-reboot.min.css">
 
     <!-- React PROD -->
-    <script crossorigin src="https://unpkg.com/react@16.4.2/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@16.4.2/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@16.6.3/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16.6.3/umd/react-dom.production.min.js"></script>
   </head>
 
 <body>
   {% block content %}{% endblock %}
 <script type="text/javascript" src="/static/dist/vendors.js"></script>
 <script type="text/javascript" src="/static/dist/tools.js"></script>
+<script type="text/javascript" src="/static/dist/commonlessons.js"></script>
 {% block tail %}{% endblock %}
 </body>
 </html>

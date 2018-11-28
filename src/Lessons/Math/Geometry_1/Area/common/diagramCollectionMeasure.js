@@ -223,7 +223,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
       mag * Math.cos(x / length * 2 * Math.PI),
     ));
     const transform = new Transform().rotate(rotation).translate(start);
-    const tPoints = points.map(p => p.transformBy(transform.m()));
+    const tPoints: Array<Point> = points.map(p => p.transformBy(transform.m()));
     return tPoints;
   }
 

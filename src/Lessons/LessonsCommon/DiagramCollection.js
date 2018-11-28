@@ -60,17 +60,17 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   +diagram: Diagram;
   moveToScenario: (
     DiagramElement,
-    TypeScenario,
+    ?TypeScenario,
     ?number,
     ?(() => void),
     ?(-1 | 1 | 0 | 2)) => number;
 
   getTimeToMoveToScenario: (
     DiagramElement,
-    TypeScenario,
+    ?TypeScenario,
     ?(-1 | 1 | 0 | 2)) => number;
 
-  setScenario: (DiagramElement, TypeScenario) => void;
+  setScenario: (DiagramElement, ?TypeScenario) => void;
   futurePositions: Array<TypeFuturePosition>;
   +calculateFuturePositions: (?TypeScenario) => void;
 
