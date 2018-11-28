@@ -52,10 +52,20 @@ export default function commonLessonLayout() {
       color: layout.colors.lines,
     },
     angle: {
-      radius: 0.4,
       curve: {
+        radius: 0.4,
         sides: 100,
-        width: 0.01,
+        width: 0.02,
+      },
+      // arrow1: {
+      //   width: 0.08,
+      //   height: 0.08,
+      //   radius: 0.4,
+      // },
+      arrow2: {
+        width: 0.08,
+        height: 0.08,
+        radius: 0.4,
       },
     },
     angle1: {
@@ -67,6 +77,11 @@ export default function commonLessonLayout() {
       p1: equilPoints[2],
       p2: equilPoints[1],
       p3: equilPoints[0],
+      arrow1: {
+        width: 0.08,
+        height: 0.08,
+        radius: 0.4,
+      },
     },
     angle3: {
       p1: equilPoints[0],

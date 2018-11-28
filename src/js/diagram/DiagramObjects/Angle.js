@@ -23,6 +23,7 @@ export type TypeAngleOptions = {
   curve?: {
     width?: number,
     sides?: number,
+    radius?: number,
   },
   p1?: Point,
   p2?: Point,
@@ -30,18 +31,21 @@ export type TypeAngleOptions = {
   arrow1?: {
     width?: number,
     height?: number,
+    radius?: number,
   },
   arrow2?: {
     width?: number,
     height?: number,
+    radius?: number,
   },
   arrows?: {
     width?: number,
     height?: number,
+    radius?: number,
   } | boolean,
   label?: {
     text: string | Array<string>,
-    offset?: number,
+    radius?: number,
     curvePosition?: number,
     showRealAngle?: boolean,
   },
@@ -71,7 +75,7 @@ export type TypeAngleOptions = {
 // The angle collection comprises:
 //   * Positioned at 0, 0 in vertex space
 //   * Curve from 0 to angle size (where 0 is along x axis in vertex space)
-//   * Curve can be clockwise or anticlockwise
+  // * Curve can be clockwise or anticlockwise
 //   * Label in center of curve
 //   * Arrows at ends of curve
 //   * Straight lines forming the corner
@@ -120,13 +124,14 @@ class DiagramObjectAngle extends DiagramElementCollection {
 
   // lObjects that may or may not exist
   label: ?AngleLabel;
-  arrow1: ?{ height: number; };
-  arrow2: ?{ height: number; };
+  arrow1: ?{ height: number; width: number, radius: number };
+  arrow2: ?{ height: number; width: number, radius: number };
   side1: ?{ width: number, length: number, color: Array<number> };
   side2: ?{ width: number, length: number, color: Array<number> };
   curve: ?{
     width: number,
     sides: number,
+    radius: number,
   };
 
   // angle properties - read only
@@ -193,16 +198,16 @@ class DiagramObjectAngle extends DiagramElementCollection {
       position: new Point(0, 0),
       rotation: 0,
       angle: 1,
-      radius: 0.1,
+      // radius: 0.1,
       color: [0, 1, 0, 1],
-      clockwise: false,
+      // clockwise: false,
       curve: null,
       sides: null,
       sideStart: null,
       sideStop: null,
       arrows: null,
-      arrowStart: null,
-      arrowStop: null,
+      arrow1: null,
+      arrow2: null,
       label: null,
       p1: null,       // if p1, p2 and p3 are defined, position, angle and
       p2: null,       // rotation will be overridden
@@ -226,7 +231,8 @@ class DiagramObjectAngle extends DiagramElementCollection {
     this.position = optionsToUse.position;
     this.rotation = optionsToUse.rotation;
     this.angle = optionsToUse.angle;
-    this.radius = optionsToUse.radius;
+    // this.clockwise = optionsToUse.clockwise;
+    // this.radius = optionsToUse.radius;
     if (optionsToUse.p1 != null
       && optionsToUse.p2 != null
       && optionsToUse.p3 != null
@@ -252,33 +258,31 @@ class DiagramObjectAngle extends DiagramElementCollection {
     // If the curve is to be shown (and not just a label) then make it
     this._curve = null;
     if (optionsToUse.curve) {
-      this.addCurve(this.radius, optionsToUse.curve);
+      this.addCurve(optionsToUse.curve);
     }
 
-    // // Label related properties
-    // this.label = null;
-    // // this.showRealAngle = false;
-    // this._label = null;
+    let defaultArrowDimension = 0.04;
+    if (this.curve) {
+      defaultArrowDimension = this.curve.width * 4;
+    }
+    let defaultArrowRadius = 0.1;
+    if (this.curve) {
+      defaultArrowRadius = this.curve.radius;
+    }
+    const defaultArrowOptions = {
+      width: defaultArrowDimension,
+      height: defaultArrowDimension,
+      radius: defaultArrowRadius,
+    };
+    if (optionsToUse.arrow1) {
+      const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrow1);
+      this.addArrow(1, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
+    }
 
-    // // this.setLength(this.length);
-
-    // if (optionsToUse.p1 != null && optionsToUse.p2 != null) {
-    //   this.setEndPoints(optionsToUse.p1, optionsToUse.p2);
-    // }
-
-    // const defaultArrowOptions = {
-    //   width: this.width * 4,
-    //   height: this.width * 4,
-    // };
-    // if (optionsToUse.arrowStart) {
-    //   const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrowStart);
-    //   this.addArrowStart(arrowOptions.height, arrowOptions.width);
-    // }
-
-    // if (optionsToUse.arrowEnd) {
-    //   const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrowEnd);
-    //   this.addArrowEnd(arrowOptions.height, arrowOptions.width);
-    // }
+    if (optionsToUse.arrow2) {
+      const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrow2);
+      this.addArrow(2, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
+    }
 
     // // Arrows overrides arrowStart or arrowEnd
     // if (optionsToUse.arrows) {
@@ -287,7 +291,8 @@ class DiagramObjectAngle extends DiagramElementCollection {
     //     ({ arrows } = optionsToUse);
     //   }
     //   const arrowOptions = Object.assign({}, defaultArrowOptions, arrows);
-    //   this.addArrows(arrowOptions.height, arrowOptions.width);
+    //   this.addArrow(1, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
+    //   this.addArrow(2, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
     // }
 
     // const defaultLabelOptions = {
@@ -311,7 +316,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
     // }
   }
 
-  addCurve(radius: number = this.radius, curveOptions: {
+  addCurve(curveOptions: {
     width?: number,
     sides?: number,
   } = {}) {
@@ -324,12 +329,14 @@ class DiagramObjectAngle extends DiagramElementCollection {
     );
     const curve = this.shapes.polygon({
       sides: optionsToUse.sides,
-      radius,
+      radius: optionsToUse.radius,
       width: optionsToUse.width,
-      sidesToDraw: Math.floor(this.angle / (Math.PI * 2) * optionsToUse.sides),
+      // sidesToDraw: Math.floor(this.angle / (Math.PI * 2) * optionsToUse.sides),
       color: this.color,
       fill: false,
+      transform: new Transform('AngleCurve').rotate(0),
     });
+    this.curve = optionsToUse;
     this.add('curve', curve);
   }
 
@@ -365,21 +372,77 @@ class DiagramObjectAngle extends DiagramElementCollection {
 
   addArrow(
     index: 1 | 2,
-    height: number = this.width * 4,
-    width: number = height,
+    height: number | null = null,
+    width: number | null = height,
+    radius: number | null = null,
   ) {
     let r = Math.PI / 2;
     if (index === 2) {
       r = Math.PI / 2 * 3;
     }
+    let heightToUse = 0.04;
+    if (height) {
+      heightToUse = height;
+    } else if (this.curve) {
+      heightToUse = this.curve.width * 4;
+    }
+    let widthToUse = 0.04;
+    if (width) {
+      widthToUse = width;
+    } else if (this.curve) {
+      widthToUse = this.curve.width * 4;
+    }
+    let radiusToUse = 0.1;
+    if (radius) {
+      radiusToUse = radius;
+    } else if (this.curve) {
+      radiusToUse = this.curve.radius;
+    }
+
     const a = this.shapes.arrow(
-      width, 0, height, 0,
-      this.color, new Transform().translate(this.vertexSpaceStart.x, 0), new Point(0, 0), r,
+      widthToUse, 0, heightToUse, 0,
+      this.color, new Transform().rotate(0).translate(0, 0), new Point(0, 0), r,
     );
     // $FlowFixMe
-    this[`arrow${index}`] = { height };
+    this[`arrow${index}`] = {
+      height: heightToUse,
+      width: widthToUse,
+      radius: radiusToUse,
+    };
     this.add(`arrow${index}`, a);
-    this.setLength(this.currentLength);
+    this.update();
+  }
+
+  update() {
+    let rotationForArrow1 = 0;
+    let curveAngle = this.angle;
+
+    const { _arrow1, arrow1 } = this;
+    if (_arrow1 && arrow1) {
+      _arrow1.transform.updateTranslation(arrow1.radius, 0);
+      const arrowLengthAngle = arrow1.height / arrow1.radius;
+      rotationForArrow1 = arrowLengthAngle;
+      curveAngle -= arrowLengthAngle;
+      _arrow1.transform.updateRotation(Math.PI / 2 + arrowLengthAngle);
+    }
+
+    const { _arrow2, arrow2 } = this;
+    if (_arrow2 && arrow2) {
+      _arrow2.transform.updateTranslation(polarToRect(arrow2.radius, this.angle));
+      const arrowLengthAngle = arrow2.height / arrow2.radius;
+      curveAngle -= arrowLengthAngle * 0.5;
+      _arrow2.transform.updateRotation(this.angle + Math.PI / 2 - arrowLengthAngle);
+    }
+
+    this.transform.updateTranslation(this.position);
+    this.transform.updateRotation(this.rotation);
+    const { _curve, curve } = this;
+    if (_curve != null && curve != null) {
+      curveAngle = Math.max(curveAngle, 0);
+      console.log(curveAngle, this.angle);
+      _curve.angleToDraw = curveAngle;
+      _curve.transform.updateRotation(rotationForArrow1);
+    }
   }
 
   addArrows(
