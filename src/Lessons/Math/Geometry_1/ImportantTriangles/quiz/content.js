@@ -1,12 +1,12 @@
 // @flow
 import {
   LessonContent,
+  // interactiveItem,
 } from '../../../../../js/Lesson/LessonContent';
 // import {
-//   click, centerV, highlight,
+//   click, centerH,
 // } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
-// import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
 import imgLinkGrey from '../tile-grey.png';
@@ -27,24 +27,37 @@ class Content extends LessonContent {
   }
 
   addSections() {
-    const diag = this.diagram.elements;
-    // const x = diag._x;
+    // const diag = this.diagram.elements;
+    // const quiz = diag._quiz;
 
-    const common = {
-      setContent: '',
-      setInfo: '',
-      modifiers: {},
-      infoModifiers: {},
-      setEnterState: () => {},
-      showOnly: [],
-      show: [],
-      hide: [],
-      setSteadyState: () => {},
-      setLeaveState: () => {},
-    };
-    this.addSection(common, {
+    this.addSection({
       title: 'Enter_title_here',
       setContent: ['Enter_content_here'],
+    });
+    this.addSection({
+      title: 'Enter_title_here',
+      setContent: [
+        'Enter_question_here',
+      ],
+      modifiers: {
+      },
+      setInfo: `<ul>
+          <li></li>
+          </ul>
+      `,
+      infoModifiers: {
+      },
+      interactiveElements: [
+        // interactiveItem(quiz._check),
+      ],
+      setEnterState: () => {
+      },
+      showOnly: [
+      ],
+      show: [
+      ],
+      setSteadyState: () => {
+      },
     });
   }
 }

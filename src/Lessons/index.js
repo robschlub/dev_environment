@@ -114,6 +114,20 @@ export default function getLessonIndex() {
     true,
   ));
   lessonIndex.push(new LessonDescription(
+    'Important Triangles',
+    '/Lessons/Math/Geometry_1/ImportantTriangles',
+    'important_triangles',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'congruent_triangles',
+    ],
+    true,
+  ));
+  lessonIndex.push(new LessonDescription(
     'Why Study Shapes?',
     '/Lessons/Math/Geometry_1/Introduction',
     'why_study_shapes',
@@ -189,18 +203,6 @@ export default function getLessonIndex() {
     ],
     [
       'right_angle_triangles',
-    ],
-    false,
-  ));
-  lessonIndex.push(new LessonDescription(
-    'Important Triangles',
-    '/Lessons/Math/Geometry_1/ToDo/ImportantTriangles',
-    'important_triangles',
-    [
-      '1',
-    ],
-    [
-      'congruent_triangles',
     ],
     false,
   ));
