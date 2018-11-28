@@ -261,6 +261,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       this.addCurve(optionsToUse.curve);
     }
 
+    // Arrows
     let defaultArrowDimension = 0.04;
     if (this.curve) {
       defaultArrowDimension = this.curve.width * 4;
@@ -284,17 +285,19 @@ class DiagramObjectAngle extends DiagramElementCollection {
       this.addArrow(2, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
     }
 
-    // // Arrows overrides arrowStart or arrowEnd
-    // if (optionsToUse.arrows) {
-    //   let arrows = {};
-    //   if (typeof optionsToUse.arrows === 'object') {
-    //     ({ arrows } = optionsToUse);
-    //   }
-    //   const arrowOptions = Object.assign({}, defaultArrowOptions, arrows);
-    //   this.addArrow(1, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
-    //   this.addArrow(2, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
-    // }
+    // Arrows overrides arrowStart or arrowEnd
+    if (optionsToUse.arrows) {
+      let arrows = {};
+      if (typeof optionsToUse.arrows === 'object') {
+        ({ arrows } = optionsToUse);
+      }
+      const arrowOptions = Object.assign({}, defaultArrowOptions, arrows);
+      this.addArrow(1, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
+      this.addArrow(2, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
+    }
 
+    // Label
+    this.update();
     // const defaultLabelOptions = {
     //   text: '',
     //   offset: 0,
@@ -439,47 +442,48 @@ class DiagramObjectAngle extends DiagramElementCollection {
     const { _curve, curve } = this;
     if (_curve != null && curve != null) {
       curveAngle = Math.max(curveAngle, 0);
-      console.log(curveAngle, this.angle);
+      console.log(curveAngle)
       _curve.angleToDraw = curveAngle;
       _curve.transform.updateRotation(rotationForArrow1);
     }
   }
 
   addArrows(
-    arrowHeight: number = this.width * 4,
-    arrowWidth: number = arrowHeight,
+    height: number | null = null,
+    width: number | null = height,
+    radius: number | null = null,
   ) {
-    this.addArrow1(arrowHeight, arrowWidth);
-    this.addArrow2(arrowHeight, arrowWidth);
+    this.addArrow(1, height, width, radius);
+    this.addArrow(2, height, width, radius);
   }
 
-  addArrow1(
-    arrowHeight: number = this.width * 4,
-    arrowWidth: number = arrowHeight,
-  ) {
-    this.addArrow(1, arrowHeight, arrowWidth);
-  }
+  // addArrow1(
+  //   arrowHeight: number = this.width * 4,
+  //   arrowWidth: number = arrowHeight,
+  // ) {
+  //   this.addArrow(1, arrowHeight, arrowWidth);
+  // }
 
-  addArrow2(
-    arrowHeight: number = this.width * 4,
-    arrowWidth: number = arrowHeight,
-  ) {
-    this.addArrow(2, arrowHeight, arrowWidth);
-  }
+  // addArrow2(
+  //   arrowHeight: number = this.width * 4,
+  //   arrowWidth: number = arrowHeight,
+  // ) {
+  //   this.addArrow(2, arrowHeight, arrowWidth);
+  // }
 
-  addArrowStart(
-    arrowHeight: number = this.width * 4,
-    arrowWidth: number = arrowHeight,
-  ) {
-    this.addArrow1(arrowHeight, arrowWidth);
-  }
+  // addArrowStart(
+  //   arrowHeight: number = this.width * 4,
+  //   arrowWidth: number = arrowHeight,
+  // ) {
+  //   this.addArrow1(arrowHeight, arrowWidth);
+  // }
 
-  addArrowEnd(
-    arrowHeight: number = this.width * 4,
-    arrowWidth: number = arrowHeight,
-  ) {
-    this.addArrow2(arrowHeight, arrowWidth);
-  }
+  // addArrowEnd(
+  //   arrowHeight: number = this.width * 4,
+  //   arrowWidth: number = arrowHeight,
+  // ) {
+  //   this.addArrow2(arrowHeight, arrowWidth);
+  // }
 
   setMovable(
     movable: boolean = true,
