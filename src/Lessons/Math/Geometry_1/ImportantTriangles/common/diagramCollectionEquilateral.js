@@ -24,20 +24,26 @@ export default class EquilateralCollection extends CommonDiagramCollection {
   }
 
   addAngles() {
-    const angle = this.diagram.objects.angle({
-      radius: 0.4,
-      p3: this.layout.equil.tri.points[0],
-      p2: this.layout.equil.tri.points[1],
-      p1: this.layout.equil.tri.points[2],
-      // position: this.layout.equil.tri.points[0],
-      rotation: 0,
-      angle: 1,
-      curve: {
-        width: 0.01,
-        sides: 100,
-      },
-    });
-    this.add('angle', angle);
+    // const angle = this.diagram.objects.angle({
+    //   radius: 0.4,
+    //   p3: this.layout.equil.tri.points[0],
+    //   p2: this.layout.equil.tri.points[1],
+    //   p1: this.layout.equil.tri.points[2],
+    //   // position: this.layout.equil.tri.points[0],
+    //   rotation: 0,
+    //   angle: 1,
+    //   curve: {
+    //     width: 0.01,
+    //     sides: 100,
+    //   },
+    // });
+    const lay = this.layout.equil;
+    const angle1 = this.diagram.objects.angle(lay.angle, lay.angle1);
+    this.add('angle1', angle1);
+    const angle2 = this.diagram.objects.angle(lay.angle, lay.angle2);
+    this.add('angle2', angle2);
+    const angle3 = this.diagram.objects.angle(lay.angle, lay.angle3);
+    this.add('angle3', angle3);
   }
 
   constructor(
@@ -49,7 +55,7 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     this.setPosition(this.layout.equil.position);
     this.addTris();
     this.addAngles();
-    // console.log(this)
+    console.log(this)
     // this.hasTouchableElements = true;
   }
 }

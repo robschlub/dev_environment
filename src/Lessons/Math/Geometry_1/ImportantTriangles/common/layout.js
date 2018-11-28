@@ -51,6 +51,28 @@ export default function commonLessonLayout() {
       position: new Point(0, 0),
       color: layout.colors.lines,
     },
+    angle: {
+      radius: 0.4,
+      curve: {
+        sides: 100,
+        width: 0.01,
+      },
+    },
+    angle1: {
+      p1: equilPoints[1],
+      p2: equilPoints[0],
+      p3: equilPoints[2],
+    },
+    angle2: {
+      p1: equilPoints[2],
+      p2: equilPoints[1],
+      p3: equilPoints[0],
+    },
+    angle3: {
+      p1: equilPoints[0],
+      p2: equilPoints[2],
+      p3: equilPoints[1],
+    },
   };
   return layout;
 }
