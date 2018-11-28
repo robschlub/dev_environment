@@ -47,7 +47,7 @@ function getAllLessons(lessonsPath) {
 
 function entryPoints(buildMode) {
   const points = {
-    main: ['whatwg-fetch', 'babel-polyfill', './src/js/main.js'],
+    main: ['whatwg-fetch', '@babel/polyfill', './src/js/main.js'],
   };
   const lessons = getAllPaths('./src/Lessons', buildMode);
   lessons.forEach((lesson) => {

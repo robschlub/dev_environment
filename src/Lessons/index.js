@@ -9,6 +9,7 @@ export default function getLessonIndex() {
     'adjacent_angles',
     [
       '1',
+      'dev',
       'summary',
     ],
     [
@@ -34,6 +35,7 @@ export default function getLessonIndex() {
     'area_introduction',
     [
       '1',
+      'dev',
       'quiz',
       'summary',
     ],
@@ -48,6 +50,7 @@ export default function getLessonIndex() {
     'area_circle',
     [
       '1',
+      'dev',
       'quiz',
       'summary',
     ],
@@ -62,6 +65,7 @@ export default function getLessonIndex() {
     'area_triangle',
     [
       '1',
+      'dev',
       'quiz',
       'summary',
     ],
@@ -88,6 +92,7 @@ export default function getLessonIndex() {
     'congruent_triangles',
     [
       '1',
+      'dev',
       'quiz',
       'summary',
     ],
@@ -151,6 +156,7 @@ export default function getLessonIndex() {
     'quadrangles',
     [
       '1',
+      'dev',
       'quiz',
       'summary',
     ],
@@ -165,6 +171,7 @@ export default function getLessonIndex() {
     'related_angles',
     [
       '1',
+      'dev',
       'quiz',
       'summary',
     ],
@@ -240,6 +247,7 @@ export default function getLessonIndex() {
     'triangle_introduction',
     [
       '1',
+      'dev',
       'quiz',
       'summary',
     ],

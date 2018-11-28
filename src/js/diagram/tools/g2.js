@@ -416,240 +416,214 @@ function getDeltaAngle(
   // return rotDiff;
 }
 
-function Line(p1: Point, p2OrMag: Point | number, angle: number = 0) {
-  this.p1 = p1._dup();
-  if (p2OrMag instanceof Point) {
-    this.p2 = p2OrMag._dup();
-    this.ang = Math.atan2(this.p2.y - this.p1.y, this.p2.x - this.p1.x);
-  } else {
-    this.p2 = this.p1.add(
-      p2OrMag * Math.cos(angle),
-      p2OrMag * Math.sin(angle),
+class Line {
+  p1: Point;
+  p2: Point;
+  ang: number;
+  A: number;
+  B: number;
+  C: number;
+  distance: number;
+
+  constructor(p1: Point, p2OrMag: Point | number, angle: number = 0) {
+    this.p1 = p1._dup();
+    if (p2OrMag instanceof Point) {
+      this.p2 = p2OrMag._dup();
+      this.ang = Math.atan2(this.p2.y - this.p1.y, this.p2.x - this.p1.x);
+    } else {
+      this.p2 = this.p1.add(
+        p2OrMag * Math.cos(angle),
+        p2OrMag * Math.sin(angle),
+      );
+      this.ang = angle;
+    }
+    this.A = this.p2.y - this.p1.y;
+    this.B = this.p1.x - this.p2.x;
+    this.C = this.A * this.p1.x + this.B * this.p1.y;
+    this.distance = distance(this.p1, this.p2);
+  }
+
+  getPoint(index: number = 1) {
+    if (index === 2) {
+      return this.p2;
+    }
+    return this.p1;
+  }
+
+  getYFromX(x: number) {
+    if (this.B !== 0) {
+      return (this.C - this.A * x) / this.B;
+    }
+    return null;
+  }
+
+  getXFromY(y: number) {
+    if (this.A !== 0) {
+      return (this.C - this.B * y) / this.A;
+    }
+    return null;
+  }
+
+  angle() {
+    return this.ang;
+  }
+
+  round(precision?: number = 8) {
+    const lineRounded = new Line(this.p1, this.p2);
+    lineRounded.A = roundNum(lineRounded.A, precision);
+    lineRounded.B = roundNum(lineRounded.B, precision);
+    lineRounded.C = roundNum(lineRounded.C, precision);
+    lineRounded.ang = roundNum(lineRounded.ang, precision);
+    lineRounded.distance = roundNum(lineRounded.distance, precision);
+    return lineRounded;
+  }
+
+  length() {
+    // return this.p1.sub(this.p2).distance();
+    return this.distance;
+  }
+
+  /* eslint-disable comma-dangle */
+  midpoint() {
+    const length = this.length();
+    const direction = this.p2.sub(this.p1);
+    const angle = Math.atan2(direction.y, direction.x);
+    const midpoint = point(
+      this.p1.x + length / 2 * Math.cos(angle),
+      this.p1.y + length / 2 * Math.sin(angle)
     );
-    this.ang = angle;
+    return midpoint;
   }
-  this.A = this.p2.y - this.p1.y;
-  this.B = this.p1.x - this.p2.x;
-  this.C = this.A * this.p1.x + this.B * this.p1.y;
-  this.distance = distance(this.p1, this.p2);
-}
+  /* eslint-enable comma-dangle */
 
-Line.prototype.getPoint = function getPoint(index: number = 1) {
-  return this[`p${index}`];
-};
-
-Line.prototype.getYFromX = function getX(x: number) {
-  if (this.B !== 0) {
-    return (this.C - this.A * x) / this.B;
-  }
-  return null;
-};
-
-Line.prototype.getXFromY = function getY(y: number) {
-  if (this.A !== 0) {
-    return (this.C - this.B * y) / this.A;
-  }
-  return null;
-};
-
-Line.prototype.angle = function angle() {
-  return this.ang;
-};
-
-Line.prototype.round = function lineround(precision?: number = 8) {
-  const lineRounded = new Line(this.p1, this.p2);
-  lineRounded.A = roundNum(lineRounded.A, precision);
-  lineRounded.B = roundNum(lineRounded.B, precision);
-  lineRounded.C = roundNum(lineRounded.C, precision);
-  lineRounded.ang = roundNum(lineRounded.ang, precision);
-  lineRounded.distance = roundNum(lineRounded.distance, precision);
-  return lineRounded;
-};
-
-Line.prototype.length = function linelength() {
-  // return this.p1.sub(this.p2).distance();
-  return this.distance;
-};
-/* eslint-disable comma-dangle */
-Line.prototype.midpoint = function linemidpoint() {
-  const length = this.length();
-  const direction = this.p2.sub(this.p1);
-  const angle = Math.atan2(direction.y, direction.x);
-  const midpoint = point(
-    this.p1.x + length / 2 * Math.cos(angle),
-    this.p1.y + length / 2 * Math.sin(angle)
-  );
-  return midpoint;
-};
-/* eslint-enable comma-dangle */
-Line.prototype.hasPointAlong = function linehasPointAlong(p: Point, precision?: number) {
-  if (precision === undefined || precision === null) {
-    if (this.C === this.A * p.x + this.B * p.y) {
+  hasPointAlong(p: Point, precision?: number) {
+    if (precision === undefined || precision === null) {
+      if (this.C === this.A * p.x + this.B * p.y) {
+        return true;
+      }
+    } else if (
+      roundNum(this.C, precision) === roundNum(this.A * p.x + this.B * p.y, precision)
+    ) {
       return true;
     }
-  } else if (
-    roundNum(this.C, precision) === roundNum(this.A * p.x + this.B * p.y, precision)
-  ) {
+    return false;
+  }
+
+  // perpendicular distance of line to point
+  distanceToPoint(p: Point, precision?: number) {
+    return roundNum(
+      Math.abs(this.A * p.x + this.B * p.y - this.C) / Math.sqrt(this.A ** 2 + this.B ** 2),
+      precision,
+    );
+  }
+
+  hasPointOn(p: Point, precision?: number) {
+    if (this.hasPointAlong(p, precision)) {
+      if (pointinRect(p, this.p1, this.p2, precision)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isEqualTo(line2: Line, precision?: number) {
+    let l1 = this;
+    let l2 = line2;
+    if (typeof precision === 'number') {
+      l1 = l1.round(precision);
+      l2 = l2.round(precision);
+      l1.p1 = l1.p1.round(precision);
+      l1.p2 = l1.p2.round(precision);
+      l2.p1 = l2.p1.round(precision);
+      l2.p2 = l2.p2.round(precision);
+    }
+    if (l1.A !== l2.A) {
+      return false;
+    }
+    if (l1.B !== l2.B) {
+      return false;
+    }
+    if (l1.C !== l2.C) {
+      return false;
+    }
+    if (l1.p1.isNotEqualTo(l2.p1) && l1.p1.isNotEqualTo(l2.p2)) {
+      return false;
+    }
+    if (l1.p2.isNotEqualTo(l2.p1) && l1.p2.isNotEqualTo(l2.p2)) {
+      return false;
+    }
     return true;
   }
-  return false;
-};
 
-// perpendicular distance of line to point
-Line.prototype.distanceToPoint = function distanceToPoint(p: Point, precision?: number) {
-  return roundNum(
-    Math.abs(this.A * p.x + this.B * p.y - this.C) / Math.sqrt(this.A ** 2 + this.B ** 2),
-    precision,
-  );
-};
-
-Line.prototype.hasPointOn = function linehasPointOn(p: Point, precision?: number) {
-  if (this.hasPointAlong(p, precision)) {
-    if (pointinRect(p, this.p1, this.p2, precision)) {
+  isOnSameLineAs(line2: Line, precision: number = 8) {
+    const l1 = this.round(precision);
+    const l2 = line2.round(precision);
+    // If A and B are zero, then this is not a line
+    if ((l1.A === 0 && l1.B === 0)
+      || (l2.A === 0 && l2.B === 0)) {
+      return false;
+    }
+    // If A is 0, then it must be 0 on the other line. Similar with B
+    if (l1.A !== 0) {
+      const scale = l2.A / l1.A;
+      if (l1.B * scale !== l2.B) {
+        return false;
+      }
+      if (l1.C * scale !== l2.C) {
+        return false;
+      }
       return true;
     }
-  }
-  return false;
-};
-
-Line.prototype.isEqualTo = function lineisEqualTo(line2: Line, precision?: number) {
-  let l1 = this;
-  let l2 = line2;
-  if (typeof precision === 'number') {
-    l1 = l1.round(precision);
-    l2 = l2.round(precision);
-    l1.p1 = l1.p1.round(precision);
-    l1.p2 = l1.p2.round(precision);
-    l2.p1 = l2.p1.round(precision);
-    l2.p2 = l2.p2.round(precision);
-  }
-  if (l1.A !== l2.A) {
-    return false;
-  }
-  if (l1.B !== l2.B) {
-    return false;
-  }
-  if (l1.C !== l2.C) {
-    return false;
-  }
-  if (l1.p1.isNotEqualTo(l2.p1) && l1.p1.isNotEqualTo(l2.p2)) {
-    return false;
-  }
-  if (l1.p2.isNotEqualTo(l2.p1) && l1.p2.isNotEqualTo(l2.p2)) {
-    return false;
-  }
-  return true;
-};
-
-Line.prototype.isOnSameLineAs = function lineisOnSameLineAs(line2: Line, precision: number = 8) {
-  const l1 = this.round(precision);
-  const l2 = line2.round(precision);
-  // If A and B are zero, then this is not a line
-  if ((l1.A === 0 && l1.B === 0)
-    || (l2.A === 0 && l2.B === 0)) {
-    return false;
-  }
-  // If A is 0, then it must be 0 on the other line. Similar with B
-  if (l1.A !== 0) {
-    const scale = l2.A / l1.A;
-    if (l1.B * scale !== l2.B) {
-      return false;
-    }
-    if (l1.C * scale !== l2.C) {
-      return false;
-    }
-    return true;
-  }
-  if (l2.A !== 0) {
-    const scale = l1.A / l2.A;
-    if (l2.B * scale !== l1.B) {
-      return false;
-    }
-    if (l2.C * scale !== l1.C) {
-      return false;
-    }
-    return true;
-  }
-  if (l1.B !== 0) {
-    const scale = l2.B / l1.B;
-    if (l1.A * scale !== l2.A) {
-      return false;
-    }
-    if (l1.C * scale !== l2.C) {
-      return false;
-    }
-    return true;
-  }
-  if (l2.B !== 0) {
-    const scale = l1.B / l2.B;
-    if (l2.A * scale !== l1.A) {
-      return false;
-    }
-    if (l2.C * scale !== l1.C) {
-      return false;
-    }
-    return true;
-  }
-  return true;
-};
-
-Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precision: number = 8) {
-  const l2 = line2; // line2.round(precision);
-  const l1 = this;  // this.round(precision);
-  const det = l1.A * l2.B - l2.A * l1.B;
-  if (roundNum(det, precision) !== 0) {
-    const i = point(0, 0);
-    i.x = (l2.B * l1.C - l1.B * l2.C) / det;
-    i.y = (l1.A * l2.C - l2.A * l1.C) / det;
-    if (
-      pointinRect(i, l1.p1, l1.p2, precision)
-      && pointinRect(i, l2.p1, l2.p2, precision)
-    ) {
-      return {
-        onLine: true,
-        inLine: true,
-        intersect: i,
-      };
-    }
-    return {
-      onLine: true,
-      inLine: false,
-      intersect: i,
-    };
-  }
-  if (det === 0 && (l1.isOnSameLineAs(l2, precision))) {
-    // if the lines are colliner then:
-    //   - if overlapping,
-    //   - if partially overlapping: the intersect point is halfway between
-    //     overlapping ends
-    //   - if one line is within the other line, the intersect point is
-    //     halfway between the midpoints
-    //   - if not overlapping, the intersect point is halfway between the nearest ends
-    // let l1 = this;
-    if (
-      !l1.p1.isOnLine(l2, precision)
-      && !l1.p2.isOnLine(l2, precision)
-      && !l2.p1.isOnLine(l1, precision)
-      && !l2.p2.isOnLine(l1, precision)
-    ) {
-      const line11 = new Line(l1.p1, l2.p1);
-      const line12 = new Line(l1.p1, l2.p2);
-      const line21 = new Line(l1.p2, l2.p1);
-      const line22 = new Line(l1.p2, l2.p2);
-
-      let i = line11.midpoint();
-      let len = line11.length();
-      if (line12.length() < len) {
-        i = line12.midpoint();
-        len = line12.length();
+    if (l2.A !== 0) {
+      const scale = l1.A / l2.A;
+      if (l2.B * scale !== l1.B) {
+        return false;
       }
-      if (line21.length() < len) {
-        i = line21.midpoint();
-        len = line21.length();
+      if (l2.C * scale !== l1.C) {
+        return false;
       }
-      if (line22.length() < len) {
-        i = line22.midpoint();
-        len = line22.length();
+      return true;
+    }
+    if (l1.B !== 0) {
+      const scale = l2.B / l1.B;
+      if (l1.A * scale !== l2.A) {
+        return false;
+      }
+      if (l1.C * scale !== l2.C) {
+        return false;
+      }
+      return true;
+    }
+    if (l2.B !== 0) {
+      const scale = l1.B / l2.B;
+      if (l2.A * scale !== l1.A) {
+        return false;
+      }
+      if (l2.C * scale !== l1.C) {
+        return false;
+      }
+      return true;
+    }
+    return true;
+  }
+
+  intersectsWith(line2: Line, precision: number = 8) {
+    const l2 = line2; // line2.round(precision);
+    const l1 = this;  // this.round(precision);
+    const det = l1.A * l2.B - l2.A * l1.B;
+    if (roundNum(det, precision) !== 0) {
+      const i = point(0, 0);
+      i.x = (l2.B * l1.C - l1.B * l2.C) / det;
+      i.y = (l1.A * l2.C - l2.A * l1.C) / det;
+      if (
+        pointinRect(i, l1.p1, l1.p2, precision)
+        && pointinRect(i, l2.p1, l2.p2, precision)
+      ) {
+        return {
+          onLine: true,
+          inLine: true,
+          intersect: i,
+        };
       }
       return {
         onLine: true,
@@ -657,77 +631,118 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
         intersect: i,
       };
     }
-    if (
-      (
+    if (det === 0 && (l1.isOnSameLineAs(l2, precision))) {
+      // if the lines are colliner then:
+      //   - if overlapping,
+      //   - if partially overlapping: the intersect point is halfway between
+      //     overlapping ends
+      //   - if one line is within the other line, the intersect point is
+      //     halfway between the midpoints
+      //   - if not overlapping, the intersect point is halfway between the nearest ends
+      // let l1 = this;
+      if (
+        !l1.p1.isOnLine(l2, precision)
+        && !l1.p2.isOnLine(l2, precision)
+        && !l2.p1.isOnLine(l1, precision)
+        && !l2.p2.isOnLine(l1, precision)
+      ) {
+        const line11 = new Line(l1.p1, l2.p1);
+        const line12 = new Line(l1.p1, l2.p2);
+        const line21 = new Line(l1.p2, l2.p1);
+        const line22 = new Line(l1.p2, l2.p2);
+
+        let i = line11.midpoint();
+        let len = line11.length();
+        if (line12.length() < len) {
+          i = line12.midpoint();
+          len = line12.length();
+        }
+        if (line21.length() < len) {
+          i = line21.midpoint();
+          len = line21.length();
+        }
+        if (line22.length() < len) {
+          i = line22.midpoint();
+          len = line22.length();
+        }
+        return {
+          onLine: true,
+          inLine: false,
+          intersect: i,
+        };
+      }
+      if (
+        (
+          l1.p1.isOnLine(l2, precision)
+          && l1.p2.isOnLine(l2, precision)
+          && (!l2.p1.isOnLine(l1, precision) || !l2.p2.isOnLine(l1, precision))
+        )
+        || (
+          l2.p1.isOnLine(l1, precision)
+          && l2.p2.isOnLine(l1, precision)
+          && (!l1.p1.isOnLine(l2, precision) || !l1.p2.isOnLine(l2, precision))
+        )
+      ) {
+        const midLine = new Line(l1.midpoint(), l2.midpoint());
+        return {
+          onLine: true,
+          inLine: true,
+          intersect: midLine.midpoint(),
+        };
+      }
+      let midLine;
+      if (
         l1.p1.isOnLine(l2, precision)
-        && l1.p2.isOnLine(l2, precision)
-        && (!l2.p1.isOnLine(l1, precision) || !l2.p2.isOnLine(l1, precision))
-      )
-      || (
-        l2.p1.isOnLine(l1, precision)
+        && !l1.p2.isOnLine(l2, precision)
+        && l2.p1.isOnLine(l1, precision)
+        && !l2.p2.isOnLine(l1, precision)
+      ) {
+        midLine = new Line(l1.p1, l2.p1);
+      }
+      if (
+        l1.p1.isOnLine(l2, precision)
+        && !l1.p2.isOnLine(l2, precision)
+        && !l2.p1.isOnLine(l1, precision)
         && l2.p2.isOnLine(l1, precision)
-        && (!l1.p1.isOnLine(l2, precision) || !l1.p2.isOnLine(l2, precision))
-      )
-    ) {
-      const midLine = new Line(l1.midpoint(), l2.midpoint());
+      ) {
+        midLine = new Line(l1.p1, l2.p2);
+      }
+      if (
+        !l1.p1.isOnLine(l2, precision)
+        && l1.p2.isOnLine(l2, precision)
+        && l2.p1.isOnLine(l1, precision)
+        && !l2.p2.isOnLine(l1, precision)
+      ) {
+        midLine = new Line(l1.p2, l2.p1);
+      }
+      if (
+        !l1.p1.isOnLine(l2, precision)
+        && l1.p2.isOnLine(l2, precision)
+        && !l2.p1.isOnLine(l1, precision)
+        && l2.p2.isOnLine(l1, precision)
+      ) {
+        midLine = new Line(l1.p2, l2.p2);
+      }
+
+      let i;
+
+      if (midLine instanceof Line) {
+        i = midLine.midpoint();
+      }
+
       return {
         onLine: true,
         inLine: true,
-        intersect: midLine.midpoint(),
+        intersect: i,
       };
     }
-    let midLine;
-    if (
-      l1.p1.isOnLine(l2, precision)
-      && !l1.p2.isOnLine(l2, precision)
-      && l2.p1.isOnLine(l1, precision)
-      && !l2.p2.isOnLine(l1, precision)
-    ) {
-      midLine = new Line(l1.p1, l2.p1);
-    }
-    if (
-      l1.p1.isOnLine(l2, precision)
-      && !l1.p2.isOnLine(l2, precision)
-      && !l2.p1.isOnLine(l1, precision)
-      && l2.p2.isOnLine(l1, precision)
-    ) {
-      midLine = new Line(l1.p1, l2.p2);
-    }
-    if (
-      !l1.p1.isOnLine(l2, precision)
-      && l1.p2.isOnLine(l2, precision)
-      && l2.p1.isOnLine(l1, precision)
-      && !l2.p2.isOnLine(l1, precision)
-    ) {
-      midLine = new Line(l1.p2, l2.p1);
-    }
-    if (
-      !l1.p1.isOnLine(l2, precision)
-      && l1.p2.isOnLine(l2, precision)
-      && !l2.p1.isOnLine(l1, precision)
-      && l2.p2.isOnLine(l1, precision)
-    ) {
-      midLine = new Line(l1.p2, l2.p2);
-    }
-
-    let i;
-
-    if (midLine instanceof Line) {
-      i = midLine.midpoint();
-    }
-
     return {
-      onLine: true,
-      inLine: true,
-      intersect: i,
+      onLine: false,
+      inLine: false,
+      intersect: undefined,
     };
   }
-  return {
-    onLine: false,
-    inLine: false,
-    intersect: undefined,
-  };
-};
+}
 
 function line(p1: Point, p2: Point) {
   return new Line(p1, p2);
@@ -1396,15 +1411,17 @@ class Transform {
       if (t != null) {
         const perpLine = new Line(t, 1, limitLine.angle() + Math.PI / 2);
         const { intersect } = perpLine.intersectsWith(limitLine);
-        if (intersect.isOnLine(limitLine, 4)) {
-          clippedTransform.updateTranslation(intersect);
-        } else {
-          const p1Dist = distance(intersect, limitLine.p1);
-          const p2Dist = distance(intersect, limitLine.p2);
-          if (p1Dist < p2Dist) {
-            clippedTransform.updateTranslation(limitLine.p1);
+        if (intersect) {
+          if (intersect.isOnLine(limitLine, 4)) {
+            clippedTransform.updateTranslation(intersect);
           } else {
-            clippedTransform.updateTranslation(limitLine.p2);
+            const p1Dist = distance(intersect, limitLine.p1);
+            const p2Dist = distance(intersect, limitLine.p2);
+            if (p1Dist < p2Dist) {
+              clippedTransform.updateTranslation(limitLine.p1);
+            } else {
+              clippedTransform.updateTranslation(limitLine.p2);
+            }
           }
         }
       }
