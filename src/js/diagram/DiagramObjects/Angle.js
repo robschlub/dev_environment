@@ -2,7 +2,7 @@
 
 // import Diagram from '../Diagram';
 import {
-  Transform, Point, Line, polarToRect, normAngle, Rect, distance,
+  Transform, Point, Line, polarToRect, normAngle, Rect,
   threePointAngle,
 } from '../tools/g2';
 import {
@@ -27,11 +27,11 @@ export type TypeAngleOptions = {
   p1?: Point,
   p2?: Point,
   p3?: Point,
-  arrowStart?: {
+  arrow1?: {
     width?: number,
     height?: number,
   },
-  arrowStop?: {
+  arrow2?: {
     width?: number,
     height?: number,
   },
@@ -45,7 +45,17 @@ export type TypeAngleOptions = {
     curvePosition?: number,
     showRealAngle?: boolean,
   },
-  sides: {
+  side1?: {
+    length?: number,
+    width?: number,
+    color?: Array<number>,
+  },
+  side2?: {
+    length?: number,
+    width?: number,
+    color?: Array<number>,
+  },
+  sides?: {
     length?: number,
     width?: number,
     color?: Array<number>,
@@ -77,10 +87,7 @@ export type TypeAngleOptions = {
 
 class AngleLabel extends EquationLabel {
   offset: number;
-  location: TypeLineLabelLocation;
-  subLocation: TypeLineLabelSubLocation;
-  orientation: TypeLineLabelOrientation;
-  linePosition: number;
+  curvePosition: number;
 
   constructor(
     equation: Object,
@@ -111,20 +118,26 @@ export class DiagramObjectAngle extends DiagramElementCollection {
     _base: DiagramElementPrimative;
   } & DiagramElementCollection;
 
-  // label and arrow objects that exist if labels and arrows exist
+  // lObjects that may or may not exist
   label: ?AngleLabel;
   arrow1: ?{ height: number; };
   arrow2: ?{ height: number; };
+  side1: ?{ width: number, length: number, color: Array<number> };
+  side2: ?{ width: number, length: number, color: Array<number> };
+  curve: ?{
+    width: number,
+    sides: number,
+  };
 
-  // line properties - read only
+  // angle properties - read only
   angle: number;
   rotation: number;
   position: Point;
+  radius: number;
+  clockwise: boolean;
   p1: Point;
   p2: Point;
   p3: Point;
-  width: number;
-  clockwise: boolean;
 
   // line properties - read/write
   // showRealAngle: boolean;
@@ -134,33 +147,29 @@ export class DiagramObjectAngle extends DiagramElementCollection {
   shapes: Object;
   equation: Object;
   animateNextFrame: void => void;
-  // offset: number;
   isTouchDevice: boolean;
   largerTouchBorder: boolean;
-  // dashStyle: { style: Array<number>, maxLength: number } | null;
 
   // line methods
-  setLength: (number) => void;
-  setEndPoints: (Point, Point, ?number) => void;
-  animateLengthTo: (?number, ?number, ?boolean, ?() => void) => void;
+  setAngle: (number) => void;
+  setRotation: (number) => void;
+  setByPoints: (Point, Point, Point) => void;
+  // setLength: (number) => void;
+  // setEndPoints: (Point, Point, ?number) => void;
+  // animateLengthTo: (?number, ?number, ?boolean, ?() => void) => void;
   grow: (?number, ?number, ?boolean, ?() => void) => void;
-  setMovable: (?boolean, ?('translation' | 'rotation' | 'centerTranslateEndRotation' | 'scaleX' | 'scaleY' | 'scale'), ?number, ?Rect) => void;
-  addArrow1: (?number, ?number) => void;
-  addArrow2: (?number, ?number) => void;
-  addArrowStart: (?number, ?number) => void;
-  addArrowEnd: (?number, ?number) => void;
-  addArrow: (number, ?number, ?number) => void;
+  // setMovable: (?boolean, ?('translation' | 'rotation' | 'centerTranslateEndRotation' | 'scaleX' | 'scaleY' | 'scale'), ?number, ?Rect) => void;
+  // addArrow1: (?number, ?number) => void;
+  // addArrow2: (?number, ?number) => void;
+  // addArrow: (number, ?number, ?number) => void;
   pulseWidth: () => void;
   updateLabel: (?number) => {};
-  addLabel: (string | Equation | Array<string>, number, ?TypeLineLabelLocation,
-             ?TypeLineLabelSubLocation, ?TypeLineLabelOrientation, ?number
-            ) => void;
+  // addLabel: (string | Equation | Array<string>, number, ?TypeLineLabelLocation,
+  //            ?TypeLineLabelSubLocation, ?TypeLineLabelOrientation, ?number
+  //           ) => void;
 
-  // multiMove: {
-  //   vertexSpaceMidLength: number;
-  //   bounds: Rect,
-  // };
 
+  // eslint-disable-next-line class-methods-use-this
   calculateFromP1P2P3(
     p1: Point,
     p2: Point,
@@ -168,10 +177,9 @@ export class DiagramObjectAngle extends DiagramElementCollection {
   ) {
     const position = p2._dup();
     const L21 = new Line(p2, p1);
-    const L23 = new Line(p2, p3);
-    const startAngle = L21.angle();
+    const rotation = L21.angle();
     const angle = threePointAngle(p1, p2, p3);
-    return { position, startAngle, angle };
+    return { position, rotation, angle };
   }
 
   constructor(
@@ -179,21 +187,26 @@ export class DiagramObjectAngle extends DiagramElementCollection {
     equation: Object,
     isTouchDevice: boolean,
     animateNextFrame: void => void,
-    options: TypeLineOptions = {},
+    options: TypeAngleOptions = {},
   ) {
     const defaultOptions = {
       position: new Point(0, 0),
       rotation: 0,
       angle: 1,
       radius: 0.1,
-      curve: null,
       color: [0, 1, 0, 1],
       clockwise: false,
-      p1: null,
-      p2: null,
-      p3: null,
+      curve: null,
       sides: null,
+      sideStart: null,
+      sideStop: null,
       arrows: null,
+      arrowStart: null,
+      arrowStop: null,
+      label: null,
+      p1: null,       // if p1, p2 and p3 are defined, position, angle and
+      p2: null,       // rotation will be overridden
+      p3: null,
     };
     const optionsToUse = Object.assign({}, defaultOptions, options);
 
@@ -209,42 +222,48 @@ export class DiagramObjectAngle extends DiagramElementCollection {
     this.isTouchDevice = isTouchDevice;
     this.animateNextFrame = animateNextFrame;
 
-    // Calculate and store the line geometry
-    //    The length, angle, p1 and p2 properties also exist in this.line,
-    //    but are at this level for convenience
-    this.angle = optionsToUse.angle;
-    this.startAngle = optionsToUse.startAngle;
+    // Calculate and store the angle geometry
     this.position = optionsToUse.position;
-    this.width = optionsToUse.width;
+    this.rotation = optionsToUse.rotation;
+    this.angle = optionsToUse.angle;
     this.radius = optionsToUse.radius;
-    this.sideLength = options.sideLength;
-    this.sideWidth = optionsToUse.sideWidth;
-
-    if (this.optionsToUse.p1 != null
+    if (optionsToUse.p1 != null
       && optionsToUse.p2 != null
       && optionsToUse.p3 != null
     ) {
-      { position, startAngle, angle } = this.calculateFromP1P2P3(
+      const { position, rotation, angle } = this.calculateFromP1P2P3(
         optionsToUse.p1, optionsToUse.p2, optionsToUse.p3,
       );
       this.angle = angle;
-      this.startAngle = startAngle;
+      this.rotation = rotation;
       this.position = position;
     }
-
     this.transform.updateTranslation(this.position);
-    this.transform.updateRotation(this.startAngle);
+    this.transform.updateRotation(this.rotation);
 
-    // If the line is to be shown (and not just a label) then make it
+    // Setup default values for sides, arrows, curve and label
+    this.side1 = null;
+    this.side2 = null;
+    this.arrow1 = null;
+    this.arrow2 = null;
+    this.curve = null;
+    this.label = null;
+
+    // If the curve is to be shown (and not just a label) then make it
     this._curve = null;
-    if (optionsToUse.showCurve) {
+    if (optionsToUse.curve)
+    const defaultCurveOptions = {
+      width: 0.01,
+      sides: 50,
+    };
+    if (optionsToUse.curve) {
+      this.curve = Object.assign({}, defaultCurveOptions, optionsToUse.curve);
       const curve = this.shapes.polygon({
-        sides: optionsToUse.curveSides,
-        radius: optionsToUse.radius,
-        width: optionsToUse.width,
-        clockwise: false,
-        sidesToDraw: Math.floor(this.angle / (Math.PI * 2) * optionsToUse.curveSides),
-        color: optionsToUse.color,
+        sides: this.curve.sides,
+        radius: this.radius,
+        width: this.curve.width,
+        sidesToDraw: Math.floor(this.angle / (Math.PI * 2) * this.curve.sides),
+        color: this.color,
         fill: false,
         point: this.position._dup(),
       });
@@ -253,7 +272,7 @@ export class DiagramObjectAngle extends DiagramElementCollection {
 
     // Label related properties
     this.label = null;
-    this.showRealAngle = false;
+    // this.showRealAngle = false;
     this._label = null;
 
     // this.setLength(this.length);
@@ -307,35 +326,58 @@ export class DiagramObjectAngle extends DiagramElementCollection {
     }
   }
 
-  pulseWidth() {
-    const line = this._line;
-    if (line != null) {
-      line.stopPulsing();
-      const oldTransformMethod = line.pulse.transformMethod;
-      const oldPulseCallback = line.pulse.callback;
-      const finishPulsing = () => {
-        line.pulse.transformMethod = oldTransformMethod;
-        line.pulse.callback = oldPulseCallback;
-      };
-      line.pulse.callback = finishPulsing;
-      line.pulse.transformMethod = s => new Transform().scale(1, s);
-      line.pulseScaleNow(1, 3);
-    }
-    const arrow1 = this._arrow1;
-    const arrow2 = this._arrow2;
-    if (arrow1 != null) {
-      arrow1.pulseScaleNow(1, 2);
-    }
-    if (arrow2 != null) {
-      arrow2.pulseScaleNow(1, 2);
-    }
-
-    const label = this._label;
-    if (label != null) {
-      label.pulseScaleNow(1, 1.5);
-    }
-    this.animateNextFrame();
+  addCurve(radius: number = this.radius, curveOptions: {
+    width?: number,
+    sides?: number,
+  } = {}) {
+    const defaultCurveOptions = {
+      width: 0.01,
+      sides: 50,
+    };
+    const optionsToUse = Object.assign(
+      {}, defaultCurveOptions, curveOptions,
+    );
+    const curve = this.shapes.polygon({
+      sides: optionsToUse.sides,
+      radius,
+      width: optionsToUse.width,
+      sidesToDraw: Math.floor(this.angle / (Math.PI * 2) * optionsToUse.sides),
+      color: this.color,
+      fill: false,
+      point: this.position._dup(),
+    });
+    this.add('curve', curve);
   }
+
+  // pulseWidth() {
+  //   const line = this._line;
+  //   if (line != null) {
+  //     line.stopPulsing();
+  //     const oldTransformMethod = line.pulse.transformMethod;
+  //     const oldPulseCallback = line.pulse.callback;
+  //     const finishPulsing = () => {
+  //       line.pulse.transformMethod = oldTransformMethod;
+  //       line.pulse.callback = oldPulseCallback;
+  //     };
+  //     line.pulse.callback = finishPulsing;
+  //     line.pulse.transformMethod = s => new Transform().scale(1, s);
+  //     line.pulseScaleNow(1, 3);
+  //   }
+  //   const arrow1 = this._arrow1;
+  //   const arrow2 = this._arrow2;
+  //   if (arrow1 != null) {
+  //     arrow1.pulseScaleNow(1, 2);
+  //   }
+  //   if (arrow2 != null) {
+  //     arrow2.pulseScaleNow(1, 2);
+  //   }
+
+  //   const label = this._label;
+  //   if (label != null) {
+  //     label.pulseScaleNow(1, 1.5);
+  //   }
+  //   this.animateNextFrame();
+  // }
 
   addArrow(
     index: 1 | 2,
