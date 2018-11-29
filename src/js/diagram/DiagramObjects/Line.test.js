@@ -13,11 +13,14 @@ import {
 import webgl from '../../__mocks__/WebGLInstanceMock';
 import DrawContext2D from '../../__mocks__/DrawContext2DMock';
 // import VertexPolygon from '../DrawingObjects/VertexObject/VertexPolygon';
+import * as tools from '../../tools/tools';
+
+tools.isTouchDevice = jest.fn();
 
 jest.mock('../Gesture');
 jest.mock('../webgl/webgl');
 jest.mock('../DrawContext2D');
-jest.mock('../../tools/tools');
+// jest.mock('../../tools/tools');
 
 describe('Diagram', () => {
   let diagram;

@@ -245,3 +245,34 @@ describe('Extract From Collection', () => {
     });
   });
 });
+describe('Join Objects', () => {
+  test('Empty object first', () => {
+    const result = tools.joinObjects({ a: 1, b: 2 }, {});
+    expect(result).toEqual({ a: 1, b: 2 });
+  });
+  test('Empty object second', () => {
+    const result = tools.joinObjects({}, { a: 1, b: 2 });
+    expect(result).toEqual({ a: 1, b: 2 });
+  });
+  test('Overwrite', () => {
+    const result = tools.joinObjects({ a: 3, b: 4 }, { a: 1, b: 2 });
+    expect(result).toEqual({ a: 1, b: 2 });
+  });
+  test('Overwrite with levels', () => {
+    const result = tools.joinObjects(
+      {
+        a: 3, b: 4, c: 5, d: { d1: 1, d2: 2, d3: 3 },
+      },
+      {
+        a: 1, b: 2, d: { d1: 3, d2: 4 },
+      },
+    );
+    expect(result).toEqual({
+      a: 1, b: 2, c: 5, d: { d1: 3, d2: 4, d3: 3 },
+    });
+  });
+  test('Single Object', () => {
+    const result = tools.joinObjects({ a: 1, b: 2 });
+    expect(result).toEqual({ a: 1, b: 2 });
+  });
+});

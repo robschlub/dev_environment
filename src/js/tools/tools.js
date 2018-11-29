@@ -253,6 +253,38 @@ function duplicateFromTo(
   });
 }
 
+// joins objects like object.assign but goes as many levels deep as the object
+// is. Objects later in the arrawy overwrite objects earlier.
+function joinObjects(...objects: Array<Object> | Object): Object {
+  // if (typeof objects === 'object') {
+  //   return objects;
+  // }
+  const assignObjectFromTo = (fromObject: Object, toObject: Object) => {
+    Object.keys(fromObject).forEach((key) => {
+      const value = fromObject[key];
+      if (typeof value === 'object') {
+        if (toObject[key] == null) {
+          // eslint-disable-next-line no-param-reassign
+          toObject[key] = value;
+        } else {
+          assignObjectFromTo(value, toObject[key]);
+        }
+      } else {
+        // eslint-disable-next-line no-param-reassign
+        toObject[key] = value;
+      }
+    });
+  };
+
+  const num = objects.length;
+  const out = {};
+  for (let i = 0; i < num; i += 1) {
+    const o = objects[i];
+    assignObjectFromTo(o, out);
+  }
+  return out;
+}
+
 function generateUniqueId(seed: string = '') {
   const randomString = s => `${s}${Math.floor(Math.random() * 1000000)}`;
   let seedToUse = seed;
@@ -293,5 +325,5 @@ export {
   classify, extractFrom, ObjectKeyPointer, getElement,
   RGBToArray, HexToArray, cssColorToArray, colorArrayToRGB,
   colorArrayToRGBA, addToObject, duplicateFromTo, isTouchDevice,
-  generateUniqueId,
+  generateUniqueId, joinObjects,
 };

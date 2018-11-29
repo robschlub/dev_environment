@@ -3,6 +3,7 @@ import WebGLInstance from '../webgl/webgl';
 import {
   Rect, Point, // Line,
 } from '../tools/g2';
+import { joinObjects } from '../../tools/tools';
 // import {
 //   DiagramElementCollection,
 // } from '../Element';
@@ -56,7 +57,9 @@ export default class DiagramObjects {
   }
 
   line(...options: Array<TypeLineOptions>) {
-    const optionsToUse = Object.assign({}, ...options);
+    // const optionsToUse = Object.assign({}, ...options);
+    // console.log(Object.assign({}, ...options))
+    const optionsToUse = joinObjects(...options);
     return new DiagramObjectLine(
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
       optionsToUse,
@@ -64,7 +67,7 @@ export default class DiagramObjects {
   }
 
   angle(...options: Array<TypeAngleOptions>) {
-    const optionsToUse = Object.assign({}, ...options);
+    const optionsToUse = joinObjects(...options);
     return new DiagramObjectAngle(
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
       optionsToUse,
@@ -72,7 +75,8 @@ export default class DiagramObjects {
   }
 
   label(...options: Array<TypeLabelOptions>) {
-    const optionsToUse = Object.assign({}, ...options);
+    // const optionsToUse = Object.assign({}, ...options);
+    const optionsToUse = joinObjects(...options);
     return new EquationLabel(
       this.equation, optionsToUse,
     );

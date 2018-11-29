@@ -61,6 +61,7 @@ export default function commonLessonLayout() {
         text: 'A',
         radius: 0.5,
         orientation: 'horizontal',
+        // curvePosition: 0.2,
       },
       // arrow1: {
       //   width: 0.08,
@@ -92,6 +93,10 @@ export default function commonLessonLayout() {
       p1: equilPoints[0],
       p2: equilPoints[2],
       p3: equilPoints[1],
+      label: {
+        curvePosition: -0.2,
+        radius: 0.3,
+      },
     },
   };
   return layout;
