@@ -80,7 +80,7 @@ export default function commonLessonLayout() {
       p3: equilPoints[2],
       sides: {
         // length: 0.2,
-        width: 0.02,
+        width: 0.05,
         color: [1, 1, 0, 1],
       },
     },

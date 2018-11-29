@@ -528,40 +528,89 @@ class DiagramObjectAngle extends DiagramElementCollection {
   }
 
   update(labelRotationOffset: number | null = null) {
+    const { _arrow1, arrow1 } = this;
+    const { _arrow2, arrow2 } = this;
+    let arrow1Hide = false;
+    let arrow2Hide = false;
+
     let rotationForArrow1 = 0;
     let curveAngle = this.angle;
+    const arrow2LengthModifier = 0.5;
+
+    if (arrow1) {
+      curveAngle -= arrow1.height / arrow1.radius;
+    }
+    if (arrow2) {
+      curveAngle -= arrow2.height / arrow2.radius;
+    }
+
+    if (curveAngle < 0) {
+      if (arrow1 && arrow1.autoHide) {
+        arrow1Hide = true;
+        curveAngle += arrow1.height / arrow1.radius;
+      }
+      if (arrow2 && arrow2.autoHide) {
+        arrow2Hide = true;
+        curveAngle += arrow2.height / arrow2.radius;
+      }
+    }
+
+    if (_arrow1 && arrow1) {
+      if (arrow1Hide) {
+        _arrow1.hide();
+      } else {
+        _arrow1.show();
+        _arrow1.transform.updateTranslation(arrow1.radius, 0);
+        const arrowLengthAngle = arrow1.height / arrow1.radius;
+        _arrow1.transform.updateRotation(Math.PI / 2 + arrowLengthAngle);
+        rotationForArrow1 = arrowLengthAngle;
+      }
+    }
+
+    if (_arrow2 && arrow2) {
+      if (arrow2Hide) {
+        _arrow2.hide();
+      } else {
+        _arrow2.show();
+        _arrow2.transform.updateTranslation(polarToRect(arrow2.radius, this.angle));
+        const arrowLengthAngle = (arrow2.height / arrow2.radius) * arrow2LengthModifier;
+        _arrow2.transform.updateRotation(this.angle + Math.PI / 2 - arrowLengthAngle / arrow2LengthModifier);
+        curveAngle += arrowLengthAngle * (1 - arrow2LengthModifier);
+      }
+    }
+
     if (labelRotationOffset != null) {
       this.lastLabelRotationOffset = labelRotationOffset;
     }
 
-    const { _arrow1, arrow1 } = this;
-    if (_arrow1 && arrow1) {
-      _arrow1.transform.updateTranslation(arrow1.radius, 0);
-      const arrowLengthAngle = arrow1.height / arrow1.radius;
-      rotationForArrow1 = arrowLengthAngle;
-      // console.log(arrowLengthAngle, curveAngle / 2, arrow1.autoHide)
-      if (arrowLengthAngle > curveAngle && arrow1.autoHide === true) {
-        _arrow1.hide();
-      } else {
-        curveAngle -= arrowLengthAngle;
-        _arrow1.show();
-      }
-      _arrow1.transform.updateRotation(Math.PI / 2 + arrowLengthAngle);
-    }
+    
+    // if (_arrow1 && arrow1) {
+    //   _arrow1.transform.updateTranslation(arrow1.radius, 0);
+    //   const arrowLengthAngle = arrow1.height / arrow1.radius;
+    //   rotationForArrow1 = arrowLengthAngle;
+    //   // console.log(arrowLengthAngle, curveAngle / 2, arrow1.autoHide)
+    //   if (arrowLengthAngle > curveAngle && arrow1.autoHide === true) {
+    //     _arrow1.hide();
+    //   } else {
+    //     curveAngle -= arrowLengthAngle;
+    //     _arrow1.show();
+    //   }
+    //   _arrow1.transform.updateRotation(Math.PI / 2 + arrowLengthAngle);
+    // }
 
-    const { _arrow2, arrow2 } = this;
-    if (_arrow2 && arrow2) {
-      _arrow2.transform.updateTranslation(polarToRect(arrow2.radius, this.angle));
-      const arrowLengthAngle = arrow2.height / arrow2.radius;
-      if (arrowLengthAngle > curveAngle / 2 && arrow2.autoHide === true) {
-        _arrow2.hide();
-      } else {
-        curveAngle -= arrowLengthAngle * 0.5;
-        _arrow2.show();
-      }
-      // curveAngle -= arrowLengthAngle * 0.5;
-      _arrow2.transform.updateRotation(this.angle + Math.PI / 2 - arrowLengthAngle);
-    }
+    
+    // if (_arrow2 && arrow2) {
+    //   _arrow2.transform.updateTranslation(polarToRect(arrow2.radius, this.angle));
+    //   const arrowLengthAngle = arrow2.height / arrow2.radius;
+    //   if (arrowLengthAngle > curveAngle / 2 && arrow2.autoHide === true) {
+    //     _arrow2.hide();
+    //   } else {
+    //     curveAngle -= arrowLengthAngle * 0.5;
+    //     _arrow2.show();
+    //   }
+    //   // curveAngle -= arrowLengthAngle * 0.5;
+    //   _arrow2.transform.updateRotation(this.angle + Math.PI / 2 - arrowLengthAngle);
+    // }
 
     this.transform.updateTranslation(this.position);
     this.transform.updateRotation(this.rotation);
