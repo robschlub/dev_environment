@@ -32,7 +32,7 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     equil.add('side12', this.diagram.objects.line(lay.sideLength, lay.side12));
     equil.add('side23', this.diagram.objects.line(lay.sideLength, lay.side23));
     equil.add('side31', this.diagram.objects.line(lay.sideLength, lay.side31));
-    this.add('equilTri', equil);
+    this.add('tri', equil);
   }
 
   addLeftRightTris() {
@@ -105,10 +105,10 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     // };
     // this._angle1.setAngle({p1: new Point(1, 0), p2: new Point(0, 0), p3: new Point(1, 1)});
     this.hasTouchableElements = true;
-    this.touchInBoundingRect = true;
-    this.isTouchable = true;
-    this.isMovable = true;
-    this.move.type = 'rotation';
+    // this.touchInBoundingRect = true;
+    // this.isTouchable = true;
+    // this.isMovable = true;
+    // this.move.type = 'rotation';
     // this._angle1.hasTouchableElements = true;
     // this._angle1._side2.isTouchable = true;
     // this._angle1._side2.isMovable = true;

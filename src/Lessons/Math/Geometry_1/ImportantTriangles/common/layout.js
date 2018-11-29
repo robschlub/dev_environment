@@ -43,7 +43,7 @@ export default function commonLessonLayout() {
     side12: {
       p1: equilPoints[1],
       p2: equilPoints[0],
-      offset: 0.5,
+      // offset: 0.5,
     },
     side23: {
       p1: equilPoints[2],
