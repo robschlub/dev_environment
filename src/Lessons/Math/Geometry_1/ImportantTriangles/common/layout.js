@@ -54,10 +54,10 @@ export default function commonLessonLayout() {
     angle: {
       curve: {
         radius: 0.4,
-        sides: 100,
-        width: 0.02,
+        sides: 200,
+        width: 0.01,
         num: 3,
-        step: -0.04,
+        step: -0.03,
       },
       label: {
         text: 'A + B = C',

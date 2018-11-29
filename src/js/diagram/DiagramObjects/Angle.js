@@ -17,38 +17,37 @@ import { Equation } from '../DiagramElements/Equation/GLEquation';
 
 export type TypeAngleLabelOrientation = 'horizontal' | 'tangent';
 export type TypeAngleOptions = {
-  position?: Point,
-  angle?: number,
-  rotation?: number,
-  clockwise?: boolean,
-  color?: Array<number>,
-  curve?: {
-    width?: number,
-    sides?: number,
-    radius?: number,
-    num?: number,
-    step?: number,
+  position?: Point,         // Position of angle vertex
+  angle?: number,           // Angle measure
+  rotation?: number,        // Start rotation of angle
+  color?: Array<number>,    // Default color
+  curve?: {                 // Angle annotation curve
+    width?: number,           // Curve line width
+    sides?: number,           // Number of sides in 360º curve
+    radius?: number,          // Curve radius
+    num?: number,             // Number of curves
+    step?: number,            // Step radius of curves if curve num > 1
   },
-  p1?: Point,
-  p2?: Point,
-  p3?: Point,
-  autoRightAngle?: boolean,
-  rightAngleRange?: number,
+  p1?: Point,               // Can define angle with p1, p2, p3
+  p2?: Point,               // p2 is angle vertex
+  p3?: Point,               // Curve goes from P21 to P23 anticlockwise
+  autoRightAngle?: boolean, // Right angle curve displayed when angle = π/2
+  rightAngleRange?: number, // Range around π/2 for right angle curve display
   //
   // Arrows
-  arrow1?: {
+  arrow1?: {                // Define arrow at start of curve
+    width?: number,           // Arrow width
+    height?: number,          // Arrow height
+    radius?: number,          // Arrow radius (can be different to curve rad)
+    autoHide?: boolean,       // Autohide arrow when arrow(s) height > angle
+  },
+  arrow2?: {                // Define arrow at end of curve
     width?: number,
     height?: number,
     radius?: number,
     autoHide?: boolean,
   },
-  arrow2?: {
-    width?: number,
-    height?: number,
-    radius?: number,
-    autoHide?: boolean,
-  },
-  arrows?: {
+  arrows?: {                // Define both arrows - overwrites arrow1 and 2
     width?: number,
     height?: number,
     radius?: number,
@@ -56,28 +55,29 @@ export type TypeAngleOptions = {
   } | boolean,
   //
   // Label
-  label?: {
-    text: string | Array<string>,
-    radius?: number,
-    curvePosition?: number,
-    showRealAngle?: boolean,
-    realAngleDecimals?: number,
-    orientation?: TypeAngleLabelOrientation,
-    autoHide?: number,
+  label?: {                         // Angle label
+    text: string | Array<string>,   // String goes to eqn,
+                                    // Array<string> into eqn forms
+    radius?: number,                // Label radius
+    curvePosition?: number,         // Label position along curve in %
+    showRealAngle?: boolean,        // Use angle as label
+    realAngleDecimals?: number,     // Num decimal places if using angle label
+    orientation?: TypeAngleLabelOrientation,  // horiztonal or tangent
+    autoHide?: number,              // Auto hide label at this threshold
   },
   //
   // Sides
-  side1?: {
+  side1?: {                 // Define side line at start of angle
+    length?: number,        // Side line length
+    width?: number,         // Side line width
+    color?: Array<number>,  // Side line color
+  },
+  side2?: {                 // Define side line at end of angle
     length?: number,
     width?: number,
     color?: Array<number>,
   },
-  side2?: {
-    length?: number,
-    width?: number,
-    color?: Array<number>,
-  },
-  sides?: {
+  sides?: {                 // Define both side lines - overrides side 1 & 2
     length?: number,
     width?: number,
     color?: Array<number>,
