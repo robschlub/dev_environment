@@ -374,7 +374,6 @@ class Diagram {
         element.startBeingMoved();
       }
     }
-    console.log(this.beingTouchedElements, this.beingMovedElements)
     if (this.beingMovedElements.length > 0) {
       this.animateNextFrame();
     }

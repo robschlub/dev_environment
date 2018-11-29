@@ -8,6 +8,7 @@ import {
 import {
   roundNum,
 } from '../tools/mathtools';
+import { joinObjects } from '../../tools/tools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../Element';
@@ -49,6 +50,7 @@ export type TypeAngleOptions = {
     radius?: number,
     curvePosition?: number,
     showRealAngle?: boolean,
+    realAngleDecimals?: number,
     orientation?: TypeAngleLabelOrientation,
   },
   side1?: {
@@ -77,7 +79,6 @@ export type TypeAngleOptions = {
 // The angle collection comprises:
 //   * Positioned at 0, 0 in vertex space
 //   * Curve from 0 to angle size (where 0 is along x axis in vertex space)
-  // * Curve can be clockwise or anticlockwise
 //   * Label in center of curve
 //   * Arrows at ends of curve
 //   * Straight lines forming the corner
@@ -96,6 +97,7 @@ class AngleLabel extends EquationLabel {
   curvePosition: number;
   showRealAngle: boolean;
   orientation: TypeAngleLabelOrientation;
+  realAngleDecimals: number;
 
   constructor(
     equation: Object,
@@ -104,6 +106,7 @@ class AngleLabel extends EquationLabel {
     radius: number,
     curvePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
     showRealAngle: boolean = false,
+    realAngleDecimals: number = 0,
     orientation: TypeAngleLabelOrientation = 'horizontal',
   ) {
     super(equation, { label: labelText, color });
@@ -111,6 +114,7 @@ class AngleLabel extends EquationLabel {
     this.curvePosition = curvePosition;
     this.showRealAngle = showRealAngle;
     this.orientation = orientation;
+    this.realAngleDecimals = realAngleDecimals;
   }
 }
 
@@ -217,7 +221,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       p2: null,       // rotation will be overridden
       p3: null,
     };
-    const optionsToUse = Object.assign({}, defaultOptions, options);
+    const optionsToUse = joinObjects(defaultOptions, options);
 
     super(new Transform('Line')
       .scale(1, 1)
@@ -280,12 +284,12 @@ class DiagramObjectAngle extends DiagramElementCollection {
       radius: defaultArrowRadius,
     };
     if (optionsToUse.arrow1) {
-      const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrow1);
+      const arrowOptions = joinObjects(defaultArrowOptions, optionsToUse.arrow1);
       this.addArrow(1, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
     }
 
     if (optionsToUse.arrow2) {
-      const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrow2);
+      const arrowOptions = joinObjects(defaultArrowOptions, optionsToUse.arrow2);
       this.addArrow(2, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
     }
 
@@ -295,7 +299,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       if (typeof optionsToUse.arrows === 'object') {
         ({ arrows } = optionsToUse);
       }
-      const arrowOptions = Object.assign({}, defaultArrowOptions, arrows);
+      const arrowOptions = joinObjects(defaultArrowOptions, arrows);
       this.addArrow(1, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
       this.addArrow(2, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
     }
@@ -305,19 +309,21 @@ class DiagramObjectAngle extends DiagramElementCollection {
       text: '',
       radius: 0.4,
       curvePosition: 0.5,
-      showRealAngle: true,
+      showRealAngle: false,
+      realAngleDecimals: 0,
       orientation: 'horizontal',
     };
     if (this.curve) {
       defaultLabelOptions.radius = this.curve.radius;
     }
     if (optionsToUse.label) {
-      const labelOptions = Object.assign({}, defaultLabelOptions, optionsToUse.label);
+      const labelOptions = joinObjects(defaultLabelOptions, optionsToUse.label);
       this.addLabel(
         labelOptions.text,
         labelOptions.radius,
         labelOptions.curvePosition,
         labelOptions.showRealAngle,
+        labelOptions.realAngleDecimals,
         labelOptions.orientation,
       );
     }
@@ -330,29 +336,18 @@ class DiagramObjectAngle extends DiagramElementCollection {
     radius: number,
     curvePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
     showRealAngle: boolean = false,
+    realAngleDecimals: number = 0,
     orientation: TypeAngleLabelOrientation = 'horizontal',
   ) {
     this.label = new AngleLabel(
       this.equation, labelText, this.color,
-      radius, curvePosition, showRealAngle, orientation,
+      radius, curvePosition, showRealAngle, realAngleDecimals, orientation,
     );
     if (this.label != null) {
       this.add('label', this.label.eqn.collection);
     }
     // this.updateLabel();
   }
-
-  // updateLabel(parentRotationOffset: number = 0) {
-  //   // const start = this.transform.r();
-  //   // const size = this.currentAngle;
-  //   let labelRot = labelRotationOffset;
-  //   if (labelRot == null) {
-  //     labelRot = angle._label.transform.r();
-  //   }
-  //   if (start != null && labelRot != null) {
-  //     angle.updateAngle(start, size, -labelRot - start);
-  //   }
-  // }
 
   addCurve(curveOptions: {
     width?: number,
@@ -484,6 +479,11 @@ class DiagramObjectAngle extends DiagramElementCollection {
 
     const { _label, label } = this;
     if (_label && label) {
+      if (label.showRealAngle) {
+        const angleText = roundNum(this.angle * 180 / Math.PI, label.realAngleDecimals).toString();
+        _label._base.drawingObject.setText(`${angleText}º`);
+        label.eqn.reArrangeCurrentForm();
+      }
       const labelPosition = polarToRect(label.radius, this.angle * label.curvePosition);
       if (label.orientation === 'horizontal') {
         label.updateRotation(

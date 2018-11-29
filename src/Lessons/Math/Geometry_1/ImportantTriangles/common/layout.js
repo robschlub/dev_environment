@@ -95,6 +95,7 @@ export default function commonLessonLayout() {
       p3: equilPoints[1],
       label: {
         curvePosition: 0.2,
+        showRealAngle: true,
       },
     },
   };

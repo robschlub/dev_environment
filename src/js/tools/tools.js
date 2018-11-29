@@ -255,7 +255,7 @@ function duplicateFromTo(
 
 // joins objects like object.assign but goes as many levels deep as the object
 // is. Objects later in the arrawy overwrite objects earlier.
-function joinObjects(...objects: Array<Object> | Object): Object {
+function joinObjects(...objects: Array<Object>): Object {
   // if (typeof objects === 'object') {
   //   return objects;
   // }
