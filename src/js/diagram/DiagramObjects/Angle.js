@@ -406,6 +406,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
     if (this.curve) {
       defaultLabelOptions.radius = this.curve.radius;
     }
+    // console.log(options)
     const optionsToUse = joinObjects(defaultLabelOptions, options);
     this.label = new AngleLabel(
       this.equation,

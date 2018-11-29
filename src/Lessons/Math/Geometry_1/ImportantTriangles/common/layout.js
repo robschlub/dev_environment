@@ -54,69 +54,28 @@ export default function commonLessonLayout() {
     angle: {
       curve: {
         radius: 0.4,
-        sides: 200,
-        width: 0.01,
-        num: 3,
-        step: -0.03,
+        sides: 150,
+        width: 0.02,
       },
       label: {
-        text: 'A + B = C',
-        radius: 0.4,
-        // orientation: 'tangent'
-        // curvePosition: 0.2,
+        text: ['a', '60º'],
+        radius: 0.35,
       },
-      // arrow1: {
-      //   width: 0.08,
-      //   height: 0.08,
-      //   radius: 0.4,
-      // },
-      // arrows: {
-      //   width: 0.08,
-      //   height: 0.08,
-      //   radius: 0.4,
-      // },
     },
     angle1: {
       p1: equilPoints[1],
       p2: equilPoints[0],
       p3: equilPoints[2],
-      sides: {
-        // length: 0.2,
-        width: 0.05,
-        color: [1, 1, 0, 1],
-      },
-      label: {
-        autoHide: 0.4,
-      },
-      autoRightAngle: true,
-      rightAngleRange: 0.1,
-      // arrow2: {
-      //   autoHide: false,
-      // },
     },
     angle2: {
       p1: equilPoints[2],
       p2: equilPoints[1],
       p3: equilPoints[0],
-      sides: {
-        // length: 0.2,
-        width: 0.02,
-        color: [1, 1, 0, 1],
-      },
-      // arrow1: {
-      //   width: 0.08,
-      //   height: 0.08,
-      //   radius: 0.4,
-      // },
     },
     angle3: {
       p1: equilPoints[0],
       p2: equilPoints[2],
       p3: equilPoints[1],
-      label: {
-        curvePosition: 0.2,
-        showRealAngle: true,
-      },
     },
   };
   return layout;

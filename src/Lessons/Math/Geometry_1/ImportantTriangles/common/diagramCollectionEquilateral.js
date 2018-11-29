@@ -24,19 +24,6 @@ export default class EquilateralCollection extends CommonDiagramCollection {
   }
 
   addAngles() {
-    // const angle = this.diagram.objects.angle({
-    //   radius: 0.4,
-    //   p3: this.layout.equil.tri.points[0],
-    //   p2: this.layout.equil.tri.points[1],
-    //   p1: this.layout.equil.tri.points[2],
-    //   // position: this.layout.equil.tri.points[0],
-    //   rotation: 0,
-    //   angle: 1,
-    //   curve: {
-    //     width: 0.01,
-    //     sides: 100,
-    //   },
-    // });
     const lay = this.layout.equil;
     const angle1 = this.diagram.objects.angle(lay.angle, lay.angle1);
     this.add('angle1', angle1);
@@ -71,16 +58,16 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     this.isTouchable = true;
     this.isMovable = true;
     this.move.type = 'rotation';
-    this._angle1.hasTouchableElements = true;
-    this._angle1._side2.isTouchable = true;
-    this._angle1._side2.isMovable = true;
-    this._angle1._side2.move.type = 'rotation';
-    this._angle1._side2.setTransformCallback = () => {
-      const r = this._angle1._side2.transform.r();
-      if (r != null) {
-        this._angle1.setAngle({angle: r})
-        this._angle1.update();
-      }
-    }
+    // this._angle1.hasTouchableElements = true;
+    // this._angle1._side2.isTouchable = true;
+    // this._angle1._side2.isMovable = true;
+    // this._angle1._side2.move.type = 'rotation';
+    // this._angle1._side2.setTransformCallback = () => {
+    //   const r = this._angle1._side2.transform.r();
+    //   if (r != null) {
+    //     this._angle1.setAngle({angle: r})
+    //     this._angle1.update();
+    //   }
+    // }
   }
 }

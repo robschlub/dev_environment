@@ -262,7 +262,7 @@ function joinObjects(...objects: Array<Object>): Object {
   const assignObjectFromTo = (fromObject: Object, toObject: Object) => {
     Object.keys(fromObject).forEach((key) => {
       const value = fromObject[key];
-      if (typeof value === 'object') {
+      if (typeof value === 'object' && !Array.isArray(value)) {
         if (toObject[key] == null) {
           // eslint-disable-next-line no-param-reassign
           toObject[key] = value;

@@ -275,4 +275,8 @@ describe('Join Objects', () => {
     const result = tools.joinObjects({ a: 1, b: 2 });
     expect(result).toEqual({ a: 1, b: 2 });
   });
+  test('Array Object', () => {
+    const result = tools.joinObjects({ a: 1, b: 2 }, { b: [1, 2] });
+    expect(result).toEqual({ a: 1, b: [1, 2] });
+  });
 });
