@@ -83,6 +83,9 @@ export default function commonLessonLayout() {
         width: 0.05,
         color: [1, 1, 0, 1],
       },
+      label: {
+        autoHide: 0.4,
+      },
       // arrow2: {
       //   autoHide: false,
       // },

@@ -604,34 +604,6 @@ class DiagramObjectAngle extends DiagramElementCollection {
       this.lastLabelRotationOffset = labelRotationOffset;
     }
 
-    // if (_arrow1 && arrow1) {
-    //   _arrow1.transform.updateTranslation(arrow1.radius, 0);
-    //   const arrowLengthAngle = arrow1.height / arrow1.radius;
-    //   rotationForArrow1 = arrowLengthAngle;
-    //   // console.log(arrowLengthAngle, curveAngle / 2, arrow1.autoHide)
-    //   if (arrowLengthAngle > curveAngle && arrow1.autoHide === true) {
-    //     _arrow1.hide();
-    //   } else {
-    //     curveAngle -= arrowLengthAngle;
-    //     _arrow1.show();
-    //   }
-    //   _arrow1.transform.updateRotation(Math.PI / 2 + arrowLengthAngle);
-    // }
-
-    
-    // if (_arrow2 && arrow2) {
-    //   _arrow2.transform.updateTranslation(polarToRect(arrow2.radius, this.angle));
-    //   const arrowLengthAngle = arrow2.height / arrow2.radius;
-    //   if (arrowLengthAngle > curveAngle / 2 && arrow2.autoHide === true) {
-    //     _arrow2.hide();
-    //   } else {
-    //     curveAngle -= arrowLengthAngle * 0.5;
-    //     _arrow2.show();
-    //   }
-    //   // curveAngle -= arrowLengthAngle * 0.5;
-    //   _arrow2.transform.updateRotation(this.angle + Math.PI / 2 - arrowLengthAngle);
-    // }
-
     this.transform.updateTranslation(this.position);
     this.transform.updateRotation(this.rotation);
 
@@ -644,27 +616,32 @@ class DiagramObjectAngle extends DiagramElementCollection {
 
     const { _label, label } = this;
     if (_label && label) {
-      if (label.showRealAngle) {
-        const angleText = roundNum(this.angle * 180 / Math.PI, label.realAngleDecimals).toString();
-        _label._base.drawingObject.setText(`${angleText}º`);
-        label.eqn.reArrangeCurrentForm();
-      }
-      const labelPosition = polarToRect(label.radius, this.angle * label.curvePosition);
-      if (label.orientation === 'horizontal') {
-        label.updateRotation(
-          -this.rotation - this.lastLabelRotationOffset,
-          labelPosition,
-          label.radius / 5,
-          this.angle * label.curvePosition,
-        );
-      }
-      if (label.orientation === 'tangent') {
-        label.updateRotation(
-          this.angle * label.curvePosition - Math.PI / 2,
-          labelPosition,
-          label.radius / 50,
-          this.angle * label.curvePosition,
-        );
+      if (label.autoHide > this.angle) {
+        _label.hide();
+      } else {
+        _label.show();
+        if (label.showRealAngle) {
+          const angleText = roundNum(this.angle * 180 / Math.PI, label.realAngleDecimals).toString();
+          _label._base.drawingObject.setText(`${angleText}º`);
+          label.eqn.reArrangeCurrentForm();
+        }
+        const labelPosition = polarToRect(label.radius, this.angle * label.curvePosition);
+        if (label.orientation === 'horizontal') {
+          label.updateRotation(
+            -this.rotation - this.lastLabelRotationOffset,
+            labelPosition,
+            label.radius / 5,
+            this.angle * label.curvePosition,
+          );
+        }
+        if (label.orientation === 'tangent') {
+          label.updateRotation(
+            this.angle * label.curvePosition - Math.PI / 2,
+            labelPosition,
+            label.radius / 50,
+            this.angle * label.curvePosition,
+          );
+        }
       }
     }
 
