@@ -56,6 +56,8 @@ export default function commonLessonLayout() {
         radius: 0.4,
         sides: 100,
         width: 0.02,
+        num: 3,
+        step: -0.04,
       },
       label: {
         text: 'A + B = C',

@@ -26,6 +26,8 @@ export type TypeAngleOptions = {
     width?: number,
     sides?: number,
     radius?: number,
+    num?: number,
+    step?: number,
   },
   p1?: Point,
   p2?: Point,
@@ -156,6 +158,8 @@ class DiagramObjectAngle extends DiagramElementCollection {
     width: number,
     sides: number,
     radius: number,
+    num: number,
+    step: number,
   };
 
   // angle properties - read only
@@ -439,20 +443,28 @@ class DiagramObjectAngle extends DiagramElementCollection {
       width: 0.01,
       sides: 50,
       radius: 0.5,
+      num: 1,
+      step: 0,
     };
     const optionsToUse = Object.assign(
       {}, defaultCurveOptions, curveOptions,
     );
-    const curve = this.shapes.polygon({
-      sides: optionsToUse.sides,
-      radius: optionsToUse.radius,
-      width: optionsToUse.width,
-      color: this.color,
-      fill: false,
-      transform: new Transform('AngleCurve').rotate(0),
-    });
-    this.curve = optionsToUse;
-    this.add('curve', curve);
+    for (let i = 0; i < optionsToUse.num; i += 1) {
+      const curve = this.shapes.polygon({
+        sides: optionsToUse.sides,
+        radius: optionsToUse.radius + i * optionsToUse.step,
+        width: optionsToUse.width,
+        color: this.color,
+        fill: false,
+        transform: new Transform('AngleCurve').rotate(0),
+      });
+      this.curve = optionsToUse;
+      let name = 'curve';
+      if (i > 0) {
+        name = `${name}${i}`;
+      }
+      this.add(name, curve);
+    }
 
     // Right Angle
     const right = this.shapes.collection();
@@ -545,6 +557,35 @@ class DiagramObjectAngle extends DiagramElementCollection {
     this.update();
   }
 
+  updateCurve(primaryCurveAngle: number, angle: number, rotation: number, show: boolean) {
+    const { curve } = this;
+    if (curve) {
+      for (let i = 0; i < curve.num; i += 1) {
+        let name = '_curve';
+        if (i > 0) {
+          name = `_curve${i}`;
+        }
+        // $FlowFixMe
+        const element = this[name];
+        // console.log(element)
+        if (element) {
+          if (show) {
+            element.show();
+            if (i === 0) {
+              element.angleToDraw = primaryCurveAngle;
+              element.transform.updateRotation(rotation);
+            } else {
+              element.angleToDraw = angle;
+              element.transform.updateRotation(0);
+            }
+          } else {
+            element.hide();
+          }
+        }
+      }
+    }
+  }
+
   update(labelRotationOffset: number | null = null) {
     const { _arrow1, arrow1 } = this;
     const { _arrow2, arrow2 } = this;
@@ -632,10 +673,11 @@ class DiagramObjectAngle extends DiagramElementCollection {
         if (_arrow2 != null) {
           _arrow2.show();
         }
-        _curve.show();
+        // _curve.show();
         curveAngle = Math.max(curveAngle, 0);
-        _curve.angleToDraw = curveAngle;
-        _curve.transform.updateRotation(rotationForArrow1);
+        // _curve.angleToDraw = curveAngle;
+        // _curve.transform.updateRotation(rotationForArrow1);
+        this.updateCurve(curveAngle, this.angle, rotationForArrow1, true);
       }
     }
 
