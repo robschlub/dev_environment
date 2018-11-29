@@ -68,11 +68,11 @@ export default function commonLessonLayout() {
       //   height: 0.08,
       //   radius: 0.4,
       // },
-      // arrows: {
-      //   width: 0.08,
-      //   height: 0.08,
-      //   radius: 0.4,
-      // },
+      arrows: {
+        width: 0.08,
+        height: 0.08,
+        radius: 0.4,
+      },
     },
     angle1: {
       p1: equilPoints[1],

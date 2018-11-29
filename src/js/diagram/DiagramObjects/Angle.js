@@ -165,12 +165,21 @@ class DiagramObjectAngle extends DiagramElementCollection {
   largerTouchBorder: boolean;
 
   // line methods
-  setAngle: (number) => void;
-  setRotation: (number) => void;
-  setByPoints: (Point, Point, Point) => void;
-  grow: (?number, ?number, ?boolean, ?() => void) => void;
-  pulseWidth: () => void;
-  updateLabel: (?number) => {};
+  setAngle: (?{
+      position?: Point,
+      rotation?: number,
+      angle?: number,
+      p1?: Point,
+      p2?: Point,
+      p3?: Point,
+    }) => void;
+
+  update: (?number) => void;
+  // setRotation: (number) => void;
+  // setByPoints: (Point, Point, Point) => void;
+  // grow: (?number, ?number, ?boolean, ?() => void) => void;
+  // pulseWidth: () => void;
+  // updateLabel: (?number) => {};
   // addLabel: (string | Equation | Array<string>, number, ?TypeLineLabelLocation,
   //            ?TypeLineLabelSubLocation, ?TypeLineLabelOrientation, ?number
   //           ) => void;
@@ -549,7 +558,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
 
     this.transform.updateTranslation(this.position);
     this.transform.updateRotation(this.rotation);
-    console.log(this.rotation)
+
     const { _curve, curve } = this;
     if (_curve != null && curve != null) {
       curveAngle = Math.max(curveAngle, 0);
@@ -843,91 +852,91 @@ class DiagramObjectAngle extends DiagramElementCollection {
   //   this.updateLabel();
   // }
 
-  updateLineGeometry() {
-    const t = this.transform.t();
-    const r = this.transform.r();
-    if (t != null && r != null) {
-      this.position = t;
-      this.angle = r;
-      const p1 = this.vertexSpaceStart.transformBy(new Transform()
-        .scale(this.length)
-        .rotate(this.angle)
-        .translate(this.position)
-        .m());
-      const line = new Line(p1, this.length, this.angle);
-      this.p1 = line.getPoint(1);
-      this.p2 = line.getPoint(2);
-      this.line = line;
-    }
-  }
+  // updateLineGeometry() {
+  //   const t = this.transform.t();
+  //   const r = this.transform.r();
+  //   if (t != null && r != null) {
+  //     this.position = t;
+  //     this.angle = r;
+  //     const p1 = this.vertexSpaceStart.transformBy(new Transform()
+  //       .scale(this.length)
+  //       .rotate(this.angle)
+  //       .translate(this.position)
+  //       .m());
+  //     const line = new Line(p1, this.length, this.angle);
+  //     this.p1 = line.getPoint(1);
+  //     this.p2 = line.getPoint(2);
+  //     this.line = line;
+  //   }
+  // }
 
-  setLineDimensions() {
-    const offset = polarToRect(this.offset, this.angle + Math.PI / 2);
-    this.transform.updateTranslation(this.position.add(offset));
-    this.transform.updateRotation(this.angle);
-    this.setLength(this.length);
-    this.updateLabel();
-  }
+  // setLineDimensions() {
+  //   const offset = polarToRect(this.offset, this.angle + Math.PI / 2);
+  //   this.transform.updateTranslation(this.position.add(offset));
+  //   this.transform.updateRotation(this.angle);
+  //   this.setLength(this.length);
+  //   this.updateLabel();
+  // }
 
-  setEndPoints(p: Point, q: Point, offset: number = this.offset) {
-    this.offset = offset;
-    const { length, angle, position } = this.calculateFromP1P2(p, q);
-    this.angle = angle;
-    this.length = length;
-    this.position = position;
-    this.setLineDimensions();
-  }
+  // setEndPoints(p: Point, q: Point, offset: number = this.offset) {
+  //   this.offset = offset;
+  //   const { length, angle, position } = this.calculateFromP1P2(p, q);
+  //   this.angle = angle;
+  //   this.length = length;
+  //   this.position = position;
+  //   this.setLineDimensions();
+  // }
 
-  animateLengthTo(
-    toLength: number = 1,
-    time: number = 1,
-    finishOnCancel: boolean = true,
-    callback: ?() => void = null,
-  ) {
-    this.stop();
-    const initialLength = this.currentLength;
-    const deltaLength = toLength - this.currentLength;
-    const func = (percent) => {
-      this.setLength(initialLength + deltaLength * percent);
-    };
-    const done = () => {
-      if (finishOnCancel) {
-        this.setLength(initialLength + deltaLength);
-      }
-      if (typeof callback === 'function' && callback) {
-        callback();
-      }
-    };
-    this.animateCustomTo(func, time, 0, done);
-  }
+  // animateLengthTo(
+  //   toLength: number = 1,
+  //   time: number = 1,
+  //   finishOnCancel: boolean = true,
+  //   callback: ?() => void = null,
+  // ) {
+  //   this.stop();
+  //   const initialLength = this.currentLength;
+  //   const deltaLength = toLength - this.currentLength;
+  //   const func = (percent) => {
+  //     this.setLength(initialLength + deltaLength * percent);
+  //   };
+  //   const done = () => {
+  //     if (finishOnCancel) {
+  //       this.setLength(initialLength + deltaLength);
+  //     }
+  //     if (typeof callback === 'function' && callback) {
+  //       callback();
+  //     }
+  //   };
+  //   this.animateCustomTo(func, time, 0, done);
+  // }
 
-  grow(
-    fromLength: number = 0,
-    time: number = 1,
-    finishOnCancel: boolean = true,
-    callback: ?() => void = null,
-  ) {
-    this.stop();
-    const target = this.currentLength;
-    this.setLength(fromLength);
-    this.animateLengthTo(target, time, finishOnCancel, callback);
-  }
+  // grow(
+  //   fromLength: number = 0,
+  //   time: number = 1,
+  //   finishOnCancel: boolean = true,
+  //   callback: ?() => void = null,
+  // ) {
+  //   this.stop();
+  //   const target = this.currentLength;
+  //   this.setLength(fromLength);
+  //   this.animateLengthTo(target, time, finishOnCancel, callback);
+  // }
 
-  showLineOnly() {
-    this.show();
-    if (this._line) {
-      this._line.show();
-    }
-    if (this._arrow1) {
-      this._arrow1.show();
-    }
-    if (this._arrow2) {
-      this._arrow2.show();
-    }
-    if (this._label) {
-      this._label.hideAll();
-    }
-  }
+  // showLineOnly() {
+  //   this.show();
+  //   if (this._line) {
+  //     this._line.show();
+  //   }
+  //   if (this._arrow1) {
+  //     this._arrow1.show();
+  //   }
+  //   if (this._arrow2) {
+  //     this._arrow2.show();
+  //   }
+  //   if (this._label) {
+  //     this._label.hideAll();
+  //   }
+  // }
 }
 
 export { DiagramObjectAngle };
