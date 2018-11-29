@@ -31,6 +31,7 @@ export type TypeAngleOptions = {
   p2?: Point,
   p3?: Point,
   autoRightAngle?: boolean,
+  rightAngleRange?: number,
   //
   // Arrows
   arrow1?: {
@@ -136,6 +137,7 @@ class AngleLabel extends EquationLabel {
 class DiagramObjectAngle extends DiagramElementCollection {
   // Diagram elements
   _curve: ?DiagramElementPrimative;
+  _curveRight: ?DiagramElementPrimative;
   _arrow1: ?DiagramElementPrimative;
   _arrow2: ?DiagramElementPrimative;
   _side1: ?DiagramElementPrimative;
@@ -166,6 +168,8 @@ class DiagramObjectAngle extends DiagramElementCollection {
   p2: Point;
   p3: Point;
   lastLabelRotationOffset: number;
+  autoRightAngle: boolean;
+  rightAngleRange: number;
 
   // line properties - read/write
   // showRealAngle: boolean;
@@ -226,6 +230,8 @@ class DiagramObjectAngle extends DiagramElementCollection {
       // radius: 0.1,
       color: [0, 1, 0, 1],
       // clockwise: false,
+      autoRightAngle: false,
+      rightAngleRange: 0.001,
       curve: null,
       sides: null,
       sideStart: null,
@@ -257,6 +263,8 @@ class DiagramObjectAngle extends DiagramElementCollection {
     this.rotation = optionsToUse.rotation;
     this.angle = optionsToUse.angle;
     this.lastLabelRotationOffset = 0;
+    this.autoRightAngle = optionsToUse.autoRightAngle;
+    this.rightAngleRange = optionsToUse.rightAngleRange;
 
     // this.clockwise = optionsToUse.clockwise;
     // this.radius = optionsToUse.radius;
@@ -297,29 +305,6 @@ class DiagramObjectAngle extends DiagramElementCollection {
     }
 
     // Label
-    // const defaultLabelOptions = {
-    //   text: '',
-    //   radius: 0.4,
-    //   curvePosition: 0.5,
-    //   showRealAngle: false,
-    //   realAngleDecimals: 0,
-    //   orientation: 'horizontal',
-    //   autoHide: -1,
-    // };
-    // if (this.curve) {
-    //   defaultLabelOptions.radius = this.curve.radius;
-    // }
-    // if (optionsToUse.label) {
-    //   const labelOptions = joinObjects(defaultLabelOptions, optionsToUse.label);
-    //   this.addLabel(
-    //     labelOptions.text,
-    //     labelOptions.radius,
-    //     labelOptions.curvePosition,
-    //     labelOptions.showRealAngle,
-    //     labelOptions.realAngleDecimals,
-    //     labelOptions.orientation,
-    //   );
-    // }
     if (optionsToUse.label) {
       this.addLabel(optionsToUse.label);
     }
@@ -462,13 +447,27 @@ class DiagramObjectAngle extends DiagramElementCollection {
       sides: optionsToUse.sides,
       radius: optionsToUse.radius,
       width: optionsToUse.width,
-      // sidesToDraw: Math.floor(this.angle / (Math.PI * 2) * optionsToUse.sides),
       color: this.color,
       fill: false,
       transform: new Transform('AngleCurve').rotate(0),
     });
     this.curve = optionsToUse;
     this.add('curve', curve);
+
+    // Right Angle
+    const right = this.shapes.collection();
+    const rightLength = optionsToUse.radius; // / Math.sqrt(2);
+    right.add('line1', this.shapes.horizontalLine(
+      new Point(rightLength, 0),
+      rightLength + optionsToUse.width / 2, optionsToUse.width,
+      Math.PI / 2, this.color,
+    ));
+    right.add('line2', this.shapes.horizontalLine(
+      new Point(0, rightLength),
+      rightLength + optionsToUse.width / 2, optionsToUse.width,
+      0, this.color,
+    ));
+    this.add('curveRight', right);
   }
 
   // pulseWidth() {
@@ -607,11 +606,37 @@ class DiagramObjectAngle extends DiagramElementCollection {
     this.transform.updateTranslation(this.position);
     this.transform.updateRotation(this.rotation);
 
-    const { _curve, curve } = this;
+    const { _curve, curve, _curveRight } = this;
     if (_curve != null && curve != null) {
-      curveAngle = Math.max(curveAngle, 0);
-      _curve.angleToDraw = curveAngle;
-      _curve.transform.updateRotation(rotationForArrow1);
+      if (this.autoRightAngle
+        && this.angle >= Math.PI / 2 - this.rightAngleRange / 2
+        && this.angle <= Math.PI / 2 + this.rightAngleRange / 2
+      ) {
+        if (_curveRight != null) {
+          _curveRight.showAll();
+        }
+        _curve.hide();
+        if (_arrow1 != null) {
+          _arrow1.hide();
+        }
+        if (_arrow2 != null) {
+          _arrow2.hide();
+        }
+      } else {
+        if (_curveRight != null) {
+          _curveRight.hide();
+        }
+        if (_arrow1 != null) {
+          _arrow1.show();
+        }
+        if (_arrow2 != null) {
+          _arrow2.show();
+        }
+        _curve.show();
+        curveAngle = Math.max(curveAngle, 0);
+        _curve.angleToDraw = curveAngle;
+        _curve.transform.updateRotation(rotationForArrow1);
+      }
     }
 
     const { _label, label } = this;
@@ -621,7 +646,10 @@ class DiagramObjectAngle extends DiagramElementCollection {
       } else {
         _label.show();
         if (label.showRealAngle) {
-          const angleText = roundNum(this.angle * 180 / Math.PI, label.realAngleDecimals).toString();
+          const angleText = roundNum(
+            this.angle * 180 / Math.PI,
+            label.realAngleDecimals,
+          ).toString();
           _label._base.drawingObject.setText(`${angleText}º`);
           label.eqn.reArrangeCurrentForm();
         }
@@ -658,14 +686,14 @@ class DiagramObjectAngle extends DiagramElementCollection {
     }
   }
 
-  addArrows(
-    height: number | null = null,
-    width: number | null = height,
-    radius: number | null = null,
-  ) {
-    this.addArrow(1, height, width, radius);
-    this.addArrow(2, height, width, radius);
-  }
+  // addArrows(
+  //   height: number | null = null,
+  //   width: number | null = height,
+  //   radius: number | null = null,
+  // ) {
+  //   this.addArrow(1, height, width, radius);
+  //   this.addArrow(2, height, width, radius);
+  // }
 
   // addArrow1(
   //   arrowHeight: number = this.width * 4,
