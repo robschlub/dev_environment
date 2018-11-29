@@ -65,6 +65,7 @@ export default class EquilateralCollection extends CommonDiagramCollection {
         this._angle3.update(r);
       }
     }
+    this._angle1.setAngle({p1: new Point(1, 0), p2: new Point(0, 0), p3: new Point(1, 1)});
     // this.hasTouchableElements = true;
     this.touchInBoundingRect = true;
     this.isTouchable = true;

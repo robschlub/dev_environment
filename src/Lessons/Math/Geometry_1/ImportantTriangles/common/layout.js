@@ -88,6 +88,11 @@ export default function commonLessonLayout() {
       p1: equilPoints[2],
       p2: equilPoints[1],
       p3: equilPoints[0],
+      sides: {
+        // length: 0.2,
+        width: 0.02,
+        color: [1, 1, 0, 1],
+      },
       // arrow1: {
       //   width: 0.08,
       //   height: 0.08,

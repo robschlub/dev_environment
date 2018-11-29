@@ -376,7 +376,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       this.rotation = options.rotation;
     }
     if (options.angle != null) {
-      this.rotation = options.angle;
+      this.angle = options.angle;
     }
     if (options.p1 != null
       && options.p2 != null
@@ -389,6 +389,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       this.rotation = rotation;
       this.position = position;
     }
+    this.update();
   }
 
   addSide(
@@ -548,6 +549,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
 
     this.transform.updateTranslation(this.position);
     this.transform.updateRotation(this.rotation);
+    console.log(this.rotation)
     const { _curve, curve } = this;
     if (_curve != null && curve != null) {
       curveAngle = Math.max(curveAngle, 0);
@@ -583,13 +585,13 @@ class DiagramObjectAngle extends DiagramElementCollection {
 
     const { _side1, side1 } = this;
     if (_side1 && side1) {
-      _side1.transform.updateRotation(this.rotation);
+      // _side1.transform.updateRotation(this.rotation);
       _side1.transform.updateScale(side1.length, 1);
     }
 
     const { _side2, side2 } = this;
     if (_side2 && side2) {
-      _side2.transform.updateRotation(this.rotation + this.angle);
+      _side2.transform.updateRotation(this.angle);
       _side2.transform.updateScale(side2.length, 1);
     }
   }
