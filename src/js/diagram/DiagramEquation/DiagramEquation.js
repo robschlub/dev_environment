@@ -196,7 +196,7 @@ export default class DiagramEquation {
     }>) {
     const defaultOptions = {
       numerator: '1',
-      denominator: '1',
+      denominator: 'NOT DEFINED',
       color: [1, 0, 0, 1],
       scale: 0.5,
     };
@@ -226,8 +226,8 @@ export default class DiagramEquation {
     }>) {
     const defaultOptions = {
       numerator: '1',
-      denominator: '1',
-      main: 'x',
+      denominator: 'NOT DEFINED',
+      main: 'NOT DEFINED',
       color: [1, 0, 0, 1],
       scale: 0.5,
       fracScale: 0.6,

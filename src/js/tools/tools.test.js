@@ -279,4 +279,35 @@ describe('Join Objects', () => {
     const result = tools.joinObjects({ a: 1, b: 2 }, { b: [1, 2] });
     expect(result).toEqual({ a: 1, b: [1, 2] });
   });
+  test('Three Layers object over number', () => {
+    const result = tools.joinObjects(
+      {
+        a: 1,
+        b: {
+          b1: 2,
+          b2: 3,
+        },
+      },
+      {
+        a: 1,
+        b: {
+          b1: 2,
+          b2: {
+            b21: 3,
+            b22: 5,
+          },
+        },
+      },
+    );
+    expect(result).toEqual({
+      a: 1,
+      b: {
+        b1: 2,
+        b2: {
+          b21: 3,
+          b22: 5,
+        },
+      },
+    });
+  });
 });

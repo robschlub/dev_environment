@@ -13,6 +13,7 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../Element';
 import EquationLabel from './EquationLabel';
+import type { TypeLabelEquationOptions } from './EquationLabel';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
 
 export type TypeAngleLabelOrientation = 'horizontal' | 'tangent';
@@ -56,7 +57,7 @@ export type TypeAngleOptions = {
   //
   // Label
   label?: {                         // Angle label
-    text: string | Array<string> | Equation, // String goes to eqn,
+    text: string | Array<string> | Equation | TypeLabelEquationOptions, // String goes to eqn,
                                     // Array<string> into eqn forms
     radius?: number,                // Label radius
     curvePosition?: number,         // Label position along curve in %
@@ -386,7 +387,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
   }
 
   addLabel(options: {
-    labelText?: string | Equation | Array<string>,
+    labelText?: string | Equation | Array<string> | TypeLabelEquationOptions,
     radius?: number,
     curvePosition?: number,
     showRealAngle?: boolean,

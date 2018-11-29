@@ -8,6 +8,7 @@ import { Equation } from '../DiagramElements/Equation/GLEquation';
 import type {
   TypeVAlign, TypeHAlign,
 } from '../DiagramElements/Equation/GLEquation';
+import { joinObjects } from '../../tools/tools';
 // export type TypeEquationLabel = {
 //   eqn: Equation;
 //   updateRotation: (number, Point, number, number) => void;
@@ -16,8 +17,17 @@ import type {
 //   // updateScale: (Point) => void;
 // };
 
+export type TypeLabelEquationOptions = {
+  eqn: 'fraction' | 'fractionPre',
+  denominator: string,
+  numerator: string,
+  main?: string,
+  scale?: number,
+  fracScale?: number,
+};
+
 export type TypeLabelOptions = {
-  label?: string | Equation | Array<string>,
+  label?: string | Equation | Array<string> | TypeLabelEquationOptions,
   color?: Array<number>,
   scale?: number,
   position?: Point,
@@ -65,7 +75,7 @@ export default class EquationLabel {
       eqn.setCurrentForm('base');
     } else if (labelTextOrEquation instanceof Equation) {
       eqn = labelTextOrEquation;
-    } else {
+    } else if (Array.isArray(labelTextOrEquation)) {
       eqn = equations.makeEqn();
       const elements = {};
       labelTextOrEquation.forEach((labelText, index) => {
@@ -81,6 +91,19 @@ export default class EquationLabel {
         eqn.addForm(`${index}`, [`_${index}`]);
       });
       eqn.setCurrentForm(form, formType);
+    } else {
+      if (labelTextOrEquation.eqn === 'fraction') {
+        const defaultFracOptions = { color, scale: 0.5 };
+        const fracOptions = joinObjects(defaultFracOptions, labelTextOrEquation);
+        eqn = equations.fraction(fracOptions);
+        eqn.setCurrentForm('base');
+      }
+      if (labelTextOrEquation.eqn === 'fractionPre') {
+        const defaultFracOptions = { color, scale: 0.7, fracScale: 0.5 };
+        const fracOptions = joinObjects(defaultFracOptions, labelTextOrEquation);
+        eqn = equations.fractionPre(fracOptions);
+        eqn.setCurrentForm('base');
+      }
     }
     this.eqn = eqn;
   }

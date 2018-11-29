@@ -63,7 +63,7 @@ export default class EquilateralCollection extends CommonDiagramCollection {
           denominator: '2',
           main: 'A',
           color: this.layout.colors.lines,
-          scale: 0.6,
+          scale: 0.7,
         }),
       },
     }));

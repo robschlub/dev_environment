@@ -11,6 +11,7 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../Element';
 import EquationLabel from './EquationLabel';
+import type { TypeLabelEquationOptions } from './EquationLabel';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
 
 // top - text is on top of line (except when line is vertical)
@@ -65,7 +66,7 @@ export type TypeLineOptions = {
     height?: number,
   } | boolean,
   label?: {
-    text: string | Array<string>,
+    text: string | Array<string> | Equation | TypeLabelEquationOptions,
     offset?: number,
     location?: TypeLineLabelLocation,
     subLocation?: TypeLineLabelSubLocation,
@@ -121,7 +122,7 @@ class LineLabel extends EquationLabel {
 
   constructor(
     equation: Object,
-    labelText: string | Equation | Array<string>,
+    labelText: string | Equation | Array<string> | TypeLabelEquationOptions,
     color: Array<number>,
     offset: number,
     location: TypeLineLabelLocation = 'top',
@@ -264,7 +265,8 @@ export class DiagramObjectLine extends DiagramElementCollection {
   addArrow: (number, ?number, ?number) => void;
   pulseWidth: () => void;
   updateLabel: (?number) => {};
-  addLabel: (string | Equation | Array<string>, number, ?TypeLineLabelLocation,
+  addLabel: (string | Equation | Array<string> | TypeLabelEquationOptions,
+             number, ?TypeLineLabelLocation,
              ?TypeLineLabelSubLocation, ?TypeLineLabelOrientation, ?number
             ) => void;
 
@@ -633,7 +635,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
   }
 
   addLabel(
-    labelText: string | Equation | Array<string>,
+    labelText: string | Equation | Array<string> | TypeLabelEquationOptions,
     offset: number,
     location: TypeLineLabelLocation = 'top',
     subLocation: TypeLineLabelSubLocation = 'left',

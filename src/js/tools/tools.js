@@ -262,20 +262,50 @@ function joinObjects(...objects: Array<Object>): Object {
   const assignObjectFromTo = (fromObject: Object, toObject: Object) => {
     Object.keys(fromObject).forEach((key) => {
       const value = fromObject[key];
-      if (typeof value === 'object'
-        && !Array.isArray(value)
-        && value != null
-        && value._dup == null) {
-        if (toObject[key] == null) {
-          // eslint-disable-next-line no-param-reassign
-          toObject[key] = value;
-        } else {
-          assignObjectFromTo(value, toObject[key]);
-        }
-      } else {
+      // console.log(fromObject, toObject, key, value, typeof value)
+      if (typeof value === 'number'
+        || typeof value === 'boolean'
+        || typeof value === 'string'
+        || value == null
+        || typeof value === 'function'
+        || typeof value._dup === 'function'
+        || Array.isArray(value)
+      ) {
+        // console.log('got here')
         // eslint-disable-next-line no-param-reassign
         toObject[key] = value;
+      } else if (toObject[key] == null) {
+        // eslint-disable-next-line no-param-reassign
+        toObject[key] = value;
+      } else {
+        // console.log('and somehow here')
+        const toValue = toObject[key];
+        if (typeof toValue === 'number'
+          || typeof toValue === 'boolean'
+          || typeof toValue === 'string'
+          || toValue == null
+          || typeof toValue === 'function'
+          || Array.isArray(toValue)
+        ) {
+          // eslint-disable-next-line no-param-reassign
+          toObject[key] = {};
+        }
+        assignObjectFromTo(value, toObject[key]);
       }
+      // if (typeof value === 'object'
+      //   && !Array.isArray(value)
+      //   && value != null
+      //   && value._dup == null) {
+      //   if (toObject[key] == null) {
+      //     // eslint-disable-next-line no-param-reassign
+      //     toObject[key] = value;
+      //   } else {
+      //     assignObjectFromTo(value, toObject[key]);
+      //   }
+      // } else {
+      //   // eslint-disable-next-line no-param-reassign
+      //   toObject[key] = value;
+      // }
     });
   };
 

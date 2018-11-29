@@ -143,7 +143,14 @@ export default function commonLessonLayout() {
       side12: {
         p1: equilPoints[1],
         p2: mid,
-        label: { text: 'A/2' },
+        label: {
+          text: {
+            eqn: 'fractionPre',
+            numerator: '1',
+            denominator: '2',
+            main: 'A',
+          },
+        },
       },
       side23: {
         p1: equilPoints[2],
