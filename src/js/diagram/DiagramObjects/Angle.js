@@ -60,7 +60,7 @@ export type TypeAngleOptions = {
     showRealAngle?: boolean,
     realAngleDecimals?: number,
     orientation?: TypeAngleLabelOrientation,
-    autoHide?: boolean,
+    autoHide?: number,
   },
   //
   // Sides
@@ -109,7 +109,7 @@ class AngleLabel extends EquationLabel {
   showRealAngle: boolean;
   orientation: TypeAngleLabelOrientation;
   realAngleDecimals: number;
-  autoHide: boolean;
+  autoHide: number;
 
   constructor(
     equation: Object,
@@ -119,7 +119,7 @@ class AngleLabel extends EquationLabel {
     curvePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
     showRealAngle: boolean = false,
     realAngleDecimals: number = 0,
-    autoHide: boolean = true,
+    autoHide: number = -1,
     orientation: TypeAngleLabelOrientation = 'horizontal',
   ) {
     super(equation, { label: labelText, color });
@@ -296,12 +296,6 @@ class DiagramObjectAngle extends DiagramElementCollection {
       this.addArrow(2, joinObjects(optionsToUse.arrow2, optionsToUse.arrows));
     }
 
-    // // Arrows overrides arrowStart or arrowEnd
-    // if (optionsToUse.arrows) {
-    //   this.addArrow(1, joinObjects(optionsToUse.arrow1, optionsToUse.arrows));
-    //   this.addArrow(2, joinObjects(optionsToUse.arrow2, optionsToUse.arrows));
-    // }
-
     // Label
     const defaultLabelOptions = {
       text: '',
@@ -310,6 +304,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       showRealAngle: false,
       realAngleDecimals: 0,
       orientation: 'horizontal',
+      autoHide: -1,
     };
     if (this.curve) {
       defaultLabelOptions.radius = this.curve.radius;
@@ -574,7 +569,9 @@ class DiagramObjectAngle extends DiagramElementCollection {
         _arrow2.show();
         _arrow2.transform.updateTranslation(polarToRect(arrow2.radius, this.angle));
         const arrowLengthAngle = (arrow2.height / arrow2.radius) * arrow2LengthModifier;
-        _arrow2.transform.updateRotation(this.angle + Math.PI / 2 - arrowLengthAngle / arrow2LengthModifier);
+        _arrow2.transform.updateRotation(
+          this.angle + Math.PI / 2 - arrowLengthAngle / arrow2LengthModifier,
+        );
         curveAngle += arrowLengthAngle * (1 - arrow2LengthModifier);
       }
     }
@@ -583,7 +580,6 @@ class DiagramObjectAngle extends DiagramElementCollection {
       this.lastLabelRotationOffset = labelRotationOffset;
     }
 
-    
     // if (_arrow1 && arrow1) {
     //   _arrow1.transform.updateTranslation(arrow1.radius, 0);
     //   const arrowLengthAngle = arrow1.height / arrow1.radius;

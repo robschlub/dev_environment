@@ -83,6 +83,9 @@ export default function commonLessonLayout() {
         width: 0.05,
         color: [1, 1, 0, 1],
       },
+      // arrow2: {
+      //   autoHide: false,
+      // },
     },
     angle2: {
       p1: equilPoints[2],
