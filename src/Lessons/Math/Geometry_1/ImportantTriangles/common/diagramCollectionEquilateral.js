@@ -49,13 +49,26 @@ export default class EquilateralCollection extends CommonDiagramCollection {
   constructor(
     diagram: LessonDiagram,
     layout: Object,
-    transform: Transform = new Transform().translate(0, 0),
+    transform: Transform = new Transform().rotate(0).translate(0, 0),
   ) {
     super(diagram, layout, transform);
     this.setPosition(this.layout.equil.position);
     this.addTris();
     this.addAngles();
     console.log(this)
+    this.setTransformCallback = () => {
+      const r = this.transform.r();
+      // console.log(r)
+      if (r != null) {
+        this._angle1.update(r);
+        this._angle2.update(r);
+        this._angle3.update(r);
+      }
+    }
     // this.hasTouchableElements = true;
+    this.touchInBoundingRect = true;
+    this.isTouchable = true;
+    this.isMovable = true;
+    this.move.type = 'rotation';
   }
 }

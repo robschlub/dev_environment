@@ -29,6 +29,7 @@ class Content extends LessonContent {
   addSections() {
     const diag = this.diagram.elements;
     const equil = diag._equil;
+    console.log(this.diagram.elements)
 
     const common = {
       setContent: '',

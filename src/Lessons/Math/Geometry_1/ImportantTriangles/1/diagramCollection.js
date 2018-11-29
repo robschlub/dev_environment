@@ -21,5 +21,6 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     super(diagram, layout, transform);
 
     this.add('equil', new EquilateralCollection(diagram, this.layout));
+    this.hasTouchableElements = true;
   }
 }

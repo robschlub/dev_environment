@@ -58,9 +58,9 @@ export default function commonLessonLayout() {
         width: 0.02,
       },
       label: {
-        text: 'A',
-        radius: 0.5,
-        orientation: 'horizontal',
+        text: 'A + B = C',
+        radius: 0.4,
+        // orientation: 'tangent'
         // curvePosition: 0.2,
       },
       // arrow1: {
@@ -94,8 +94,7 @@ export default function commonLessonLayout() {
       p2: equilPoints[2],
       p3: equilPoints[1],
       label: {
-        curvePosition: -0.2,
-        radius: 0.3,
+        curvePosition: 0.2,
       },
     },
   };

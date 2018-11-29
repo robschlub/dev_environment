@@ -452,7 +452,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
     this.update();
   }
 
-  update() {
+  update(labelRotationOffset: number = 0) {
     let rotationForArrow1 = 0;
     let curveAngle = this.angle;
 
@@ -484,15 +484,22 @@ class DiagramObjectAngle extends DiagramElementCollection {
 
     const { _label, label } = this;
     if (_label && label) {
-      _label.transform.updateTranslation(polarToRect(
-        label.radius,
-        this.angle * label.curvePosition,
-      ));
+      const labelPosition = polarToRect(label.radius, this.angle * label.curvePosition);
       if (label.orientation === 'horizontal') {
-        _label.transform.updateRotation(-this.rotation);
+        label.updateRotation(
+          -this.rotation - labelRotationOffset,
+          labelPosition,
+          label.radius / 5,
+          this.angle * label.curvePosition,
+        );
       }
       if (label.orientation === 'tangent') {
-        _label.transform.updateRotation(this.angle * label.curvePosition - Math.PI / 2);
+        label.updateRotation(
+          this.angle * label.curvePosition - Math.PI / 2,
+          labelPosition,
+          label.radius / 50,
+          this.angle * label.curvePosition,
+        );
       }
     }
   }
