@@ -40,9 +40,9 @@ class Content extends LessonContent {
       show: [],
       hide: [],
       setSteadyState: () => {
-        equil._angle1.update();
-        equil._angle2.update();
-        equil._angle3.update();
+        // equil._angle1.update();
+        // equil._angle2.update();
+        // equil._angle3.update();
       },
       setLeaveState: () => {},
     };

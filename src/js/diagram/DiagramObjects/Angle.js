@@ -171,10 +171,10 @@ class DiagramObjectAngle extends DiagramElementCollection {
   p2: Point;
   p3: Point;
   lastLabelRotationOffset: number;
-
-  // angle properties - pulic read/write
   autoRightAngle: boolean;
   rightAngleRange: number;
+
+  // angle properties - pulic read/write
 
   // angle properties - private internal use only
   shapes: Object;
@@ -457,19 +457,21 @@ class DiagramObjectAngle extends DiagramElementCollection {
     }
 
     // Right Angle
-    const right = this.shapes.collection();
-    const rightLength = optionsToUse.radius; // / Math.sqrt(2);
-    right.add('line1', this.shapes.horizontalLine(
-      new Point(rightLength, 0),
-      rightLength + optionsToUse.width / 2, optionsToUse.width,
-      Math.PI / 2, this.color,
-    ));
-    right.add('line2', this.shapes.horizontalLine(
-      new Point(0, rightLength),
-      rightLength + optionsToUse.width / 2, optionsToUse.width,
-      0, this.color,
-    ));
-    this.add('curveRight', right);
+    if (this.autoRightAngle) {
+      const right = this.shapes.collection();
+      const rightLength = optionsToUse.radius; // / Math.sqrt(2);
+      right.add('line1', this.shapes.horizontalLine(
+        new Point(rightLength, 0),
+        rightLength + optionsToUse.width / 2, optionsToUse.width,
+        Math.PI / 2, this.color,
+      ));
+      right.add('line2', this.shapes.horizontalLine(
+        new Point(0, rightLength),
+        rightLength + optionsToUse.width / 2, optionsToUse.width,
+        0, this.color,
+      ));
+      this.add('curveRight', right);
+    }
   }
 
   // pulseWidth() {

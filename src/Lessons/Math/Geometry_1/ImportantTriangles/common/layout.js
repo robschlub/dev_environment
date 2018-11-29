@@ -6,6 +6,8 @@ import baseLayout from '../../../../LessonsCommon/layout';
 
 const cssColorNames = [
   'lines',
+  'angles',
+  'height',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -17,6 +19,7 @@ export default function commonLessonLayout() {
     new Point(1, -1),
     new Point(0, 0.732),
   ];
+  const mid = new Point(0, equilPoints[0].y);
   layout.equil = {
     position: new Point(0, 0),
     tri: {
@@ -27,40 +30,143 @@ export default function commonLessonLayout() {
       position: new Point(0, 0),
       color: layout.colors.lines,
     },
-    leftTri: {
-      points: [
-        equilPoints[0],
-        new Point(0, equilPoints[0].y),
-        new Point(0, equilPoints[2].y),
-      ],
-      width: 0.01,
-      close: true,
-      borderToPoint: 'alwaysOn',
-      position: new Point(0, 0),
+    sideLength: {
       color: layout.colors.lines,
+      offset: 0.2,
+      label: {
+        text: 'A',
+        location: 'outside',
+        orientation: 'horizontal',
+      },
+      showLine: false,
     },
-    rightTri: {
-      points: [
-        new Point(0, equilPoints[1].y),
-        equilPoints[1],
-        new Point(0, equilPoints[2].y),
-      ],
-      width: 0.01,
-      close: true,
-      borderToPoint: 'alwaysOn',
-      position: new Point(0, 0),
-      color: layout.colors.lines,
+    side12: {
+      p1: equilPoints[1],
+      p2: equilPoints[0],
+      offset: 0.5,
+    },
+    side23: {
+      p1: equilPoints[2],
+      p2: equilPoints[1],
+    },
+    side31: {
+      p1: equilPoints[0],
+      p2: equilPoints[2],
+    },
+    sideH: {
+      p1: equilPoints[2],
+      p2: mid,
+      color: layout.colors.height,
+      offset: 0.1,
+      label: {
+        linePosition: 0.6,
+      },
+    },
+    left: {
+      tri: {
+        points: [
+          equilPoints[0],
+          mid,
+          equilPoints[2],
+        ],
+        width: 0.01,
+        close: true,
+        borderToPoint: 'alwaysOn',
+        position: new Point(0, 0),
+        color: layout.colors.lines,
+      },
+      angle1: {
+        p1: mid,
+        p2: equilPoints[0],
+        p3: equilPoints[2],
+        label: { text: 'a' },
+      },
+      angle2: {
+        p1: equilPoints[2],
+        p2: mid,
+        p3: equilPoints[0],
+        label: { text: 'b' },
+      },
+      angle3: {
+        p1: equilPoints[0],
+        p2: equilPoints[2],
+        p3: mid,
+        label: { text: 'c' },
+      },
+      side12: {
+        p1: mid,
+        p2: equilPoints[0],
+        label: { text: 'A/2' },
+      },
+      side23: {
+        p1: equilPoints[2],
+        p2: mid,
+        label: { text: 'h' },
+      },
+      side31: {
+        p1: equilPoints[0],
+        p2: equilPoints[2],
+        label: { text: 'A' },
+      },
+    },
+    right: {
+      tri: {
+        points: [
+          mid,
+          equilPoints[1],
+          equilPoints[2],
+        ],
+        width: 0.01,
+        close: true,
+        borderToPoint: 'alwaysOn',
+        position: new Point(0, 0),
+        color: layout.colors.lines,
+      },
+      angle1: {
+        p1: equilPoints[1],
+        p2: mid,
+        p3: equilPoints[2],
+        label: { text: ['d', 'b'] },
+      },
+      angle2: {
+        p1: equilPoints[2],
+        p2: equilPoints[1],
+        p3: mid,
+        label: { text: ['e', 'a'] },
+      },
+      angle3: {
+        p1: mid,
+        p2: equilPoints[2],
+        p3: equilPoints[1],
+        label: { text: ['f', 'c'] },
+      },
+      side12: {
+        p1: equilPoints[1],
+        p2: mid,
+        label: { text: 'A/2' },
+      },
+      side23: {
+        p1: equilPoints[2],
+        p2: equilPoints[1],
+        label: { text: 'A' },
+      },
+      side31: {
+        p1: mid,
+        p2: equilPoints[2],
+        label: { text: 'h' },
+      },
     },
     angle: {
       curve: {
-        radius: 0.4,
+        radius: 0.3,
         sides: 150,
         width: 0.02,
       },
       label: {
         text: ['a', '60º'],
-        radius: 0.35,
+        radius: 0.28,
       },
+      color: layout.colors.angles,
     },
     angle1: {
       p1: equilPoints[1],
