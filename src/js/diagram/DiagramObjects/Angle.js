@@ -134,8 +134,8 @@ class DiagramObjectAngle extends DiagramElementCollection {
   label: ?AngleLabel;
   arrow1: ?{ height: number; width: number, radius: number };
   arrow2: ?{ height: number; width: number, radius: number };
-  side1: ?{ width: number, length: number, color: Array<number> };
-  side2: ?{ width: number, length: number, color: Array<number> };
+  side1: ?{ width: number, length: number };
+  side2: ?{ width: number, length: number };
   curve: ?{
     width: number,
     sides: number,
@@ -151,6 +151,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
   p1: Point;
   p2: Point;
   p3: Point;
+  lastLabelRotationOffset: number;
 
   // line properties - read/write
   // showRealAngle: boolean;
@@ -167,14 +168,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
   setAngle: (number) => void;
   setRotation: (number) => void;
   setByPoints: (Point, Point, Point) => void;
-  // setLength: (number) => void;
-  // setEndPoints: (Point, Point, ?number) => void;
-  // animateLengthTo: (?number, ?number, ?boolean, ?() => void) => void;
   grow: (?number, ?number, ?boolean, ?() => void) => void;
-  // setMovable: (?boolean, ?('translation' | 'rotation' | 'centerTranslateEndRotation' | 'scaleX' | 'scaleY' | 'scale'), ?number, ?Rect) => void;
-  // addArrow1: (?number, ?number) => void;
-  // addArrow2: (?number, ?number) => void;
-  // addArrow: (number, ?number, ?number) => void;
   pulseWidth: () => void;
   updateLabel: (?number) => {};
   // addLabel: (string | Equation | Array<string>, number, ?TypeLineLabelLocation,
@@ -239,6 +233,8 @@ class DiagramObjectAngle extends DiagramElementCollection {
     this.position = optionsToUse.position;
     this.rotation = optionsToUse.rotation;
     this.angle = optionsToUse.angle;
+    this.lastLabelRotationOffset = 0;
+
     // this.clockwise = optionsToUse.clockwise;
     // this.radius = optionsToUse.radius;
     if (optionsToUse.p1 != null
@@ -328,7 +324,86 @@ class DiagramObjectAngle extends DiagramElementCollection {
       );
     }
 
+    // Sides
+    let defaultSideLength = 0.5;
+    if (this.curve) {
+      defaultSideLength = this.curve.radius * 2;
+    }
+    let defaultSideWidth = 0.01;
+    if (this.curve) {
+      defaultSideWidth = this.curve.width;
+    }
+    const defaultSideOptions = {
+      length: defaultSideLength,
+      width: defaultSideWidth,
+      color: this.color,
+    };
+    if (optionsToUse.side1) {
+      const sideOptions = joinObjects(defaultSideOptions, optionsToUse.side1);
+      this.addSide(1, sideOptions.length, sideOptions.width, sideOptions.color);
+    }
+
+    if (optionsToUse.side2) {
+      const sideOptions = joinObjects(defaultSideOptions, optionsToUse.side2);
+      this.addSide(2, sideOptions.length, sideOptions.width, sideOptions.color);
+    }
+
+    // Sides overrides side1 and side2
+    if (optionsToUse.sides) {
+      let sides = {};
+      if (typeof optionsToUse.sides === 'object') {
+        ({ sides } = optionsToUse);
+      }
+      const sideOptions = joinObjects(defaultSideOptions, sides);
+      this.addSide(1, sideOptions.length, sideOptions.width, sideOptions.color);
+      this.addSide(2, sideOptions.length, sideOptions.width, sideOptions.color);
+    }
     this.update();
+  }
+
+  setAngle(options: {
+      position?: Point,
+      rotation?: number,
+      angle?: number,
+      p1?: Point,
+      p2?: Point,
+      p3?: Point,
+    } = {}) {
+    if (options.position != null) {
+      this.position = options.position;
+    }
+    if (options.rotation != null) {
+      this.rotation = options.rotation;
+    }
+    if (options.angle != null) {
+      this.rotation = options.angle;
+    }
+    if (options.p1 != null
+      && options.p2 != null
+      && options.p3 != null
+    ) {
+      const { position, rotation, angle } = this.calculateFromP1P2P3(
+        options.p1, options.p2, options.p3,
+      );
+      this.angle = angle;
+      this.rotation = rotation;
+      this.position = position;
+    }
+  }
+
+  addSide(
+    index: 1 | 2,
+    length: number | null = null,
+    width: number | null = null,
+    color: Array<number> = this.color,
+  ) {
+    const line = this.shapes.horizontalLine(
+      new Point(0, 0),
+      1, width, 0, color, new Transform().scale(1, 1).rotate(0),
+    );
+    // $FlowFixMe
+    this[`side${index}`] = { length, width };
+    this.add(`side${index}`, line);
   }
 
   addLabel(
@@ -447,9 +522,12 @@ class DiagramObjectAngle extends DiagramElementCollection {
     this.update();
   }
 
-  update(labelRotationOffset: number = 0) {
+  update(labelRotationOffset: number | null = null) {
     let rotationForArrow1 = 0;
     let curveAngle = this.angle;
+    if (labelRotationOffset != null) {
+      this.lastLabelRotationOffset = labelRotationOffset;
+    }
 
     const { _arrow1, arrow1 } = this;
     if (_arrow1 && arrow1) {
@@ -487,7 +565,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       const labelPosition = polarToRect(label.radius, this.angle * label.curvePosition);
       if (label.orientation === 'horizontal') {
         label.updateRotation(
-          -this.rotation - labelRotationOffset,
+          -this.rotation - this.lastLabelRotationOffset,
           labelPosition,
           label.radius / 5,
           this.angle * label.curvePosition,
@@ -501,6 +579,18 @@ class DiagramObjectAngle extends DiagramElementCollection {
           this.angle * label.curvePosition,
         );
       }
+    }
+
+    const { _side1, side1 } = this;
+    if (_side1 && side1) {
+      _side1.transform.updateRotation(this.rotation);
+      _side1.transform.updateScale(side1.length, 1);
+    }
+
+    const { _side2, side2 } = this;
+    if (_side2 && side2) {
+      _side2.transform.updateRotation(this.rotation + this.angle);
+      _side2.transform.updateScale(side2.length, 1);
     }
   }
 
