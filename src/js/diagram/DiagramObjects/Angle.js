@@ -148,7 +148,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
     _base: DiagramElementPrimative;
   } & DiagramElementCollection;
 
-  // lObjects that may or may not exist
+  // Objects that may or may not exist
   label: ?AngleLabel;
   arrow1: ?{ height: number; width: number, radius: number, autoHide: boolean };
   arrow2: ?{ height: number; width: number, radius: number, autoHide: boolean };
@@ -162,31 +162,28 @@ class DiagramObjectAngle extends DiagramElementCollection {
     step: number,
   };
 
-  // angle properties - read only
+  // angle properties - pulic read only
   angle: number;
   rotation: number;
   position: Point;
   radius: number;
-  clockwise: boolean;
   p1: Point;
   p2: Point;
   p3: Point;
   lastLabelRotationOffset: number;
+
+  // angle properties - pulic read/write
   autoRightAngle: boolean;
   rightAngleRange: number;
 
-  // line properties - read/write
-  // showRealAngle: boolean;
-
-  // line properties - private internal use only
-  // start: number;
+  // angle properties - private internal use only
   shapes: Object;
   equation: Object;
   animateNextFrame: void => void;
   isTouchDevice: boolean;
   largerTouchBorder: boolean;
 
-  // line methods
+  // Pulic Angle methods
   setAngle: (?{
       position?: Point,
       rotation?: number,
@@ -197,14 +194,6 @@ class DiagramObjectAngle extends DiagramElementCollection {
     }) => void;
 
   update: (?number) => void;
-  // setRotation: (number) => void;
-  // setByPoints: (Point, Point, Point) => void;
-  // grow: (?number, ?number, ?boolean, ?() => void) => void;
-  // pulseWidth: () => void;
-  // updateLabel: (?number) => {};
-  // addLabel: (string | Equation | Array<string>, number, ?TypeLineLabelLocation,
-  //            ?TypeLineLabelSubLocation, ?TypeLineLabelOrientation, ?number
-  //           ) => void;
 
 
   // eslint-disable-next-line class-methods-use-this
