@@ -56,7 +56,17 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     right.add('angle3', this.diagram.objects.angle(lay.angle, layR.angle3));
 
     // Sides
-    left.add('side12', this.diagram.objects.line(lay.sideLength, layL.side12));
+    left.add('side12', this.diagram.objects.line(lay.sideLength, layL.side12, {
+      label: {
+        text: this.diagram.equation.fractionPre({
+          numerator: '1',
+          denominator: '2',
+          main: 'A',
+          color: this.layout.colors.lines,
+          scale: 0.6,
+        }),
+      },
+    }));
     left.add('side23', this.diagram.objects.line(lay.sideLength, layL.side23));
     left.add('side31', this.diagram.objects.line(lay.sideLength, layL.side31));
     right.add('side12', this.diagram.objects.line(lay.sideLength, layR.side12));

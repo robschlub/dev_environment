@@ -6,6 +6,7 @@ import {
 import {
   DiagramElementCollection,
 } from '../Element';
+import { joinObjects } from '../../tools/tools';
 import DrawContext2D from '../DrawContext2D';
 import {
   DiagramFont,
@@ -185,5 +186,66 @@ export default class DiagramEquation {
       'lesson__equation_description',
       new Point(0, 0), 'middle', 'left',
     );
+  }
+
+  fraction(...options: Array<{
+      numerator?: string,
+      denominotor?: string,
+      color?: Array<number>,
+      scale?: number,
+    }>) {
+    const defaultOptions = {
+      numerator: '1',
+      denominator: '1',
+      color: [1, 0, 0, 1],
+      scale: 0.5,
+    };
+    const optionsToUse = joinObjects(defaultOptions, ...options);
+
+    const eqn = this.makeEqn();
+    eqn.createElements({
+      num: optionsToUse.numerator,
+      den: optionsToUse.denominator,
+      v: this.vinculum(optionsToUse.color),
+    }, optionsToUse.color);
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'baseline';
+    eqn.formAlignment.scale = optionsToUse.scale;
+    eqn.addForm('base', [eqn.frac('num', 'den', 'v')]);
+    eqn.setCurrentForm('base');
+    return eqn;
+  }
+
+  fractionPre(...options: Array<{
+      numerator?: string,
+      denominotor?: string,
+      main?: string,
+      color?: Array<number>,
+      scale?: number,
+      fracScale?: number,
+    }>) {
+    const defaultOptions = {
+      numerator: '1',
+      denominator: '1',
+      main: 'x',
+      color: [1, 0, 0, 1],
+      scale: 0.5,
+      fracScale: 0.6,
+    };
+    const optionsToUse = joinObjects(defaultOptions, ...options);
+
+    const eqn = this.makeEqn();
+    eqn.createElements({
+      num: optionsToUse.numerator,
+      den: optionsToUse.denominator,
+      main: optionsToUse.main,
+      v: this.vinculum(optionsToUse.color),
+    }, optionsToUse.color);
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'baseline';
+    eqn.formAlignment.scale = optionsToUse.scale;
+    eqn.addForm('base', [eqn.sfrac('num', 'den', 'v', optionsToUse.fracScale), 'space', 'main']);
+    eqn.setCurrentForm('base');
+    return eqn;
   }
 }

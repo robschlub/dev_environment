@@ -56,7 +56,7 @@ export type TypeAngleOptions = {
   //
   // Label
   label?: {                         // Angle label
-    text: string | Array<string>,   // String goes to eqn,
+    text: string | Array<string> | Equation, // String goes to eqn,
                                     // Array<string> into eqn forms
     radius?: number,                // Label radius
     curvePosition?: number,         // Label position along curve in %
