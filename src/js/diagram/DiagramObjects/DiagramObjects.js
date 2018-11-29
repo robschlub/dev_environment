@@ -11,7 +11,7 @@ import DrawContext2D from '../DrawContext2D';
 import EquationNavigator from './EquationNavigator';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
 import { DiagramObjectLine } from './Line';
-import { DiagramObjectAngle } from './Angle';
+import DiagramObjectAngle from './Angle';
 import type { TypeLineOptions } from './Line';
 import type { TypeAngleOptions } from './Angle';
 import type { TypeLabelOptions } from './EquationLabel';
