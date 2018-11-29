@@ -289,40 +289,18 @@ class DiagramObjectAngle extends DiagramElementCollection {
     }
 
     // Arrows
-    let defaultArrowDimension = 0.04;
-    if (this.curve) {
-      defaultArrowDimension = this.curve.width * 4;
+    if (optionsToUse.arrow1 || optionsToUse.arrows) {
+      this.addArrow(1, joinObjects(optionsToUse.arrow1, optionsToUse.arrows));
     }
-    let defaultArrowRadius = 0.1;
-    if (this.curve) {
-      defaultArrowRadius = this.curve.radius;
-    }
-    const defaultArrowOptions = {
-      width: defaultArrowDimension,
-      height: defaultArrowDimension,
-      radius: defaultArrowRadius,
-      autoHide: true,
-    };
-    if (optionsToUse.arrow1) {
-      const arrowOptions = joinObjects(defaultArrowOptions, optionsToUse.arrow1);
-      this.addArrow(1, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
+    if (optionsToUse.arrow2 || optionsToUse.arrows) {
+      this.addArrow(2, joinObjects(optionsToUse.arrow2, optionsToUse.arrows));
     }
 
-    if (optionsToUse.arrow2) {
-      const arrowOptions = joinObjects(defaultArrowOptions, optionsToUse.arrow2);
-      this.addArrow(2, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
-    }
-
-    // Arrows overrides arrowStart or arrowEnd
-    if (optionsToUse.arrows) {
-      let arrows = {};
-      if (typeof optionsToUse.arrows === 'object') {
-        ({ arrows } = optionsToUse);
-      }
-      const arrowOptions = joinObjects(defaultArrowOptions, arrows);
-      this.addArrow(1, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
-      this.addArrow(2, arrowOptions.height, arrowOptions.width, arrowOptions.radius);
-    }
+    // // Arrows overrides arrowStart or arrowEnd
+    // if (optionsToUse.arrows) {
+    //   this.addArrow(1, joinObjects(optionsToUse.arrow1, optionsToUse.arrows));
+    //   this.addArrow(2, joinObjects(optionsToUse.arrow2, optionsToUse.arrows));
+    // }
 
     // Label
     const defaultLabelOptions = {
@@ -506,43 +484,45 @@ class DiagramObjectAngle extends DiagramElementCollection {
 
   addArrow(
     index: 1 | 2,
-    height: number | null = null,
-    width: number | null = height,
-    radius: number | null = null,
+    options: {
+      width?: number,
+      height?: number,
+      radius?: number,
+      autoHide?: number,
+    } | null = {},
   ) {
+    let defaultArrowDimension = 0.04;
+    if (this.curve) {
+      defaultArrowDimension = this.curve.width * 4;
+    }
+    let defaultArrowRadius = 0.1;
+    if (this.curve) {
+      defaultArrowRadius = this.curve.radius;
+    }
+    const defaultArrowOptions = {
+      width: defaultArrowDimension,
+      height: defaultArrowDimension,
+      radius: defaultArrowRadius,
+      autoHide: true,
+    };
+    let optionsToUse = {};
+    if (options != null) {
+      optionsToUse = options;
+    }
+    const arrowOptions = joinObjects(defaultArrowOptions, optionsToUse);
+    const { width, height } = arrowOptions;
+
     let r = Math.PI / 2;
     if (index === 2) {
       r = Math.PI / 2 * 3;
     }
-    let heightToUse = 0.04;
-    if (height) {
-      heightToUse = height;
-    } else if (this.curve) {
-      heightToUse = this.curve.width * 4;
-    }
-    let widthToUse = 0.04;
-    if (width) {
-      widthToUse = width;
-    } else if (this.curve) {
-      widthToUse = this.curve.width * 4;
-    }
-    let radiusToUse = 0.1;
-    if (radius) {
-      radiusToUse = radius;
-    } else if (this.curve) {
-      radiusToUse = this.curve.radius;
-    }
 
     const a = this.shapes.arrow(
-      widthToUse, 0, heightToUse, 0,
+      width, 0, height, 0,
       this.color, new Transform().rotate(0).translate(0, 0), new Point(0, 0), r,
     );
     // $FlowFixMe
-    this[`arrow${index}`] = {
-      height: heightToUse,
-      width: widthToUse,
-      radius: radiusToUse,
-    };
+    this[`arrow${index}`] = arrowOptions;
     this.add(`arrow${index}`, a);
     this.update();
   }
@@ -559,7 +539,8 @@ class DiagramObjectAngle extends DiagramElementCollection {
       _arrow1.transform.updateTranslation(arrow1.radius, 0);
       const arrowLengthAngle = arrow1.height / arrow1.radius;
       rotationForArrow1 = arrowLengthAngle;
-      if (arrowLengthAngle > curveAngle / 2 && arrow1.autoHide === true) {
+      // console.log(arrowLengthAngle, curveAngle / 2, arrow1.autoHide)
+      if (arrowLengthAngle > curveAngle && arrow1.autoHide === true) {
         _arrow1.hide();
       } else {
         curveAngle -= arrowLengthAngle;
@@ -572,11 +553,11 @@ class DiagramObjectAngle extends DiagramElementCollection {
     if (_arrow2 && arrow2) {
       _arrow2.transform.updateTranslation(polarToRect(arrow2.radius, this.angle));
       const arrowLengthAngle = arrow2.height / arrow2.radius;
-      if (arrowLengthAngle > curveAngle / 2 && arrow1.autoHide === true) {
-        _arrow1.hide();
+      if (arrowLengthAngle > curveAngle / 2 && arrow2.autoHide === true) {
+        _arrow2.hide();
       } else {
         curveAngle -= arrowLengthAngle * 0.5;
-        _arrow1.show();
+        _arrow2.show();
       }
       // curveAngle -= arrowLengthAngle * 0.5;
       _arrow2.transform.updateRotation(this.angle + Math.PI / 2 - arrowLengthAngle);

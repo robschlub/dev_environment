@@ -280,7 +280,9 @@ function joinObjects(...objects: Array<Object>): Object {
   const out = {};
   for (let i = 0; i < num; i += 1) {
     const o = objects[i];
-    assignObjectFromTo(o, out);
+    if (o != null) {
+      assignObjectFromTo(o, out);
+    }
   }
   return out;
 }
