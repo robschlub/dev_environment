@@ -30,21 +30,29 @@ export type TypeAngleOptions = {
   p1?: Point,
   p2?: Point,
   p3?: Point,
+  autoRightAngle: boolean,
+  //
+  // Arrows
   arrow1?: {
     width?: number,
     height?: number,
     radius?: number,
+    autoHide?: boolean,
   },
   arrow2?: {
     width?: number,
     height?: number,
     radius?: number,
+    autoHide?: boolean,
   },
   arrows?: {
     width?: number,
     height?: number,
     radius?: number,
+    autoHide?: boolean,
   } | boolean,
+  //
+  // Label
   label?: {
     text: string | Array<string>,
     radius?: number,
@@ -52,7 +60,10 @@ export type TypeAngleOptions = {
     showRealAngle?: boolean,
     realAngleDecimals?: number,
     orientation?: TypeAngleLabelOrientation,
+    autoHide?: boolean,
   },
+  //
+  // Sides
   side1?: {
     length?: number,
     width?: number,
@@ -98,6 +109,7 @@ class AngleLabel extends EquationLabel {
   showRealAngle: boolean;
   orientation: TypeAngleLabelOrientation;
   realAngleDecimals: number;
+  autoHide: boolean;
 
   constructor(
     equation: Object,
@@ -107,6 +119,7 @@ class AngleLabel extends EquationLabel {
     curvePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
     showRealAngle: boolean = false,
     realAngleDecimals: number = 0,
+    autoHide: boolean = true,
     orientation: TypeAngleLabelOrientation = 'horizontal',
   ) {
     super(equation, { label: labelText, color });
@@ -115,6 +128,7 @@ class AngleLabel extends EquationLabel {
     this.showRealAngle = showRealAngle;
     this.orientation = orientation;
     this.realAngleDecimals = realAngleDecimals;
+    this.autoHide = autoHide;
   }
 }
 
@@ -132,8 +146,8 @@ class DiagramObjectAngle extends DiagramElementCollection {
 
   // lObjects that may or may not exist
   label: ?AngleLabel;
-  arrow1: ?{ height: number; width: number, radius: number };
-  arrow2: ?{ height: number; width: number, radius: number };
+  arrow1: ?{ height: number; width: number, radius: number, autoHide: boolean };
+  arrow2: ?{ height: number; width: number, radius: number, autoHide: boolean };
   side1: ?{ width: number, length: number };
   side2: ?{ width: number, length: number };
   curve: ?{
@@ -287,6 +301,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       width: defaultArrowDimension,
       height: defaultArrowDimension,
       radius: defaultArrowRadius,
+      autoHide: true,
     };
     if (optionsToUse.arrow1) {
       const arrowOptions = joinObjects(defaultArrowOptions, optionsToUse.arrow1);
@@ -544,7 +559,12 @@ class DiagramObjectAngle extends DiagramElementCollection {
       _arrow1.transform.updateTranslation(arrow1.radius, 0);
       const arrowLengthAngle = arrow1.height / arrow1.radius;
       rotationForArrow1 = arrowLengthAngle;
-      curveAngle -= arrowLengthAngle;
+      if (arrowLengthAngle > curveAngle / 2 && arrow1.autoHide === true) {
+        _arrow1.hide();
+      } else {
+        curveAngle -= arrowLengthAngle;
+        _arrow1.show();
+      }
       _arrow1.transform.updateRotation(Math.PI / 2 + arrowLengthAngle);
     }
 
@@ -552,7 +572,13 @@ class DiagramObjectAngle extends DiagramElementCollection {
     if (_arrow2 && arrow2) {
       _arrow2.transform.updateTranslation(polarToRect(arrow2.radius, this.angle));
       const arrowLengthAngle = arrow2.height / arrow2.radius;
-      curveAngle -= arrowLengthAngle * 0.5;
+      if (arrowLengthAngle > curveAngle / 2 && arrow1.autoHide === true) {
+        _arrow1.hide();
+      } else {
+        curveAngle -= arrowLengthAngle * 0.5;
+        _arrow1.show();
+      }
+      // curveAngle -= arrowLengthAngle * 0.5;
       _arrow2.transform.updateRotation(this.angle + Math.PI / 2 - arrowLengthAngle);
     }
 
