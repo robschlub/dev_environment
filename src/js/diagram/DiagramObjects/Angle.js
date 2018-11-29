@@ -30,7 +30,7 @@ export type TypeAngleOptions = {
   p1?: Point,
   p2?: Point,
   p3?: Point,
-  autoRightAngle: boolean,
+  autoRightAngle?: boolean,
   //
   // Arrows
   arrow1?: {
@@ -297,28 +297,31 @@ class DiagramObjectAngle extends DiagramElementCollection {
     }
 
     // Label
-    const defaultLabelOptions = {
-      text: '',
-      radius: 0.4,
-      curvePosition: 0.5,
-      showRealAngle: false,
-      realAngleDecimals: 0,
-      orientation: 'horizontal',
-      autoHide: -1,
-    };
-    if (this.curve) {
-      defaultLabelOptions.radius = this.curve.radius;
-    }
+    // const defaultLabelOptions = {
+    //   text: '',
+    //   radius: 0.4,
+    //   curvePosition: 0.5,
+    //   showRealAngle: false,
+    //   realAngleDecimals: 0,
+    //   orientation: 'horizontal',
+    //   autoHide: -1,
+    // };
+    // if (this.curve) {
+    //   defaultLabelOptions.radius = this.curve.radius;
+    // }
+    // if (optionsToUse.label) {
+    //   const labelOptions = joinObjects(defaultLabelOptions, optionsToUse.label);
+    //   this.addLabel(
+    //     labelOptions.text,
+    //     labelOptions.radius,
+    //     labelOptions.curvePosition,
+    //     labelOptions.showRealAngle,
+    //     labelOptions.realAngleDecimals,
+    //     labelOptions.orientation,
+    //   );
+    // }
     if (optionsToUse.label) {
-      const labelOptions = joinObjects(defaultLabelOptions, optionsToUse.label);
-      this.addLabel(
-        labelOptions.text,
-        labelOptions.radius,
-        labelOptions.curvePosition,
-        labelOptions.showRealAngle,
-        labelOptions.realAngleDecimals,
-        labelOptions.orientation,
-      );
+      this.addLabel(optionsToUse.label);
     }
 
     // Sides
@@ -404,17 +407,38 @@ class DiagramObjectAngle extends DiagramElementCollection {
     this.add(`side${index}`, line);
   }
 
-  addLabel(
-    labelText: string | Equation | Array<string>,
-    radius: number,
-    curvePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
-    showRealAngle: boolean = false,
-    realAngleDecimals: number = 0,
-    orientation: TypeAngleLabelOrientation = 'horizontal',
-  ) {
+  addLabel(options: {
+    labelText?: string | Equation | Array<string>,
+    radius?: number,
+    curvePosition?: number,
+    showRealAngle?: boolean,
+    realAngleDecimals?: number,
+    orientation?: TypeAngleLabelOrientation,
+    autoHide?: number
+  } = {}) {
+    const defaultLabelOptions = {
+      text: '',
+      radius: 0.4,
+      curvePosition: 0.5,
+      showRealAngle: false,
+      realAngleDecimals: 0,
+      orientation: 'horizontal',
+      autoHide: -1,
+    };
+    if (this.curve) {
+      defaultLabelOptions.radius = this.curve.radius;
+    }
+    const optionsToUse = joinObjects(defaultLabelOptions, options);
     this.label = new AngleLabel(
-      this.equation, labelText, this.color,
-      radius, curvePosition, showRealAngle, realAngleDecimals, orientation,
+      this.equation,
+      optionsToUse.text,
+      this.color,
+      optionsToUse.radius,
+      optionsToUse.curvePosition,
+      optionsToUse.showRealAngle,
+      optionsToUse.realAngleDecimals,
+      optionsToUse.autoHide,
+      optionsToUse.orientation,
     );
     if (this.label != null) {
       this.add('label', this.label.eqn.collection);
