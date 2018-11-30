@@ -1,6 +1,6 @@
 // @flow
 
-import { Point } from '../../../../../js/diagram/tools/g2';
+import { Point, Line } from '../../../../../js/diagram/tools/g2';
 import getCssColors from '../../../../../js/tools/getCssColors';
 import baseLayout from '../../../../LessonsCommon/layout';
 
@@ -204,6 +204,18 @@ export default function commonLessonLayout() {
       p1: equilPoints[0],
       p2: equilPoints[2],
       p3: equilPoints[1],
+    },
+    splitLine1: {
+      p1: equilPoints[1],
+      p2: new Line(equilPoints[2], equilPoints[0]).midpoint(),
+      width: 0.015,
+      color: layout.colors.lines,
+    },
+    splitLine2: {
+      p1: equilPoints[0],
+      p2: new Line(equilPoints[1], equilPoints[2]).midpoint(),
+      width: 0.015,
+      color: layout.colors.lines,
     },
   };
   return layout;

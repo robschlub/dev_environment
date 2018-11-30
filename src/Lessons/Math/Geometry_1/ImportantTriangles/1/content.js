@@ -3,7 +3,7 @@ import {
   LessonContent,
 } from '../../../../../js/Lesson/LessonContent';
 import {
-  click, centerV, highlight,
+  click, centerV, highlight, clickWord,
 } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import Definition from '../../../../LessonsCommon/tools/definition';
@@ -91,7 +91,7 @@ class Content extends LessonContent {
       modifiers: { Side_Side_Side: click(qr._sss.show, [qr._sss], colors.diagram.action) },
     });
 
-    common.setContent = 'Start by drawing a |line| from the top point to the |middle| of the |base| side.';
+    common.setContent = 'Start by drawing a |line| from one |point| to the |opposite side|.';
     common.showOnly = [equil, equil._tri, equil._tri._tri];
     common.show = [equil._tri._side12, equil._tri._side23, equil._tri._side31];
     this.addSection(common, {});
@@ -175,7 +175,7 @@ class Content extends LessonContent {
         equil.moveToScenario(equil._right, layout.equil.right.scenario.center, 1);
       },
     });
-    common.showOnly = [equil, equil._tri, equil._tri._tri];
+    common.showOnly = [equil, equil._tri, equil._tri._tri, qr];
     common.show = [
       equil._tri._angle1, equil._tri._angle2,
       equil._tri._side12, equil._tri._side23, equil._tri._side31,
@@ -189,14 +189,33 @@ class Content extends LessonContent {
     };
     this.addSection(common);
 
-    common.setContent = 'If instead the line is drawn from a |different triangle point|, this same procedure can be used to show the |third angle| is the |same| as the other two.';
+    common.setContent = 'If instead the line is drawn from a |different| triangle point, this same procedure can be used to show the |third angle| is the |same| as the other two.';
+    common.modifiers = {
+      different: click(equil.toggleSplitLines, [equil, null], colors.diagram.action),
+    };
+
     this.addSection(common);
     common.show = [
       equil._tri._angle1, equil._tri._angle2, equil._tri._angle3,
       equil._tri._side12, equil._tri._side23, equil._tri._side31,
     ];
     this.addSection(common);
-    // common.show
+
+    common.title = 'adf';
+    common.setContent = 'All angles in a triangle are equal, and a triangle\'s angles sum to |_180|. Therefore each angle must be a third of 180º, or |60º|.';
+    common.modifiers = {
+      _180: clickWord('180º', 'id_important_triangles_sum', qr._tri.show, [qr._tri], colors.diagram.action),
+    };
+    this.addSection(common);
+
+    common.setSteadyState = () => {
+      equil.setScenario(equil._left, layout.equil.left.scenario.center);
+      equil.setScenario(equil._right, layout.equil.right.scenario.center);
+      equil._tri._angle1.label.eqn.showForm('1');
+      equil._tri._angle2.label.eqn.showForm('1');
+      equil._tri._angle3.label.eqn.showForm('1');
+    };
+    this.addSection(common);
   }
 }
 

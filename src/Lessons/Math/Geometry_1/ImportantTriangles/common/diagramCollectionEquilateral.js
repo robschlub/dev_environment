@@ -35,6 +35,12 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     this.add('tri', equil);
   }
 
+  addSplitLines() {
+    const lay = this.layout.equil;
+    this.add('splitLine1', this.diagram.objects.line(lay.splitLine1));
+    this.add('splitLine2', this.diagram.objects.line(lay.splitLine2));
+  }
+
   addLeftRightTris() {
     const lay = this.layout.equil;
     const layL = this.layout.equil.left;
@@ -93,6 +99,7 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     this.setPosition(this.layout.equil.position);
     this.addTri();
     this.addLeftRightTris();
+    this.addSplitLines();
     console.log(this)
     // this.setTransformCallback = () => {
     //   const r = this.transform.r();
@@ -120,5 +127,29 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     //     this._angle1.update();
     //   }
     // }
+  }
+
+  toggleSplitLines(index: number | null) {
+    const line1 = this._splitLine1;
+    const line2 = this._splitLine2;
+    let indexToUse = 1;
+    if (index === null) {
+      if (line1.isShown) {
+        indexToUse = 2;
+      } else {
+        indexToUse = 1;
+      }
+    } else {
+      indexToUse = index;
+    }
+
+    if (indexToUse === 1) {
+      line1.showAll();
+      line2.hideAll();
+    } else {
+      line1.hideAll();
+      line2.showAll();
+    }
+    this.diagram.animateNextFrame();
   }
 }
