@@ -149,7 +149,7 @@ class Content extends LessonContent {
     ];
     this.addSection(common, {});
 
-    common.setContent = 'And so we have shown that the two |a| angles in an |equilateral| triangle are the same.';
+    common.setContent = 'And so we have shown that two angles in an |equilateral| triangle are the same.';
     common.modifiers = { a: highlight(colors.angles) };
     this.addSection(common, {});
     common.show = [
@@ -189,7 +189,13 @@ class Content extends LessonContent {
     };
     this.addSection(common);
 
-    // common.setContent = 'The third angle can also be shown to equal |a| if a line is drawn from a different point to its opposite side';
+    common.setContent = 'If instead the line is drawn from a |different triangle point|, this same procedure can be used to show the |third angle| is the |same| as the other two.';
+    this.addSection(common);
+    common.show = [
+      equil._tri._angle1, equil._tri._angle2, equil._tri._angle3,
+      equil._tri._side12, equil._tri._side23, equil._tri._side31,
+    ];
+    this.addSection(common);
     // common.show
   }
 }
