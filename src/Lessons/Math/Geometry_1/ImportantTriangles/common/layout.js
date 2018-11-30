@@ -14,16 +14,21 @@ const cssColorNames = [
 export default function commonLessonLayout() {
   const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
-  const equilPoints = [
-    new Point(-1, -1),
-    new Point(1, -1),
-    new Point(0, 0.732),
+  // const equilPoints = [
+  //   new Point(-1, -1),
+  //   new Point(1, -1),
+  //   new Point(0, 0.732),
+  // ];
+  const isoPoints = [
+    new Point(-0.8, -1),
+    new Point(0.8, -1),
+    new Point(0, 1),
   ];
-  const mid = new Point(0, equilPoints[0].y);
-  layout.equil = {
+  const mid = new Point(0, isoPoints[0].y);
+  layout.iso = {
     position: new Point(0, 0),
     tri: {
-      points: equilPoints,
+      points: isoPoints,
       width: 0.015,
       close: true,
       borderToPoint: 'alwaysOn',
@@ -41,20 +46,21 @@ export default function commonLessonLayout() {
       showLine: false,
     },
     side12: {
-      p1: equilPoints[1],
-      p2: equilPoints[0],
+      p1: isoPoints[1],
+      p2: isoPoints[0],
+      label: { text: 'B' },
       // offset: 0.5,
     },
     side23: {
-      p1: equilPoints[2],
-      p2: equilPoints[1],
+      p1: isoPoints[2],
+      p2: isoPoints[1],
     },
     side31: {
-      p1: equilPoints[0],
-      p2: equilPoints[2],
+      p1: isoPoints[0],
+      p2: isoPoints[2],
     },
     sideH: {
-      p1: equilPoints[2],
+      p1: isoPoints[2],
       p2: mid,
       color: layout.colors.height,
       offset: 0.1,
@@ -69,9 +75,9 @@ export default function commonLessonLayout() {
       },
       tri: {
         points: [
-          equilPoints[0],
+          isoPoints[0],
           mid,
-          equilPoints[2],
+          isoPoints[2],
         ],
         width: 0.015,
         close: true,
@@ -81,42 +87,42 @@ export default function commonLessonLayout() {
       },
       angle1: {
         p1: mid,
-        p2: equilPoints[0],
-        p3: equilPoints[2],
+        p2: isoPoints[0],
+        p3: isoPoints[2],
         label: { text: 'a' },
       },
       angle2: {
-        p1: equilPoints[2],
+        p1: isoPoints[2],
         p2: mid,
-        p3: equilPoints[0],
+        p3: isoPoints[0],
         label: { text: 'b' },
       },
       angle3: {
-        p1: equilPoints[0],
-        p2: equilPoints[2],
+        p1: isoPoints[0],
+        p2: isoPoints[2],
         p3: mid,
         label: { text: 'c' },
       },
       side12: {
         p1: mid,
-        p2: equilPoints[0],
+        p2: isoPoints[0],
         label: {
           text: {
             eqn: 'fractionPre',
             numerator: '1',
             denominator: '2',
-            main: 'A',
+            main: 'B',
           },
         },
       },
       side23: {
-        p1: equilPoints[2],
+        p1: isoPoints[2],
         p2: mid,
-        label: { text: 'B', linePosition: 0.6 },
+        label: { text: 'C', linePosition: 0.6 },
       },
       side31: {
-        p1: equilPoints[0],
-        p2: equilPoints[2],
+        p1: isoPoints[0],
+        p2: isoPoints[2],
         label: { text: 'A' },
       },
     },
@@ -128,8 +134,8 @@ export default function commonLessonLayout() {
       tri: {
         points: [
           mid,
-          equilPoints[1],
-          equilPoints[2],
+          isoPoints[1],
+          isoPoints[2],
         ],
         width: 0.015,
         close: true,
@@ -138,44 +144,44 @@ export default function commonLessonLayout() {
         color: layout.colors.lines,
       },
       angle1: {
-        p1: equilPoints[1],
+        p1: isoPoints[1],
         p2: mid,
-        p3: equilPoints[2],
+        p3: isoPoints[2],
         label: { text: 'b' },
       },
       angle2: {
-        p1: equilPoints[2],
-        p2: equilPoints[1],
+        p1: isoPoints[2],
+        p2: isoPoints[1],
         p3: mid,
         label: { text: 'a' },
       },
       angle3: {
         p1: mid,
-        p2: equilPoints[2],
-        p3: equilPoints[1],
+        p2: isoPoints[2],
+        p3: isoPoints[1],
         label: { text: 'c' },
       },
       side12: {
-        p1: equilPoints[1],
+        p1: isoPoints[1],
         p2: mid,
         label: {
           text: {
             eqn: 'fractionPre',
             numerator: '1',
             denominator: '2',
-            main: 'A',
+            main: 'B',
           },
         },
       },
       side23: {
-        p1: equilPoints[2],
-        p2: equilPoints[1],
+        p1: isoPoints[2],
+        p2: isoPoints[1],
         label: { text: 'A' },
       },
       side31: {
         p1: mid,
-        p2: equilPoints[2],
-        label: { text: 'B', linePosition: 0.4 },
+        p2: isoPoints[2],
+        label: { text: 'C', linePosition: 0.4 },
       },
     },
     angle: {
@@ -185,35 +191,35 @@ export default function commonLessonLayout() {
         width: 0.02,
       },
       label: {
-        text: ['a', '60º'],
+        text: 'a',
         radius: 0.28,
       },
       color: layout.colors.angles,
     },
     angle1: {
-      p1: equilPoints[1],
-      p2: equilPoints[0],
-      p3: equilPoints[2],
+      p1: isoPoints[1],
+      p2: isoPoints[0],
+      p3: isoPoints[2],
     },
     angle2: {
-      p1: equilPoints[2],
-      p2: equilPoints[1],
-      p3: equilPoints[0],
+      p1: isoPoints[2],
+      p2: isoPoints[1],
+      p3: isoPoints[0],
     },
-    angle3: {
-      p1: equilPoints[0],
-      p2: equilPoints[2],
-      p3: equilPoints[1],
-    },
+    // angle3: {
+    //   p1: isoPoints[0],
+    //   p2: isoPoints[2],
+    //   p3: isoPoints[1],
+    // },
     splitLine1: {
-      p1: equilPoints[1],
-      p2: new Line(equilPoints[2], equilPoints[0]).midpoint(),
+      p1: isoPoints[1],
+      p2: new Line(isoPoints[2], isoPoints[0]).midpoint(),
       width: 0.015,
       color: layout.colors.lines,
     },
     splitLine2: {
-      p1: equilPoints[0],
-      p2: new Line(equilPoints[1], equilPoints[2]).midpoint(),
+      p1: isoPoints[0],
+      p2: new Line(isoPoints[1], isoPoints[2]).midpoint(),
       width: 0.015,
       color: layout.colors.lines,
     },

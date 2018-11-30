@@ -28,7 +28,7 @@ class Content extends LessonContent {
 
   addSections() {
     const diag = this.diagram.elements;
-    const equil = diag._equil;
+    const iso = diag._iso;
     const qr = diag._qr;
 
     const common = {
@@ -43,6 +43,7 @@ class Content extends LessonContent {
       setSteadyState: () => {},
       setLeaveState: () => {},
     };
+
     this.addSection(common, {
       title: 'Introduction',
       setContent: centerV([
@@ -59,27 +60,24 @@ class Content extends LessonContent {
 
 
     this.addSection(common, {
-      title: 'Equilateral',
+      title: 'Isoceles',
       setContent: [
-        'An |Equilateral| triangle is a triangle whose sides are all the |same length|.',
-        `${new Definition('Equilateral', 'Latin', ['aequi', 'equal', 'lateralis', 'lateral, of or pertaining to the side']).html('id_lesson__equilateral_definition')}`,
+        'An |Isoceles| triangle has |two sides with equal length|.',
+        `${new Definition('Isoceles', 'Greek', ['isoskeles', '', 'isos', 'equal', 'skelos', 'leg']).html('id_lesson__isoceles_definition')}`,
       ],
-      showOnly: [equil, equil._tri, equil._tri._tri],
-      show: [equil._tri._side12, equil._tri._side23, equil._tri._side31],
+      showOnly: [iso, iso._tri, iso._tri._tri],
+      show: [iso._tri._side12, iso._tri._side23, iso._tri._side31],
     });
 
     common.setSteadyState = () => {
-      equil._tri._angle1.label.eqn.showForm('0');
-      equil._tri._angle2.label.eqn.showForm('0');
-      equil._tri._angle3.label.eqn.showForm('0');
-      equil.setScenario(equil._left, layout.equil.left.scenario.center);
-      equil.setScenario(equil._right, layout.equil.right.scenario.center);
+      iso.setScenario(iso._left, layout.iso.left.scenario.center);
+      iso.setScenario(iso._right, layout.iso.right.scenario.center);
     };
-    common.showOnly = [equil, qr];
-    common.show = [equil._tri];
+    common.showOnly = [iso, qr];
+    common.show = [iso._tri];
     this.addSection(common, {
       setContent: [
-        'An |Equilateral| triangle\'s |angles| are also all |equal|.',
+        'An |Isoceles| triangle also has |two equal angles|.',
       ],
       modifiers: { angles: highlight(colors.angles) },
     });
@@ -92,49 +90,49 @@ class Content extends LessonContent {
     });
 
     common.setContent = 'Start by drawing a |line| from one |point| to the |opposite side|.';
-    common.showOnly = [equil, equil._tri, equil._tri._tri];
-    common.show = [equil._tri._side12, equil._tri._side23, equil._tri._side31];
+    common.showOnly = [iso, iso._tri, iso._tri._tri];
+    common.show = [iso._tri._side12, iso._tri._side23, iso._tri._side31];
     this.addSection(common, {});
     common.showOnly = [
-      equil, equil._tri, equil._tri._tri,
-      equil._left, equil._left._tri, equil._right, equil._right._tri,
+      iso, iso._tri, iso._tri._tri,
+      iso._left, iso._left._tri, iso._right, iso._right._tri,
     ];
     this.addSection(common, {});
     common.showOnly = [
-      equil, equil._tri, equil._tri._tri,
-      equil._left, equil._left._tri, equil._right, equil._right._tri,
+      iso, iso._tri, iso._tri._tri,
+      iso._left, iso._left._tri, iso._right, iso._right._tri,
     ];
     // common.show = [
-    //   equil._tri._side12, equil._tri._side23, equil._tri._side31,
-    //   equil._left._side12, equil._right._side12, equil._left._side23,
+    //   iso._tri._side12, iso._tri._side23, iso._tri._side31,
+    //   iso._left._side12, iso._right._side12, iso._left._side23,
     // ];
     common.show = [
-      equil._tri._side12,
-      equil._left._side12, equil._left._side31, equil._left._side23,
-      equil._right._side12, equil._right._side23,
+      iso._tri._side12,
+      iso._left._side12, iso._left._side31, iso._left._side23,
+      iso._right._side12, iso._right._side23,
     ];
     this.addSection(common, {});
 
     common.setContent = 'This line splits the triangle into two.';
     this.addSection(common, {});
     common.showOnly = [
-      equil, qr,
-      equil._left, equil._left._tri,
-      equil._right, equil._right._tri,
+      iso, qr,
+      iso._left, iso._left._tri,
+      iso._right, iso._right._tri,
     ];
     common.show = [
-      equil._left._side12, equil._left._side31, equil._left._side23,
-      equil._right._side12, equil._right._side23,
+      iso._left._side12, iso._left._side31, iso._left._side23,
+      iso._right._side12, iso._right._side23,
     ];
     common.setSteadyState = () => {
-      equil.setScenario(equil._left, layout.equil.left.scenario.left);
-      equil.setScenario(equil._right, layout.equil.right.scenario.right);
-      equil._right._side31.showAll();
+      iso.setScenario(iso._left, layout.iso.left.scenario.left);
+      iso.setScenario(iso._right, layout.iso.right.scenario.right);
+      iso._right._side31.showAll();
     };
     this.addSection(common, {
       transitionFromPrev: (done) => {
-        equil.moveToScenario(equil._left, layout.equil.left.scenario.left, 1, done);
-        equil.moveToScenario(equil._right, layout.equil.right.scenario.right, 1);
+        iso.moveToScenario(iso._left, layout.iso.left.scenario.left, 1, done);
+        iso.moveToScenario(iso._right, layout.iso.right.scenario.right, 1);
       },
     });
 
@@ -145,7 +143,7 @@ class Content extends LessonContent {
     common.setContent = 'These two triangles |share the same side lengths|, and therefore their |angles are also the same|.';
     this.addSection(common, {});
     common.show = [
-      equil._left, equil._right,
+      iso._left, iso._right,
     ];
     this.addSection(common, {});
 
@@ -153,51 +151,51 @@ class Content extends LessonContent {
     common.modifiers = { a: highlight(colors.angles) };
     this.addSection(common, {});
     common.show = [
-      equil._left._angle1, equil._left._side31, equil._left._side12,
-      equil._right._angle2, equil._right._side23, equil._right._side12,
+      iso._left._angle1, iso._left._side31, iso._left._side12,
+      iso._right._angle2, iso._right._side23, iso._right._side12,
     ];
     common.setSteadyState = () => {
-      equil.setScenario(equil._left, layout.equil.left.scenario.left);
-      equil.setScenario(equil._right, layout.equil.right.scenario.right);
+      iso.setScenario(iso._left, layout.iso.left.scenario.left);
+      iso.setScenario(iso._right, layout.iso.right.scenario.right);
     };
     this.addSection(common, {});
     common.setSteadyState = () => {
-      equil.setScenario(equil._left, layout.equil.left.scenario.center);
-      equil.setScenario(equil._right, layout.equil.right.scenario.center);
+      iso.setScenario(iso._left, layout.iso.left.scenario.center);
+      iso.setScenario(iso._right, layout.iso.right.scenario.center);
     };
     common.setSteadyState = () => {
-      equil.setScenario(equil._left, layout.equil.left.scenario.center);
-      equil.setScenario(equil._right, layout.equil.right.scenario.center);
+      iso.setScenario(iso._left, layout.iso.left.scenario.center);
+      iso.setScenario(iso._right, layout.iso.right.scenario.center);
     };
     this.addSection(common, {
       transitionFromPrev: (done) => {
-        equil.moveToScenario(equil._left, layout.equil.left.scenario.center, 1, done);
-        equil.moveToScenario(equil._right, layout.equil.right.scenario.center, 1);
+        iso.moveToScenario(iso._left, layout.iso.left.scenario.center, 1, done);
+        iso.moveToScenario(iso._right, layout.iso.right.scenario.center, 1);
       },
     });
-    common.showOnly = [equil, equil._tri, equil._tri._tri, qr];
+    common.showOnly = [iso, iso._tri, iso._tri._tri, qr];
     common.show = [
-      equil._tri._angle1, equil._tri._angle2,
-      equil._tri._side12, equil._tri._side23, equil._tri._side31,
+      iso._tri._angle1, iso._tri._angle2,
+      iso._tri._side12, iso._tri._side23, iso._tri._side31,
     ];
     common.setSteadyState = () => {
-      equil.setScenario(equil._left, layout.equil.left.scenario.center);
-      equil.setScenario(equil._right, layout.equil.right.scenario.center);
-      equil._tri._angle1.label.eqn.showForm('0');
-      equil._tri._angle2.label.eqn.showForm('0');
-      equil._tri._angle3.label.eqn.showForm('0');
+      iso.setScenario(iso._left, layout.iso.left.scenario.center);
+      iso.setScenario(iso._right, layout.iso.right.scenario.center);
+      iso._tri._angle1.label.eqn.showForm('0');
+      iso._tri._angle2.label.eqn.showForm('0');
+      iso._tri._angle3.label.eqn.showForm('0');
     };
     this.addSection(common);
 
     common.setContent = 'If instead the line is drawn from a |different| triangle point, this same procedure can be used to show the |third angle| is the |same| as the other two.';
     common.modifiers = {
-      different: click(equil.toggleSplitLines, [equil, null], colors.diagram.action),
+      different: click(iso.toggleSplitLines, [iso, null], colors.diagram.action),
     };
 
     this.addSection(common);
     common.show = [
-      equil._tri._angle1, equil._tri._angle2, equil._tri._angle3,
-      equil._tri._side12, equil._tri._side23, equil._tri._side31,
+      iso._tri._angle1, iso._tri._angle2, iso._tri._angle3,
+      iso._tri._side12, iso._tri._side23, iso._tri._side31,
     ];
     this.addSection(common);
 
@@ -209,13 +207,23 @@ class Content extends LessonContent {
     this.addSection(common);
 
     common.setSteadyState = () => {
-      equil.setScenario(equil._left, layout.equil.left.scenario.center);
-      equil.setScenario(equil._right, layout.equil.right.scenario.center);
-      equil._tri._angle1.label.eqn.showForm('1');
-      equil._tri._angle2.label.eqn.showForm('1');
-      equil._tri._angle3.label.eqn.showForm('1');
+      iso.setScenario(iso._left, layout.iso.left.scenario.center);
+      iso.setScenario(iso._right, layout.iso.right.scenario.center);
+      iso._tri._angle1.label.eqn.showForm('1');
+      iso._tri._angle2.label.eqn.showForm('1');
+      iso._tri._angle3.label.eqn.showForm('1');
     };
     this.addSection(common);
+
+    // this.addSection(common, {
+    //   title: 'isoateral',
+    //   setContent: [
+    //     'An |Equilateral| triangle is a triangle whose sides are all the |same length|.',
+    //     `${new Definition('Equilateral', 'Latin', ['aequi', 'equal', 'lateralis', 'lateral, of or pertaining to the side']).html('id_lesson__equilateral_definition')}`,
+    //   ],
+    //   showOnly: [equil, iso._tri, iso._tri._tri],
+    //   show: [iso._tri._side12, iso._tri._side23, iso._tri._side31],
+    // });
   }
 }
 

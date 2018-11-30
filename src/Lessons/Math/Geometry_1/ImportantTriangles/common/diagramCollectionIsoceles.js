@@ -10,47 +10,47 @@ import { joinObjects } from '../../../../../js/tools/tools';
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-export default class EquilateralCollection extends CommonDiagramCollection {
+export default class IsocelesCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
 
   addTri() {
-    const equil = this.diagram.shapes.collection(new Transform('Equil')
+    const iso = this.diagram.shapes.collection(new Transform('iso')
       .translate(0, 0));
 
     // tri
-    const tri = this.diagram.shapes.polyLine(this.layout.equil.tri);
-    equil.add('tri', tri);
+    const tri = this.diagram.shapes.polyLine(this.layout.iso.tri);
+    iso.add('tri', tri);
 
     // Angles
-    let lay = this.layout.equil;
-    equil.add('angle1', this.diagram.objects.angle(lay.angle, lay.angle1));
-    equil.add('angle2', this.diagram.objects.angle(lay.angle, lay.angle2));
-    equil.add('angle3', this.diagram.objects.angle(lay.angle, lay.angle3));
+    let lay = this.layout.iso;
+    iso.add('angle1', this.diagram.objects.angle(lay.angle, lay.angle1));
+    iso.add('angle2', this.diagram.objects.angle(lay.angle, lay.angle2));
+    // iso.add('angle3', this.diagram.objects.angle(lay.angle, lay.angle3));
 
     // Sides
-    lay = this.layout.equil;
-    equil.add('side12', this.diagram.objects.line(lay.sideLength, lay.side12));
-    equil.add('side23', this.diagram.objects.line(lay.sideLength, lay.side23));
-    equil.add('side31', this.diagram.objects.line(lay.sideLength, lay.side31));
-    this.add('tri', equil);
+    lay = this.layout.iso;
+    iso.add('side12', this.diagram.objects.line(lay.sideLength, lay.side12));
+    iso.add('side23', this.diagram.objects.line(lay.sideLength, lay.side23));
+    iso.add('side31', this.diagram.objects.line(lay.sideLength, lay.side31));
+    this.add('tri', iso);
   }
 
   addSplitLines() {
-    const lay = this.layout.equil;
+    const lay = this.layout.iso;
     this.add('splitLine1', this.diagram.objects.line(lay.splitLine1));
     this.add('splitLine2', this.diagram.objects.line(lay.splitLine2));
   }
 
   addLeftRightTris() {
-    const lay = this.layout.equil;
-    const layL = this.layout.equil.left;
-    const layR = this.layout.equil.right;
+    const lay = this.layout.iso;
+    const layL = this.layout.iso.left;
+    const layR = this.layout.iso.right;
 
     const left = this.diagram.shapes.collection(new Transform('left').translate(0, 0));
     const right = this.diagram.shapes.collection(new Transform('left').translate(0, 0));
 
     // tri
-    const leftTri = this.diagram.shapes.polyLine(this.layout.equil.left.tri);
+    const leftTri = this.diagram.shapes.polyLine(this.layout.iso.left.tri);
     left.add('tri', leftTri);
 
     // Angles
@@ -69,7 +69,7 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     right.add('side23', this.diagram.objects.line(lay.sideLength, layR.side23));
     right.add('side31', this.diagram.objects.line(lay.sideLength, layR.side31));
 
-    const rightTri = this.diagram.shapes.polyLine(this.layout.equil.right.tri);
+    const rightTri = this.diagram.shapes.polyLine(this.layout.iso.right.tri);
     right.add('tri', rightTri);
 
     this.add('left', left);
@@ -77,17 +77,17 @@ export default class EquilateralCollection extends CommonDiagramCollection {
   }
 
   // addSideLengths() {
-  //   const { points } = this.layout.equil.tri;
+  //   const { points } = this.layout.iso.tri;
   //   const addLine = (p: { p1: number, p2: number }, name) => {
   //     const line = this.diagram.objects.line(joinObjects(
-  //       this.layout.equil.sideLength, p,
+  //       this.layout.iso.sideLength, p,
   //     ));
   //     this.add(name, line);
   //   };
-  //   addLine(this.layout.equil.side12, 'side12');
-  //   addLine(this.layout.equil.side23, 'side23');
-  //   addLine(this.layout.equil.side31, 'side31');
-  //   addLine(this.layout.equil.sideH, 'sideH');
+  //   addLine(this.layout.iso.side12, 'side12');
+  //   addLine(this.layout.iso.side23, 'side23');
+  //   addLine(this.layout.iso.side31, 'side31');
+  //   addLine(this.layout.iso.sideH, 'sideH');
   // }
 
   constructor(
@@ -96,7 +96,7 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().rotate(0).translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    this.setPosition(this.layout.equil.position);
+    this.setPosition(this.layout.iso.position);
     this.addTri();
     this.addLeftRightTris();
     this.addSplitLines();

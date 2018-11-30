@@ -7,12 +7,12 @@ import lessonLayout from './layout';
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 
-import EquilateralCollection from '../common/diagramCollectionEquilateral';
+import IsocelesCollection from '../common/diagramCollectionIsoceles';
 import QuickReferenceCollection from '../common/diagramCollectionQuickReference';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
-  _equil: EquilateralCollection;
+  _iso: IsocelesCollection;
   _qr: QuickReferenceCollection;
 
   constructor(
@@ -22,7 +22,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     const layout = lessonLayout();
     super(diagram, layout, transform);
 
-    this.add('equil', new EquilateralCollection(diagram, this.layout));
+    this.add('iso', new IsocelesCollection(diagram, this.layout));
     this.add('qr', new QuickReferenceCollection(diagram, this.layout));
     this.hasTouchableElements = true;
   }
