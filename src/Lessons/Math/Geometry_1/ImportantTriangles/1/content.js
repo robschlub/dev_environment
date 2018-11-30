@@ -100,6 +100,20 @@ class Content extends LessonContent {
       equil._left, equil._left._tri, equil._right, equil._right._tri,
     ];
     this.addSection(common, {});
+    common.showOnly = [
+      equil, equil._tri, equil._tri._tri,
+      equil._left, equil._left._tri, equil._right, equil._right._tri,
+    ];
+    // common.show = [
+    //   equil._tri._side12, equil._tri._side23, equil._tri._side31,
+    //   equil._left._side12, equil._right._side12, equil._left._side23,
+    // ];
+    common.show = [
+      equil._tri._side12,
+      equil._left._side12, equil._left._side31, equil._left._side23,
+      equil._right._side12, equil._right._side23,
+    ];
+    this.addSection(common, {});
 
     common.setContent = 'We now have two triangles, are they the same?';
     this.addSection(common, {});

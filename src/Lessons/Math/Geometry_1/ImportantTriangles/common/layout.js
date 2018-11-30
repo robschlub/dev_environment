@@ -112,7 +112,7 @@ export default function commonLessonLayout() {
       side23: {
         p1: equilPoints[2],
         p2: mid,
-        label: { text: 'h' },
+        label: { text: 'B', linePosition: 0.6 },
       },
       side31: {
         p1: equilPoints[0],
@@ -175,7 +175,7 @@ export default function commonLessonLayout() {
       side31: {
         p1: mid,
         p2: equilPoints[2],
-        label: { text: 'h' },
+        label: { text: 'B', linePosition: 0.4 },
       },
     },
     angle: {
