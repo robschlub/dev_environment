@@ -7,7 +7,7 @@ import baseLayout from '../../../../LessonsCommon/layout';
 const cssColorNames = [
   'lines',
   'angles',
-  'height',
+  'equalLength',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -54,10 +54,12 @@ export default function commonLessonLayout() {
     side23: {
       p1: isoPoints[2],
       p2: isoPoints[1],
+      color: layout.colors.equalLength,
     },
     side31: {
       p1: isoPoints[0],
       p2: isoPoints[2],
+      color: layout.colors.equalLength,
     },
     sideH: {
       p1: isoPoints[2],
@@ -123,6 +125,7 @@ export default function commonLessonLayout() {
       side31: {
         p1: isoPoints[0],
         p2: isoPoints[2],
+        color: layout.colors.equalLength,
         label: { text: 'A' },
       },
     },
@@ -176,6 +179,7 @@ export default function commonLessonLayout() {
       side23: {
         p1: isoPoints[2],
         p2: isoPoints[1],
+        color: layout.colors.equalLength,
         label: { text: 'A' },
       },
       side31: {
@@ -186,13 +190,13 @@ export default function commonLessonLayout() {
     },
     angle: {
       curve: {
-        radius: 0.3,
+        radius: 0.2,
         sides: 150,
         width: 0.02,
       },
       label: {
         text: 'a',
-        radius: 0.28,
+        radius: 0.18,
       },
       color: layout.colors.angles,
     },

@@ -18,8 +18,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       .translate(0, 0));
 
     // tri
-    const tri = this.diagram.shapes.polyLine(this.layout.iso.tri);
-    iso.add('tri', tri);
+    const line = this.diagram.shapes.polyLine(this.layout.iso.tri);
+    iso.add('line', line);
 
     // Angles
     let lay = this.layout.iso;
@@ -50,8 +50,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     const right = this.diagram.shapes.collection(new Transform('left').translate(0, 0));
 
     // tri
-    const leftTri = this.diagram.shapes.polyLine(this.layout.iso.left.tri);
-    left.add('tri', leftTri);
+    const leftLine = this.diagram.shapes.polyLine(this.layout.iso.left.tri);
+    left.add('line', leftLine);
 
     // Angles
     left.add('angle1', this.diagram.objects.angle(lay.angle, layL.angle1));
@@ -69,8 +69,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     right.add('side23', this.diagram.objects.line(lay.sideLength, layR.side23));
     right.add('side31', this.diagram.objects.line(lay.sideLength, layR.side31));
 
-    const rightTri = this.diagram.shapes.polyLine(this.layout.iso.right.tri);
-    right.add('tri', rightTri);
+    const rightLine = this.diagram.shapes.polyLine(this.layout.iso.right.tri);
+    right.add('line', rightLine);
 
     this.add('left', left);
     this.add('right', right);
@@ -127,6 +127,18 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     //     this._angle1.update();
     //   }
     // }
+  }
+
+  pulseEqualSides() {
+    this._tri._side23._label.pulseScaleNow(1, 2);
+    this._tri._side31._label.pulseScaleNow(1, 2);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseEqualAngles() {
+    this._tri._angle1.pulseScaleNow(1, 1.5);
+    this._tri._angle2.pulseScaleNow(1, 1.5);
+    this.diagram.animateNextFrame();
   }
 
   toggleSplitLines(index: number | null) {
