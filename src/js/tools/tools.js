@@ -274,9 +274,9 @@ function joinObjects(...objects: Array<Object>): Object {
         // console.log('got here')
         // eslint-disable-next-line no-param-reassign
         toObject[key] = value;
-      } else if (toObject[key] == null) {
+      // } else if (toObject[key] == null) {
         // eslint-disable-next-line no-param-reassign
-        toObject[key] = value;
+        // toObject[key] = value;
       } else {
         // console.log('and somehow here')
         const toValue = toObject[key];
