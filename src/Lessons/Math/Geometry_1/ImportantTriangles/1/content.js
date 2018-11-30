@@ -65,10 +65,13 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Isoceles',
       setContent: [
-        'An |Isoceles| triangle has |two_sides| with |equal length|.',
+        'An |Isoceles| triangle has |two_sides| with |equal_length|.',
         `${new Definition('Isoceles', 'Greek', ['isoskeles', '', 'isos', 'equal', 'skelos', 'leg']).html('id_lesson__isoceles_definition')}`,
       ],
-      modifiers: { two_sides: click(iso.pulseEqualSides, [iso], colors.equalLength) },
+      modifiers: {
+        two_sides: click(iso.pulseEqualSides, [iso], colors.equalLength),
+        equal_length: click(iso.pulseEqualSides, [iso], colors.equalLength),
+      },
       showOnly: [iso, iTri, iTri._line],
       show: [iTri._side12, iTri._side23, iTri._side31],
     });
@@ -113,47 +116,49 @@ class Content extends LessonContent {
         left, left._line, right, right._line,
       ],
     });
+    // this.addSection(common, {
+    //   showOnly: [
+    //     iso, iTri, iTri._line,
+    //     left, left._line, right, right._line,
+    //   ],
+    //   show: [
+    //     iTri._side12,
+    //     left._side12, left._side31, left._side23,
+    //     right._side12, right._side23,
+    //   ],
+    // });
+
+
+    // common = {
+    //   setContent: 'This line splits the triangle into two.',
+    //   showOnly: [
+    //     iso, qr,
+    //     iTri, iTri._line,
+    //     left, left._line,
+    //     right, right._line,
+    //   ],
+    //   show: [
+    //     iTri._side12,
+    //     left._side12, left._side31, left._side23,
+    //     right._side12, right._side23,
+    //   ],
+    //   setSteadyState: () => {
+    //     iso.setScenario(left, layout.iso.left.scenario.center);
+    //     iso.setScenario(right, layout.iso.right.scenario.center);
+    //   },
+    // };
+    // this.addSection(common);
     this.addSection(common, {
-      showOnly: [
-        iso, iTri, iTri._line,
-        left, left._line, right, right._line,
-      ],
-      show: [
-        iTri._side12,
-        left._side12, left._side31, left._side23,
-        right._side12, right._side23,
-      ],
-    });
-
-
-    common = {
       setContent: 'This line splits the triangle into two.',
       showOnly: [
         iso, qr,
-        iTri, iTri._line,
         left, left._line,
         right, right._line,
       ],
       show: [
-        iTri._side12,
-        left._side12, left._side31, left._side23,
-        right._side12, right._side23,
-      ],
-      setSteadyState: () => {
-        iso.setScenario(left, layout.iso.left.scenario.center);
-        iso.setScenario(right, layout.iso.right.scenario.center);
-      },
-    };
-    this.addSection(common);
-    this.addSection(common, {
-      showOnly: [
-        iso, qr,
-        left, left._line,
-        right, right._line,
-      ],
-      show: [
-        left._side12, left._side31, left._side23,
-        right._side12, right._side23,
+        left._side31, right._side23,
+        // left._side12, left._side31, left._side23,
+        // right._side12, right._side23,
       ],
       transitionFromPrev: (done) => {
         iso.moveToScenario(left, layout.iso.left.scenario.left, 1, done);
@@ -162,7 +167,8 @@ class Content extends LessonContent {
       setSteadyState: () => {
         iso.setScenario(left, layout.iso.left.scenario.left);
         iso.setScenario(right, layout.iso.right.scenario.right);
-        right._side31.showAll();
+        right._side12.showAll();
+        left._side12.showAll();
       },
     });
 
@@ -178,8 +184,8 @@ class Content extends LessonContent {
         right, right._line,
       ],
       show: [
-        left._side12, left._side31, left._side23,
-        right._side12, right._side23, right._side31,
+        left._side12, left._side31, // left._side23,
+        right._side12, right._side23, // right._side31,
       ],
       setSteadyState: () => {
         iso.setScenario(left, layout.iso.left.scenario.left);
@@ -195,7 +201,7 @@ class Content extends LessonContent {
     this.addSection(common, { show: [iso._left, iso._right] });
 
     common = {
-      setContent: 'And so we have shown that two angles in an |isoceles| triangle are the same.',
+      setContent: 'Now, |join| the two triangles back.',
       modifiers: { a: highlight(colors.angles) },
       showOnly: [iso, qr],
       show: [left, right],
@@ -235,6 +241,9 @@ class Content extends LessonContent {
       iso.setScenario(right, layout.iso.right.scenario.center);
     };
     this.addSection(common);
+    this.addSection(common, {
+      setContent: 'And so we have shown that two angles in an |isoceles| triangle are the same.',
+    });
 
     // common.setContent = 'If instead the line is drawn from a |different| triangle point, this same procedure can be used to show the |third angle| is the |same| as the other two.';
     // common.modifiers = {
