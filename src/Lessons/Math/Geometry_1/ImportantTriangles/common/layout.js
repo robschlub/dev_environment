@@ -269,6 +269,8 @@ export default function commonLessonLayout() {
 
   layout.equation = {
     color: [1, 0, 1, 1],
+    position: new Point(0, 0),
+    currentForm: 'form2',
     formAlignment: {
       fixTo: 'equals',
       hAlign: 'center',

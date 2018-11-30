@@ -21,7 +21,62 @@ import RoundedSquareBracket from '../DiagramElements/Equation/RoundedSquareBrack
 import {
   EquationForm, createEquationElements, Equation,
 } from '../DiagramElements/Equation/GLEquation';
+import type {
+  TypeHAlign, TypeVAlign,
+} from '../DiagramElements/Equation/GLEquation';
 import HTMLEquation from '../DiagramElements/Equation/HTMLEquation';
+
+export type TypeEquationArray =
+  string
+  | Array<string
+    | TypeEquationArray
+    | {                                 // Fraction and SmallFraction
+      numerator: TypeEquationArray;
+      denominator: TypeEquationArray;
+      vinculum: string;
+      scaleModifier?: number;
+    }
+    | {                                 // Superscript and Subscript
+      content: TypeEquationArray;
+      subscript?: TypeEquationArray;
+      superscript?: TypeEquationArray;
+    }
+    | {                                 // Strike
+      content: TypeEquationArray;
+      strike: string;
+      strikeInSize?: boolean;
+    }
+    | {                                 // Annotation
+      content: TypeEquationArray;
+      annotationArray: Array<{
+        content: TypeEquationArray;
+        xPosition?: 'left' | 'right' | 'center';
+        yPosition?: 'bottom' | 'top' | 'middle' | 'baseline';
+        xAlign?: 'left' | 'right' | 'center';
+        yAlign?: 'bottom' | 'top' | 'middle' | 'baseline';
+        scale?: number;
+      }>;
+      annotationInSize?: boolean;
+    }
+    | {                                 // Bracket
+      content: TypeEquationArray;
+      left: string;
+      right: string;
+      space?: number;
+    }
+    | {                                 // Top and Bottom Bar
+      content: TypeEquationArray;
+      bar: string;
+      space?: number;
+      outsideSpace?: number;
+    }
+    | {                                 // Top and Bottom Comment
+      content: TypeEquationArray;
+      comment: TypeEquationArray;
+      bar: string;
+      space?: number;
+      outsideSpace?: number;
+    }>;
 
 export default class DiagramEquation {
   webgl: WebGLInstance;
@@ -186,6 +241,43 @@ export default class DiagramEquation {
       'lesson__equation_description',
       new Point(0, 0), 'middle', 'left',
     );
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  makeEqnFromOptions(...options: Array<{
+    color?: Array<number>,
+    position?: Point,
+    currentForm?: string,
+    formAlignment?: {
+      fixTo?: Point | string,
+      scale?: number,
+      alignH?: TypeHAlign | null,
+      alignV?: TypeVAlign | null,
+    },
+    forms?: {
+      [formName: string]: TypeEquationArray | {
+        content?: TypeEquationArray,
+        elementMods?: {
+          [elementName: string]: {
+            style?: 'linear' | 'curved',
+            color?: Array<number>,
+            direction?: '' | 'up' | 'left' | 'down' | 'right',
+            mag?: number,
+          }
+        },
+        alignment?: {
+          fixTo?: Point | string,
+          scale?: number,
+          alignH?: TypeHAlign | null,
+          alignV?: TypeVAlign | null,
+        },
+      },
+    },
+    formSeries?: {
+      [seriesName: string]: Array<string>,
+    },
+  }>) {
+
   }
 
   fraction(...options: Array<{
