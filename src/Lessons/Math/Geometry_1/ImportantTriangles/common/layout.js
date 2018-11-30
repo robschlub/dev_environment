@@ -59,7 +59,7 @@ export default function commonLessonLayout() {
       color: layout.colors.height,
       offset: 0.1,
       label: {
-        linePosition: 0.8,
+        linePosition: 0.6,
       },
     },
     left: {
@@ -112,7 +112,7 @@ export default function commonLessonLayout() {
       side23: {
         p1: equilPoints[2],
         p2: mid,
-        label: { text: 'B', linePosition: 0.2 },
+        label: { text: 'B', linePosition: 0.6 },
       },
       side31: {
         p1: equilPoints[0],
@@ -141,19 +141,19 @@ export default function commonLessonLayout() {
         p1: equilPoints[1],
         p2: mid,
         p3: equilPoints[2],
-        label: { text: ['d', 'b'] },
+        label: { text: 'b' },
       },
       angle2: {
         p1: equilPoints[2],
         p2: equilPoints[1],
         p3: mid,
-        label: { text: ['e', 'a'] },
+        label: { text: 'a' },
       },
       angle3: {
         p1: mid,
         p2: equilPoints[2],
         p3: equilPoints[1],
-        label: { text: ['f', 'c'] },
+        label: { text: 'c' },
       },
       side12: {
         p1: equilPoints[1],

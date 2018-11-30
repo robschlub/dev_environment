@@ -56,13 +56,9 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     right.add('angle3', this.diagram.objects.angle(lay.angle, layR.angle3));
 
     // Sides
-    console.log(lay.sideLength.label.linePosition)
     left.add('side12', this.diagram.objects.line(lay.sideLength, layL.side12));
-    console.log(lay.sideLength.label.linePosition)
     left.add('side23', this.diagram.objects.line(lay.sideLength, layL.side23));
-    console.log(lay.sideLength.label.linePosition)
     left.add('side31', this.diagram.objects.line(lay.sideLength, layL.side31));
-    console.log(lay.sideLength.label.linePosition)
     right.add('side12', this.diagram.objects.line(lay.sideLength, layR.side12));
     right.add('side23', this.diagram.objects.line(lay.sideLength, layR.side23));
     right.add('side31', this.diagram.objects.line(lay.sideLength, layR.side31));

@@ -115,10 +115,10 @@ class Content extends LessonContent {
     ];
     this.addSection(common, {});
 
-    common.setContent = 'We now have two triangles, are they the same?';
+    common.setContent = 'This line splits the triangle into two.';
     this.addSection(common, {});
     common.showOnly = [
-      equil,
+      equil, qr,
       equil._left, equil._left._tri,
       equil._right, equil._right._tri,
     ];
@@ -126,17 +126,71 @@ class Content extends LessonContent {
       equil._left._side12, equil._left._side31, equil._left._side23,
       equil._right._side12, equil._right._side23,
     ];
+    common.setSteadyState = () => {
+      equil.setScenario(equil._left, layout.equil.left.scenario.left);
+      equil.setScenario(equil._right, layout.equil.right.scenario.right);
+      equil._right._side31.showAll();
+    };
     this.addSection(common, {
       transitionFromPrev: (done) => {
         equil.moveToScenario(equil._left, layout.equil.left.scenario.left, 1, done);
         equil.moveToScenario(equil._right, layout.equil.right.scenario.right, 1);
       },
-      setSteadyState: () => {
-        equil.setScenario(equil._left, layout.equil.left.scenario.left);
-        equil.setScenario(equil._right, layout.equil.right.scenario.right);
-        equil._right._side31.showAll();
+    });
+
+    common.setContent = 'The |Side_Side_Side| triangle congruency test says that if two triangles share the same sides, then they also share the |same angles|.';
+    common.modifiers = { Side_Side_Side: click(qr._sss.show, [qr._sss], colors.diagram.action) };
+    this.addSection(common, {});
+
+    common.setContent = 'These two triangles |share the same side lengths|, and therefore their |angles are also the same|.';
+    this.addSection(common, {});
+    common.show = [
+      equil._left, equil._right,
+    ];
+    this.addSection(common, {});
+
+    common.setContent = 'And so we have shown that the two |a| angles in an |equilateral| triangle are the same.';
+    common.modifiers = { a: highlight(colors.angles) };
+    this.addSection(common, {});
+    common.show = [
+      equil._left._angle1, equil._left._side31, equil._left._side12,
+      equil._right._angle2, equil._right._side23, equil._right._side12,
+    ];
+    common.setSteadyState = () => {
+      equil.setScenario(equil._left, layout.equil.left.scenario.left);
+      equil.setScenario(equil._right, layout.equil.right.scenario.right);
+    };
+    this.addSection(common, {});
+    common.setSteadyState = () => {
+      equil.setScenario(equil._left, layout.equil.left.scenario.center);
+      equil.setScenario(equil._right, layout.equil.right.scenario.center);
+    };
+    common.setSteadyState = () => {
+      equil.setScenario(equil._left, layout.equil.left.scenario.center);
+      equil.setScenario(equil._right, layout.equil.right.scenario.center);
+    };
+    this.addSection(common, {
+      transitionFromPrev: (done) => {
+        equil.moveToScenario(equil._left, layout.equil.left.scenario.center, 1, done);
+        equil.moveToScenario(equil._right, layout.equil.right.scenario.center, 1);
       },
     });
+    common.showOnly = [equil, equil._tri, equil._tri._tri];
+    common.show = [
+      equil._tri._angle1, equil._tri._angle2,
+      equil._tri._side12, equil._tri._side23, equil._tri._side31,
+    ];
+    common.setSteadyState = () => {
+      equil.setScenario(equil._left, layout.equil.left.scenario.center);
+      equil.setScenario(equil._right, layout.equil.right.scenario.center);
+      equil._tri._angle1.label.eqn.showForm('0');
+      equil._tri._angle2.label.eqn.showForm('0');
+      equil._tri._angle3.label.eqn.showForm('0');
+    };
+    this.addSection(common);
+
+    // common.setContent = 'The third angle can also be shown to equal |a| if a line is drawn from a different point to its opposite side';
+    // common.show
   }
 }
 
