@@ -25,7 +25,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     let lay = this.layout.iso;
     iso.add('angle1', this.diagram.objects.angle(lay.angle, lay.angle1));
     iso.add('angle2', this.diagram.objects.angle(lay.angle, lay.angle2));
-    // iso.add('angle3', this.diagram.objects.angle(lay.angle, lay.angle3));
+    iso.add('angle3', this.diagram.objects.angle(lay.angle, lay.angle3));
 
     // Sides
     lay = this.layout.iso;
@@ -138,6 +138,11 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   pulseEqualAngles() {
     this._tri._angle1.pulseScaleNow(1, 1.5);
     this._tri._angle2.pulseScaleNow(1, 1.5);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseAngle3() {
+    this._tri._angle3.pulseScaleNow(1, 1.5);
     this.diagram.animateNextFrame();
   }
 

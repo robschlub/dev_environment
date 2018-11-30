@@ -62,10 +62,15 @@ class Content extends LessonContent {
     });
 
 
-    this.addSection({
+    common = {
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.center);
+      },
+    };
+    this.addSection(common, {
       title: 'Isoceles',
       setContent: [
-        'An |Isoceles| triangle has |two_sides| with |equal_length|.',
+        'A triangle with |two_sides| of |equal_length| is called an |Isoceles| triangle.',
         `${new Definition('Isoceles', 'Greek', ['isoskeles', '', 'isos', 'equal', 'skelos', 'leg']).html('id_lesson__isoceles_definition')}`,
       ],
       modifiers: {
@@ -83,6 +88,9 @@ class Content extends LessonContent {
         iTri._side12, iTri._side23, iTri._side31,
         iTri._angle1, iTri._angle2,
       ],
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.center);
+      },
     };
     this.addSection(common, {
       setContent: [
@@ -107,6 +115,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         iso.setScenario(left, layout.iso.left.scenario.center);
         iso.setScenario(right, layout.iso.right.scenario.center);
+        iso.setScenario(iTri, layout.iso.scenario.center);
       },
     };
     this.addSection(common);
@@ -239,10 +248,53 @@ class Content extends LessonContent {
     common.setSteadyState = () => {
       iso.setScenario(left, layout.iso.left.scenario.center);
       iso.setScenario(right, layout.iso.right.scenario.center);
+      iso.setScenario(iTri, layout.iso.scenario.center);
     };
     this.addSection(common);
     this.addSection(common, {
       setContent: 'And so we have shown that two angles in an |isoceles| triangle are the same.',
+      transitionFromNext: (done) => {
+        iso.moveToScenario(iTri, layout.iso.scenario.center, 1, done);
+      },
+    });
+
+    common.setSteadyState = () => {
+      iso.setScenario(iTri, layout.iso.scenario.bottom);
+    };
+    this.addSection(common, {
+      title: 'Third Angle',
+      setContent: 'With the understanting |two angles are the same|, we can find the |relationship| between the |equal angles| and the |third angle|.',
+      transitionFromPrev: (done) => {
+        iso.moveToScenario(iTri, layout.iso.scenario.bottom, 1, done);
+      },
+    });
+
+
+    common = {
+      setContent: 'We start by labelling the third angle and recalling all the angles in a triangle add to |_180|.',
+      modifiers: {
+        _180: clickWord(
+          '180º', 'id_important_triangles_sum1',
+          qr._tri.show, [qr._tri], colors.diagram.action,
+        ),
+      },
+      showOnly: [iso, iTri, iTri._line, qr],
+      show: [
+        iTri._angle1, iTri._angle2, iTri._angle3,
+        iTri._side12, iTri._side23, iTri._side31,
+      ],
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.bottom);
+      },
+    };
+    this.addSection(common, {
+      hide: [iTri._angle3],
+    });
+    this.addSection(common, {
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.bottom);
+        iso.pulseAngle3();
+      },
     });
 
     // common.setContent = 'If instead the line is drawn from a |different| triangle point, this same procedure can be used to show the |third angle| is the |same| as the other two.';

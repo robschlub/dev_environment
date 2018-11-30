@@ -27,6 +27,10 @@ export default function commonLessonLayout() {
   const mid = new Point(0, isoPoints[0].y);
   layout.iso = {
     position: new Point(0, 0),
+    scenario: {
+      center: { position: new Point(0, 0) },
+      bottom: { position: new Point(0, -0.5) },
+    },
     tri: {
       points: isoPoints,
       width: 0.015,
@@ -97,13 +101,15 @@ export default function commonLessonLayout() {
         p1: isoPoints[2],
         p2: mid,
         p3: isoPoints[0],
-        label: { text: 'b' },
+        curve: { radius: 0.17 },
+        label: { text: 'b', radius: 0.15 },
       },
       angle3: {
         p1: isoPoints[0],
         p2: isoPoints[2],
         p3: mid,
-        label: { text: 'c' },
+        curve: { radius: 0.3 },
+        label: { text: 'c', radius: 0.28 },
       },
       side12: {
         p1: mid,
@@ -150,7 +156,8 @@ export default function commonLessonLayout() {
         p1: isoPoints[1],
         p2: mid,
         p3: isoPoints[2],
-        label: { text: 'b' },
+        curve: { radius: 0.17 },
+        label: { text: 'b', radius: 0.15 },
       },
       angle2: {
         p1: isoPoints[2],
@@ -162,7 +169,8 @@ export default function commonLessonLayout() {
         p1: mid,
         p2: isoPoints[2],
         p3: isoPoints[1],
-        label: { text: 'c' },
+        curve: { radius: 0.3 },
+        label: { text: 'c', radius: 0.28 },
       },
       side12: {
         p1: isoPoints[1],
@@ -210,11 +218,13 @@ export default function commonLessonLayout() {
       p2: isoPoints[1],
       p3: isoPoints[0],
     },
-    // angle3: {
-    //   p1: isoPoints[0],
-    //   p2: isoPoints[2],
-    //   p3: isoPoints[1],
-    // },
+    angle3: {
+      p1: isoPoints[0],
+      p2: isoPoints[2],
+      p3: isoPoints[1],
+      curve: { radius: 0.3 },
+      label: { radius: 0.28 },
+    },
     splitLine1: {
       p1: isoPoints[1],
       p2: new Line(isoPoints[2], isoPoints[0]).midpoint(),
