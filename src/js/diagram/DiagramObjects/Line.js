@@ -451,6 +451,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     };
     if (optionsToUse.label) {
       const labelOptions = Object.assign({}, defaultLabelOptions, optionsToUse.label);
+      console.log(labelOptions.linePosition);
       this.addLabel(
         labelOptions.text,
         labelOptions.offset,

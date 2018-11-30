@@ -310,4 +310,12 @@ describe('Join Objects', () => {
       },
     });
   });
+  test.only('Do not modify existing objects', () => {
+    const o1 = { a: 1, b: { x: 1, z: 1 } };
+    const o2 = { a: 2, b: { x: 2, y: 2 } };
+    const result = tools.joinObjects(o1, o2);
+    expect(result).toEqual({ a: 2, b: { x: 2, y: 2, z: 1 } });
+    expect(o1).toEqual({ a: 1, b: { x: 1, z: 1 } });
+    expect(o2).toEqual({ a: 2, b: { x: 2, y: 2 } });
+  });
 });
