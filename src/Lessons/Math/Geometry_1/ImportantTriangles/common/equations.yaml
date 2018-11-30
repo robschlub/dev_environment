@@ -1,0 +1,31 @@
+equation:
+  name: TestEquation
+  elements:
+    a: 'a'
+    b:
+      text: 'b'
+      color: [1, 0, 0, 1]
+    equals: '  =  '
+    plus: ' + '
+    _2: '2'
+    _180: '180º'
+
+  forms:
+    0:
+      - _2
+      - a
+      - plus
+      - b
+      - equals
+      - _180
+    ],
+    '2': {
+      'deg': [
+        '_2', 'frac', {
+          
+        }
+      ],
+      'rad': [
+      ],
+    },
+  },

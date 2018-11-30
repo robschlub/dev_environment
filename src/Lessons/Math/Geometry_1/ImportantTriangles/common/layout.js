@@ -223,7 +223,7 @@ export default function commonLessonLayout() {
       p2: isoPoints[2],
       p3: isoPoints[1],
       curve: { radius: 0.3 },
-      label: { radius: 0.28 },
+      label: { text: 'b', radius: 0.28 },
     },
     splitLine1: {
       p1: isoPoints[1],
@@ -236,6 +236,109 @@ export default function commonLessonLayout() {
       p2: new Line(isoPoints[1], isoPoints[2]).midpoint(),
       width: 0.015,
       color: layout.colors.lines,
+    },
+  };
+
+  layout.equation = {
+    elements: {
+      a: 'a',
+      b: {
+        text: 'b',
+        color: [1, 0, 0, 1],
+      },
+      equals: '  =  ',
+      plus: ' + ',
+      _2: '2',
+      _180: '180º',
+    },
+    forms: {
+      '1': [
+        '_2', 'a', 'plus', 'b', 'equals', '_180',
+      ],
+      '2': {
+        'deg': [
+          '_2', 'frac', {
+
+          }
+        ],
+        'rad': [
+        ],
+      },
+    },
+  };
+
+  layout.equation = {
+    color: [1, 0, 1, 1],
+    formAlignment: {
+      fixTo: 'equals',
+      hAlign: 'center',
+      vAlign: 'baseline',
+      scale: 1,
+    },
+    elements: {},
+    forms: {
+      form1: [],
+      form2: [],
+      form3: [],
+    },
+    formSeries: {
+      'series1': ['form1', 'form2'],
+      'series2': ['form1', 'form3'],
+    },
+  };
+
+  layout.equation.elements = {
+    a: 'a',
+    b: {
+      text: 'b',
+      color: [1, 0, 0, 1],
+    },
+    equals: '  =  ',
+    plus: ' + ',
+    _2: '2',
+    _180: '180º',
+    pi: 'π',
+    v: { obj: 'vinculum', color: [1, 0, 0, 1] },
+  };
+
+  layout.equation.forms['1'] = [
+    '_2', 'a', 'plus', 'b', 'equals', '_180',
+  ];
+
+  layout.equation.forms['2'] = {
+    'deg': [
+      '_2', 'a', 'plus', 'b', 'equals', '_180',
+    ],
+    'rad': [
+      '_2', 'a', 'plus', 'b', 'equals', 'pi',
+    ],
+  };
+
+  layout.equation.forms['3'] = [
+    '.frac', ['_2', 'a', 'v'], 'plus', 'b', 'equals', '_180',
+  ];
+
+  layout.equation.forms['4'] = [
+    'frac', {
+      numerator: '_2',
+      demonimator: 'a',
+      vinculum: 'v',
+    }, 'plus', 'b', 'equals', '_180',
+  ];
+
+  layout.equation.forms['5'] = {
+    content: [
+      '_2', 'a', 'plus', 'b', 'equals', '_180',
+    ],
+    elementMods: {
+      _2: {
+        style: 'linear',
+      },
+    },
+    animationTime: {
+      fromPrev: 1,
+      fromNext: 2,
+      fromAny: 1.5,
     },
   };
   return layout;

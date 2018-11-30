@@ -17,6 +17,7 @@
             }
           }
         ],
+        "quote-props": "off",
         "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1 }],
         "lines-between-class-members": [
           "error",
