@@ -26,7 +26,7 @@ export default function commonLessonLayout() {
       points: equilPoints,
       width: 0.015,
       close: true,
-      borderToPoint: 'never',
+      borderToPoint: 'alwaysOn',
       position: new Point(0, 0),
       color: layout.colors.lines,
     },
@@ -63,13 +63,17 @@ export default function commonLessonLayout() {
       },
     },
     left: {
+      scenario: {
+        center: { position: new Point(0, 0) },
+        left: { position: new Point(-0.5, 0) },
+      },
       tri: {
         points: [
           equilPoints[0],
           mid,
           equilPoints[2],
         ],
-        width: 0.01,
+        width: 0.015,
         close: true,
         borderToPoint: 'alwaysOn',
         position: new Point(0, 0),
@@ -117,13 +121,17 @@ export default function commonLessonLayout() {
       },
     },
     right: {
+      scenario: {
+        center: { position: new Point(0, 0) },
+        right: { position: new Point(0.5, 0) },
+      },
       tri: {
         points: [
           mid,
           equilPoints[1],
           equilPoints[2],
         ],
-        width: 0.01,
+        width: 0.015,
         close: true,
         borderToPoint: 'alwaysOn',
         position: new Point(0, 0),
