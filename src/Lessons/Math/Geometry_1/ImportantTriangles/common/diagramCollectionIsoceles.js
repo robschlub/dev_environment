@@ -88,7 +88,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       addToCollection: this,
       name: 'test',
       forms: {
-        '0': ['a', 'plus', 'b'],
+        '0': ['a', 'space', 'plus', 'b'],
+        '1': ['b', 'plus', 'a'],
       },
     });
   }
