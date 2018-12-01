@@ -490,6 +490,11 @@ export default class DiagramEquation {
         },
       );
     });
+
+    if (optionsToUse.formSeries != null) {
+      eqn.setFormSeries(optionsToUse.formSeries);
+    }
+
     eqn.collection.setPosition(optionsToUse.position);
     eqn.setCurrentForm(optionsToUse.currentForm);
     const { addToCollection } = optionsToUse;

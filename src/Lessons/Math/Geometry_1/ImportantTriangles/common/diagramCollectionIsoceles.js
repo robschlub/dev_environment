@@ -108,6 +108,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         },
         '5': ['.sfrac', ['a', '_2', 'v', 0.7], 'space', 'plus', 'b'],
       },
+      formSeries: ['0', '1', '2', '3', '4', '5'],
     });
   }
 
