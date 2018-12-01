@@ -709,17 +709,16 @@ class Annotation extends Elements {
     });
 
     if (this.annotationInSize) {
-      console.log('got here')
       const bottomLeft = new Point(minX, minY);
       const topRight = new Point(maxX, maxY);
       this.width = topRight.x - bottomLeft.x;
       this.ascent = topRight.y - this.mainContent.location.y;
       this.descent = this.mainContent.location.y - bottomLeft.y;
 
-      const xOffset = this.mainContent.location.x - bottomLeft;
+      const xOffset = this.mainContent.location.x - bottomLeft.x;
       if (xOffset) {
         this.mainContent.offsetLocation(new Point(xOffset, 0));
-        this.annotations = this.annotations.map(
+        this.annotations.forEach(
           annotationInfo => annotationInfo.content
             .offsetLocation(new Point(xOffset, 0)),
         );

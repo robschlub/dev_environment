@@ -137,7 +137,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
             '.ann', ['e', 'right', 'top', 'left', 'bottom'],
           ],
           true,
-        ]],
+        ], '_2'],
       },
       formSeries: ['0', '1', '2', '3', '4', '5'],
     });
