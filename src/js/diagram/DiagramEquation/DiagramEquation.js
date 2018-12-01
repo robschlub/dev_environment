@@ -248,6 +248,8 @@ export default class DiagramEquation {
     color?: Array<number>,
     position?: Point,
     currentForm?: string,
+    addToCollection?: DiagramElementCollection;
+    name?: string,
     elements: {
       [elementName: string]: string | {
         text: string,
@@ -297,6 +299,7 @@ export default class DiagramEquation {
     const defaultOptions = {
       color: [0.5, 0.5, 0.5, 1],
       position: new Point(0, 0),
+      currentForm: 'base',
       formAlignment: {
         fixTo: new Point(0, 0),
         scale: 0.7,
@@ -402,7 +405,61 @@ export default class DiagramEquation {
       alignment: defaultOptions.formAlignment,
       type: 'base',
       elementMods: {},
-    }
+      animationTime: null,
+      addToSeries: false,
+    };
+    const makePhrase = (phrase: TypeEquationArray) => {
+      const out = [];
+      if (typeof phrase === 'string') {
+        return [phrase];
+      }
+      for (let i = 0; i < phrase.length; i += 1) {
+        const element = phrase[i];
+        if (typeof element === 'string') {
+          if (element.startsWith('.') && i < phrase.length - 1) {
+            if (element === '.frac') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [num, den, vinculum] = parameters;
+                out.push(eqn.frac(
+                  makePhrase(num),
+                  makePhrase(den),
+                  vinculum,
+                ));
+              } else {
+                const { numerator, denominator, vinculum } = parameters;
+                out.push(eqn.frac(
+                  makePhrase(numerator),
+                  makePhrase(denominator),
+                  vinculum,
+                ));
+              }
+            }
+            if (element === '.sfrac') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [num, den, vinculum] = parameters;
+                out.push(eqn.frac(
+                  makePhrase(num),
+                  makePhrase(den),
+                  vinculum,
+                ));
+              } else {
+                const { numerator, denominator, vinculum } = parameters;
+                out.push(eqn.frac(
+                  makePhrase(numerator),
+                  makePhrase(denominator),
+                  vinculum,
+                ));
+              }
+            }
+          } else {
+            out.push(element);
+          }
+        }
+      }
+      return out;
+    };
     Object.keys(optionsToUse.forms).forEach((name) => {
       const form = optionsToUse.forms[name];
       let formOptions;
@@ -417,9 +474,25 @@ export default class DiagramEquation {
           formOptions.elementMods[key],
         );
       });
-      
-    })
-
+      eqn.addForm(
+        name,
+        makePhrase(formOptions.content),
+        {
+          animationTime: formOptions.animationTime,
+          elementMods: formOptions.elementMods,
+          formType: formOptions.type,
+          addToSeries: formOptions.addToSeries,
+        },
+      );
+    });
+    eqn.collection.setPosition(optionsToUse.position);
+    eqn.setCurrentForm(optionsToUse.currentForm);
+    const { addToCollection } = optionsToUse;
+    if (addToCollection != null) {
+      addToCollection.eqns[optionsToUse.name] = eqn;
+      addToCollection.add(optionsToUse.name, eqn.collection);
+    }
+    return eqn;
   }
 
   fraction(...options: Array<{
