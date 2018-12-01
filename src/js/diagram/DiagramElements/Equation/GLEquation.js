@@ -2458,7 +2458,6 @@ export class Equation {
             color, style, direction, mag,
           } = elementMods[elementName]);
         }
-        console.log(color)
         this.form[name][formType].elementMods[elementName] = {
           element: diagramElement,
           color,

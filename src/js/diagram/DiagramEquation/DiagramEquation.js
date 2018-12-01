@@ -643,7 +643,6 @@ export default class DiagramEquation {
                   content, xPosition, yPosition, xAlign,  // $FlowFixMe
                   yAlign, annotationScale,
                 ] = parameters;
-                console.log(content, xPosition, yPosition, xAlign, yAlign, annotationScale)
                 out.push(eqn.ann(               // $FlowFixMe
                   makePhrase(content),          // $FlowFixMe
                   xPosition,                    // $FlowFixMe
