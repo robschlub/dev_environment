@@ -307,14 +307,14 @@ export default function commonLessonLayout() {
     '_2', 'a', 'plus', 'b', 'equals', '_180',
   ];
 
-  layout.equation.forms['2'] = {
-    'deg': [
-      '_2', 'a', 'plus', 'b', 'equals', '_180',
-    ],
-    'rad': [
-      '_2', 'a', 'plus', 'b', 'equals', 'pi',
-    ],
-  };
+  // layout.equation.forms['2'] = {
+  //   'deg': [
+  //     '_2', 'a', 'plus', 'b', 'equals', '_180',
+  //   ],
+  //   'rad': [
+  //     '_2', 'a', 'plus', 'b', 'equals', 'pi',
+  //   ],
+  // };
 
   layout.equation.forms['3'] = [
     '.frac', ['_2', 'a', 'v'], 'plus', 'b', 'equals', '_180',

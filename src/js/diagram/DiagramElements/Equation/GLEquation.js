@@ -1426,6 +1426,7 @@ export function createEquationElements(
   colorOrFont: Array<number> | DiagramFont = [],
   diagramLimits: Rect = new Rect(-1, -1, 2, 2),
   firstTransform: Transform = new Transform(),
+  existingCollection: DiagramElementCollection | null = null,
 ) {
   let color = [1, 1, 1, 1];
   if (Array.isArray(colorOrFont)) {
@@ -1459,10 +1460,16 @@ export function createEquationElements(
     }
   }
 
-  const collection = new DiagramElementCollection(
-    new Transform('Equation Elements Collection').scale(1, 1).rotate(0).translate(0, 0),
-    diagramLimits,
-  );
+  let collection;
+  if (existingCollection != null) {
+    collection = existingCollection;
+  } else {
+    collection = new DiagramElementCollection(
+      new Transform('Equation Elements Collection').scale(1, 1).rotate(0).translate(0, 0),
+      diagramLimits,
+    );
+  }
+
   const makeElem = (text: string, fontOrStyle: DiagramFont | string | null) => {
     let fontToUse: DiagramFont = font;
     if (fontOrStyle instanceof DiagramFont) {
@@ -1489,14 +1496,11 @@ export function createEquationElements(
       if (!key.startsWith('space')) {
         collection.add(key, makeElem(elems[key], null));
       }
-    }
-    if (elems[key] instanceof DiagramElementPrimative) {
+    } else if (elems[key] instanceof DiagramElementPrimative) {
       collection.add(key, elems[key]);
-    }
-    if (elems[key] instanceof DiagramElementCollection) {
+    } else if (elems[key] instanceof DiagramElementCollection) {
       collection.add(key, elems[key]);
-    }
-    if (Array.isArray(elems[key])) {
+    } else if (Array.isArray(elems[key])) {
       const [text, col, isTouchable, onClick, direction, mag, fontOrStyle] = elems[key];
       const elem = makeElem(text, fontOrStyle);
       if (col) {
@@ -1517,7 +1521,35 @@ export function createEquationElements(
         elem.animate.transform.translation.style = 'curved';
         elem.animate.transform.translation.options.magnitude = mag;
       }
+      collection.add(key, elem);
+    } else {
+      const {
+        text, isTouchable,
+        onClick, direction, mag, fontOrStyle,
+      } = elems[key];
+      let col;
+      if (elems[key].color) {
+        col = elems[key].color;
+      }
+      const elem = makeElem(text, fontOrStyle);
+      if (col) {
+        elem.setColor(col);
+      }
+      if (isTouchable) {
+        elem.isTouchable = isTouchable;
+      }
+      if (onClick) {
+        elem.onClick = onClick;
+      }
+      if (direction) {
+        elem.animate.transform.translation.style = 'curved';
+        elem.animate.transform.translation.options.direction = direction;
+      }
 
+      if (mag) {
+        elem.animate.transform.translation.style = 'curved';
+        elem.animate.transform.translation.options.magnitude = mag;
+      }
       collection.add(key, elem);
     }
   });
@@ -2302,6 +2334,7 @@ export class Equation {
     colorOrFont: Array<number> | DiagramFont = [],
     descriptionElement: DiagramElementPrimative | null = null,
     descriptionPosition: Point = new Point(0, 0),
+    existingCollection: DiagramElementCollection | null = null,
   ) {
     this.collection = createEquationElements(
       elems,
@@ -2309,6 +2342,7 @@ export class Equation {
       colorOrFont,
       this.diagramLimits,
       this.firstTransform,
+      existingCollection,
     );
     this.addDescriptionElement(descriptionElement, descriptionPosition);
   }

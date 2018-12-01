@@ -248,6 +248,21 @@ export default class DiagramEquation {
     color?: Array<number>,
     position?: Point,
     currentForm?: string,
+    elements: {
+      [elementName: string]: string | {
+        text: string,
+        color?: Array<number>,
+        isTouchable?: boolean,
+        onClick?: () => void | null,
+        direction?: '' | 'up' | 'left' | 'down' | 'right',
+        mag?: number,
+        z?: number,      // higher numbers are above lower numbers
+        fontOrStyle?: DiagramFont | null,
+        diagramElement: string | null,
+        side?: 'up' | 'left' | 'down' | 'right',
+        numLines?: number,
+      },
+    };
     formAlignment?: {
       fixTo?: Point | string,
       scale?: number,
@@ -256,7 +271,7 @@ export default class DiagramEquation {
     },
     forms?: {
       [formName: string]: TypeEquationArray | {
-        content?: TypeEquationArray,
+        content: TypeEquationArray,
         elementMods?: {
           [elementName: string]: {
             style?: 'linear' | 'curved',
@@ -265,6 +280,7 @@ export default class DiagramEquation {
             mag?: number,
           }
         },
+        type?: string,
         alignment?: {
           fixTo?: Point | string,
           scale?: number,
@@ -277,6 +293,132 @@ export default class DiagramEquation {
       [seriesName: string]: Array<string>,
     },
   }>) {
+    const eqn = this.makeEqn();
+    const defaultOptions = {
+      color: [0.5, 0.5, 0.5, 1],
+      position: new Point(0, 0),
+      formAlignment: {
+        fixTo: new Point(0, 0),
+        scale: 0.7,
+        alignH: 'left',
+        alignV: 'baseline',
+      },
+      elements: {},
+      forms: {},
+      formSeries: {},
+    };
+    const optionsToUse = joinObjects(defaultOptions, ...options);
+
+    // Create Equation Elements
+    const defElementOptions = {
+      text: '',
+      color: optionsToUse.color,
+      isTouchable: false,
+      onClick: null,
+      direction: '',
+      mag: 0,
+      fontOrStyle: null,
+      z: 1,
+      diagramElement: null,
+      side: 'left',
+      numLines: 1,
+    };
+    Object.keys(optionsToUse.elements).forEach((elementName, index) => {
+      const elementValue = optionsToUse.elements[elementName];
+      let elementOptions;
+      if (typeof elementValue === 'string') {
+        elementOptions = joinObjects(defElementOptions, { text: elementValue });
+      } else {
+        elementOptions = joinObjects(defElementOptions, elementValue);
+      }
+      if (elementOptions.obj != null) {
+        let diagramElement;
+        if (elementOptions.obj === 'vinculum') {
+          diagramElement = this.vinculum(elementOptions.color);
+        }
+        if (elementOptions.obj === 'bracket') {
+          diagramElement = this.bracket(
+            elementOptions.side, elementOptions.numLines, elementOptions.color,
+          );
+        }
+        if (elementOptions.obj === 'brace') {
+          diagramElement = this.brace(
+            elementOptions.side, elementOptions.numLines, elementOptions.color,
+          );
+        }
+        if (elementOptions.obj === 'bar') {
+          diagramElement = this.brace(
+            elementOptions.side, elementOptions.numLines, elementOptions.color,
+          );
+        }
+        if (elementOptions.obj === 'squareBracket') {
+          diagramElement = this.squareBracket(
+            elementOptions.side, elementOptions.numLines, elementOptions.color,
+          );
+        }
+        if (elementOptions.obj === 'roundedSquareBracket') {
+          diagramElement = this.roundedSquareBracket(
+            elementOptions.side, elementOptions.numLines, elementOptions.color,
+          );
+        }
+        if (elementOptions.obj === 'strike') {
+          diagramElement = this.strike(elementOptions.color);
+        }
+        if (elementOptions.obj === 'xStrike') {
+          diagramElement = this.xStrike(elementOptions.color);
+        }
+        if (elementOptions.obj === 'integral') {
+          diagramElement = this.integral(elementOptions.color);
+        }
+        if (diagramElement != null) {
+          diagramElement.isTouchable = elementOptions.isTouchable;
+          diagramElement.onClick = elementOptions.onClick;
+          diagramElement.animate.transform.translation
+            .options.direction = elementOptions.direction;
+          diagramElement.animate.transform.translation
+            .options.magnitude = elementOptions.mag;
+          elementOptions = diagramElement;
+        }
+      }
+      if (index === 0) {
+        eqn.createElements({ elementName: elementOptions });
+      } else {
+        eqn.createElements(
+          { elementName: elementOptions },
+          [], null, new Point(0, 0),
+          eqn.collection,
+        );
+      }
+    });
+
+    // Create Equation Forms
+    const defElementMods = {
+      style: 'linear',
+      color: defElementOptions.color,
+      direction: defElementOptions.direction,
+      mag: defElementOptions.mag,
+    };
+    const defForm = {
+      alignment: defaultOptions.formAlignment,
+      type: 'base',
+      elementMods: {},
+    }
+    Object.keys(optionsToUse.forms).forEach((name) => {
+      const form = optionsToUse.forms[name];
+      let formOptions;
+      if (Array.isArray(form)) {
+        formOptions = joinObjects(defForm, { content: form });
+      } else {
+        formOptions = joinObjects(defForm, form);
+      }
+      Object.keys(formOptions.elementMods).forEach((key) => {
+        formOptions.elementMods[key] = joinObjects(
+          defElementMods,
+          formOptions.elementMods[key],
+        );
+      });
+      
+    })
 
   }
 
