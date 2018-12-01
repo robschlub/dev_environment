@@ -78,8 +78,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
 
   addEquations() {
     this.diagram.equation.makeEqnFromOptions({
+      name: 'test',
+      addToCollection: this,
       color: this.layout.colors.angles,
-      currentForm: '0',
       elements: {
         a: 'a',
         _2: '2',
@@ -97,8 +98,6 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         bb: { diagramObj: 'squareBracket', side: 'bottom' },
         bar: { diagramObj: 'bar', side: 'top' },
       },
-      addToCollection: this,
-      name: 'test',
       forms: {
         '0': ['a', 'space', 'plus', 'b'],
         '1': ['b', 'plus', 'a'],
@@ -138,8 +137,17 @@ export default class IsocelesCollection extends CommonDiagramCollection {
           ],
           true,
         ], '_2'],
+        '16': {
+          'deg': {
+            content: ['a', 'space', 'plus', 'b'],
+          },
+          'rad': {
+            content: ['b', 'space', 'plus', 'a'],
+          },
+        },
       },
-      formSeries: ['0', '1', '2', '3', '4', '5'],
+      currentForm: '0',
+      formSeries: ['0', '1', '2', '3', '4', '5', '16'],
     });
   }
 

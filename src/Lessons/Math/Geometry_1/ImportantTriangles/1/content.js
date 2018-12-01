@@ -56,8 +56,8 @@ class Content extends LessonContent {
       setSteadyState: () => {
         iso.show();
         iso._test.showAll();
-        iso.eqns.test.showForm('15');
-        // iso.eqns.test.nextForm();
+        iso.eqns.test.showForm('5');
+        iso.eqns.test.nextForm();
       },
     });
 

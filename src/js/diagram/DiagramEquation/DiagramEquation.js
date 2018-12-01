@@ -695,30 +695,39 @@ export default class DiagramEquation {
       }
       return out;
     };
+
     Object.keys(optionsToUse.forms).forEach((name) => {
       const form = optionsToUse.forms[name];
-      let formOptions;
+      const formOptionsArray = [];
       if (Array.isArray(form)) {
-        formOptions = joinObjects(defForm, { content: form });
+        formOptionsArray.push(joinObjects(defForm, { content: form }));
+      } else if (form.content == null) {
+        Object.keys(form).forEach((formType) => {
+          formOptionsArray.push(joinObjects(
+            defForm, form[formType], { type: formType }));
+        });
       } else {
-        formOptions = joinObjects(defForm, form);
+        formOptionsArray.push(joinObjects(defForm, form));
       }
-      Object.keys(formOptions.elementMods).forEach((key) => {
-        formOptions.elementMods[key] = joinObjects(
-          defElementMods,
-          formOptions.elementMods[key],
+      formOptionsArray.forEach((formOptions) => {
+        Object.keys(formOptions.elementMods).forEach((key) => {
+          // eslint-disable-next-line no-param-reassign
+          formOptions.elementMods[key] = joinObjects(
+            defElementMods,
+            formOptions.elementMods[key],
+          );
+        });
+        eqn.addForm(
+          name,
+          makePhrase(formOptions.content),
+          {
+            animationTime: formOptions.animationTime,
+            elementMods: formOptions.elementMods,
+            formType: formOptions.type,
+            addToSeries: formOptions.addToSeries,
+          },
         );
       });
-      eqn.addForm(
-        name,
-        makePhrase(formOptions.content),
-        {
-          animationTime: formOptions.animationTime,
-          elementMods: formOptions.elementMods,
-          formType: formOptions.type,
-          addToSeries: formOptions.addToSeries,
-        },
-      );
     });
 
     if (optionsToUse.formSeries != null) {
@@ -732,6 +741,7 @@ export default class DiagramEquation {
       addToCollection.eqns[optionsToUse.name] = eqn;
       addToCollection.add(optionsToUse.name, eqn.collection);
     }
+    eqn.formTypeOrder = ['rad', 'deg', 'base'];
     return eqn;
   }
 
