@@ -82,14 +82,31 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       currentForm: '0',
       elements: {
         a: 'a',
+        _2: '2',
         plus: '+',
         b: 'b',
+        v: { diagramObj: 'vinculum' },
       },
       addToCollection: this,
       name: 'test',
       forms: {
         '0': ['a', 'space', 'plus', 'b'],
         '1': ['b', 'plus', 'a'],
+        '2': ['.frac', ['a', '_2', 'v'], 'space', 'plus', 'b'],
+        '3': ['.frac', {
+          numerator: 'b',
+          denominator: '_2',
+          vinculum: 'v',
+        }, 'space', 'plus', 'a'],
+        '4': {
+          content: ['a', 'space', 'plus', 'b'],
+          elementMods: {
+            a: {
+              color: [0, 0, 1, 1],
+            },
+          },
+        },
+        '5': ['.sfrac', ['a', '_2', 'v', 0.7], 'space', 'plus', 'b'],
       },
     });
   }

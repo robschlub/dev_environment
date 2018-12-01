@@ -259,7 +259,7 @@ export default function commonLessonLayout() {
         'deg': [
           '_2', 'frac', {
 
-          }
+          },
         ],
         'rad': [
         ],

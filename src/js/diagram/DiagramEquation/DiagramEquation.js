@@ -263,7 +263,8 @@ export default class DiagramEquation {
         diagramElement: string | null,
         side?: 'up' | 'left' | 'down' | 'right',
         numLines?: number,
-      },
+        diagramObj?: string,
+      };
     };
     formAlignment?: {
       fixTo?: Point | string,
@@ -334,43 +335,43 @@ export default class DiagramEquation {
       } else {
         elementOptions = joinObjects(defElementOptions, elementValue);
       }
-      if (elementOptions.obj != null) {
+      if (elementOptions.diagramObj != null) {
         let diagramElement;
-        if (elementOptions.obj === 'vinculum') {
+        if (elementOptions.diagramObj === 'vinculum') {
           diagramElement = this.vinculum(elementOptions.color);
         }
-        if (elementOptions.obj === 'bracket') {
+        if (elementOptions.diagramObj === 'bracket') {
           diagramElement = this.bracket(
             elementOptions.side, elementOptions.numLines, elementOptions.color,
           );
         }
-        if (elementOptions.obj === 'brace') {
+        if (elementOptions.diagramObj === 'brace') {
           diagramElement = this.brace(
             elementOptions.side, elementOptions.numLines, elementOptions.color,
           );
         }
-        if (elementOptions.obj === 'bar') {
+        if (elementOptions.diagramObj === 'bar') {
           diagramElement = this.brace(
             elementOptions.side, elementOptions.numLines, elementOptions.color,
           );
         }
-        if (elementOptions.obj === 'squareBracket') {
+        if (elementOptions.diagramObj === 'squareBracket') {
           diagramElement = this.squareBracket(
             elementOptions.side, elementOptions.numLines, elementOptions.color,
           );
         }
-        if (elementOptions.obj === 'roundedSquareBracket') {
+        if (elementOptions.diagramObj === 'roundedSquareBracket') {
           diagramElement = this.roundedSquareBracket(
             elementOptions.side, elementOptions.numLines, elementOptions.color,
           );
         }
-        if (elementOptions.obj === 'strike') {
+        if (elementOptions.diagramObj === 'strike') {
           diagramElement = this.strike(elementOptions.color);
         }
-        if (elementOptions.obj === 'xStrike') {
+        if (elementOptions.diagramObj === 'xStrike') {
           diagramElement = this.xStrike(elementOptions.color);
         }
-        if (elementOptions.obj === 'integral') {
+        if (elementOptions.diagramObj === 'integral') {
           diagramElement = this.integral(elementOptions.color);
         }
         if (diagramElement != null) {
@@ -440,18 +441,20 @@ export default class DiagramEquation {
             if (element === '.sfrac') {
               const parameters = phrase[i + 1];
               if (Array.isArray(parameters)) {
-                const [num, den, vinculum] = parameters;
-                out.push(eqn.frac(
+                const [num, den, vinculum, scale] = parameters;
+                out.push(eqn.sfrac(
                   makePhrase(num),
                   makePhrase(den),
                   vinculum,
+                  scale,
                 ));
               } else {
-                const { numerator, denominator, vinculum } = parameters;
-                out.push(eqn.frac(
+                const { numerator, denominator, vinculum, scale } = parameters;
+                out.push(eqn.sfrac(
                   makePhrase(numerator),
                   makePhrase(denominator),
                   vinculum,
+                  scale,
                 ));
               }
             }
