@@ -383,11 +383,13 @@ export default class DiagramEquation {
           elementOptions = diagramElement;
         }
       }
+      const elementObject = {};
+      elementObject[elementName] = elementOptions;
       if (index === 0) {
-        eqn.createElements({ elementName: elementOptions });
+        eqn.createElements(elementObject);
       } else {
         eqn.createElements(
-          { elementName: elementOptions },
+          elementObject,
           [], null, new Point(0, 0),
           eqn.collection,
         );

@@ -53,6 +53,10 @@ class Content extends LessonContent {
         'There are several |types of triangle| commonly found in many applications.',
         'Being able to |identify| these types of triangle can make |understanding| a problem |quicker and easier|.',
       ]),
+      setSteadyState: () => {
+        iso._test.showAll();
+        iso.eqns.test.showForm('0');
+      },
     });
 
     this.addSection({

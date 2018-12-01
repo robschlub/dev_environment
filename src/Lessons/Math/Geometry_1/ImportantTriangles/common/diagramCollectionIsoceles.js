@@ -76,6 +76,23 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.add('right', right);
   }
 
+  addEquations() {
+    this.diagram.equation.makeEqnFromOptions({
+      color: this.layout.colors.angles,
+      currentForm: '0',
+      elements: {
+        a: 'a',
+        plus: '+',
+        b: 'b',
+      },
+      addToCollection: this,
+      name: 'test',
+      forms: {
+        '0': ['a', 'plus', 'b'],
+      },
+    });
+  }
+
   // addSideLengths() {
   //   const { points } = this.layout.iso.tri;
   //   const addLine = (p: { p1: number, p2: number }, name) => {
@@ -100,6 +117,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.addTri();
     this.addLeftRightTris();
     this.addSplitLines();
+    this.addEquations();
     console.log(this)
     // this.setTransformCallback = () => {
     //   const r = this.transform.r();
