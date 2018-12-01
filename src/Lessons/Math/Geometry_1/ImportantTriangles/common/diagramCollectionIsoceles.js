@@ -91,6 +91,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         v: { diagramObj: 'vinculum' },
         v_: { diagramObj: 'vinculum' },
         v__: { diagramObj: 'vinculum' },
+        lb: { diagramObj: 'bracket', side: 'left' },
+        rb: { diagramObj: 'bracket', side: 'right' },
       },
       addToCollection: this,
       name: 'test',
@@ -115,9 +117,12 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         '6': ['.frac', [
           ['a', 'space', 'plus', 'space', 'e'],
           ['.sfrac', ['b', ['.sfrac', ['d', 'c', 'v__', 0.7]], 'v_', 0.8]],
-          // ['.sfrac', ['b', 'c', 'v_', 0.8]],
           'v',
         ]],
+        '7': ['a', '.sub', ['b', '_2']],
+        '8': ['a', '.sup', ['b', '_2']],
+        '9': ['a', '.supsub', ['b', '_2', 'c']],
+        '10': ['a', '.brac', ['b', 'lb', 'rb']],
       },
       formSeries: ['0', '1', '2', '3', '4', '5'],
     });

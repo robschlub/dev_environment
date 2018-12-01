@@ -461,6 +461,82 @@ export default class DiagramEquation {
                 ));
               }
             }
+            if (element === '.sub') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [content, subscript] = parameters;
+                out.push(eqn.sub( // $FlowFixMe
+                  makePhrase(content),  // $FlowFixMe
+                  makePhrase(subscript),  // $FlowFixMe
+                ));
+              } else {
+                // $FlowFixMe
+                const { content, subscript } = parameters;  // $FlowFixMe
+                out.push(eqn.sub(
+                  makePhrase(content),
+                  makePhrase(subscript),
+                ));
+              }
+            }
+            if (element === '.sup') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [content, superscript] = parameters;
+                out.push(eqn.sup( // $FlowFixMe
+                  makePhrase(content),  // $FlowFixMe
+                  makePhrase(superscript),  // $FlowFixMe
+                ));
+              } else {
+                // $FlowFixMe
+                const { content, superscript } = parameters;  // $FlowFixMe
+                out.push(eqn.sup(
+                  makePhrase(content),
+                  makePhrase(superscript),
+                ));
+              }
+            }
+            if (element === '.supsub') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [content, subscript, superscript] = parameters;
+                out.push(eqn.supsub( // $FlowFixMe
+                  makePhrase(content),  // $FlowFixMe
+                  makePhrase(subscript),  // $FlowFixMe
+                  makePhrase(superscript),  // $FlowFixMe
+                ));
+              } else {
+                // $FlowFixMe
+                const { content, subscript, superscript } = parameters;  // $FlowFixMe
+                out.push(eqn.supsub(
+                  makePhrase(content),  // $FlowFixMe
+                  makePhrase(subscript),  // $FlowFixMe
+                  makePhrase(superscript),  // $FlowFixMe
+                ));
+              }
+            }
+            if (element === '.brac') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [content, left, right, space] = parameters;
+                out.push(eqn.brac(      // $FlowFixMe
+                  makePhrase(content),  // $FlowFixMe
+                  left,                 // $FlowFixMe
+                  right,                // $FlowFixMe
+                  space,
+                ));
+              } else {
+                // $FlowFixMe
+                const {
+                  content, left, right, space,
+                } = parameters;  // $FlowFixMe
+                out.push(eqn.brac(
+                  makePhrase(content),      // $FlowFixMe
+                  left,                 // $FlowFixMe
+                  right,                // $FlowFixMe
+                  space,
+                ));
+              }
+            }
           } else {
             out.push(element);
           }
