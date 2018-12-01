@@ -424,12 +424,13 @@ export default class DiagramEquation {
               const parameters = phrase[i + 1];
               if (Array.isArray(parameters)) {
                 const [num, den, vinculum] = parameters;
-                out.push(eqn.frac(
-                  makePhrase(num),
-                  makePhrase(den),
+                out.push(eqn.frac(  // $FlowFixMe
+                  makePhrase(num),  // $FlowFixMe
+                  makePhrase(den),  // $FlowFixMe
                   vinculum,
                 ));
               } else {
+                // $FlowFixMe
                 const { numerator, denominator, vinculum } = parameters;
                 out.push(eqn.frac(
                   makePhrase(numerator),
@@ -442,14 +443,16 @@ export default class DiagramEquation {
               const parameters = phrase[i + 1];
               if (Array.isArray(parameters)) {
                 const [num, den, vinculum, scale] = parameters;
-                out.push(eqn.sfrac(
-                  makePhrase(num),
-                  makePhrase(den),
-                  vinculum,
+                out.push(eqn.sfrac( // $FlowFixMe
+                  makePhrase(num),  // $FlowFixMe
+                  makePhrase(den),  // $FlowFixMe
+                  vinculum,         // $FlowFixMe
                   scale,
                 ));
               } else {
-                const { numerator, denominator, vinculum, scale } = parameters;
+                // $FlowFixMe
+                const { numerator, denominator } = parameters;  // $FlowFixMe
+                const { vinculum, scale } = parameters;
                 out.push(eqn.sfrac(
                   makePhrase(numerator),
                   makePhrase(denominator),
