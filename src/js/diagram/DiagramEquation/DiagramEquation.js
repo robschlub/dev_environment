@@ -19,7 +19,7 @@ import Brace from '../DiagramElements/Equation/Brace';
 import RoundedSquareBracket from '../DiagramElements/Equation/RoundedSquareBracket';
 
 import {
-  EquationForm, createEquationElements, Equation,
+  EquationForm, createEquationElements, Equation, getDiagramElement,
 } from '../DiagramElements/Equation/GLEquation';
 import type {
   TypeHAlign, TypeVAlign,
@@ -313,6 +313,11 @@ export default class DiagramEquation {
     };
     const optionsToUse = joinObjects(defaultOptions, ...options);
 
+    ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
+    // TODO deal with fixTO strings
+    ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
     // Create Equation Elements
     const defElementOptions = {
       text: '',
@@ -704,7 +709,8 @@ export default class DiagramEquation {
       } else if (form.content == null) {
         Object.keys(form).forEach((formType) => {
           formOptionsArray.push(joinObjects(
-            defForm, form[formType], { type: formType }));
+            defForm, form[formType], { type: formType },
+          ));
         });
       } else {
         formOptionsArray.push(joinObjects(defForm, form));
@@ -717,6 +723,18 @@ export default class DiagramEquation {
             formOptions.elementMods[key],
           );
         });
+        
+        if (typeof formOptions.alignment.fixTo === 'string') {
+          const elem = getDiagramElement(eqn.collection, formOptions.alignment.fixTo);
+          if (elem != null) {
+            eqn.formAlignment.fixTo = elem;
+          }
+        } else {
+          eqn.formAlignment.fixTo = formOptions.alignment.fixTo;
+        }
+        eqn.formAlignment.hAlign = formOptions.alignment.hAlign;
+        eqn.formAlignment.vAlign = formOptions.alignment.vAlign;
+        eqn.formAlignment.scale = formOptions.alignment.scale;
         eqn.addForm(
           name,
           makePhrase(formOptions.content),

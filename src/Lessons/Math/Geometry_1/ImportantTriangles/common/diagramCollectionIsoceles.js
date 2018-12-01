@@ -145,6 +145,13 @@ export default class IsocelesCollection extends CommonDiagramCollection {
             content: ['b', 'space', 'plus', 'a'],
           },
         },
+        '17': {
+          content: ['b', 'space2', 'a'],
+          alignment: {
+            fixTo: 'a',
+            scale: 0.5,
+          },
+        },
       },
       currentForm: '0',
       formSeries: ['0', '1', '2', '3', '4', '5', '16'],
