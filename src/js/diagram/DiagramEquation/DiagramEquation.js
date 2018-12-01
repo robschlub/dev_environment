@@ -351,7 +351,7 @@ export default class DiagramEquation {
           );
         }
         if (elementOptions.diagramObj === 'bar') {
-          diagramElement = this.brace(
+          diagramElement = this.bar(
             elementOptions.side, elementOptions.numLines, elementOptions.color,
           );
         }
@@ -443,10 +443,10 @@ export default class DiagramEquation {
               const parameters = phrase[i + 1];
               if (Array.isArray(parameters)) {
                 const [num, den, vinculum, scale] = parameters;
-                out.push(eqn.sfrac( // $FlowFixMe
-                  makePhrase(num),  // $FlowFixMe
-                  makePhrase(den),  // $FlowFixMe
-                  vinculum,         // $FlowFixMe
+                out.push(eqn.sfrac(     // $FlowFixMe
+                  makePhrase(num),      // $FlowFixMe
+                  makePhrase(den),      // $FlowFixMe
+                  vinculum,             // $FlowFixMe
                   scale,
                 ));
               } else {
@@ -465,15 +465,15 @@ export default class DiagramEquation {
               const parameters = phrase[i + 1];
               if (Array.isArray(parameters)) {
                 const [content, subscript] = parameters;
-                out.push(eqn.sub( // $FlowFixMe
-                  makePhrase(content),  // $FlowFixMe
-                  makePhrase(subscript),  // $FlowFixMe
+                out.push(eqn.sub(                   // $FlowFixMe
+                  makePhrase(content),              // $FlowFixMe
+                  makePhrase(subscript),            // $FlowFixMe
                 ));
               } else {
                 // $FlowFixMe
                 const { content, subscript } = parameters;  // $FlowFixMe
                 out.push(eqn.sub(
-                  makePhrase(content),
+                  makePhrase(content),                        // $FlowFixMe
                   makePhrase(subscript),
                 ));
               }
@@ -490,7 +490,7 @@ export default class DiagramEquation {
                 // $FlowFixMe
                 const { content, superscript } = parameters;  // $FlowFixMe
                 out.push(eqn.sup(
-                  makePhrase(content),
+                  makePhrase(content),                        // $FlowFixMe
                   makePhrase(superscript),
                 ));
               }
@@ -499,9 +499,9 @@ export default class DiagramEquation {
               const parameters = phrase[i + 1];
               if (Array.isArray(parameters)) {
                 const [content, subscript, superscript] = parameters;
-                out.push(eqn.supsub( // $FlowFixMe
-                  makePhrase(content),  // $FlowFixMe
-                  makePhrase(subscript),  // $FlowFixMe
+                out.push(eqn.supsub(        // $FlowFixMe
+                  makePhrase(content),      // $FlowFixMe
+                  makePhrase(subscript),    // $FlowFixMe
                   makePhrase(superscript),  // $FlowFixMe
                 ));
               } else {
@@ -525,15 +525,167 @@ export default class DiagramEquation {
                   space,
                 ));
               } else {
-                // $FlowFixMe
-                const {
+                const {                         // $FlowFixMe
                   content, left, right, space,
-                } = parameters;  // $FlowFixMe
+                } = parameters;                 // $FlowFixMe
                 out.push(eqn.brac(
-                  makePhrase(content),      // $FlowFixMe
-                  left,                 // $FlowFixMe
-                  right,                // $FlowFixMe
+                  makePhrase(content),          // $FlowFixMe
+                  left,                         // $FlowFixMe
+                  right,                        // $FlowFixMe
                   space,
+                ));
+              }
+            }
+            if (element === '.topComment') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [                       // $FlowFixMe
+                  content, comment, bar, space, outsideSpace,
+                ] = parameters;
+                out.push(eqn.topComment(      // $FlowFixMe
+                  makePhrase(content),        // $FlowFixMe
+                  makePhrase(comment),        // $FlowFixMe
+                  bar,                        // $FlowFixMe
+                  space,                      // $FlowFixMe
+                  outsideSpace,
+                ));
+              } else {
+                const {                         // $FlowFixMe
+                  content, comment, bar, space, outsideSpace,
+                } = parameters;                 // $FlowFixMe
+                out.push(eqn.topComment(
+                  makePhrase(content),          // $FlowFixMe
+                  makePhrase(comment),          // $FlowFixMe
+                  bar,                          // $FlowFixMe
+                  space,                        // $FlowFixMe
+                  outsideSpace,
+                ));
+              }
+            }
+            if (element === '.bottomComment') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [                         // $FlowFixMe
+                  content, comment, bar, space, outsideSpace,
+                ] = parameters;
+                out.push(eqn.bottomComment(     // $FlowFixMe
+                  makePhrase(content),          // $FlowFixMe
+                  makePhrase(comment),          // $FlowFixMe
+                  bar,                          // $FlowFixMe
+                  space,                        // $FlowFixMe
+                  outsideSpace,
+                ));
+              } else {
+                const {                         // $FlowFixMe
+                  content, comment, bar, space, outsideSpace,
+                } = parameters;                 // $FlowFixMe
+                out.push(eqn.bottomComment(
+                  makePhrase(content),          // $FlowFixMe
+                  makePhrase(comment),          // $FlowFixMe
+                  bar,                          // $FlowFixMe
+                  space,                        // $FlowFixMe
+                  outsideSpace,
+                ));
+              }
+            }
+            if (element === '.topBar') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [                         // $FlowFixMe
+                  content, bar, space, outsideSpace,
+                ] = parameters;
+                out.push(eqn.topBar(     // $FlowFixMe
+                  makePhrase(content),          // $FlowFixMe
+                  bar,                          // $FlowFixMe
+                  space,                        // $FlowFixMe
+                  outsideSpace,
+                ));
+              } else {
+                const {                         // $FlowFixMe
+                  content, bar, space, outsideSpace,
+                } = parameters;                 // $FlowFixMe
+                out.push(eqn.topBar(
+                  makePhrase(content),          // $FlowFixMe
+                  bar,                          // $FlowFixMe
+                  space,                        // $FlowFixMe
+                  outsideSpace,
+                ));
+              }
+            }
+            if (element === '.bottomBar') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [                         // $FlowFixMe
+                  content, bar, space, outsideSpace,
+                ] = parameters;
+                out.push(eqn.bottomBar(     // $FlowFixMe
+                  makePhrase(content),          // $FlowFixMe
+                  bar,                          // $FlowFixMe
+                  space,                        // $FlowFixMe
+                  outsideSpace,
+                ));
+              } else {
+                const {                         // $FlowFixMe
+                  content, bar, space, outsideSpace,
+                } = parameters;                 // $FlowFixMe
+                out.push(eqn.bottomBar(
+                  makePhrase(content),          // $FlowFixMe
+                  bar,                          // $FlowFixMe
+                  space,                        // $FlowFixMe
+                  outsideSpace,
+                ));
+              }
+            }
+            if (element === '.ann') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [                         // $FlowFixMe
+                  content, xPosition, yPosition, xAlign,  // $FlowFixMe
+                  yAlign, annotationScale,
+                ] = parameters;
+                console.log(content, xPosition, yPosition, xAlign, yAlign, annotationScale)
+                out.push(eqn.ann(               // $FlowFixMe
+                  makePhrase(content),          // $FlowFixMe
+                  xPosition,                    // $FlowFixMe
+                  yPosition,                    // $FlowFixMe
+                  xAlign,                       // $FlowFixMe
+                  yAlign,                       // $FlowFixMe
+                  annotationScale,              // $FlowFixMe
+                ));
+              } else {
+                const {                         // $FlowFixMe
+                  content, xPosition, yPosition, xAlign,  // $FlowFixMe
+                  yAlign, annotationScale,
+                } = parameters;                 // $FlowFixMe
+                out.push(eqn.ann(               // $FlowFixMe
+                  makePhrase(content),          // $FlowFixMe
+                  xPosition,                    // $FlowFixMe
+                  yPosition,                    // $FlowFixMe
+                  xAlign,                       // $FlowFixMe
+                  yAlign,                       // $FlowFixMe
+                  annotationScale,              // $FlowFixMe
+                ));
+              }
+            }
+            if (element === '.annotation') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [                         // $FlowFixMe
+                  content, annotationArray, annotationInSize,
+                ] = parameters;
+                out.push(eqn.annotation(        // $FlowFixMe
+                  makePhrase(content),          // $FlowFixMe
+                  makePhrase(annotationArray),  // $FlowFixMe
+                  annotationInSize,             // $FlowFixMe
+                ));
+              } else {
+                const {                         // $FlowFixMe
+                  content, annotationArray, annotationInSize,
+                } = parameters;                 // $FlowFixMe
+                out.push(eqn.annotation(        // $FlowFixMe
+                  makePhrase(content),          // $FlowFixMe
+                  makePhrase(annotationArray),  // $FlowFixMe
+                  annotationInSize,             // $FlowFixMe
                 ));
               }
             }

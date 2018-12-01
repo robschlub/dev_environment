@@ -709,6 +709,7 @@ class Annotation extends Elements {
     });
 
     if (this.annotationInSize) {
+      console.log('got here')
       const bottomLeft = new Point(minX, minY);
       const topRight = new Point(maxX, maxY);
       this.width = topRight.x - bottomLeft.x;
@@ -2858,10 +2859,10 @@ export class Equation {
 
   ann(
     content: TypeEquationInput,
-    xPosition: 'left' | 'right' | 'center' = 'right',
-    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' = 'top',
-    xAlign: 'left' | 'right' | 'center' = 'left',
-    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' = 'bottom',
+    xPosition: 'left' | 'right' | 'center' | number = 'right',
+    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number  = 'top',
+    xAlign: 'left' | 'right' | 'center' | number  = 'left',
+    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number  = 'bottom',
     annotationScale: number = 0.5,
   ) {
     return new AnnotationInformation(

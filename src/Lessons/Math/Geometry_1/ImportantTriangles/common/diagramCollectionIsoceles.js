@@ -93,6 +93,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         v__: { diagramObj: 'vinculum' },
         lb: { diagramObj: 'bracket', side: 'left' },
         rb: { diagramObj: 'bracket', side: 'right' },
+        tb: { diagramObj: 'brace', side: 'top' },
+        bb: { diagramObj: 'squareBracket', side: 'bottom' },
+        bar: { diagramObj: 'bar', side: 'top' },
       },
       addToCollection: this,
       name: 'test',
@@ -123,6 +126,18 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         '8': ['a', '.sup', ['b', '_2']],
         '9': ['a', '.supsub', ['b', '_2', 'c']],
         '10': ['a', '.brac', ['b', 'lb', 'rb']],
+        '11': ['a', '.topComment', [['b', 'plus', 'c'], ['_2', 'd'], 'tb']],
+        '12': ['a', '.bottomComment', [['b', 'plus', 'c'], ['_2', 'd'], 'bb']],
+        '13': ['a', '.topBar', [['b', 'plus', 'c'], 'bar']],
+        '14': ['a', '.bottomBar', [['b', 'plus', 'c'], 'bar']],
+        '15': ['a', '.annotation', [
+          ['b', 'plus', 'c'],
+          [
+            '.ann', ['d', 'left', 'bottom', 'right', 'top'],
+            '.ann', ['e', 'right', 'top', 'left', 'bottom'],
+          ],
+          true,
+        ]],
       },
       formSeries: ['0', '1', '2', '3', '4', '5'],
     });
