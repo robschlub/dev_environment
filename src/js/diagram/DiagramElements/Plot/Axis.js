@@ -41,7 +41,7 @@ class Axis extends DiagramElementCollection {
   }
 
   rebuild() {
-    this.order = [];
+    this.drawOrder = [];
     this.build();
   }
 

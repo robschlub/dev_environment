@@ -12,7 +12,7 @@ describe('Equation Form', () => {
   describe('Create collection', () => {
     test('One element collection', () => {
       const collection = createEquationElements({ a: 'a' }, new DrawContext2D());
-      expect(collection.order).toHaveLength(1);
+      expect(collection.drawOrder).toHaveLength(1);
       expect(collection._a).not.toBe(undefined);
       expect(collection._a).toBeInstanceOf(DiagramElementPrimative);
       expect(collection).toBeInstanceOf(DiagramElementCollection);
@@ -23,7 +23,7 @@ describe('Equation Form', () => {
         b: 'b',
         c: 'c',
       }, new DrawContext2D());
-      expect(collection.order).toHaveLength(3);
+      expect(collection.drawOrder).toHaveLength(3);
       expect(collection._a).not.toBe(undefined);
       expect(collection._b).not.toBe(undefined);
       expect(collection._c).not.toBe(undefined);
@@ -192,7 +192,7 @@ describe('Equation', () => {
     eqn.addForm('f3', ['a', 'b', 'c']);
   });
   test('Instantiation', () => {
-    expect(eqn.collection.order).toHaveLength(3);
+    expect(eqn.collection.drawOrder).toHaveLength(3);
     expect(eqn.form.f2.base.content[0].vinculum).toBe(eqn.collection._c);
   });
   describe('Duplicate', () => {

@@ -643,9 +643,9 @@ export class SinCosCircle extends AngleCircle {
     this._circle.add('quad3', this.makeQuad(3));
     this._circle.add('grid', this.makeAxesAndGrid());
 
-    this._circle.order = [
-      ...this._circle.order.slice(-5),
-      ...this._circle.order.slice(0, -5),
+    this._circle.drawOrder = [
+      ...this._circle.drawOrder.slice(-5),
+      ...this._circle.drawOrder.slice(0, -5),
     ];
     // console.log(this._circle.order)
   }

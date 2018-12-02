@@ -2157,7 +2157,7 @@ class DiagramElementPrimative extends DiagramElement {
 // ***************************************************************
 class DiagramElementCollection extends DiagramElement {
   elements: Object;
-  order: Array<string>;
+  drawOrder: Array<string>;
   touchInBoundingRect: boolean;
   eqns: Object;
   // biasTransform: Array<number>;
@@ -2168,7 +2168,7 @@ class DiagramElementCollection extends DiagramElement {
   ): void {
     super(transform, diagramLimits);
     this.elements = {};
-    this.order = [];
+    this.drawOrder = [];
     this.touchInBoundingRect = false;
     this.eqns = {};
   }
@@ -2180,10 +2180,10 @@ class DiagramElementCollection extends DiagramElement {
     );
     // collection.touchInBoundingRect = this.touchInBoundingRect;
     // collection.copyFrom(this);
-    const doNotDuplicate = this.order.map(e => `_${e}`);
-    duplicateFromTo(this, collection, ['elements', 'order', ...doNotDuplicate]);
-    for (let i = 0; i < this.order.length; i += 1) {
-      const name = this.order[i];
+    const doNotDuplicate = this.drawOrder.map(e => `_${e}`);
+    duplicateFromTo(this, collection, ['elements', 'drawOrder', ...doNotDuplicate]);
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const name = this.drawOrder[i];
       collection.add(name, this.elements[name]._dup());
     }
 
@@ -2202,8 +2202,8 @@ class DiagramElementCollection extends DiagramElement {
         || this.state.isPulsing) {
       return true;
     }
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       if (element instanceof DiagramElementCollection) {
         if (element.isMoving()) {
           return true;
@@ -2225,13 +2225,13 @@ class DiagramElementCollection extends DiagramElement {
     // $FlowFixMe
     this[`_${name}`] = this.elements[name];
     if (index !== -1) {
-      this.order = [
-        ...this.order.slice(0, index),
+      this.drawOrder = [
+        ...this.drawOrder.slice(0, index),
         name,
-        ...this.order.slice(index),
+        ...this.drawOrder.slice(index),
       ];
     } else {
-      this.order.push(name);
+      this.drawOrder.push(name);
     }
   }
 
@@ -2259,8 +2259,8 @@ class DiagramElementCollection extends DiagramElement {
       // this.lastDrawPulseTransform = pulseTransforms[0]._dup();
 
       for (let k = 0; k < pulseTransforms.length; k += 1) {
-        for (let i = 0, j = this.order.length; i < j; i += 1) {
-          this.elements[this.order[i]].draw(pulseTransforms[k], now);
+        for (let i = 0, j = this.drawOrder.length; i < j; i += 1) {
+          this.elements[this.drawOrder[i]].draw(pulseTransforms[k], now);
         }
       }
     }
@@ -2290,8 +2290,8 @@ class DiagramElementCollection extends DiagramElement {
 
   showAll(): void {
     this.show();
-    for (let i = 0, j = this.order.length; i < j; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0, j = this.drawOrder.length; i < j; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       element.show();
       if (typeof element.hideAll === 'function') {
         element.showAll();
@@ -2301,8 +2301,8 @@ class DiagramElementCollection extends DiagramElement {
 
   hideAll(): void {
     this.hide();
-    for (let i = 0, j = this.order.length; i < j; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0, j = this.drawOrder.length; i < j; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       element.hide();
       if (typeof element.hideAll === 'function') {
         element.hideAll();
@@ -2349,8 +2349,8 @@ class DiagramElementCollection extends DiagramElement {
         return true;
       }
     }
-    for (let i = 0, j = this.order.length; i < j; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0, j = this.drawOrder.length; i < j; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       if (element.isShown === true) {
         if (element.isBeingTouched(glLocation)) {
           return true;
@@ -2361,8 +2361,8 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   resizeHtmlObject() {
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       element.resizeHtmlObject();
     }
   }
@@ -2372,8 +2372,8 @@ class DiagramElementCollection extends DiagramElement {
     const firstTransform = parentTransform.transform(this.transform);
     this.lastDrawTransform = firstTransform;
 
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       element.setFirstTransform(firstTransform);
     }
     this.setMoveBoundaryToDiagram();
@@ -2381,8 +2381,8 @@ class DiagramElementCollection extends DiagramElement {
 
   getGLBoundaries() {
     let boundaries = [];
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       if (element.isShown) {
         const elementBoundaries = element.getGLBoundaries();
         boundaries = boundaries.concat(elementBoundaries);
@@ -2393,8 +2393,8 @@ class DiagramElementCollection extends DiagramElement {
 
   getVertexSpaceBoundaries() {
     let boundaries = [];
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       if (element.isShown) {
         const elementBoundaries = element.getVertexSpaceBoundaries();
         boundaries = boundaries.concat(elementBoundaries);
@@ -2440,8 +2440,8 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   updateLimits(limits: Rect) {
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       element.updateLimits(limits);
     }
     this.diagramLimits = limits;
@@ -2467,8 +2467,8 @@ class DiagramElementCollection extends DiagramElement {
         touched.push(this);
       }
     }
-    for (let i = this.order.length - 1; i >= 0; i -= 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = this.drawOrder.length - 1; i >= 0; i -= 1) {
+      const element = this.elements[this.drawOrder[i]];
       if (element.isShown === true) {
         touched = touched.concat(element.getTouched(glLocation));
       }
@@ -2484,22 +2484,22 @@ class DiagramElementCollection extends DiagramElement {
 
   stop(cancelled: boolean = true, forceSetToEndOfPlan: boolean = false) {
     super.stop(cancelled, forceSetToEndOfPlan);
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       element.stop(cancelled, forceSetToEndOfPlan);
     }
   }
 
   setFont(fontSize: number) {
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       element.setFont(fontSize);
     }
   }
 
   setColor(color: Array<number>) {
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       element.setColor(color);
     }
     this.color = color.slice();
@@ -2507,16 +2507,16 @@ class DiagramElementCollection extends DiagramElement {
 
   getElementTransforms() {
     const out = {};
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       out[element.name] = element.transform._dup();
     }
     return out;
   }
 
   setElementTransforms(elementTransforms: Object) {
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       if (element.name in elementTransforms) {
         element.transform = elementTransforms[element.name];
       }
@@ -2524,7 +2524,7 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   reorder() {
-    this.order.sort((a, b) => {
+    this.drawOrder.sort((a, b) => {
       const elemA = this.elements[a];
       const elemB = this.elements[b];
       return elemB.z - elemA.z;
@@ -2532,8 +2532,8 @@ class DiagramElementCollection extends DiagramElement {
     // this.elements.sort((a, b) => {
     //   const elemA
     //   b.z - a.z});
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       if (element instanceof DiagramElementCollection) {
         element.reorder();
       }
@@ -2551,8 +2551,8 @@ class DiagramElementCollection extends DiagramElement {
   ) {
     let callbackMethod = callback;
     let timeToAnimate = 0;
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       if (element.name in elementTransforms) {
         if (element.isShown) {
           if (!elementTransforms[element.name].isEqualTo(element.transform)) {
@@ -2581,8 +2581,8 @@ class DiagramElementCollection extends DiagramElement {
 
   getAllPrimatives() {
     let elements = [];
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       if (element instanceof DiagramElementCollection) {
         elements = [...elements, ...element.getAllElements()];
       } else {
@@ -2594,8 +2594,8 @@ class DiagramElementCollection extends DiagramElement {
 
   getAllElements() {
     const elements = [];
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       elements.push(element);
     }
     return elements;
@@ -2605,8 +2605,8 @@ class DiagramElementCollection extends DiagramElement {
   // DiagramElementColleciton if it is touchable or movable
   getAllCurrentlyInteractiveElements() {
     let elements = [];
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
+    for (let i = 0; i < this.drawOrder.length; i += 1) {
+      const element = this.elements[this.drawOrder[i]];
       // if (element.isShown) {
       if (element instanceof DiagramElementCollection) {
         if (!element.isTouchable && !element.isMovable

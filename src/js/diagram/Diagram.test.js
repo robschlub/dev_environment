@@ -168,7 +168,7 @@ describe('Diagram', () => {
   });
   test('Diagram instantiation', () => {
     const d = diagrams.landscapeCenter;
-    expect(d.elements.order).toHaveLength(3);
+    expect(d.elements.drawOrder).toHaveLength(3);
     expect(d.limits).toEqual(new Rect(-1, -1, 2, 2));
   });
   test('Diagram API', () => {
@@ -185,7 +185,7 @@ describe('Diagram', () => {
     );
     const square = new DiagramElementPrimative(squareVertices);
     d.add('square', square);
-    expect(d.elements.order).toHaveLength(1);
+    expect(d.elements.drawOrder).toHaveLength(1);
   });
   // describe('pageToClip', () => {
   //   test.only('Landscape center at origin', () => {

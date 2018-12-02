@@ -287,9 +287,9 @@ export default function makeTriangle(
 
     ang.addLabel(labelText, labelRadius);
     triangle.add(`angle${index}`, ang);
-    triangle.order = [
-      ...triangle.order.slice(-1),
-      ...triangle.order.slice(0, -1),
+    triangle.drawOrder = [
+      ...triangle.drawOrder.slice(-1),
+      ...triangle.drawOrder.slice(0, -1),
     ];
     triangle.hasAngles = true;
     triangle.updateAngles();
