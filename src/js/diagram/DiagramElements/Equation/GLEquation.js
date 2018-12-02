@@ -1525,28 +1525,32 @@ export function createEquationElements(
     } else {
       const {
         text, isTouchable,
-        onClick, direction, mag, fontOrStyle,
+        onClick, direction, mag, fontOrStyle, z,
       } = elems[key];
       let col;
       if (elems[key].color) {
         col = elems[key].color;
       }
       const elem = makeElem(text, fontOrStyle);
-      if (col) {
+      if (col != null) {
         elem.setColor(col);
       }
-      if (isTouchable) {
+      if (isTouchable != null) {
         elem.isTouchable = isTouchable;
       }
       if (onClick) {
         elem.onClick = onClick;
       }
-      if (direction) {
+      if (direction != null) {
         elem.animate.transform.translation.style = 'curved';
         elem.animate.transform.translation.options.direction = direction;
       }
 
-      if (mag) {
+      if (z != null) {
+        elem.z = z;
+      }
+
+      if (mag != null) {
         elem.animate.transform.translation.style = 'curved';
         elem.animate.transform.translation.options.magnitude = mag;
       }

@@ -313,11 +313,6 @@ export default class DiagramEquation {
     };
     const optionsToUse = joinObjects(defaultOptions, ...options);
 
-    ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
-    // TODO deal with fixTO strings
-    ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
     // Create Equation Elements
     const defElementOptions = {
       text: '',
@@ -386,11 +381,13 @@ export default class DiagramEquation {
             .options.direction = elementOptions.direction;
           diagramElement.animate.transform.translation
             .options.magnitude = elementOptions.mag;
+          diagramElement.z = elementOptions.z;
           elementOptions = diagramElement;
         }
       }
       const elementObject = {};
       elementObject[elementName] = elementOptions;
+
       if (index === 0) {
         eqn.createElements(elementObject);
       } else {
@@ -400,6 +397,7 @@ export default class DiagramEquation {
           eqn.collection,
         );
       }
+      eqn.collection.reorder();
     });
 
     // Create Equation Forms
@@ -723,7 +721,7 @@ export default class DiagramEquation {
             formOptions.elementMods[key],
           );
         });
-        
+
         if (typeof formOptions.alignment.fixTo === 'string') {
           const elem = getDiagramElement(eqn.collection, formOptions.alignment.fixTo);
           if (elem != null) {

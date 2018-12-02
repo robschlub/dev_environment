@@ -77,6 +77,8 @@ class DiagramElement {
   isInteractive: boolean;         // Touch event is not processed by Diagram
   hasTouchableElements: boolean;
 
+  z: number;
+
   // Callbacks
   onClick: ?(?mixed) => void;
   setTransformCallback: (Transform) => void; // element.transform is updated
@@ -204,6 +206,7 @@ class DiagramElement {
       parentCount: 0,
       elementCount: 0,
     };
+    this.z = 1;
     this.noRotationFromParent = false;
     this.animate = {
       color: {
@@ -2516,6 +2519,23 @@ class DiagramElementCollection extends DiagramElement {
       const element = this.elements[this.order[i]];
       if (element.name in elementTransforms) {
         element.transform = elementTransforms[element.name];
+      }
+    }
+  }
+
+  reorder() {
+    this.order.sort((a, b) => {
+      const elemA = this.elements[a];
+      const elemB = this.elements[b];
+      return elemB.z - elemA.z;
+    });
+    // this.elements.sort((a, b) => {
+    //   const elemA
+    //   b.z - a.z});
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element instanceof DiagramElementCollection) {
+        element.reorder();
       }
     }
   }
