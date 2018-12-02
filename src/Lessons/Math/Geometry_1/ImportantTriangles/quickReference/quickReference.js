@@ -6,11 +6,11 @@ import lessonLayout from './layout';
 import PopupBoxCollection from '../../../../LessonsCommon/DiagramCollectionPopup';
 import details from '../details';
 
-import EquilateralCollection from '../common/diagramCollectionEquilateral';
+import IsocelesCollection from '../common/diagramCollectionIsoceles';
 
 
 export default class QR_TODO extends PopupBoxCollection {
-  _collection: EquilateralCollection;
+  _collection: IsocelesCollection;
 
   constructor(
     diagram: Object,
@@ -22,7 +22,7 @@ export default class QR_TODO extends PopupBoxCollection {
       layout,
       transform,
       'collection',
-      EquilateralCollection,
+      IsocelesCollection,
     );
     this.hasTouchableElements = true;
 

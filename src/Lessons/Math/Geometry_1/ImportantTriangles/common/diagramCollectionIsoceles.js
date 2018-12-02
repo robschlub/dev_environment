@@ -3,7 +3,9 @@ import LessonDiagram from './diagram';
 import {
   Transform,
 } from '../../../../../js/diagram/tools/g2';
-import { joinObjects } from '../../../../../js/tools/tools';
+import DiagramObjectAngle from '../../../../../js/diagram/DiagramObjects/Angle';
+import { DiagramObjectLine } from '../../../../../js/diagram/DiagramObjects/Line';
+// import { joinObjects } from '../../../../../js/tools/tools';
 // import {
 //   DiagramElementCollection,
 // } from '../../../../../js/diagram/Element';
@@ -12,6 +14,17 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 
 export default class IsocelesCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
+  _tri: {
+    _angle1: DiagramObjectAngle;
+    _angle2: DiagramObjectAngle;
+    _angle3: DiagramObjectAngle;
+    _side12: DiagramObjectLine;
+    _side23: DiagramObjectLine;
+    _side31: DiagramObjectLine;
+  }
+
+  _splitLine1: DiagramObjectLine;
+  _splitLine2: DiagramObjectLine;
 
   addTri() {
     const iso = this.diagram.shapes.collection(new Transform('iso')
@@ -183,7 +196,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.addLeftRightTris();
     this.addSplitLines();
     this.addEquations();
-    console.log(this)
+    // console.log(this)
     // this.setTransformCallback = () => {
     //   const r = this.transform.r();
     //   // console.log(r)
@@ -213,8 +226,12 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   }
 
   pulseEqualSides() {
-    this._tri._side23._label.pulseScaleNow(1, 2);
-    this._tri._side31._label.pulseScaleNow(1, 2);
+    if (this._tri._side23._label != null) {
+      this._tri._side23._label.pulseScaleNow(1, 2);
+    }
+    if (this._tri._side31._label != null) {
+      this._tri._side31._label.pulseScaleNow(1, 2);
+    }
     this.diagram.animateNextFrame();
   }
 
