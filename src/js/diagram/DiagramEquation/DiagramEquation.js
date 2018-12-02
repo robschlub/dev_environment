@@ -309,7 +309,7 @@ export default class DiagramEquation {
       },
       elements: {},
       forms: {},
-      formSeries: {},
+      formSeries: null,
     };
     const optionsToUse = joinObjects(defaultOptions, ...options);
 
