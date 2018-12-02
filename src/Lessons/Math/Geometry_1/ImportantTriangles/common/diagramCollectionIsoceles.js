@@ -98,8 +98,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         a: 'a',
         _2: '2',
         plus: '+',
-        b: { text: 'b', color: [1, 0, 1, 1], z: 2 },
-        c: { text: 'c1', color: [1, 0, 1, 1], z: 0 },
+        b: { text: 'b', color: [1, 0, 1, 1], drawPriority: 2 },
+        c: { text: 'c1', color: [1, 0, 1, 1], drawPriority: 0 },
         d: 'd',
         e: 'e',
         v: { diagramObj: 'vinculum' },
@@ -196,7 +196,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.addLeftRightTris();
     this.addSplitLines();
     this.addEquations();
-    // console.log(this)
+    console.log(this)
     // this.setTransformCallback = () => {
     //   const r = this.transform.r();
     //   // console.log(r)

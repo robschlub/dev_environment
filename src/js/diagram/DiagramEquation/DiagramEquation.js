@@ -258,7 +258,7 @@ export default class DiagramEquation {
         onClick?: () => void | null,
         direction?: '' | 'up' | 'left' | 'down' | 'right',
         mag?: number,
-        z?: number,      // higher numbers are above lower numbers
+        drawPriority?: number,      // higher numbers are above lower numbers
         fontOrStyle?: DiagramFont | null,
         diagramElement: string | null,
         side?: 'up' | 'left' | 'down' | 'right',
@@ -322,7 +322,7 @@ export default class DiagramEquation {
       direction: '',
       mag: 0,
       fontOrStyle: null,
-      z: 1,
+      drawPriority: 1,
       diagramElement: null,
       side: 'left',
       numLines: 1,
@@ -381,7 +381,7 @@ export default class DiagramEquation {
             .options.direction = elementOptions.direction;
           diagramElement.animate.transform.translation
             .options.magnitude = elementOptions.mag;
-          diagramElement.z = elementOptions.z;
+          diagramElement.drawPriority = elementOptions.drawPriority;
           elementOptions = diagramElement;
         }
       }

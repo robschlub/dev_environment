@@ -1525,7 +1525,7 @@ export function createEquationElements(
     } else {
       const {
         text, isTouchable,
-        onClick, direction, mag, fontOrStyle, z,
+        onClick, direction, mag, fontOrStyle, drawPriority,
       } = elems[key];
       let col;
       if (elems[key].color) {
@@ -1546,8 +1546,8 @@ export function createEquationElements(
         elem.animate.transform.translation.options.direction = direction;
       }
 
-      if (z != null) {
-        elem.drawPriority = z;
+      if (drawPriority != null) {
+        elem.drawPriority = drawPriority;
       }
 
       if (mag != null) {
