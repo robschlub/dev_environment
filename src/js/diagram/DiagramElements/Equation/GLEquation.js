@@ -1547,7 +1547,7 @@ export function createEquationElements(
       }
 
       if (z != null) {
-        elem.z = z;
+        elem.drawPriority = z;
       }
 
       if (mag != null) {
@@ -2862,9 +2862,9 @@ export class Equation {
   ann(
     content: TypeEquationInput,
     xPosition: 'left' | 'right' | 'center' | number = 'right',
-    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number  = 'top',
-    xAlign: 'left' | 'right' | 'center' | number  = 'left',
-    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number  = 'bottom',
+    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'top',
+    xAlign: 'left' | 'right' | 'center' | number = 'left',
+    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'bottom',
     annotationScale: number = 0.5,
   ) {
     return new AnnotationInformation(

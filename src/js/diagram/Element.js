@@ -77,7 +77,7 @@ class DiagramElement {
   isInteractive: boolean;         // Touch event is not processed by Diagram
   hasTouchableElements: boolean;
 
-  z: number;
+  drawPriority: number;
 
   // Callbacks
   onClick: ?(?mixed) => void;
@@ -206,7 +206,7 @@ class DiagramElement {
       parentCount: 0,
       elementCount: 0,
     };
-    this.z = 1;
+    this.drawPriority = 1;
     this.noRotationFromParent = false;
     this.animate = {
       color: {
@@ -2527,7 +2527,7 @@ class DiagramElementCollection extends DiagramElement {
     this.drawOrder.sort((a, b) => {
       const elemA = this.elements[a];
       const elemB = this.elements[b];
-      return elemB.z - elemA.z;
+      return elemB.drawPriority - elemA.drawPriority;
     });
     // this.elements.sort((a, b) => {
     //   const elemA
