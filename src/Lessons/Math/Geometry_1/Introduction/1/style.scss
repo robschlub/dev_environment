@@ -9,3 +9,6 @@ body {
   @include color_vars($colors);
 }
 
+.diagram__text {
+  z-index: 1;
+}
