@@ -2506,6 +2506,37 @@ export class Equation {
     this.nextForm(time, 0.5);
   }
 
+  animateToForm(
+    name: string,
+    time: number | null = null,
+    delay: number = 0,
+    callback: null | () => void = null,
+  ) {
+    this.collection.stopAnimatingColor(true, true);
+    this.collection.stopAnimatingColor(true, true);
+    this.collection.stop();
+    this.collection.stop();
+    const form = this.getForm(name);
+    if (form != null) {
+      form.animatePositionsTo(delay, 0.4, time, 0.4, callback);
+    }
+    this.setCurrentForm(name);
+
+    // if (this.isAnimating) {
+    //   this.collection.stop(true, true);
+    //   this.collection.stop(true, true);
+    //   this.isAnimating = false;
+    //   const currentForm = this.getCurrentForm();
+    //   if (currentForm != null) {
+    //     this.showForm(currentForm);
+    //   }
+    //   // return;
+    // }
+    // this.collection.stop();
+    // this.collection.stop();
+    // this.isAnimating = false;
+  }
+
   goToForm(
     name: ?string | number = null,
     time: number | null = null,
@@ -2527,6 +2558,8 @@ export class Equation {
     this.collection.stop();
     this.collection.stop();
     this.isAnimating = false;
+
+    // By default go to the next form in a series
     let nextIndex = 0;
     if (name == null) {
       let index = 0;
@@ -2558,6 +2591,7 @@ export class Equation {
       // eslint-disable-next-line prefer-destructuring
       formTypeToUse = possibleFormTypes[0];
     }
+
     if (formTypeToUse != null) {
       // $FlowFixMe
       form = this.formSeries[nextIndex][formTypeToUse];

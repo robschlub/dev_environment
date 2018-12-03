@@ -184,7 +184,8 @@ class Content extends LessonContent {
           // circle._equation._equals.disolveInWithDelay(1.5, 1);
           // circle._equation._pi.disolveInWithDelay(1.5, 1, done);
           circle._equation.setPosition(new Point(-0.05 - 1, -0.065));
-          circle.eqns.equation.goToForm('0', 1, 0, null, true, done);
+          // circle.eqns.equation.goToForm('0', 1, 0, null, true, done);
+          circle.eqns.equation.animateToForm('0', 1, 0, done);
           // circle.eqn.animateTo(1, 2, new Point(0, 0), done);
         };
 
