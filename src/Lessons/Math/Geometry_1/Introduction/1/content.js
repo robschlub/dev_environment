@@ -184,7 +184,8 @@ class Content extends LessonContent {
           // circle._equation._equals.disolveInWithDelay(1.5, 1);
           // circle._equation._pi.disolveInWithDelay(1.5, 1, done);
           circle._equation.setPosition(new Point(-0.05 - 1, -0.065));
-          circle.eqn.animateTo(1, 2, new Point(0, 0), done);
+          circle.eqns.equation.goToForm('0', 1, 0, null, true, done);
+          // circle.eqn.animateTo(1, 2, new Point(0, 0), done);
         };
 
         circle._circumferenceDimension.appearWithDelay(tDiameter, 1);
@@ -198,7 +199,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         circle.resetColors();
-        circle.eqn.arrange(1);
+        // circle.eqn.arrange(1);
         // circle._equation.setPosition(new Point(-1, 0));
         circle._equation.showAll();
         circle._diameterDimension.grow(1);
@@ -228,7 +229,8 @@ class Content extends LessonContent {
         _properties: actionWord('properties', 'id_properties', colors.dimensions),
       },
       setSteadyState: () => {
-        circle.eqn.calcSize(new Point(0, 0), 1);
+        // circle.eqn.calcSize(new Point(0, 0), 1);
+        // circle.setF
         circle._clock.transform.updateTranslation(-1.8, 0);
         circle._ball.transform.updateTranslation(0, 0);
         circle._earth.transform.updateTranslation(1.8, 0);

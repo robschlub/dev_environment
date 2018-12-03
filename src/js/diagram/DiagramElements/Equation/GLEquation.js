@@ -1781,8 +1781,7 @@ export class EquationForm extends Elements {
     this.collection.hideAll();
     this.collection.show();
     super.calcSize(new Point(0, 0), scale);
-    // console.log('a location', this.content[1].location)
-    // console.log('a width, descent', this.content[1].width, this.content[1].descent)
+
     let fixPoint = new Point(0, 0);
     if (fixTo instanceof DiagramElementPrimative
         || fixTo instanceof DiagramElementCollection) {
@@ -1793,17 +1792,13 @@ export class EquationForm extends Elements {
     } else {
       fixPoint = new Point(-fixTo.x, -fixTo.y);
     }
-    // console.log(fixTo === this.collection._b)
+
     let w = this.width;
     let h = this.height;
     let a = this.ascent;
     let d = this.descent;
     let p = this.location._dup();
-    // if (this.name === 'com_add') {
-    //   console.log(this.name, 'stop')
-    //   flag = false;
-    // }
-    // let { height } = this;
+
     if (fixTo instanceof DiagramElementPrimative
         || fixTo instanceof DiagramElementCollection) {
       const t = fixTo.transform.t();
@@ -2126,33 +2121,33 @@ export class EquationForm extends Elements {
     return cumTime;
   }
 
-  // deprecate
-  animateTo(
-    // location: Point,
-    scale: number = 1,
-    time: number = 1,
-    fixElement: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
-    callback: ?(?mixed) => void = null,
-    xAlign: 'left' | 'center' | 'right' = 'left',
-    yAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'baseline',
-  ) {
-    const allElements = this.collection.getAllElements();
-    this.collection.stop();
-    const elementsShown = allElements.filter(e => e.isShown);
-    const elementsShownTarget = this.getAllElements();
-    const elementsToHide =
-      elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
-    const elementsToShow =
-      elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
+  // // deprecate
+  // animateTo(
+  //   // location: Point,
+  //   scale: number = 1,
+  //   time: number = 1,
+  //   fixElement: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
+  //   callback: ?(?mixed) => void = null,
+  //   xAlign: 'left' | 'center' | 'right' = 'left',
+  //   yAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'baseline',
+  // ) {
+  //   const allElements = this.collection.getAllElements();
+  //   this.collection.stop();
+  //   const elementsShown = allElements.filter(e => e.isShown);
+  //   const elementsShownTarget = this.getAllElements();
+  //   const elementsToHide =
+  //     elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
+  //   const elementsToShow =
+  //     elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
 
-    const currentTransforms = this.collection.getElementTransforms();
-    this.arrange(scale, xAlign, yAlign, fixElement);
-    const animateToTransforms = this.collection.getElementTransforms();
-    this.collection.setElementTransforms(currentTransforms);
-    this.dissolveElements(elementsToHide, 'out', 0.001, 0.01, null);
-    this.collection.animateToTransforms(animateToTransforms, time, 0);
-    this.dissolveElements(elementsToShow, 'in', time, 0.5, callback);
-  }
+  //   const currentTransforms = this.collection.getElementTransforms();
+  //   this.arrange(scale, xAlign, yAlign, fixElement);
+  //   const animateToTransforms = this.collection.getElementTransforms();
+  //   this.collection.setElementTransforms(currentTransforms);
+  //   this.dissolveElements(elementsToHide, 'out', 0.001, 0.01, null);
+  //   this.collection.animateToTransforms(animateToTransforms, time, 0);
+  //   this.dissolveElements(elementsToShow, 'in', time, 0.5, callback);
+  // }
 
   // // deprecate
   // sfrac(
@@ -2653,8 +2648,9 @@ export class Equation {
     name: ?string | number = null,
     time: number | null = null,
     delay: number = 0,
-    fromWhere: 'fromPrev' | 'fromNext' | 'fromAny' = 'fromAny',
+    fromWhere: 'fromPrev' | 'fromNext' | 'fromAny' | null = 'fromAny',
     animate: boolean = true,
+    callback: null | () => void = null,
   ) {
     if (this.isAnimating) {
       this.collection.stop(true, true);
@@ -2705,10 +2701,16 @@ export class Equation {
       form = this.formSeries[nextIndex][formTypeToUse];
       if (time === 0) {
         this.showForm(form);
+        if (callback != null) {
+          callback();
+        }
       } else {
         this.isAnimating = true;
         const end = () => {
           this.isAnimating = false;
+          if (callback != null) {
+            callback();
+          }
         };
         if (animate) {
           let timeToUse = null;

@@ -289,11 +289,32 @@ class CircleCollection extends DiagramElementCollection {
   _diameterDimension: DiameterDimensionType;
   _shade: DiameterDimensionType;
   diagram: Diagram;
-  eqn: EquationForm;
+  // eqn: EquationForm;
   _equation: EquationType;
   _earthCalculation: EarthCalculationType;
   propertyLocations: Array<number>;
   propertyLocationIndex: number;
+
+  addEqn() {
+    this.diagram.equation.makeEqnFromOptions({
+      name: 'equation',
+      addToCollection: this,
+      elements: {
+        'c': 'c',
+        d: 'd',
+        pi: 'π',
+        equals: ' = ',
+      },
+      forms: {
+        '0': {
+          content: ['c', 'equals', 'pi', 'd'],
+          alignment: { scale: 1 },
+          animationTime: 1,
+        },
+      },
+      formSeries: ['0'],
+    });
+  }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
@@ -309,10 +330,12 @@ class CircleCollection extends DiagramElementCollection {
     this.add('shade', makeShade(shapes));
     this.add('diameterDimension', makeDiameterDimension(shapes));
     this.add('circumferenceDimension', makeCircumferenceDimension(shapes));
-    this.add('equation', makeEquation(diagram));
+    // this.add('equation', makeEquation(diagram));
+    this.addEqn();
     this.add('earthCalculation', makeEarthCalculation(shapes));
-    this.eqn = diagram.equation.make(this._equation);
-    this.eqn.createEq(['c', 'equals', 'pi', 'd']);
+    // this.eqn = diagram.equation.make(this._equation);
+    // this.eqn.addForm('0')
+    // this.eqn.createEq(['c', 'equals', 'pi', 'd']);
 
     this.propertyLocations = [-1.8, 0, 1.8];
     this.propertyLocationIndex = 0;
