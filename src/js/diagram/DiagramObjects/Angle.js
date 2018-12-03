@@ -238,7 +238,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       p2: null,       // rotation will be overridden
       p3: null,
     };
-    const optionsToUse = joinObjects(defaultOptions, options);
+    const optionsToUse = joinObjects({}, defaultOptions, options);
 
     super(new Transform('Line')
       .scale(1, 1)
@@ -292,10 +292,10 @@ class DiagramObjectAngle extends DiagramElementCollection {
 
     // Arrows
     if (optionsToUse.arrow1 || optionsToUse.arrows) {
-      this.addArrow(1, joinObjects(optionsToUse.arrow1, optionsToUse.arrows));
+      this.addArrow(1, joinObjects({}, optionsToUse.arrow1, optionsToUse.arrows));
     }
     if (optionsToUse.arrow2 || optionsToUse.arrows) {
-      this.addArrow(2, joinObjects(optionsToUse.arrow2, optionsToUse.arrows));
+      this.addArrow(2, joinObjects({}, optionsToUse.arrow2, optionsToUse.arrows));
     }
 
     // Label
@@ -318,12 +318,12 @@ class DiagramObjectAngle extends DiagramElementCollection {
       color: this.color,
     };
     if (optionsToUse.side1) {
-      const sideOptions = joinObjects(defaultSideOptions, optionsToUse.side1);
+      const sideOptions = joinObjects({}, defaultSideOptions, optionsToUse.side1);
       this.addSide(1, sideOptions.length, sideOptions.width, sideOptions.color);
     }
 
     if (optionsToUse.side2) {
-      const sideOptions = joinObjects(defaultSideOptions, optionsToUse.side2);
+      const sideOptions = joinObjects({}, defaultSideOptions, optionsToUse.side2);
       this.addSide(2, sideOptions.length, sideOptions.width, sideOptions.color);
     }
 
@@ -333,7 +333,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       if (typeof optionsToUse.sides === 'object') {
         ({ sides } = optionsToUse);
       }
-      const sideOptions = joinObjects(defaultSideOptions, sides);
+      const sideOptions = joinObjects({}, defaultSideOptions, sides);
       this.addSide(1, sideOptions.length, sideOptions.width, sideOptions.color);
       this.addSide(2, sideOptions.length, sideOptions.width, sideOptions.color);
     }
@@ -408,7 +408,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       defaultLabelOptions.radius = this.curve.radius;
     }
     // console.log(options)
-    const optionsToUse = joinObjects(defaultLabelOptions, options);
+    const optionsToUse = joinObjects({}, defaultLabelOptions, options);
     this.label = new AngleLabel(
       this.equation,
       optionsToUse.text,
@@ -532,7 +532,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
     if (options != null) {
       optionsToUse = options;
     }
-    const arrowOptions = joinObjects(defaultArrowOptions, optionsToUse);
+    const arrowOptions = joinObjects({}, defaultArrowOptions, optionsToUse);
     const { width, height } = arrowOptions;
 
     let r = Math.PI / 2;

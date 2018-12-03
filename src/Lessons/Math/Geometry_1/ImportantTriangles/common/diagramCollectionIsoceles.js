@@ -114,6 +114,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
           color: this.layout.colors.angles,
           elementOptions: {
             isTouchable: true,
+            animate: { transform: { translation: { options: { magnitude: 0.23 } } } },
           },
         },
       },

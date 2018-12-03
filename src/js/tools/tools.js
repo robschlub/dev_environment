@@ -262,7 +262,6 @@ function joinObjects(...objects: Array<Object>): Object {
   const assignObjectFromTo = (fromObject: Object, toObject: Object) => {
     Object.keys(fromObject).forEach((key) => {
       const value = fromObject[key];
-      // console.log(fromObject, toObject, key, value, typeof value)
       if (typeof value === 'number'
         || typeof value === 'boolean'
         || typeof value === 'string'
@@ -271,14 +270,9 @@ function joinObjects(...objects: Array<Object>): Object {
         || typeof value._dup === 'function'
         || Array.isArray(value)
       ) {
-        // console.log('got here')
         // eslint-disable-next-line no-param-reassign
         toObject[key] = value;
-      // } else if (toObject[key] == null) {
-        // eslint-disable-next-line no-param-reassign
-        // toObject[key] = value;
       } else {
-        // console.log('and somehow here')
         const toValue = toObject[key];
         if (typeof toValue === 'number'
           || typeof toValue === 'boolean'
@@ -292,26 +286,12 @@ function joinObjects(...objects: Array<Object>): Object {
         }
         assignObjectFromTo(value, toObject[key]);
       }
-      // if (typeof value === 'object'
-      //   && !Array.isArray(value)
-      //   && value != null
-      //   && value._dup == null) {
-      //   if (toObject[key] == null) {
-      //     // eslint-disable-next-line no-param-reassign
-      //     toObject[key] = value;
-      //   } else {
-      //     assignObjectFromTo(value, toObject[key]);
-      //   }
-      // } else {
-      //   // eslint-disable-next-line no-param-reassign
-      //   toObject[key] = value;
-      // }
     });
   };
 
   const num = objects.length;
-  const out = {};
-  for (let i = 0; i < num; i += 1) {
+  const out = objects[0];
+  for (let i = 1; i < num; i += 1) {
     const o = objects[i];
     if (o != null) {
       assignObjectFromTo(o, out);

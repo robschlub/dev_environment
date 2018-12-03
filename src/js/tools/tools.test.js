@@ -260,6 +260,7 @@ describe('Join Objects', () => {
   });
   test('Overwrite with levels', () => {
     const result = tools.joinObjects(
+      {},
       {
         a: 3, b: 4, c: 5, d: { d1: 1, d2: 2, d3: 3 },
       },
@@ -281,6 +282,7 @@ describe('Join Objects', () => {
   });
   test('Three Layers object over number', () => {
     const result = tools.joinObjects(
+      {},
       {
         a: 1,
         b: {
@@ -313,7 +315,7 @@ describe('Join Objects', () => {
   test('Do not modify existing objects', () => {
     const o1 = { a: 1, b: { x: 1, z: 1 } };
     const o2 = { a: 2, b: { x: 2, y: 2 } };
-    const result = tools.joinObjects(o1, o2);
+    const result = tools.joinObjects({}, o1, o2);
     expect(result).toEqual({ a: 2, b: { x: 2, y: 2, z: 1 } });
     expect(o1).toEqual({ a: 1, b: { x: 1, z: 1 } });
     expect(o2).toEqual({ a: 2, b: { x: 2, y: 2 } });

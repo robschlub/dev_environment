@@ -312,7 +312,7 @@ export default class DiagramEquation {
       forms: {},
       formSeries: null,
     };
-    const optionsToUse = joinObjects(defaultOptions, ...options);
+    const optionsToUse = joinObjects({}, defaultOptions, ...options);
 
     // Create Equation Elements
     const defElementOptions = {
@@ -332,9 +332,9 @@ export default class DiagramEquation {
       const elementValue = optionsToUse.elements[elementName];
       let elementOptions;
       if (typeof elementValue === 'string') {
-        elementOptions = joinObjects(defElementOptions, { text: elementValue });
+        elementOptions = joinObjects({}, defElementOptions, { text: elementValue });
       } else {
-        elementOptions = joinObjects(defElementOptions, elementValue);
+        elementOptions = joinObjects({}, defElementOptions, elementValue);
       }
       if (elementOptions.diagramObj != null) {
         let diagramElement;
@@ -723,21 +723,21 @@ export default class DiagramEquation {
       const form = optionsToUse.forms[name];
       const formOptionsArray = [];
       if (Array.isArray(form)) {
-        formOptionsArray.push(joinObjects(defForm, { content: form }));
+        formOptionsArray.push(joinObjects({}, defForm, { content: form }));
       } else if (form.content == null) {
         Object.keys(form).forEach((formType) => {
           formOptionsArray.push(joinObjects(
-            defForm, form[formType], { type: formType },
+            {}, defForm, form[formType], { type: formType },
           ));
         });
       } else {
-        formOptionsArray.push(joinObjects(defForm, form));
+        formOptionsArray.push(joinObjects({}, defForm, form));
       }
       formOptionsArray.forEach((formOptions) => {
         Object.keys(formOptions.elementMods).forEach((key) => {
           // eslint-disable-next-line no-param-reassign
           formOptions.elementMods[key] = joinObjects(
-            defElementMods,
+            {}, defElementMods,
             formOptions.elementMods[key],
           );
         });
@@ -859,7 +859,7 @@ export default class DiagramEquation {
       formSeries: [],
     };
 
-    const equationOptionsToUse = joinObjects(defaultEquationOptions, ...options);
+    const equationOptionsToUse = joinObjects({}, defaultEquationOptions, ...options);
     const equation = new EquationNew(this.shapes, {
       defaultFormAlignment: equationOptionsToUse.defaultFormAlignment,
     });
@@ -887,10 +887,10 @@ export default class DiagramEquation {
       let eqnElementOptions;
       // If element is defined as string, then it is a text element
       if (typeof element === 'string') {
-        eqnElementOptions = joinObjects(defEqnElementOptions, { text: element });
+        eqnElementOptions = joinObjects({}, defEqnElementOptions, { text: element });
       // Otherwise it's an object of options
       } else {
-        eqnElementOptions = joinObjects(defEqnElementOptions, element);
+        eqnElementOptions = joinObjects({}, defEqnElementOptions, element);
       }
       // See if the eqnElementOptions object has a defined symbol. If it
       // does, then create the element.
@@ -936,7 +936,6 @@ export default class DiagramEquation {
       if (elementToAdd != null) {
         const elementObject = {};
         elementObject[elementName] = elementToAdd;
-        console.log(elementObject)
         equation.addEquationElements(elementObject);
       }
     });
@@ -1334,7 +1333,7 @@ export default class DiagramEquation {
       color: [1, 0, 0, 1],
       scale: 0.5,
     };
-    const optionsToUse = joinObjects(defaultOptions, ...options);
+    const optionsToUse = joinObjects({}, defaultOptions, ...options);
 
     const eqn = this.makeEqn();
     eqn.createElements({
@@ -1366,7 +1365,7 @@ export default class DiagramEquation {
       scale: 0.5,
       fracScale: 0.6,
     };
-    const optionsToUse = joinObjects(defaultOptions, ...options);
+    const optionsToUse = joinObjects({}, defaultOptions, ...options);
 
     const eqn = this.makeEqn();
     eqn.createElements({

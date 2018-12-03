@@ -2190,7 +2190,7 @@ export class EquationNew extends DiagramElementCollection {
         scale: 0.7,
       },
     };
-    const optionsToUse = joinObjects(defaultOptions, options);
+    const optionsToUse = joinObjects({}, defaultOptions, options);
     super(new Transform('Equation')
       .scale(1, 1)
       .rotate(0)
