@@ -1633,12 +1633,12 @@ export type TypeEquationForm = {
   getElementsToShowAndHide: () => void;
   showHide: (number, number, ?(?mixed)) => void;
   hideShow: (number, number, ?(?mixed)) => void;
-  animateTo: (
-    number, number,
-    DiagramElementPrimative | DiagramElementCollection | Point,
-    ?(?mixed) => void,
-    'left' | 'center' | 'right', 'top' | 'bottom' | 'middle' | 'baseline',
-  ) => void;
+  // animateTo: (
+  //   number, number,
+  //   DiagramElementPrimative | DiagramElementCollection | Point,
+  //   ?(?mixed) => void,
+  //   'left' | 'center' | 'right', 'top' | 'bottom' | 'middle' | 'baseline',
+  // ) => void;
   animatePositionsTo: (number, ?(?mixed) => void) => void;
   description: string | null;
   modifiers: Object;
@@ -1675,11 +1675,7 @@ export class EquationForm extends Elements {
 
   _dup(collection: DiagramElementCollection = this.collection) {
     const equationCopy = new EquationForm(collection);
-    // equationCopy.collection = collection;
-
-    // const allCollectionElements = collection.getAllElements();
     const namedElements = {};
-    // getAllPrimatives?
     collection.getAllElements().forEach((element) => {
       namedElements[element.name] = element;
     });
@@ -1712,12 +1708,6 @@ export class EquationForm extends Elements {
       this.content = elements;
     });
   }
-
-  // createNewEq(content: Array<Elements | Element | string>) {
-  //   const eqn = new EquationForm(this.collection);
-  //   eqn.createEq(content);
-  //   return eqn;
-  // }
 
   // An Equation collection is a flat collection of DiagramElements.
   //
@@ -1995,29 +1985,6 @@ export class EquationForm extends Elements {
     });
   }
 
-  // setColors() {
-  //   Object.keys(this.elementMods).forEach((elementName) => {
-  //     const mods = this.elementMods[elementName];
-  //     const {
-  //       element, color, style, direction, mag,
-  //     } = mods;
-  //     if (element != null) {
-  //       if (color != null) {
-  //         element.animateColorToWithDelay(color, cumTime, moveTimeToUse);
-  //       }
-  //       if (style != null) {
-  //         element.animate.transform.translation.style = style;
-  //       }
-  //       if (direction != null) {
-  //         element.animate.transform.translation.options.direction = direction;
-  //       }
-  //       if (mag != null) {
-  //         element.animate.transform.translation.options.magnitude = mag;
-  //       }
-  //     }
-  //   });
-  // }
-
   animatePositionsTo(
     delay: number,
     disolveOutTime: number,
@@ -2120,111 +2087,6 @@ export class EquationForm extends Elements {
     }
     return cumTime;
   }
-
-  // // deprecate
-  // animateTo(
-  //   // location: Point,
-  //   scale: number = 1,
-  //   time: number = 1,
-  //   fixElement: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
-  //   callback: ?(?mixed) => void = null,
-  //   xAlign: 'left' | 'center' | 'right' = 'left',
-  //   yAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'baseline',
-  // ) {
-  //   const allElements = this.collection.getAllElements();
-  //   this.collection.stop();
-  //   const elementsShown = allElements.filter(e => e.isShown);
-  //   const elementsShownTarget = this.getAllElements();
-  //   const elementsToHide =
-  //     elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
-  //   const elementsToShow =
-  //     elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
-
-  //   const currentTransforms = this.collection.getElementTransforms();
-  //   this.arrange(scale, xAlign, yAlign, fixElement);
-  //   const animateToTransforms = this.collection.getElementTransforms();
-  //   this.collection.setElementTransforms(currentTransforms);
-  //   this.dissolveElements(elementsToHide, 'out', 0.001, 0.01, null);
-  //   this.collection.animateToTransforms(animateToTransforms, time, 0);
-  //   this.dissolveElements(elementsToShow, 'in', time, 0.5, callback);
-  // }
-
-  // // deprecate
-  // sfrac(
-  //   numerator: TypeEquationInput,
-  //   denominator: TypeEquationInput,
-  //   vinculum: DiagramElementPrimative | DiagramElementCollection | string,
-  //   scaleModifier: number = 1,
-  // ) {
-  //   const f = this.frac(numerator, denominator, vinculum);
-  //   f.scaleModifier = scaleModifier;
-  //   return f;
-  // }
-
-  // // deprecate
-  // frac(
-  //   numerator: TypeEquationInput,
-  //   denominator: TypeEquationInput,
-  //   vinculum: string | DiagramElementPrimative | DiagramElementCollection,
-  // ) {
-  //   return new Fraction(
-  //     contentToElement(this.collection, numerator),
-  //     contentToElement(this.collection, denominator),
-  //     getDiagramElement(this.collection, vinculum),
-  //   );
-  // }
-
-  // // deprecate
-  // sub(
-  //   content: TypeEquationInput,
-  //   subscript: TypeEquationInput,
-  // ) {
-  //   return new SuperSub(
-  //     contentToElement(this.collection, content),
-  //     null,
-  //     contentToElement(this.collection, subscript),
-  //   );
-  // }
-
-  // // deprecate
-  // sup(
-  //   content: TypeEquationInput,
-  //   superscript: TypeEquationInput,
-  // ) {
-  //   return new SuperSub(
-  //     contentToElement(this.collection, content),
-  //     contentToElement(this.collection, superscript),
-  //     null,
-  //   );
-  // }
-
-  // // deprecate
-  // supsub(
-  //   content: TypeEquationInput,
-  //   superscript: TypeEquationInput,
-  //   subscript: TypeEquationInput,
-  // ) {
-  //   return new SuperSub(
-  //     contentToElement(this.collection, content),
-  //     contentToElement(this.collection, superscript),
-  //     contentToElement(this.collection, subscript),
-  //   );
-  // }
-
-  // // deprecate
-  // int(
-  //   limitMin: TypeEquationInput,
-  //   limitMax: TypeEquationInput,
-  //   content: TypeEquationInput,
-  //   integralGlyph: DiagramElementPrimative,
-  // ) {
-  //   return new Integral(
-  //     contentToElement(this.collection, limitMin),
-  //     contentToElement(this.collection, limitMax),
-  //     contentToElement(this.collection, content),
-  //     getDiagramElement(this.collection, integralGlyph),
-  //   );
-  // }
 }
 
 
