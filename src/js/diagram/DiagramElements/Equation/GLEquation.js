@@ -1899,11 +1899,6 @@ export class EquationForm extends Elements {
     if (showTime === 0) {
       show.forEach((e) => {
         e.showAll();
-        // if (e instanceof DiagramElementCollection) {
-        //   e.showAll();
-        // } else {
-        //   e.show();
-        // }
       });
     } else {
       this.dissolveElements(show, 'in', 0.01, showTime, null);
@@ -1932,11 +1927,6 @@ export class EquationForm extends Elements {
     if (showTime === 0) {
       show.forEach((e) => {
         e.showAll();
-        // if (e instanceof DiagramElementCollection) {
-        //   e.showAll();
-        // } else {
-        //   e.show();
-        // }
       });
       if (callback != null) {
         callback();
@@ -2033,13 +2023,12 @@ export class EquationForm extends Elements {
   //   });
   // }
 
+  
   animatePositionsTo(
-    // location: Point,
     delay: number,
     disolveOutTime: number,
     moveTime: number | null,
     disolveInTime: number,
-    // time: number = 1,
     callback: ?(?mixed) => void = null,
   ) {
     const allElements = this.collection.getAllElements();
