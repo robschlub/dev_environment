@@ -117,6 +117,12 @@ export default class IsocelesCollection extends CommonDiagramCollection {
             animate: { transform: { translation: { options: { magnitude: 0.23 } } } },
           },
         },
+        v: {
+          symbol: 'vinculum',
+          elementOptions: {
+            isTouchable: true,
+          },
+        },
       },
     });
     this.diagram.equation.makeEqnFromOptions({
