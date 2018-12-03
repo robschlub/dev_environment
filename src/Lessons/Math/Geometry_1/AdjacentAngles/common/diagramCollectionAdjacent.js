@@ -119,11 +119,11 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     eqn.addForm('com_add', ['a', 'plus', 'b', 'equals', eqn.frac('pi', '_2', 'v')], 'rad');
 
     eqn.addForm('exp_a', ['a', 'equals', '_360', 'minus', 'b'], 'deg');
-    eqn.addForm('exp_a', ['a', 'equals', '2', 'pi', 'minus', 'b'], 'rad');
+    eqn.addForm('exp_a', ['a', 'equals', '_2', 'pi', 'minus', 'b'], 'rad');
     eqn.addForm('exp_b', ['b', 'equals', '_360', 'minus', 'a'], 'deg');
-    eqn.addForm('exp_b', ['b', 'equals', '2', 'pi', 'minus', 'a'], 'rad');
+    eqn.addForm('exp_b', ['b', 'equals', '_2', 'pi', 'minus', 'a'], 'rad');
     eqn.addForm('exp_add', ['a', 'plus', 'b', 'equals', '_360'], 'deg');
-    eqn.addForm('exp_add', ['a', 'plus', 'b', 'equals', '2', 'pi'], 'rad');
+    eqn.addForm('exp_add', ['a', 'plus', 'b', 'equals', '_2', 'pi'], 'rad');
     return eqn;
   }
 
@@ -181,9 +181,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     };
 
     const onclickEqn = (form: TypeEquationForm = 'add') => {
-      const eqnForm = eqn.getForm(`${this.angleType.slice(0, 3)}_${form}`);
-      eqn.setCurrentForm(eqnForm);
-      eqnForm.animateTo(this.layout.equationScale, 1.5, eqn.collection._equals);
+      eqn.goToForm(`${this.angleType.slice(0, 3)}_${form}`, 1.5)
       if (form === 'a') {
         this._lines._angleA.pulseScaleNow(1, 1.5);
         this._lines._angleB.showForm('b');

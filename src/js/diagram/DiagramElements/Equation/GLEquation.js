@@ -2023,7 +2023,6 @@ export class EquationForm extends Elements {
   //   });
   // }
 
-  
   animatePositionsTo(
     delay: number,
     disolveOutTime: number,
