@@ -12,7 +12,7 @@ import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import DrawingObject from './DrawingObjects/DrawingObject';
 import VertexObject from './DrawingObjects/VertexObject/VertexObject';
 import { TextObject } from './DrawingObjects/TextObject/TextObject';
-import { colorArrayToRGBA, duplicateFromTo } from '../tools/tools';
+import { colorArrayToRGBA, duplicateFromTo, joinObjects } from '../tools/tools';
 // eslint-disable-next-line import/no-cycle
 import {
   AnimationPhase, ColorAnimationPhase, CustomAnimationPhase,
@@ -297,6 +297,9 @@ class DiagramElement {
     // this.presetTransforms = {};
   }
 
+  setProperties(properties: Object) {
+    joinObjects(this, properties);
+  }
   // copyFrom(element: Object) {
   //   const copyValue = (value) => {
   //     if (typeof value === 'number'

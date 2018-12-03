@@ -20,6 +20,7 @@ import RoundedSquareBracket from '../DiagramElements/Equation/RoundedSquareBrack
 
 import {
   EquationForm, createEquationElements, Equation, getDiagramElement,
+  EquationNew
 } from '../DiagramElements/Equation/GLEquation';
 import type {
   TypeHAlign, TypeVAlign,
@@ -778,6 +779,547 @@ export default class DiagramEquation {
     }
     eqn.formTypeOrder = ['rad', 'deg', 'base'];
     return eqn;
+  }
+
+  // Make an Equation Diagram Collection
+  // eslint-disable-next-line class-methods-use-this
+  addEquation(
+    parent: DiagramElementCollection, // Parent collection
+    ...options: Array<{
+      name: string,                   // Element name within parent collection
+      color?: Array<number>,          // Default color for all elements
+      position?: Point,               // Position of collection
+      firstForm?: string | null,      // First form to set
+      //
+      elements: {                     // Elements to add to collection
+        [elementName: string]: string | {
+          // All
+          color?: Array<number>,      // Color of element
+          elementOptions?: null,      // Additional options for final element
+          // Either
+          text?: string,               // Text Element
+          textOptions?: {
+            fontOrStyle?: DiagramFont | null | 'italic' | 'normal',
+          };
+          // Or
+          symbol?: string,            // Symbol Element
+          symbolOptions?: {
+            side?: 'up' | 'left' | 'down' | 'right',
+            numLines?: number,
+          },
+        };
+      };
+      //
+      defaultFormAlignment?: {               // Default form alignment
+        fixTo?: Point | string,
+        scale?: number,
+        alignH?: TypeHAlign | null,
+        alignV?: TypeVAlign | null,
+      },
+      //
+      forms?: {                       // Forms to add to Equation
+        [formName: string]: TypeEquationArray | {
+          content: TypeEquationArray,
+          elementMods?: {
+            [elementName: string]: {
+              style?: 'linear' | 'curved',
+              color?: Array<number>,
+              direction?: '' | 'up' | 'left' | 'down' | 'right',
+              mag?: number,
+            }
+          },
+          type?: string,
+          alignment?: {
+            fixTo?: Point | string,
+            scale?: number,
+            alignH?: TypeHAlign | null,
+            alignV?: TypeVAlign | null,
+          },
+        },
+      },
+      //
+      formSeries?: {
+        [seriesName: string]: Array<string>,
+      },
+    }>
+  ) {
+    const defaultEquationOptions = {
+      color: [0.5, 0.5, 0.5, 1],
+      position: new Point(0, 0),
+      elements: {},
+      //
+      defaultFormAlignment: {
+        fixTo: new Point(0, 0),
+        scale: 0.7,
+        alignH: 'left',     // applies to fixTo if fixTo is a DiagramElement
+        alignV: 'baseline', // applies to fixTo if fixTo is a DiagramElement
+      },
+      forms: {},
+      firstForm: null,
+      formSeries: [],
+    };
+
+    const equationOptionsToUse = joinObjects(defaultEquationOptions, ...options);
+    const equation = new EquationNew(this.shapes, {
+      defaultFormAlignment: equationOptionsToUse.defaultFormAlignment,
+    });
+    parent.add(equationOptionsToUse.name, equation);
+
+    // Create Equation Elements
+    const defEqnElementOptions = {
+      color: equationOptionsToUse.color,
+      elementOptions: {},
+      //
+      text: '',
+      textOptions: {
+        fontOrStyle: null,
+      },
+      symbol: null,
+      symbolOptions: {
+        side: 'left',
+        numLines: 1,
+      },
+    };
+    const { elements } = equationOptionsToUse;
+    Object.keys(elements).forEach((elementName) => {
+      const element = elements[elementName];
+      let elementToAdd;
+      let eqnElementOptions;
+      // If element is defined as string, then it is a text element
+      if (typeof element === 'string') {
+        eqnElementOptions = joinObjects(defEqnElementOptions, { text: element });
+      // Otherwise it's an object of options
+      } else {
+        eqnElementOptions = joinObjects(defEqnElementOptions, element);
+      }
+      // See if the eqnElementOptions object has a defined symbol. If it
+      // does, then create the element.
+      const { symbol } = eqnElementOptions;
+      if (symbol != null) {
+        const { color, numLines, side } = eqnElementOptions.symbolOptions;
+        let diagramElement;
+        if (symbol === 'vinculum') {
+          diagramElement = this.vinculum(color);
+        }
+        if (symbol === 'bracket') {
+          diagramElement = this.bracket(side, numLines, color);
+        }
+        if (symbol === 'brace') {
+          diagramElement = this.brace(side, numLines, color);
+        }
+        if (symbol === 'bar') {
+          diagramElement = this.bar(side, numLines, color);
+        }
+        if (symbol === 'squareBracket') {
+          diagramElement = this.squareBracket(side, numLines, color);
+        }
+        if (symbol === 'roundedSquareBracket') {
+          diagramElement = this.roundedSquareBracket(side, numLines, color);
+        }
+        if (symbol === 'strike') {
+          diagramElement = this.strike(color);
+        }
+        if (symbol === 'xStrike') {
+          diagramElement = this.xStrike(color);
+        }
+        if (symbol === 'integral') {
+          diagramElement = this.integral(color);
+        }
+        if (diagramElement != null) {
+          diagramElement.setProperties(eqnElementOptions.elementOptions);
+          elementToAdd = diagramElement;
+        }
+      } else {
+        elementToAdd = eqnElementOptions;
+      }
+
+      if (elementToAdd != null) {
+        const elementObject = {};
+        elementObject[elementName] = elementToAdd;
+        console.log(elementObject)
+        equation.addEquationElements(elementObject);
+      }
+    });
+    equation.reorder();
+
+    // // Create Equation Forms
+    // const defElementMods = {
+    //   style: 'linear',
+    //   color: defElementOptions.color,
+    //   direction: defElementOptions.direction,
+    //   mag: defElementOptions.mag,
+    // };
+    // const defForm = {
+    //   alignment: defaultOptions.formAlignment,
+    //   type: 'base',
+    //   elementMods: {},
+    //   animationTime: null,
+    //   addToSeries: false,
+    // };
+    // const makePhrase = (phrase: TypeEquationArray) => {
+    //   const out = [];
+    //   if (typeof phrase === 'string') {
+    //     return [phrase];
+    //   }
+    //   for (let i = 0; i < phrase.length; i += 1) {
+    //     const element = phrase[i];
+    //     if (typeof element === 'string') {
+    //       if (element.startsWith('.') && i < phrase.length - 1) {
+    //         if (element === '.frac') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [num, den, vinculum] = parameters;
+    //             out.push(eqn.frac(  // $FlowFixMe
+    //               makePhrase(num),  // $FlowFixMe
+    //               makePhrase(den),  // $FlowFixMe
+    //               vinculum,
+    //             ));
+    //           } else {
+    //             // $FlowFixMe
+    //             const { numerator, denominator, vinculum } = parameters;
+    //             out.push(eqn.frac(
+    //               makePhrase(numerator),
+    //               makePhrase(denominator),
+    //               vinculum,
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.sfrac') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [num, den, vinculum, scale] = parameters;
+    //             out.push(eqn.sfrac(     // $FlowFixMe
+    //               makePhrase(num),      // $FlowFixMe
+    //               makePhrase(den),      // $FlowFixMe
+    //               vinculum,             // $FlowFixMe
+    //               scale,
+    //             ));
+    //           } else {
+    //             // $FlowFixMe
+    //             const { numerator, denominator } = parameters;  // $FlowFixMe
+    //             const { vinculum, scale } = parameters;
+    //             out.push(eqn.sfrac(
+    //               makePhrase(numerator),
+    //               makePhrase(denominator),
+    //               vinculum,
+    //               scale,
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.strike') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [content, strike, strikeInSize] = parameters;
+    //             out.push(eqn.strike(                   // $FlowFixMe
+    //               makePhrase(content),              // $FlowFixMe
+    //               strike,
+    //               strikeInSize,
+    //             ));
+    //           } else {
+    //             // $FlowFixMe
+    //             const { content, strike, strikeInSize } = parameters;  // $FlowFixMe
+    //             out.push(eqn.strike(
+    //               makePhrase(content),                        // $FlowFixMe
+    //               strike,
+    //               strikeInSize,
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.sub') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [content, subscript] = parameters;
+    //             out.push(eqn.sub(                   // $FlowFixMe
+    //               makePhrase(content),              // $FlowFixMe
+    //               makePhrase(subscript),            // $FlowFixMe
+    //             ));
+    //           } else {
+    //             // $FlowFixMe
+    //             const { content, subscript } = parameters;  // $FlowFixMe
+    //             out.push(eqn.sub(
+    //               makePhrase(content),                        // $FlowFixMe
+    //               makePhrase(subscript),
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.sup') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [content, superscript] = parameters;
+    //             out.push(eqn.sup( // $FlowFixMe
+    //               makePhrase(content),  // $FlowFixMe
+    //               makePhrase(superscript),  // $FlowFixMe
+    //             ));
+    //           } else {
+    //             // $FlowFixMe
+    //             const { content, superscript } = parameters;  // $FlowFixMe
+    //             out.push(eqn.sup(
+    //               makePhrase(content),                        // $FlowFixMe
+    //               makePhrase(superscript),
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.supsub') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [content, subscript, superscript] = parameters;
+    //             out.push(eqn.supsub(        // $FlowFixMe
+    //               makePhrase(content),      // $FlowFixMe
+    //               makePhrase(subscript),    // $FlowFixMe
+    //               makePhrase(superscript),  // $FlowFixMe
+    //             ));
+    //           } else {
+    //             // $FlowFixMe
+    //             const { content, subscript, superscript } = parameters;  // $FlowFixMe
+    //             out.push(eqn.supsub(
+    //               makePhrase(content),  // $FlowFixMe
+    //               makePhrase(subscript),  // $FlowFixMe
+    //               makePhrase(superscript),  // $FlowFixMe
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.brac') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [content, left, right, space] = parameters;
+    //             out.push(eqn.brac(      // $FlowFixMe
+    //               makePhrase(content),  // $FlowFixMe
+    //               left,                 // $FlowFixMe
+    //               right,                // $FlowFixMe
+    //               space,
+    //             ));
+    //           } else {
+    //             const {                         // $FlowFixMe
+    //               content, left, right, space,
+    //             } = parameters;                 // $FlowFixMe
+    //             out.push(eqn.brac(
+    //               makePhrase(content),          // $FlowFixMe
+    //               left,                         // $FlowFixMe
+    //               right,                        // $FlowFixMe
+    //               space,
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.topComment') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [                       // $FlowFixMe
+    //               content, comment, bar, space, outsideSpace,
+    //             ] = parameters;
+    //             out.push(eqn.topComment(      // $FlowFixMe
+    //               makePhrase(content),        // $FlowFixMe
+    //               makePhrase(comment),        // $FlowFixMe
+    //               bar,                        // $FlowFixMe
+    //               space,                      // $FlowFixMe
+    //               outsideSpace,
+    //             ));
+    //           } else {
+    //             const {                         // $FlowFixMe
+    //               content, comment, bar, space, outsideSpace,
+    //             } = parameters;                 // $FlowFixMe
+    //             out.push(eqn.topComment(
+    //               makePhrase(content),          // $FlowFixMe
+    //               makePhrase(comment),          // $FlowFixMe
+    //               bar,                          // $FlowFixMe
+    //               space,                        // $FlowFixMe
+    //               outsideSpace,
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.bottomComment') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [                         // $FlowFixMe
+    //               content, comment, bar, space, outsideSpace,
+    //             ] = parameters;
+    //             out.push(eqn.bottomComment(     // $FlowFixMe
+    //               makePhrase(content),          // $FlowFixMe
+    //               makePhrase(comment),          // $FlowFixMe
+    //               bar,                          // $FlowFixMe
+    //               space,                        // $FlowFixMe
+    //               outsideSpace,
+    //             ));
+    //           } else {
+    //             const {                         // $FlowFixMe
+    //               content, comment, bar, space, outsideSpace,
+    //             } = parameters;                 // $FlowFixMe
+    //             out.push(eqn.bottomComment(
+    //               makePhrase(content),          // $FlowFixMe
+    //               makePhrase(comment),          // $FlowFixMe
+    //               bar,                          // $FlowFixMe
+    //               space,                        // $FlowFixMe
+    //               outsideSpace,
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.topBar') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [                         // $FlowFixMe
+    //               content, bar, space, outsideSpace,
+    //             ] = parameters;
+    //             out.push(eqn.topBar(     // $FlowFixMe
+    //               makePhrase(content),          // $FlowFixMe
+    //               bar,                          // $FlowFixMe
+    //               space,                        // $FlowFixMe
+    //               outsideSpace,
+    //             ));
+    //           } else {
+    //             const {                         // $FlowFixMe
+    //               content, bar, space, outsideSpace,
+    //             } = parameters;                 // $FlowFixMe
+    //             out.push(eqn.topBar(
+    //               makePhrase(content),          // $FlowFixMe
+    //               bar,                          // $FlowFixMe
+    //               space,                        // $FlowFixMe
+    //               outsideSpace,
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.bottomBar') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [                         // $FlowFixMe
+    //               content, bar, space, outsideSpace,
+    //             ] = parameters;
+    //             out.push(eqn.bottomBar(     // $FlowFixMe
+    //               makePhrase(content),          // $FlowFixMe
+    //               bar,                          // $FlowFixMe
+    //               space,                        // $FlowFixMe
+    //               outsideSpace,
+    //             ));
+    //           } else {
+    //             const {                         // $FlowFixMe
+    //               content, bar, space, outsideSpace,
+    //             } = parameters;                 // $FlowFixMe
+    //             out.push(eqn.bottomBar(
+    //               makePhrase(content),          // $FlowFixMe
+    //               bar,                          // $FlowFixMe
+    //               space,                        // $FlowFixMe
+    //               outsideSpace,
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.ann') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [                         // $FlowFixMe
+    //               content, xPosition, yPosition, xAlign,  // $FlowFixMe
+    //               yAlign, annotationScale,
+    //             ] = parameters;
+    //             out.push(eqn.ann(               // $FlowFixMe
+    //               makePhrase(content),          // $FlowFixMe
+    //               xPosition,                    // $FlowFixMe
+    //               yPosition,                    // $FlowFixMe
+    //               xAlign,                       // $FlowFixMe
+    //               yAlign,                       // $FlowFixMe
+    //               annotationScale,              // $FlowFixMe
+    //             ));
+    //           } else {
+    //             const {                         // $FlowFixMe
+    //               content, xPosition, yPosition, xAlign,  // $FlowFixMe
+    //               yAlign, annotationScale,
+    //             } = parameters;                 // $FlowFixMe
+    //             out.push(eqn.ann(               // $FlowFixMe
+    //               makePhrase(content),          // $FlowFixMe
+    //               xPosition,                    // $FlowFixMe
+    //               yPosition,                    // $FlowFixMe
+    //               xAlign,                       // $FlowFixMe
+    //               yAlign,                       // $FlowFixMe
+    //               annotationScale,              // $FlowFixMe
+    //             ));
+    //           }
+    //         }
+    //         if (element === '.annotation') {
+    //           const parameters = phrase[i + 1];
+    //           if (Array.isArray(parameters)) {
+    //             const [                         // $FlowFixMe
+    //               content, annotationArray, annotationInSize,
+    //             ] = parameters;
+    //             out.push(eqn.annotation(        // $FlowFixMe
+    //               makePhrase(content),          // $FlowFixMe
+    //               makePhrase(annotationArray),  // $FlowFixMe
+    //               annotationInSize,             // $FlowFixMe
+    //             ));
+    //           } else {
+    //             const {                         // $FlowFixMe
+    //               content, annotationArray, annotationInSize,
+    //             } = parameters;                 // $FlowFixMe
+    //             out.push(eqn.annotation(        // $FlowFixMe
+    //               makePhrase(content),          // $FlowFixMe
+    //               makePhrase(annotationArray),  // $FlowFixMe
+    //               annotationInSize,             // $FlowFixMe
+    //             ));
+    //           }
+    //         }
+    //       } else {
+    //         out.push(element);
+    //       }
+    //     }
+    //   }
+    //   return out;
+    // };
+
+    // Object.keys(optionsToUse.forms).forEach((name) => {
+    //   const form = optionsToUse.forms[name];
+    //   const formOptionsArray = [];
+    //   if (Array.isArray(form)) {
+    //     formOptionsArray.push(joinObjects(defForm, { content: form }));
+    //   } else if (form.content == null) {
+    //     Object.keys(form).forEach((formType) => {
+    //       formOptionsArray.push(joinObjects(
+    //         defForm, form[formType], { type: formType },
+    //       ));
+    //     });
+    //   } else {
+    //     formOptionsArray.push(joinObjects(defForm, form));
+    //   }
+    //   formOptionsArray.forEach((formOptions) => {
+    //     Object.keys(formOptions.elementMods).forEach((key) => {
+    //       // eslint-disable-next-line no-param-reassign
+    //       formOptions.elementMods[key] = joinObjects(
+    //         defElementMods,
+    //         formOptions.elementMods[key],
+    //       );
+    //     });
+
+    //     if (typeof formOptions.alignment.fixTo === 'string') {
+    //       const elem = getDiagramElement(eqn.collection, formOptions.alignment.fixTo);
+    //       if (elem != null) {
+    //         eqn.formAlignment.fixTo = elem;
+    //       }
+    //     } else {
+    //       eqn.formAlignment.fixTo = formOptions.alignment.fixTo;
+    //     }
+    //     eqn.formAlignment.hAlign = formOptions.alignment.hAlign;
+    //     eqn.formAlignment.vAlign = formOptions.alignment.vAlign;
+    //     eqn.formAlignment.scale = formOptions.alignment.scale;
+    //     eqn.addForm(
+    //       name,
+    //       makePhrase(formOptions.content),
+    //       {
+    //         animationTime: formOptions.animationTime,
+    //         elementMods: formOptions.elementMods,
+    //         formType: formOptions.type,
+    //         addToSeries: formOptions.addToSeries,
+    //       },
+    //     );
+    //   });
+    // });
+
+    // if (optionsToUse.formSeries != null) {
+    //   eqn.setFormSeries(optionsToUse.formSeries);
+    // }
+
+    // eqn.collection.setPosition(optionsToUse.position);
+    // eqn.setCurrentForm(optionsToUse.currentForm);
+    // const { addToCollection } = optionsToUse;
+    // if (addToCollection != null) {
+    //   addToCollection.eqns[optionsToUse.name] = eqn;
+    //   addToCollection.add(optionsToUse.name, eqn.collection);
+    // }
+    // eqn.formTypeOrder = ['rad', 'deg', 'base'];
+    // return eqn;
   }
 
   fraction(...options: Array<{

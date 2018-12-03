@@ -104,7 +104,20 @@ export default class IsocelesCollection extends CommonDiagramCollection {
 
   addEquations() {
     const strikeCol = this.layout.colors.diagram.disabled;
-
+    this.diagram.equation.addEquation(this, {
+      name: 'testEqn',
+      color: this.layout.colors.diagram.text.base,
+      elements: {
+        a: 'a',
+        b: {
+          text: 'b',
+          color: this.layout.colors.angles,
+          elementOptions: {
+            isTouchable: true,
+          },
+        },
+      },
+    });
     this.diagram.equation.makeEqnFromOptions({
       name: 'isoEqn',
       addToCollection: this,
