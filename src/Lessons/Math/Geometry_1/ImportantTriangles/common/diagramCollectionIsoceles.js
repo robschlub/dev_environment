@@ -215,6 +215,14 @@ export default class IsocelesCollection extends CommonDiagramCollection {
           'equals',
           '.frac', [['_180', 'minus', 'b'], '_2', 'v'],
         ],
+        '16': {
+          'deg': {
+            content: ['a', 'space', 'plus', 'b'],
+          },
+          'rad': {
+            content: ['b', 'space', 'plus', 'a'],
+          },
+        },
       },
       currentForm: '0',
       formSeries: ['0', '1', '2', '3', '4', '5', '6'],

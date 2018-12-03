@@ -14,6 +14,7 @@ import DrawContext2D from '../../DrawContext2D';
 import * as html from '../../../tools/htmlGenerator';
 // import { TextObject } from './DrawingObjects/TextObject/TextObject';
 import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
+import { joinObjects } from '../../../tools/tools';
 
 // Equation is a class that takes a set of drawing objects (TextObjects,
 // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
@@ -2131,6 +2132,218 @@ export type TypeEquation = {
 
   +showForm: (EquationForm | string, ?string) => {};
 };
+
+export type TypeEquationOptions = {
+  defaultFormAlignment?: {
+    fixTo?: Point,
+    hAlign?: TypeHAlign,
+    vAlign?: TypeVAlign,
+  };
+};
+
+// An Equation is a collection of elements that can be arranged into different
+// forms.
+// Equation allows setting of forms, and navigating through form series
+// Eqn manages different forms of the
+export class EquationNew extends DiagramElementCollection {
+  eqn: {
+    forms: { [formName: string]: {
+      base: EquationForm;                   // There is always a base form
+      [subFormName: string]: EquationForm;  // Sub forms may differ in units
+      name: string;                         // Name of form
+    } };
+    currentForm: string;
+    currentSubForm: string;
+    getCurrentForm: () => ?EquationForm;
+    subFormPriority: Array<string>,
+    //
+    formSeries: { [seriesName: String]: Array<EquationForm> };
+    currentFormSeries: string;
+    getCurrentFormSeries: () => ?Array<EquationForm>;
+    //
+    defaultFormAlignment: {
+      fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
+      hAlign: TypeHAlign;
+      vAlign: TypeVAlign;
+      scale: number,
+    };
+    //
+    showForm: (EquationForm | string, ?string) => {};
+    //
+  };
+
+  isTouchDevice: boolean;
+  animateNextFrame: void => void;
+  shapes: Object;
+
+  constructor(
+    shapes: Object,
+    equation: Object,
+    isTouchDevice: boolean,
+    animateNextFrame: void => void,
+    options: TypeEquationOptions = {},
+  ) {
+    const defaultOptions = {
+      defaultFormAlignment: {
+        fixTo: new Point(0, 0),
+        hAlign: 'left',
+        vAlign: 'baseline',
+      },
+    };
+    const optionsToUse = joinObjects(defaultOptions, options);
+    super(new Transform('Equation')
+      .scale(1, 1)
+      .rotate(0)
+      .translate(0, 0), shapes.limits);
+    this.shapes = shapes;
+    this.isTouchDevice = isTouchDevice;
+    this.animateNextFrame = animateNextFrame;
+
+    // Set default values
+    this.eqn = {
+      forms: {},
+      currentForm: '',
+      currentSubForm: '',
+      subFormPriority: [],
+      formSeries: {},
+      currentFormSeries: '',
+      defaultFormAlignment: optionsToUse.defaultOptions,
+    };
+  }
+
+  addElements(
+    elems: Object,
+    colorOrFont: Array<number> | DiagramFont = [],
+    descriptionElement: DiagramElementPrimative | null = null,
+    descriptionPosition: Point = new Point(0, 0),
+  ) {
+    this.collection = createEquationElements(
+      elems,
+      this.drawContext2D,
+      colorOrFont,
+      this.diagramLimits,
+      this.firstTransform,
+      this,
+    );
+    this.addDescriptionElement(descriptionElement, descriptionPosition);
+  }
+
+  addEquationElements(
+    elems: Object,
+    colorOrFont: Array<number> | DiagramFont = [],
+    firstTransform: Transform = new Transform(),
+  ) {
+    let color = [1, 1, 1, 1];
+    if (Array.isArray(colorOrFont)) {
+      color = colorOrFont.slice();
+    }
+    let font = new DiagramFont(
+      'Times New Roman',
+      'normal',
+      0.2,
+      '200',
+      'left',
+      'alphabetic',
+      color,
+    );
+    let fontItalic = new DiagramFont(
+      'Times New Roman',
+      'italic',
+      0.2,
+      '200',
+      'left',
+      'alphabetic',
+      color,
+    );
+    if (colorOrFont instanceof DiagramFont) {
+      font = colorOrFont._dup();
+      font.style = 'normal';
+      fontItalic = colorOrFont._dup();
+      fontItalic.style = 'italic';
+      if (font.color != null) {
+        color = RGBToArray(font.color);
+      }
+    }
+
+    const makeElem = (text: string, fontOrStyle: DiagramFont | string | null) => {
+      let fontToUse: DiagramFont = font;
+      if (fontOrStyle instanceof DiagramFont) {
+        fontToUse = fontOrStyle;
+      } else if (fontOrStyle === 'italic') {
+        fontToUse = fontItalic;
+      } else if (fontOrStyle === 'normal') {
+        fontToUse = font;
+      } else if (text.match(/[A-Z,a-z]/)) {
+        fontToUse = fontItalic;
+      }
+      const p = this.shapes.txt(
+        text,
+        { location: new Point(0, 0), font: fontToUse },
+      );
+      return p;
+    };
+
+    Object.keys(elems).forEach((key) => {
+      if (typeof elems[key] === 'string') {
+        if (!key.startsWith('space')) {
+          this.add(key, makeElem(elems[key], null));
+        }
+      } else if (elems[key] instanceof DiagramElementPrimative) {
+        this.add(key, elems[key]);
+      } else if (elems[key] instanceof DiagramElementCollection) {
+        this.add(key, elems[key]);
+      } else {
+        const {
+          text, isTouchable,
+          onClick, direction, mag, fontOrStyle, drawPriority,
+        } = elems[key];
+        let col;
+        if (elems[key].color) {
+          col = elems[key].color;
+        }
+        const elem = makeElem(text, fontOrStyle);
+        if (col != null) {
+          elem.setColor(col);
+        }
+        if (isTouchable != null) {
+          elem.isTouchable = isTouchable;
+        }
+        if (onClick) {
+          elem.onClick = onClick;
+        }
+        if (direction != null) {
+          elem.animate.transform.translation.style = 'curved';
+          elem.animate.transform.translation.options.direction = direction;
+        }
+
+        if (drawPriority != null) {
+          elem.drawPriority = drawPriority;
+        }
+
+        if (mag != null) {
+          elem.animate.transform.translation.style = 'curved';
+          elem.animate.transform.translation.options.magnitude = mag;
+        }
+        this.add(key, elem);
+      }
+    });
+
+    this.setFirstTransform(firstTransform);
+  }
+}
+
+// An Equation is tied to a collection of elements.
+//
+// The Equation class manages equation forms that
+// speicify how to lay out the collection of elements.
+//
+// The Equation class also has a helper that can create a colleciton
+// of DiagramElements for an equation
+//
+// EqnCollection extends DiagramElementCollection
+//    eqns: { equations that manage this collection }
+//    eqnName: direct access to equation with a particular name
+
 
 export class Equation {
   collection: DiagramElementCollection;

@@ -33,6 +33,7 @@ import {
   DiagramText, DiagramFont, TextObject,
 } from '../DrawingObjects/TextObject/TextObject';
 import HTMLObject from '../DrawingObjects/HTMLObject/HTMLObject';
+import { joinObjects } from '../../tools/tools';
 
 export type TypePolygonOptions = {
   sides?: number,
@@ -151,6 +152,46 @@ export default class DiagramPrimatives {
   //     color, transform, this.limits,
   //   );
   // }
+
+  txt(text: string, ...options: Array<{
+    location?: Point;
+    font?: DiagramFont;
+    family?: string;
+    style?: string;
+    size?: number;
+    weight?: string;
+    hAlign?: string;
+    vAlign?: string;
+    color?: Array<number>;
+  }>) {
+    const defaultOptions = {
+      location: new Point(0, 0),
+      font: null,
+      family: 'Times New Roman',
+      style: 'italic',
+      size: 0.2,
+      weight: '200',
+      hAlign: 'center',
+      vAlign: 'middle',
+      color: [1, 0, 0, 1],
+    };
+    const optionsToUse = joinObjects(defaultOptions, ...options);
+    const o = optionsToUse;
+    let fontToUse = o.font;
+    if (fontToUse === null) {
+      fontToUse = new DiagramFont(
+        o.family, o.style, o.size, o.weight, o.hAlign, o.vAlign, o.color,
+      );
+    }
+    const dT = new DiagramText(new Point(0, 0), text, fontToUse);
+    const to = new TextObject(this.draw2D, [dT]);
+    return new DiagramElementPrimative(
+      to,
+      new Transform().scale(1, 1).translate(o.location.x, o.location.y),
+      [1, 0, 0, 1],
+      this.limits,
+    );
+  }
 
   text(
     textInput: string,
