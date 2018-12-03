@@ -126,8 +126,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         v: { diagramObj: 'vinculum' },
         v_: { diagramObj: 'vinculum' },
         x: { diagramObj: 'xStrike', color: strikeCol },
-        x_: { diagramObj: 'xStrike', color: strikeCol  },
-        x__: { diagramObj: 'xStrike', color: strikeCol  },
+        x_: { diagramObj: 'xStrike', color: strikeCol },
+        x__: { diagramObj: 'xStrike', color: strikeCol },
 
         // plus: '+',
         // b: { text: 'b', color: [1, 0, 1, 1], drawPriority: 2 },
