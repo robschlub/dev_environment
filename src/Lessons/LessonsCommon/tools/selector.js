@@ -462,7 +462,7 @@ export function makeSelectorText(
   }
 
   let x = 0 - width / 2 - space * numTitles / 2;
-  selector.order.forEach((key, index) => {
+  selector.drawOrder.forEach((key, index) => {
     const element = selector.elements[key];
     if (separator !== '' && index % 2 === 1) {
       element.setPosition(x + widthRecord[index] / 2, 0);
