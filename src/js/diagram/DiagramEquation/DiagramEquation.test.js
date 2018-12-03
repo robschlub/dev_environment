@@ -85,7 +85,7 @@ describe('Diagram Equations From Object', () => {
       const directionB = 'up';
       const magA = 0;
       const magB = 1;
-      const fontOrStyleA = null;
+      // const fontOrStyleA = null;
       const fontOrStyleB = null;
       const drawPriorityA = 1;
       const drawPriorityB = 2;
@@ -123,6 +123,74 @@ describe('Diagram Equations From Object', () => {
       expect(b.animate.transform.translation.options.magnitude).toBe(magB);
       expect(a.drawPriority).toBe(drawPriorityA);
       expect(b.drawPriority).toBe(drawPriorityB);
+    });
+  });
+  describe('Forms', () => {
+    let eqnObj;
+    beforeEach(() => {
+      eqnObj = {
+        name: 'testEqn',
+        color,
+        addToCollection: collection,
+        elements: { a: 'a', b: 'b', c: 'c' },
+      };
+    });
+    test('Array definition', () => {
+      eqnObj.forms = {
+        '0': ['a', 'b', 'c'],
+        '1': ['b', 'a', 'c'],
+      };
+      const eqn = diagram.equation.makeEqnFromOptions(eqnObj);
+      const formContent = eqn.form['0'].base.content;
+      expect(formContent[0].content).toBe(collection._testEqn._a);
+      expect(formContent[1].content).toBe(collection._testEqn._b);
+      expect(formContent[2].content).toBe(collection._testEqn._c);
+
+      const formContent1 = eqn.form['1'].base.content;
+      expect(formContent1[0].content).toBe(collection._testEqn._b);
+      expect(formContent1[1].content).toBe(collection._testEqn._a);
+      expect(formContent1[2].content).toBe(collection._testEqn._c);
+    });
+    test.only('Object definition', () => {
+      const fixTo0 = new Point(0, 0);
+      const fixTo1 = 'b';
+      const scale0 = 0.7;
+      const scale1 = 0.25;
+      const vAlign0 = 'baseline';
+      const vAlign1 = 'bottom';
+      const hAlign0 = 'left';
+      const hAlign1 = 'right';
+      const animationTime0 = null;
+      const animationTime1 = 10;
+      eqnObj.forms = {
+        // '0': ['a', 'b', 'c'],
+        '1': {
+          content: ['a', 'b', 'c'],
+          alignment: {
+            fixTo: fixTo1,
+            scale: scale1,
+            vAlign: vAlign1,
+            hAlign: hAlign1,
+          },
+          animationTime: animationTime1,
+        },
+      };
+      const eqn = diagram.equation.makeEqnFromOptions(eqnObj);
+      // const form0 = eqn.form['0'].base;
+      // const formContent = eqn.form['0'].base.content;
+      // expect(formContent[0].content).toBe(collection._testEqn._a);
+      // expect(formContent[1].content).toBe(collection._testEqn._b);
+      // expect(formContent[2].content).toBe(collection._testEqn._c);
+      // expect(form0.location).toEqual(fixTo0);
+
+      const form1 = eqn.form['1'].base;
+      const formContent1 = eqn.form['1'].base.content;
+      expect(formContent1[0].content).toBe(collection._testEqn._a);
+      expect(formContent1[1].content).toBe(collection._testEqn._b);
+      expect(formContent1[2].content).toBe(collection._testEqn._c);
+      expect(round(form1.location.x, 8)).toEqual(round(-form1.width, 8));
+      // console.log(form1)
+      console.log(formContent1[0].location)
     });
   });
 });

@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform,
+  Transform, Rect, Point, 
 } from '../../../../../js/diagram/tools/g2';
 import DiagramObjectAngle from '../../../../../js/diagram/DiagramObjects/Angle';
 import { DiagramObjectLine } from '../../../../../js/diagram/DiagramObjects/Line';
@@ -25,6 +25,19 @@ export default class IsocelesCollection extends CommonDiagramCollection {
 
   _splitLine1: DiagramObjectLine;
   _splitLine2: DiagramObjectLine;
+
+  addGrid() {
+    const lay = this.layout.grid;
+    const grid = this.diagram.shapes.grid(
+      new Rect(
+        -lay.length / 2, -lay.height / 2,
+        lay.length, lay.height,
+      ),
+      lay.spacing, lay.spacing, 2, this.layout.colors.grid,
+      new Transform().translate(lay.position),
+    );
+    this.add('grid', grid);
+  }
 
   addTri() {
     const iso = this.diagram.shapes.collection(new Transform('iso')
@@ -159,10 +172,12 @@ export default class IsocelesCollection extends CommonDiagramCollection {
           },
         },
         '17': {
-          content: ['b', 'space2', 'a'],
+          content: ['b', 'space1', '.frac', ['a', ['.sfrac', ['d', ['.sfrac', ['e', 'c', 'v__', 0.5]], 'v_', 0.5]], 'v']],
           alignment: {
-            fixTo: 'a',
-            scale: 0.5,
+            fixTo: 'b',
+            scale: 2,
+            vAlign: 'top',
+            hAlign: 'right',
           },
         },
       },
@@ -192,6 +207,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   ) {
     super(diagram, layout, transform);
     this.setPosition(this.layout.iso.position);
+    this.addGrid();
     this.addTri();
     this.addLeftRightTris();
     this.addSplitLines();

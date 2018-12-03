@@ -1737,6 +1737,8 @@ export class EquationForm extends Elements {
     this.collection.hideAll();
     this.collection.show();
     super.calcSize(new Point(0, 0), scale);
+    // console.log('a location', this.content[1].location)
+    // console.log('a width, descent', this.content[1].width, this.content[1].descent)
     let fixPoint = new Point(0, 0);
     if (fixTo instanceof DiagramElementPrimative
         || fixTo instanceof DiagramElementCollection) {
@@ -1747,6 +1749,7 @@ export class EquationForm extends Elements {
     } else {
       fixPoint = fixTo._dup();
     }
+    // console.log(fixTo === this.collection._b)
     let w = this.width;
     let h = this.height;
     let a = this.ascent;
@@ -1760,15 +1763,18 @@ export class EquationForm extends Elements {
     if (fixTo instanceof DiagramElementPrimative
         || fixTo instanceof DiagramElementCollection) {
       const t = fixTo.transform.t();
-      if (t != null) {
+      const s = fixTo.transform.s();
+      if (t != null && s != null) {
         const rect = fixTo.getVertexSpaceBoundingRect();
-        w = rect.width;
-        h = rect.height;
-        a = rect.top - t.y;
-        d = t.y - rect.bottom;
+        w = rect.width * s.x;
+        h = rect.height * s.y;
+        a = rect.top * s.y - t.y;
+        d = t.y - rect.bottom * s.y;
         p = t._dup();
+        console.log('rect, d, p', rect, d, p)
       }
     }
+
     if (alignH === 'right') {
       fixPoint.x += w;
     } else if (alignH === 'center') {
@@ -1783,6 +1789,7 @@ export class EquationForm extends Elements {
     }
 
     const delta = new Point(0, 0).sub(fixPoint);
+    console.log('delta', delta)
     if (delta.x !== 0 || delta.y !== 0) {
       this.offsetLocation(delta);
       this.setPositions();

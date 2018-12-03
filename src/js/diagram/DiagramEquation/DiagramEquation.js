@@ -304,8 +304,8 @@ export default class DiagramEquation {
       formAlignment: {
         fixTo: new Point(0, 0),
         scale: 0.7,
-        alignH: 'left',
-        alignV: 'baseline',
+        alignH: 'left',     // applies to fixTo if fixTo is a DiagramElement
+        alignV: 'baseline', // applies to fixTo if fixTo is a DiagramElement
       },
       elements: {},
       forms: {},
