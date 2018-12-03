@@ -2155,82 +2155,82 @@ export class EquationForm extends Elements {
     this.dissolveElements(elementsToShow, 'in', time, 0.5, callback);
   }
 
-  // deprecate
-  sfrac(
-    numerator: TypeEquationInput,
-    denominator: TypeEquationInput,
-    vinculum: DiagramElementPrimative | DiagramElementCollection | string,
-    scaleModifier: number = 1,
-  ) {
-    const f = this.frac(numerator, denominator, vinculum);
-    f.scaleModifier = scaleModifier;
-    return f;
-  }
+  // // deprecate
+  // sfrac(
+  //   numerator: TypeEquationInput,
+  //   denominator: TypeEquationInput,
+  //   vinculum: DiagramElementPrimative | DiagramElementCollection | string,
+  //   scaleModifier: number = 1,
+  // ) {
+  //   const f = this.frac(numerator, denominator, vinculum);
+  //   f.scaleModifier = scaleModifier;
+  //   return f;
+  // }
 
-  // deprecate
-  frac(
-    numerator: TypeEquationInput,
-    denominator: TypeEquationInput,
-    vinculum: string | DiagramElementPrimative | DiagramElementCollection,
-  ) {
-    return new Fraction(
-      contentToElement(this.collection, numerator),
-      contentToElement(this.collection, denominator),
-      getDiagramElement(this.collection, vinculum),
-    );
-  }
+  // // deprecate
+  // frac(
+  //   numerator: TypeEquationInput,
+  //   denominator: TypeEquationInput,
+  //   vinculum: string | DiagramElementPrimative | DiagramElementCollection,
+  // ) {
+  //   return new Fraction(
+  //     contentToElement(this.collection, numerator),
+  //     contentToElement(this.collection, denominator),
+  //     getDiagramElement(this.collection, vinculum),
+  //   );
+  // }
 
-  // deprecate
-  sub(
-    content: TypeEquationInput,
-    subscript: TypeEquationInput,
-  ) {
-    return new SuperSub(
-      contentToElement(this.collection, content),
-      null,
-      contentToElement(this.collection, subscript),
-    );
-  }
+  // // deprecate
+  // sub(
+  //   content: TypeEquationInput,
+  //   subscript: TypeEquationInput,
+  // ) {
+  //   return new SuperSub(
+  //     contentToElement(this.collection, content),
+  //     null,
+  //     contentToElement(this.collection, subscript),
+  //   );
+  // }
 
-  // deprecate
-  sup(
-    content: TypeEquationInput,
-    superscript: TypeEquationInput,
-  ) {
-    return new SuperSub(
-      contentToElement(this.collection, content),
-      contentToElement(this.collection, superscript),
-      null,
-    );
-  }
+  // // deprecate
+  // sup(
+  //   content: TypeEquationInput,
+  //   superscript: TypeEquationInput,
+  // ) {
+  //   return new SuperSub(
+  //     contentToElement(this.collection, content),
+  //     contentToElement(this.collection, superscript),
+  //     null,
+  //   );
+  // }
 
-  // deprecate
-  supsub(
-    content: TypeEquationInput,
-    superscript: TypeEquationInput,
-    subscript: TypeEquationInput,
-  ) {
-    return new SuperSub(
-      contentToElement(this.collection, content),
-      contentToElement(this.collection, superscript),
-      contentToElement(this.collection, subscript),
-    );
-  }
+  // // deprecate
+  // supsub(
+  //   content: TypeEquationInput,
+  //   superscript: TypeEquationInput,
+  //   subscript: TypeEquationInput,
+  // ) {
+  //   return new SuperSub(
+  //     contentToElement(this.collection, content),
+  //     contentToElement(this.collection, superscript),
+  //     contentToElement(this.collection, subscript),
+  //   );
+  // }
 
-  // deprecate
-  int(
-    limitMin: TypeEquationInput,
-    limitMax: TypeEquationInput,
-    content: TypeEquationInput,
-    integralGlyph: DiagramElementPrimative,
-  ) {
-    return new Integral(
-      contentToElement(this.collection, limitMin),
-      contentToElement(this.collection, limitMax),
-      contentToElement(this.collection, content),
-      getDiagramElement(this.collection, integralGlyph),
-    );
-  }
+  // // deprecate
+  // int(
+  //   limitMin: TypeEquationInput,
+  //   limitMax: TypeEquationInput,
+  //   content: TypeEquationInput,
+  //   integralGlyph: DiagramElementPrimative,
+  // ) {
+  //   return new Integral(
+  //     contentToElement(this.collection, limitMin),
+  //     contentToElement(this.collection, limitMax),
+  //     contentToElement(this.collection, content),
+  //     getDiagramElement(this.collection, integralGlyph),
+  //   );
+  // }
 }
 
 
