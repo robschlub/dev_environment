@@ -154,13 +154,13 @@ describe('Diagram Equations From Object', () => {
     test.only('Object definition', () => {
       const fixTo0 = new Point(0, 0);
       const fixTo1 = 'b';
-      const scale0 = 0.7;
+      // const scale0 = 0.7;
       const scale1 = 0.25;
-      const vAlign0 = 'baseline';
+      // const vAlign0 = 'baseline';
       const vAlign1 = 'bottom';
-      const hAlign0 = 'left';
+      // const hAlign0 = 'left';
       const hAlign1 = 'right';
-      const animationTime0 = null;
+      // const animationTime0 = null;
       const animationTime1 = 10;
       eqnObj.forms = {
         '0': ['a', 'b', 'c'],
@@ -193,6 +193,8 @@ describe('Diagram Equations From Object', () => {
       expect(formContent1[2].content).toBe(collection._testEqn._c);
       expect(round(form1.location.x, 8)).toEqual(round(-aWidth - bWidth, 8));
       expect(round(form1.location.y, 8)).toEqual(round(bDescent, 8));
+      expect(form1.time).toEqual({ fromPrev: 10, fromNext: 10, fromAny: 10 });
+      expect(form1.name).toBe('1');
       // console.log(form1)
       // console.log(formContent1[0].location)
     });
