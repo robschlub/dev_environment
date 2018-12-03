@@ -154,7 +154,7 @@ describe('Equation Form', () => {
       });
       test('fixed to point', () => {
         eqn.createEq(['a', 'b', 'c']);
-        eqn.arrange(1, 'left', 'bottom', new Point(-1, -1));
+        eqn.arrange(1, 'left', 'bottom', new Point(1, 1));
         const c = eqn.content;
         expect(c[0].location.round(4)).toEqual(new Point(1, 1.0032));
         expect(c[1].location.round(4)).toEqual(new Point(1.04, 1.0032));

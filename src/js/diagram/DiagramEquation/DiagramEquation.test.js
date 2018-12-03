@@ -151,7 +151,7 @@ describe('Diagram Equations From Object', () => {
       expect(formContent1[1].content).toBe(collection._testEqn._a);
       expect(formContent1[2].content).toBe(collection._testEqn._c);
     });
-    test.only('Object definition', () => {
+    test('Object definition', () => {
       const fixTo0 = new Point(0, 0);
       const fixTo1 = 'b';
       // const scale0 = 0.7;
@@ -195,8 +195,6 @@ describe('Diagram Equations From Object', () => {
       expect(round(form1.location.y, 8)).toEqual(round(bDescent, 8));
       expect(form1.time).toEqual({ fromPrev: 10, fromNext: 10, fromAny: 10 });
       expect(form1.name).toBe('1');
-      // console.log(form1)
-      // console.log(formContent1[0].location)
     });
   });
 });
