@@ -464,6 +464,25 @@ export default class DiagramEquation {
                 ));
               }
             }
+            if (element === '.strike') {
+              const parameters = phrase[i + 1];
+              if (Array.isArray(parameters)) {
+                const [content, strike, strikeInSize] = parameters;
+                out.push(eqn.strike(                   // $FlowFixMe
+                  makePhrase(content),              // $FlowFixMe
+                  strike,
+                  strikeInSize,
+                ));
+              } else {
+                // $FlowFixMe
+                const { content, strike, strikeInSize } = parameters;  // $FlowFixMe
+                out.push(eqn.strike(
+                  makePhrase(content),                        // $FlowFixMe
+                  strike,
+                  strikeInSize,
+                ));
+              }
+            }
             if (element === '.sub') {
               const parameters = phrase[i + 1];
               if (Array.isArray(parameters)) {
