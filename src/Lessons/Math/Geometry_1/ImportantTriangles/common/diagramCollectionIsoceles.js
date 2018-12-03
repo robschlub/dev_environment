@@ -174,8 +174,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         '17': {
           content: ['b', 'space1', '.frac', ['a', ['.sfrac', ['d', ['.sfrac', ['e', 'c', 'v__', 0.5]], 'v_', 0.5]], 'v']],
           alignment: {
-            fixTo: 'b',
-            scale: 2,
+            fixTo: new Point(1, 1),
+            scale: 1.5,
             vAlign: 'top',
             hAlign: 'right',
           },

@@ -163,7 +163,7 @@ describe('Diagram Equations From Object', () => {
       const animationTime0 = null;
       const animationTime1 = 10;
       eqnObj.forms = {
-        // '0': ['a', 'b', 'c'],
+        '0': ['a', 'b', 'c'],
         '1': {
           content: ['a', 'b', 'c'],
           alignment: {
@@ -176,21 +176,25 @@ describe('Diagram Equations From Object', () => {
         },
       };
       const eqn = diagram.equation.makeEqnFromOptions(eqnObj);
-      // const form0 = eqn.form['0'].base;
-      // const formContent = eqn.form['0'].base.content;
-      // expect(formContent[0].content).toBe(collection._testEqn._a);
-      // expect(formContent[1].content).toBe(collection._testEqn._b);
-      // expect(formContent[2].content).toBe(collection._testEqn._c);
-      // expect(form0.location).toEqual(fixTo0);
+      const form0 = eqn.form['0'].base;
+      const formContent = eqn.form['0'].base.content;
+      expect(formContent[0].content).toBe(collection._testEqn._a);
+      expect(formContent[1].content).toBe(collection._testEqn._b);
+      expect(formContent[2].content).toBe(collection._testEqn._c);
+      expect(form0.location).toEqual(fixTo0);
 
       const form1 = eqn.form['1'].base;
+      const aWidth = form1.content[0].width;
+      const bDescent = form1.content[1].descent;
+      const bWidth = form1.content[1].width;
       const formContent1 = eqn.form['1'].base.content;
       expect(formContent1[0].content).toBe(collection._testEqn._a);
       expect(formContent1[1].content).toBe(collection._testEqn._b);
       expect(formContent1[2].content).toBe(collection._testEqn._c);
-      expect(round(form1.location.x, 8)).toEqual(round(-form1.width, 8));
+      expect(round(form1.location.x, 8)).toEqual(round(-aWidth - bWidth, 8));
+      expect(round(form1.location.y, 8)).toEqual(round(bDescent, 8));
       // console.log(form1)
-      console.log(formContent1[0].location)
+      // console.log(formContent1[0].location)
     });
   });
 });

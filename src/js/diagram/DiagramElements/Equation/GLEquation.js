@@ -1719,19 +1719,63 @@ export class EquationForm extends Elements {
   //   return eqn;
   // }
 
-  // By default, the colleciton is arranged so the first element in the
-  // equation is at (0,0) in colleciton space.
+  // An Equation collection is a flat collection of DiagramElements.
+  //
+  // The form determines how elements are positioned relative to each other.
+  //
+  // A form of an equation takes the form's elements (a subset of the
+  // collection) and applies a translation and scale transformation. This
+  // aligns all the elements of a form relative to each other to render
+  // the desired form.
+  //
+  // Arranging a form of an equation goes through each element in the form
+  // and positions and scales it in the equation's vertex space.
+  // It also saves the locaiton and scale information in the form's element
+  // property.
+  //
+  // The elements are positioned relative to 0,0 in vertex space based on the
+  // fixTo, alignH and alignV parameters.
+  //
+  // fixTo can only be a point in the equation's vertex space, or a
+  // DiagramElement in the equation.
+  //
+  // If fixTo is an element in the equation:
+  //    - the fixTo element is positioned at 0, 0, and all other elements
+  //      repositioned relative to that.
+  //    - The equation collection setPosition (or translation transform) can
+  //      then be used to position the equation in the diagram (or relative
+  //      collection space)
+  //    - if alignH is:
+  //        - 'middle': the fixTo element is centered in x around (0, 0)
+  //        - 'right': the fixTo element right most point is at x = 0
+  //        - 'left': default - the fixTo element x position at 0
+  //    - if alignV is:
+  //        - 'center': the fixTo element is centered in y around (0, 0)
+  //        - 'bottom': the fixTo element bottom most point is at y = 0
+  //        - 'top': the fixTo element top most point is at y = 0
+  //        - 'baseline': default - the fixTo element y position at 0
+  //
+  // If fixTo is a Point, the equation is positioned at that point in the
+  // equation's vertex space.
+  //  - alignH:
+  //    - 'left': The equation's left most element's left most point is at
+  //              Point.x
+  //    - 'right': The equation's right most element's right most point is at
+  //              Point.x
+  //    - 'center': The equation is centered horizontally around Point.x
+  //  - alignV:
+  //    - 'baseline': The equation's baseline is at Point.y
+  //    - 'top': The equation's top most element's top most point is at Point.y
+  //    - 'bottom': The equation's top most element's top most point is at
+  //                Point.y
+  //    - 'middle': The equation is centered vertically around Point.y
+  //
   arrange(
     scale: number = 1,
     alignH: TypeHAlign | null = 'left',
     alignV: TypeVAlign | null = 'baseline',
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
   ) {
-    // if (this.name === 'com_add') {
-    //   console.log(this.name, 'start')
-    //   flag = true;
-    // }
-    // const elementsInEqn = this.getAllElements();
     const elementsInCollection = this.collection.getAllElements();
     const elementsCurrentlyShowing = elementsInCollection.filter(e => e.isShown);
     this.collection.hideAll();
@@ -1747,7 +1791,7 @@ export class EquationForm extends Elements {
         fixPoint = t._dup();
       }
     } else {
-      fixPoint = fixTo._dup();
+      fixPoint = new Point(-fixTo.x, -fixTo.y);
     }
     // console.log(fixTo === this.collection._b)
     let w = this.width;
@@ -1771,7 +1815,6 @@ export class EquationForm extends Elements {
         a = rect.top * s.y - t.y;
         d = t.y - rect.bottom * s.y;
         p = t._dup();
-        console.log('rect, d, p', rect, d, p)
       }
     }
 
@@ -1789,7 +1832,6 @@ export class EquationForm extends Elements {
     }
 
     const delta = new Point(0, 0).sub(fixPoint);
-    console.log('delta', delta)
     if (delta.x !== 0 || delta.y !== 0) {
       this.offsetLocation(delta);
       this.setPositions();
