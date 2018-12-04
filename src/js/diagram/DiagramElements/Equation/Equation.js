@@ -503,8 +503,13 @@ export class EquationNew extends DiagramElementCollection {
     this.setFirstTransform(this.transform);
   }
 
-  addForms(forms: TypeEquationForms,) {
-
+  addForms(forms: TypeEquationForms) {
+    Object.keys(forms).forEach((name) => {
+      const form = forms[name];
+      if (Array.isArray(form)) {
+        this.addForm(name, form);
+      }
+    });
   }
 
   addForm(

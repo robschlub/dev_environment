@@ -221,6 +221,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         // ],
       },
     });
+    this._testEqn.addForms({
+      '1': ['b', 'a', 'c'],
+    });
     this.diagram.equation.makeEqnFromOptions({
       name: 'isoEqn',
       addToCollection: this,

@@ -22,6 +22,7 @@ describe('Diagram Equations From Object', () => {
   let diagram;
   let eqn;
   let addForms;
+  let forms;
   // let modColor1;
   // let modColor2;
   // let defaultColor;
@@ -41,13 +42,31 @@ describe('Diagram Equations From Object', () => {
       arraySingleForm: {
         '0': ['a', 'b', 'c'],
       },
+      arrayTwoForms: {
+        '0': ['a', 'b', 'c'],
+        '1': ['b', 'a', 'c'],
+      },
     };
+    ({ forms } = eqn.eqn);
   });
   test('Equation instantiation', () => {
     expect(eqn).not.toBe(null);
   });
   test('Array Single Form', () => {
     eqn.addForms(addForms.arraySingleForm);
-    console.log(eqn.eqn.forms);
+    expect(forms).toHaveProperty('0');
+    expect(forms['0']).toHaveProperty('base');
+    expect(forms['0'].base.content[0].content.drawingObject.text[0].text).toBe('a');
+    expect(forms['0'].base.content[1].content.drawingObject.text[0].text).toBe('b');
+    expect(forms['0'].base.content[2].content.drawingObject.text[0].text).toBe('c');
+  });
+  test('Array Two Forms', () => {
+    eqn.addForms(addForms.arrayTwoForms);
+    expect(forms).toHaveProperty('0');
+    expect(forms).toHaveProperty('1');
+    expect(forms['0']).toHaveProperty('base');
+    expect(forms['1']).toHaveProperty('base');
+    expect(forms['0'].base.content[0].content.drawingObject.text[0].text).toBe('a');
+    expect(forms['1'].base.content[0].content.drawingObject.text[0].text).toBe('b');
   });
 });
