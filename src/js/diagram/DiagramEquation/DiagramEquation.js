@@ -976,6 +976,7 @@ export default class DiagramEquation {
             if (element === '.frac') {
               const parameters = phrase[i + 1];
               out.push(equation.eqn.functions.frac(parameters));
+              i += 1;
               // if (Array.isArray(parameters)) {
               //   const [num, den, vinculum] = parameters;
               //   out.push(eqn.frac(  // $FlowFixMe
@@ -1263,6 +1264,14 @@ export default class DiagramEquation {
             // }
           } else {
             out.push(element);
+          }
+        } else if (Array.isArray(element)) {
+          out.push(element);
+        } else {
+          const methodName = Object.keys(element)[0];
+          const methodParams = Object.values(element)[0];
+          if (equation.eqn.functions[methodName]) {
+            out.push(equation.eqn.functions[methodName](methodParams));
           }
         }
       }

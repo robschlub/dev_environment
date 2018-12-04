@@ -126,8 +126,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         },
       },
       forms: {
-        '0': ['a', 'b', 'c'],
-        '1': ['b', 'b', 'c'],
+        '0': ['.frac', ['a', 'b', 'v'], 'c'],
+        '1': [{ frac: ['a', 'c', 'v'] }, 'b'],
+        '2': ['b', 'b', 'c'],
       },
     });
     this.diagram.equation.makeEqnFromOptions({
