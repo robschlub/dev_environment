@@ -2140,6 +2140,41 @@ export type TypeEquationOptions = {
   };
 };
 
+class EquationFunctions {
+  // eslint-disable-next-line no-use-before-define
+  collection: EquationNew;
+
+  // eslint-disable-next-line no-use-before-define
+  constructor(collection: EquationNew) {
+    this.collection = collection;
+  }
+
+  frac(options: {
+      numerator: TypeEquationInput,
+      denominator: TypeEquationInput,
+      vinculum: string | DiagramElementPrimative | DiagramElementCollection,
+    }
+    | [
+        TypeEquationInput,
+        TypeEquationInput,
+        string | DiagramElementPrimative | DiagramElementCollection
+      ]) {
+    let numerator;
+    let denominator;
+    let vinculum;
+    if (Array.isArray(options)) {
+      [numerator, denominator, vinculum] = options;
+    } else {
+      ({ numerator, denominator, vinculum } = options);
+    }
+    return new Fraction(
+      contentToElement(this.collection, numerator),
+      contentToElement(this.collection, denominator),
+      getDiagramElement(this.collection, vinculum),
+    );
+  }
+}
+
 // An Equation is a collection of elements that can be arranged into different
 // forms.
 // Equation allows setting of forms, and navigating through form series
@@ -2208,6 +2243,7 @@ export class EquationNew extends DiagramElementCollection {
       formSeries: {},
       currentFormSeries: '',
       defaultFormAlignment: optionsToUse.defaultOptions,
+      functions: new EquationFunctions(this),
     };
   }
 
@@ -2268,7 +2304,6 @@ export class EquationNew extends DiagramElementCollection {
     };
 
     Object.keys(elems).forEach((key) => {
-      console.log(elems, elems[key], key)
       if (typeof elems[key] === 'string') {
         if (!key.startsWith('space')) {
           this.add(key, makeElem(elems[key], null));
@@ -2294,6 +2329,97 @@ export class EquationNew extends DiagramElementCollection {
 
     this.setFirstTransform(this.transform);
   }
+
+
+  addForm(
+    name: string,
+    content: Array<Elements | Element | string>,
+    options: {
+      subForm?: string,
+      addToSeries?: string,
+      elementMods?: Object,
+      time?: number | null | { fromPrev?: number, fromNext?: number },
+      description?: string,
+      modifiers?: Object,
+    } = {},
+  ) {
+    if (!(name in this.eqn.forms)) {
+      this.eqn.forms[name] = {};
+    }
+    const defaultOptions = {
+      subForm: 'base',
+      addToSeries: '',
+      elementMods: {},
+      animationTime: null,          // use velocities instead of time
+      description: '',
+      modifiers: {},
+    };
+    let optionsToUse = defaultOptions;
+    if (options) {
+      optionsToUse = Object.assign({}, defaultOptions, options);
+    }
+    const {
+      subForm, description, modifiers,
+      animationTime, elementMods, addToSeries,
+    } = optionsToUse;
+    const time = animationTime;
+    this.eqn.forms[name].name = name;
+    const form = this.eqn.forms[name];
+    form[subForm] = new EquationForm(this);
+    // form[subForm].name = subForm;
+    form[subForm].description = description;
+    form[subForm].modifiers = modifiers;
+    form[subForm].subForm = subForm;
+    form[subForm].elementMods = {};
+    if (typeof time === 'number') {
+      form[name].time = {
+        fromPrev: time, fromNext: time, fromAny: time,
+      };
+    } else {
+      form[subForm].time = time;
+    }
+    Object.keys(elementMods).forEach((elementName) => {
+      const diagramElement = getDiagramElement(this, elementName);
+      if (diagramElement) {
+        let color;
+        let elementOptions;
+        if (Array.isArray(elementMods[elementName])) {
+          [color, elementOptions] = elementMods[elementName];
+        } else {
+          ({
+            color, elementOptions,
+          } = elementMods[elementName]);
+        }
+        form[subForm].elementMods[elementName] = {
+          element: diagramElement,
+          color,
+          elementOptions,
+        };
+      }
+    });
+    // const form = this.form[name][formType];
+    form[subForm].createEq(content);
+    form[subForm].type = formType;
+    form[subForm].arrange(
+      this.defaultFormAlignment.scale,
+      this.defaultFormAlignment.hAlign,
+      this.defaultFormAlignment.vAlign,
+      this.defaultFormAlignment.fixTo,
+    );
+    if (addToSeries) {
+      if (this.formSeries == null) {
+        this.formSeries = [];
+      }
+      this.formSeries.push(this.form[name]);
+    }
+    // make the first form added also equal to the base form as always
+    // need a base form for some functions
+    if (this.form[name].base === undefined) {
+      const baseOptions = Object.assign({}, options);
+      baseOptions.formType = 'base';
+      this.addForm(name, content, baseOptions);
+    }
+  }
 }
 
 // An Equation is tied to a collection of elements.
@@ -2307,7 +2433,6 @@ export class EquationNew extends DiagramElementCollection {
 // EqnCollection extends DiagramElementCollection
 //    eqns: { equations that manage this collection }
 //    eqnName: direct access to equation with a particular name
-
 
 export class Equation {
   collection: DiagramElementCollection;
