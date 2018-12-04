@@ -972,27 +972,12 @@ export default class DiagramEquation {
       for (let i = 0; i < phrase.length; i += 1) {
         const element = phrase[i];
         if (typeof element === 'string') {
-          if (element.startsWith('.') && i < phrase.length - 1) {
+          if (i < phrase.length - 1) {
+            const methodName = element
             if (element === '.frac') {
               const parameters = phrase[i + 1];
               out.push(equation.eqn.functions.frac(parameters));
               i += 1;
-              // if (Array.isArray(parameters)) {
-              //   const [num, den, vinculum] = parameters;
-              //   out.push(eqn.frac(  // $FlowFixMe
-              //     makePhrase(num),  // $FlowFixMe
-              //     makePhrase(den),  // $FlowFixMe
-              //     vinculum,
-              //   ));
-              // } else {
-              //   // $FlowFixMe
-              //   const { numerator, denominator, vinculum } = parameters;
-              //   out.push(eqn.frac(
-              //     makePhrase(numerator),
-              //     makePhrase(denominator),
-              //     vinculum,
-              //   ));
-              // }
             }
             // if (element === '.sfrac') {
             //   const parameters = phrase[i + 1];

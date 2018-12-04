@@ -195,21 +195,23 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         ],
         '1b': [
           frac('a', 'b', 'v'),
+          frac({ num: 'a', den: 'b', sym: 'v'}),
           {
             frac: {
-              num: ['a'],
-              den: 'b',
-              sym: 'v',
+              numerator: ['a'],
+              denominator: 'b',
+              symbol: 'v',
             },
           },
           { frac: ['a', 'b', 'v'] },
           {
-            frac: [
-              'a',
-              'b',
-              'v',
-            ],
+            strike: {
+              content: ['a'],
+              widthSymbol: 'x',
+            },
           },
+          { strike: ['a', 'x'] },
+
           annotate(['_2', 'a', 'plus', 'b_'], {
             withAnnotation: ['minus_', 'b__'],
             relativeToContent: ['center', -0.4],
