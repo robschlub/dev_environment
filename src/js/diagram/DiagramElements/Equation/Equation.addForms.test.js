@@ -84,15 +84,15 @@ describe('Diagram Equations From Object', () => {
     expect(forms).toHaveProperty('1');
     expect(forms['0']).toHaveProperty('base');
     expect(forms['1']).toHaveProperty('base');
-    expect(forms['0'].base.content[0].content.drawingObject.text[0].text).toBe('a');
-    expect(forms['1'].base.content[0].content.drawingObject.text[0].text).toBe('b');
+    expect(forms['0'].base.content[0].content).toBe(eqn._a);
+    expect(forms['1'].base.content[0].content).toBe(eqn._b);
   });
   test('Nested Arrays', () => {
     eqn.addForms(addForms.nestedArrays);
     const { content } = forms['0'].base;
-    expect(content[0].content.drawingObject.text[0].text).toBe('a');
-    expect(content[1].content.drawingObject.text[0].text).toBe('b');
-    expect(content[2].content.drawingObject.text[0].text).toBe('c');
+    expect(forms['0'].base.content[0].content).toBe(eqn._a);
+    expect(forms['0'].base.content[1].content).toBe(eqn._b);
+    expect(forms['0'].base.content[2].content).toBe(eqn._c);
   });
   test('frac', () => {
     eqn.addForms(addForms.frac);
