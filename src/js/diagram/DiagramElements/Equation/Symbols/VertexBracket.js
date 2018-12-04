@@ -1,9 +1,9 @@
 // @flow
 import {
   Point, Transform, polarToRect,
-} from '../../tools/g2';
-import WebGLInstance from '../../webgl/webgl';
-import VertexObject from '../../DrawingObjects/VertexObject/VertexObject';
+} from '../../../tools/g2';
+import WebGLInstance from '../../../webgl/webgl';
+import VertexObject from '../../../DrawingObjects/VertexObject/VertexObject';
 
 class VertexBracket extends VertexObject {
   mainHeight: number;

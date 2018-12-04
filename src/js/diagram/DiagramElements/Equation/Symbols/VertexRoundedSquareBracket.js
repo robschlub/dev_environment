@@ -1,10 +1,10 @@
 // @flow
 import {
   Point, polarToRect, Transform,
-} from '../../tools/g2';
+} from '../../../tools/g2';
 import VertexBracket from './VertexBracket';
 
-class VertexBrace extends VertexBracket {
+class VertexRoundedSquareBracket extends VertexBracket {
   getPoints() {
     let w = 1 / 20;
 
@@ -33,32 +33,21 @@ class VertexBrace extends VertexBracket {
     const height = h;
 
     const top = new Transform()
-      .translate(width - w, this.mainHeight - height);
+      .translate(0, this.mainHeight - height);
     const bottom = new Transform()
       .scale(1, -1)
-      .translate(width - w, height);
-    const middleBottom = new Transform()
-      .scale(-1, 1)
-      .translate(width, this.mainHeight / 2 - height * 1);
-    const middleTop = new Transform()
-      .scale(-1, -1)
-      .translate(width, this.mainHeight / 2 + height * 1);
-
+      .translate(0, height);
 
     const leftPoints: Array<Point> = [
       ...cornerR1Points.map(p => p.transformBy(bottom.m())).reverse(),
-      ...cornerR2Points.map(p => p.transformBy(middleBottom.m())),
-      ...cornerR2Points.map(p => p.transformBy(middleTop.m())).reverse(),
       ...cornerR1Points.map(p => p.transformBy(top.m())),
     ];
     const rightPoints: Array<Point> = [
       ...cornerR2Points.map(p => p.transformBy(bottom.m())).reverse(),
-      ...cornerR1Points.map(p => p.transformBy(middleBottom.m())),
-      ...cornerR1Points.map(p => p.transformBy(middleTop.m())).reverse(),
       ...cornerR2Points.map(p => p.transformBy(top.m())),
     ];
-    return { leftPoints, rightPoints, maxX: width * 2 - w };
+    return { leftPoints, rightPoints, maxX: width };
   }
 }
-export default VertexBrace;
+export default VertexRoundedSquareBracket;
 

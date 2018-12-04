@@ -1,13 +1,13 @@
 // @flow
 
-import VertexRoundedSquareBracket from './VertexRoundedSquareBracket';
-import { DiagramElementPrimative } from '../../Element';
+import VertexBar from './VertexBar';
+import { DiagramElementPrimative } from '../../../Element';
 import {
   Point, Transform, Rect,
-} from '../../tools/g2';
-import WebGLInstance from '../../webgl/webgl';
+} from '../../../tools/g2';
+import WebGLInstance from '../../../webgl/webgl';
 
-export default function RoundedSquareBracket(
+export default function Bracket(
   webgl: WebGLInstance,
   color: Array<number>,
   side: 'left' | 'right' | 'top' | 'bottom',
@@ -15,7 +15,7 @@ export default function RoundedSquareBracket(
   transformOrLocation: Transform | Point,
   diagramLimits: Rect,
 ) {
-  const vertices = new VertexRoundedSquareBracket(webgl, side, numLines);
+  const vertices = new VertexBar(webgl, side, numLines);
   let transform = new Transform();
   if (transformOrLocation instanceof Point) {
     transform = transform.translate(transformOrLocation.x, transformOrLocation.y);

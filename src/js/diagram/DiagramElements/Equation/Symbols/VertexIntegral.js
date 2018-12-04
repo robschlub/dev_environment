@@ -2,9 +2,9 @@
 
 import {
   Point, Transform,
-} from '../../tools/g2';
-import WebGLInstance from '../../webgl/webgl';
-import VertexObject from '../../DrawingObjects/VertexObject/VertexObject';
+} from '../../../tools/g2';
+import WebGLInstance from '../../../webgl/webgl';
+import VertexObject from '../../../DrawingObjects/VertexObject/VertexObject';
 
 function range(start: number, stop: number, step: number) {
   const out = [];

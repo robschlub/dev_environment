@@ -1,23 +1,24 @@
 // @flow
 
-import VertexIntegral from './VertexIntegral';
+import VertexBracket from './VertexBracket';
 // import VertexPolygonFilled from '../../DrawingObjects/VertexObject/VertexPolygon';
-import { DiagramElementPrimative } from '../../Element';
+import { DiagramElementPrimative } from '../../../Element';
 import {
   Point, Transform, Rect,
-} from '../../tools/g2';
-import WebGLInstance from '../../webgl/webgl';
+} from '../../../tools/g2';
+import WebGLInstance from '../../../webgl/webgl';
 
-export default function Integral(
+export default function Bracket(
   webgl: WebGLInstance,
   color: Array<number>,
+  side: 'left' | 'right' | 'top' | 'bottom',
   numLines: number,
   transformOrLocation: Transform | Point,
   diagramLimits: Rect,
 ) {
   // const serifSides = 30;
   // const serifRadius = 0.05;
-  const vertices = new VertexIntegral(webgl, numLines, true);
+  const vertices = new VertexBracket(webgl, side, numLines);
   // const serif = new VertexPolygonFilled(
   //   webgl,
   //   serifSides,

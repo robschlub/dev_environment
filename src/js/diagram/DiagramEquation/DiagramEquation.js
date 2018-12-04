@@ -11,16 +11,16 @@ import DrawContext2D from '../DrawContext2D';
 import {
   DiagramFont,
 } from '../DrawingObjects/TextObject/TextObject';
-import Integral from '../DiagramElements/Equation/Integral';
-import Bracket from '../DiagramElements/Equation/Bracket';
-import Bar from '../DiagramElements/Equation/Bar';
-import SquareBracket from '../DiagramElements/Equation/SquareBracket';
-import Brace from '../DiagramElements/Equation/Brace';
-import RoundedSquareBracket from '../DiagramElements/Equation/RoundedSquareBracket';
+import Integral from '../DiagramElements/Equation/Symbols/Integral';
+import Bracket from '../DiagramElements/Equation/Symbols/Bracket';
+import Bar from '../DiagramElements/Equation/Symbols/Bar';
+import SquareBracket from '../DiagramElements/Equation/Symbols/SquareBracket';
+import Brace from '../DiagramElements/Equation/Symbols/Brace';
+import RoundedSquareBracket from '../DiagramElements/Equation/Symbols/RoundedSquareBracket';
 
 import {
   EquationForm, createEquationElements, Equation, getDiagramElement,
-  EquationNew
+  EquationNew,
 } from '../DiagramElements/Equation/GLEquation';
 import type {
   TypeHAlign, TypeVAlign,
