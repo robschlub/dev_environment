@@ -193,6 +193,79 @@ export default class IsocelesCollection extends CommonDiagramCollection {
             ],
           ],
         ],
+        '1b': [
+          frac('a', 'b', 'v'),
+          {
+            frac: {
+              num: ['a'],
+              den: 'b',
+              sym: 'v',
+            },
+          },
+          { frac: ['a', 'b', 'v'] },
+          {
+            frac: [
+              'a',
+              'b',
+              'v',
+            ],
+          },
+          annotate(['_2', 'a', 'plus', 'b_'], {
+            withAnnotation: ['minus_', 'b__'],
+            relativeToContent: ['center', -0.4],
+            relativeToAnnotation: ['center', 'top'],
+            size: 0.6,
+          }),
+          {
+            annotate: {
+              content:              ['_2', 'a', 'plus', 'b_'],
+              withAnnotation:       ['minus_', 'b__'],
+              relativeToContent:    ['center', -0.4],
+              relativeToAnnotation: ['center', 'top'],
+              size: 0.6,
+            },
+          },
+          {
+            annotate: {
+              content: ['_2', 'a', 'plus', 'b_'],
+              withAnnotations: [
+                {
+                  annotation: ['minus_', 'b__'],
+                  relativeToContent: ['center', -0.4],
+                  relativeToAnnotation: ['center', 'top'],
+                  size: 0.6,
+                },
+                {
+                  annotation: ['minus_', 'b__'],
+                  relativeToContent: ['right', 1.4],
+                  relativeToAnnotation: ['left', 'bottom'],
+                  size: 0.6,
+                },
+              ],
+            },
+          },
+        ],
+        '1a': [
+          {
+            annotation: [
+              ['_2', 'a', 'plus', 'b_'],
+              {
+                ann: [
+                  ['minus_', 'b__'],
+                  'center', -0.4, 'center', 'top', 0.6,
+                ],
+              },
+            ],
+          },
+          'equals',
+          '.annotation', [
+            '_180',
+            ['.ann', [
+              ['minus', 'b'],
+              'center', -0.4, 'center', 'top', 0.6],
+            ],
+          ],
+        ],
         '2': [
           '.annotation', [
             ['_2', 'a', 'plus', '.strike', ['b_', 'x']],
