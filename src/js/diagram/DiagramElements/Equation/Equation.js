@@ -608,21 +608,27 @@ export class EquationNew extends DiagramElementCollection {
             out.push(result);
           }
         } else {
-          const [method, methodOptions] = Object.entries(phraseElem)[0];
+          let [method, methodOptions] = Object.entries(phraseElem)[0];
+          console.log(method, methodOptions)
           if (method != null
               && methodOptions != null
-              && typeof methodOptions === 'object'
+              // && typeof methodOptions === 'object'
           ) {
-            const specialTerms = [
-              'content', 'numerator', 'denominator', 'subscript',
-              'superscript',
-            ];
-            Object.entries(methodOptions).forEach((entry) => {
-              const [key, value] = entry;
-              if (specialTerms.indexOf(key) > -1) {
-                methodOptions[key] = makePhrase(value);
-              }
-            });
+            if (Array.isArray(methodOptions)) {
+              methodOptions = makePhrase(methodOptions);
+            } else if (typeof methodOptions === 'object') {
+              const specialTerms = [
+                'content', 'numerator', 'denominator', 'subscript',
+                'superscript',
+              ];
+              Object.entries(methodOptions).forEach((entry) => {
+                const [key, value] = entry;
+                if (specialTerms.indexOf(key) > -1) {
+                  methodOptions[key] = makePhrase(value);
+                }
+              });
+            }
+            console.log(methodOptions)
             if (this.eqn.functions[method] != null) {
               out.push(this.eqn.functions[method](methodOptions));
             }

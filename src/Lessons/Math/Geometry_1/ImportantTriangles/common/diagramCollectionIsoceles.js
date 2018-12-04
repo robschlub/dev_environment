@@ -229,13 +229,22 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       '1a': ['b', 'a', 'c'],
       '1b': [{ frac: ['b', 'a', 'v'] }, 'c'],
       '1c': [{ sfrac: ['b', 'a', 'v', 0.5] }, 'c'],
-      '1': [
+      '1d': [
         {
           frac: {
             numerator: { sfrac: ['d', 'e', 'v1', 0.5] },
             denominator: 'b',
             symbol: 'v',
           },
+        }, 'c',
+      ],
+      '1': [
+        {
+          frac: [
+            { sfrac: ['d', 'e', 'v1', 0.5] },
+            'b',
+            'v',
+          ],
         }, 'c',
       ],
     });

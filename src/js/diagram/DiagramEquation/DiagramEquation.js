@@ -1292,7 +1292,6 @@ export default class DiagramEquation {
             formOptions.elementMods[key],
           );
         });
-        console.log(equation)
         if (typeof formOptions.alignment.fixTo === 'string') {
           const elem = getDiagramElement(equation, formOptions.alignment.fixTo);
           if (elem != null) {
