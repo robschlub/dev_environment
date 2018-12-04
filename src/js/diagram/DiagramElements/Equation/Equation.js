@@ -608,16 +608,19 @@ export class EquationNew extends DiagramElementCollection {
             out.push(result);
           }
         } else {
-          const method = Object.keys(phraseElem)[0];
-          if (method != null) {
-            const methodOptions = phraseElem[method];
+          const [method, methodOptions] = Object.entries(phraseElem)[0];
+          if (method != null
+              && methodOptions != null
+              && typeof methodOptions === 'object'
+          ) {
             const specialTerms = [
               'content', 'numerator', 'denominator', 'subscript',
               'superscript',
             ];
-            Object.keys(methodOptions).forEach((key) => {
+            Object.entries(methodOptions).forEach((entry) => {
+              const [key, value] = entry;
               if (specialTerms.indexOf(key) > -1) {
-                methodOptions[key] = makePhrase(methodOptions[key]);
+                methodOptions[key] = makePhrase(value);
               }
             });
             if (this.eqn.functions[method] != null) {
