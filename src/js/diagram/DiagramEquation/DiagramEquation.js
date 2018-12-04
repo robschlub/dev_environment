@@ -935,7 +935,7 @@ export default class DiagramEquation {
       if (elementToAdd != null) {
         const elementObject = {};
         elementObject[elementName] = elementToAdd;
-        equation.addEquationElements(elementObject);
+        equation.addEquationElements(elementObject, elementToAdd.color);
       }
     });
     equation.reorder();

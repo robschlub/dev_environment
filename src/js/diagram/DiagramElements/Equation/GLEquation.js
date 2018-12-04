@@ -2239,7 +2239,7 @@ export class EquationNew extends DiagramElementCollection {
       forms: {},
       currentForm: '',
       currentSubForm: '',
-      subFormPriority: [],
+      subFormPriority: ['base'],
       formSeries: {},
       currentFormSeries: '',
       defaultFormAlignment: optionsToUse.defaultFormAlignment,
@@ -2420,9 +2420,17 @@ export class EquationNew extends DiagramElementCollection {
       baseOptions.subForm = 'base';
       this.addForm(name, content, baseOptions);
     }
+
+    if (this.eqn.currentForm === '') {
+      this.eqn.currentForm = name;
+    }
+    if (this.eqn.currentSubForm === '') {
+      this.eqn.currentSubForm = 'base';
+    }
   }
 
   getCurrentForm() {
+    console.log(this.eqn.currentForm, this.eqn.currentSubForm, this.eqn.forms)
     if (this.eqn.forms[this.eqn.currentForm] == null) {
       return null;
     }
@@ -2452,12 +2460,12 @@ export class EquationNew extends DiagramElementCollection {
       if (formOrName in this.eqn.forms) {
         this.eqn.currentForm = formOrName;
         if (subForm in this.eqn.forms[formOrName]) {
-          this.currentSubForm = subForm;
+          this.eqn.currentSubForm = subForm;
         }
       }
     } else {
       this.eqn.currentForm = formOrName.name;
-      this.eqn.currentSubForm = formOrName.type;
+      this.eqn.currentSubForm = formOrName.subForm;
     }
   }
 
@@ -2488,7 +2496,7 @@ export class EquationNew extends DiagramElementCollection {
       let formTypeToUse = subForm;
       if (formTypeToUse == null) {
         const possibleFormTypes
-          = this.eqn.subFormPriority.filter(fType => fType in this.eqns.forms[formOrName]);
+          = this.eqn.subFormPriority.filter(fType => fType in this.eqn.forms[formOrName]);
         if (possibleFormTypes.length) {
           // eslint-disable-next-line prefer-destructuring
           formTypeToUse = possibleFormTypes[0];

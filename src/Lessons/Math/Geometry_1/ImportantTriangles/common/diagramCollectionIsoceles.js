@@ -127,6 +127,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       },
       forms: {
         '0': ['a', 'b', 'c'],
+        '1': ['b', 'b', 'c'],
       },
     });
     this.diagram.equation.makeEqnFromOptions({
@@ -351,7 +352,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   constructor(
     diagram: LessonDiagram,
     layout: Object,
-    transform: Transform = new Transform().rotate(0).translate(0, 0),
+    transform: Transform = new Transform('Iso').rotate(0).translate(0, 0),
   ) {
     super(diagram, layout, transform);
     this.setPosition(this.layout.iso.position);
