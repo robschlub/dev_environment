@@ -1,25 +1,30 @@
 // @flow
 import {
-  Point, Rect, Transform, getMoveTime,
+  Point, Transform,
 } from '../../tools/g2';
 // import { roundNum } from '../../tools/mathtools';
-import { RGBToArray, duplicateFromTo, joinObjects } from '../../../tools/tools';
+import { RGBToArray, joinObjects } from '../../../tools/tools';
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../Element';
 import {
   DiagramText, DiagramFont, TextObject,
 } from '../../DrawingObjects/TextObject/TextObject';
-import DrawContext2D from '../../DrawContext2D';
-import * as html from '../../../tools/htmlGenerator';
+// import DrawContext2D from '../../DrawContext2D';
+// import * as html from '../../../tools/htmlGenerator';
 // import { TextObject } from './DrawingObjects/TextObject/TextObject';
-import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
+// import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 import { BlankElement, Element, Elements } from './Elements/Element';
 import Fraction from './Elements/Fraction';
-import Strike from './Elements/Strike';
-import SuperSub from './Elements/SuperSub';
-import { Brackets, Bar } from './Elements/Brackets';
-import { Annotation, AnnotationInformation } from './Elements/Annotation';
+import EquationForm from './EquationForm';
+import type {
+  TypeHAlign, TypeVAlign,
+} from './EquationForm';
+
+// import Strike from './Elements/Strike';
+// import SuperSub from './Elements/SuperSub';
+// import { Brackets, Bar } from './Elements/Brackets';
+// import { Annotation, AnnotationInformation } from './Elements/Annotation';
 // // Equation is a class that takes a set of drawing objects (TextObjects,
 // // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
 // // and arranges their size in a )
@@ -40,16 +45,12 @@ export function getDiagramElement(
 
 type TypeEquationInput = Array<Elements | Element | string> | Elements | Element | string;
 
-export function contentToElement(
+function contentToElement(
   collection: DiagramElementCollection,
   content: TypeEquationInput,
 ): Elements {
   // If input is alread an Elements object, then return it
   if (content instanceof Elements) {
-    // const namedElements = {};
-    // collection.getAllElements().forEach((element) => {
-    //   namedElements[element.name] = element;
-    // });
     return content._dup();
   }
 
@@ -95,77 +96,47 @@ export function contentToElement(
   return new Elements(elementArray);
 }
 
-export type TypeHAlign = 'left' | 'right' | 'center';
-export type TypeVAlign = 'top' | 'bottom' | 'middle' | 'baseline';
-export type TypeEquationForm = {
-  collection: DiagramElementCollection;
-  createEq: (Array<Elements | Element | string>) => void;
-  arrange: (
-    number, TypeHAlign | null, TypeVAlign | null,
-    DiagramElementPrimative | DiagramElementCollection | Point
-  ) => void;
-  dissolveElements: (
-    Array<DiagramElementPrimative | DiagramElementCollection>,
-    boolean, number, number, ?(?boolean)) => void;
-  getElementsToShowAndHide: () => void;
-  showHide: (number, number, ?(?mixed)) => void;
-  hideShow: (number, number, ?(?mixed)) => void;
-  // animateTo: (
-  //   number, number,
-  //   DiagramElementPrimative | DiagramElementCollection | Point,
-  //   ?(?mixed) => void,
-  //   'left' | 'center' | 'right', 'top' | 'bottom' | 'middle' | 'baseline',
-  // ) => void;
-  animatePositionsTo: (number, ?(?mixed) => void) => void;
-  description: string | null;
-  modifiers: Object;
-  type: string;
-  elementMods: Object;
-  time: number | null;
-} & Elements;
+// export type TypeEquation = {
+//   +collection: DiagramElementCollection;
+//   diagramLimits: Rect;
+//   firstTransform: Transform;
+//   _dup: () => TypeEquation;
+//   form: Object;
+//   unitsForm: Object;
+//   currentForm: ?EquationForm;
+//   // currentFormName: string;
+//   formAlignment: {
+//     vAlign: TypeVAlign;
+//     hAlign: TypeHAlign;
+//     fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
+//     scale: number;
+//   };
+//   addForm: (string, Array<Elements | Element | string>) => void;
+//   scaleForm: (string, number) => void;
+//   setElem: (DiagramElementCollection | DiagramElementPrimative | string,
+//             Array<number> | null,
+//             boolean,
+//             'up' | 'down' | 'left' | 'right' | '',
+//             number) => void;
+//   frac: (
+//       TypeEquationInput,
+//       TypeEquationInput,
+//       string | DiagramElementPrimative | DiagramElementCollection,
+//     ) => Fraction;
+//   sfrac: (
+//       TypeEquationInput,
+//       TypeEquationInput,
+//       string | DiagramElementPrimative | DiagramElementCollection, number,
+//     ) => Fraction;
+//   setCurrentForm: (EquationForm | string) => void;
+//   render: () => void;
+//   setPosition: (Point) => void;
+//   stop: () => void;
+//   scale: (number) => void;
+//   isAnimating: boolean;
 
-
-export type TypeEquation = {
-  +collection: DiagramElementCollection;
-  diagramLimits: Rect;
-  firstTransform: Transform;
-  _dup: () => TypeEquation;
-  form: Object;
-  unitsForm: Object;
-  currentForm: ?EquationForm;
-  // currentFormName: string;
-  formAlignment: {
-    vAlign: TypeVAlign;
-    hAlign: TypeHAlign;
-    fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
-    scale: number;
-  };
-  addForm: (string, Array<Elements | Element | string>) => void;
-  scaleForm: (string, number) => void;
-  setElem: (DiagramElementCollection | DiagramElementPrimative | string,
-            Array<number> | null,
-            boolean,
-            'up' | 'down' | 'left' | 'right' | '',
-            number) => void;
-  frac: (
-      TypeEquationInput,
-      TypeEquationInput,
-      string | DiagramElementPrimative | DiagramElementCollection,
-    ) => Fraction;
-  sfrac: (
-      TypeEquationInput,
-      TypeEquationInput,
-      string | DiagramElementPrimative | DiagramElementCollection, number,
-    ) => Fraction;
-  setCurrentForm: (EquationForm | string) => void;
-  render: () => void;
-  setPosition: (Point) => void;
-  stop: () => void;
-  scale: (number) => void;
-  isAnimating: boolean;
-
-  +showForm: (EquationForm | string, ?string) => {};
-};
+//   +showForm: (EquationForm | string, ?string) => {};
+// };
 
 export type TypeEquationOptions = {
   defaultFormAlignment?: {
@@ -187,7 +158,7 @@ class EquationFunctions {
   frac(options: {
       numerator: TypeEquationInput,
       denominator: TypeEquationInput,
-      vinculum: string | DiagramElementPrimative | DiagramElementCollection,
+      symbol: string | DiagramElementPrimative | DiagramElementCollection,
     }
     | [
         TypeEquationInput,
@@ -196,16 +167,16 @@ class EquationFunctions {
       ]) {
     let numerator;
     let denominator;
-    let vinculum;
+    let symbol;
     if (Array.isArray(options)) {
-      [numerator, denominator, vinculum] = options;
+      [numerator, denominator, symbol] = options;
     } else {
-      ({ numerator, denominator, vinculum } = options);
+      ({ numerator, denominator, symbol } = options);
     }
     return new Fraction(
       contentToElement(this.collection, numerator),
       contentToElement(this.collection, denominator),
-      getDiagramElement(this.collection, vinculum),
+      getDiagramElement(this.collection, symbol),
     );
   }
 }
@@ -553,15 +524,3 @@ export class EquationNew extends DiagramElementCollection {
     return null;
   }
 }
-
-// An Equation is tied to a collection of elements.
-//
-// The Equation class manages equation forms that
-// speicify how to lay out the collection of elements.
-//
-// The Equation class also has a helper that can create a colleciton
-// of DiagramElements for an equation
-//
-// EqnCollection extends DiagramElementCollection
-//    eqns: { equations that manage this collection }
-//    eqnName: direct access to equation with a particular name

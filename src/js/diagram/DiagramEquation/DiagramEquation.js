@@ -17,40 +17,40 @@ import Bar from '../DiagramElements/Equation/Symbols/Bar';
 import SquareBracket from '../DiagramElements/Equation/Symbols/SquareBracket';
 import Brace from '../DiagramElements/Equation/Symbols/Brace';
 import RoundedSquareBracket from '../DiagramElements/Equation/Symbols/RoundedSquareBracket';
-
+import EquationForm from '../DiagramElements/Equation/EquationForm';
 import {
-  EquationForm, createEquationElements, Equation, getDiagramElement,
-  EquationNew,
+  createEquationElements, Equation, getDiagramElement,
 } from '../DiagramElements/Equation/GLEquation';
+import { EquationNew } from '../DiagramElements/Equation/Equation';
 import type {
   TypeHAlign, TypeVAlign,
-} from '../DiagramElements/Equation/GLEquation';
+} from '../DiagramElements/Equation/EquationForm';
 import HTMLEquation from '../DiagramElements/Equation/HTMLEquation';
 
-export type TypeEquationArray =
+export type TypeEquationPhrase =
   string
   | Array<string
-    | TypeEquationArray
+    | TypeEquationPhrase
     | {                                 // Fraction and SmallFraction
-      numerator: TypeEquationArray;
-      denominator: TypeEquationArray;
-      vinculum: string;
+      numerator: TypeEquationPhrase;
+      denominator: TypeEquationPhrase;
+      symbol: string;
       scaleModifier?: number;
     }
     | {                                 // Superscript and Subscript
-      content: TypeEquationArray;
-      subscript?: TypeEquationArray;
-      superscript?: TypeEquationArray;
+      content: TypeEquationPhrase;
+      subscript?: TypeEquationPhrase;
+      superscript?: TypeEquationPhrase;
     }
     | {                                 // Strike
-      content: TypeEquationArray;
-      strike: string;
+      content: TypeEquationPhrase;
+      symbol: string;
       strikeInSize?: boolean;
     }
     | {                                 // Annotation
-      content: TypeEquationArray;
+      content: TypeEquationPhrase;
       annotationArray: Array<{
-        content: TypeEquationArray;
+        content: TypeEquationPhrase;
         xPosition?: 'left' | 'right' | 'center';
         yPosition?: 'bottom' | 'top' | 'middle' | 'baseline';
         xAlign?: 'left' | 'right' | 'center';
@@ -60,21 +60,21 @@ export type TypeEquationArray =
       annotationInSize?: boolean;
     }
     | {                                 // Bracket
-      content: TypeEquationArray;
-      left: string;
-      right: string;
+      content: TypeEquationPhrase;
+      symbol: string;
+      symbol: string;
       space?: number;
     }
     | {                                 // Top and Bottom Bar
-      content: TypeEquationArray;
-      bar: string;
+      content: TypeEquationPhrase;
+      symbol: string;
       space?: number;
       outsideSpace?: number;
     }
     | {                                 // Top and Bottom Comment
-      content: TypeEquationArray;
-      comment: TypeEquationArray;
-      bar: string;
+      content: TypeEquationPhrase;
+      comment: TypeEquationPhrase;
+      symbol: string;
       space?: number;
       outsideSpace?: number;
     }>;
