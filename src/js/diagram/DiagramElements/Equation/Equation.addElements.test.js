@@ -32,21 +32,33 @@ describe('Diagram Equations From Object', () => {
     modColor2 = [0, 0.95, 0, 1];
     defaultColor = [0.5, 0.5, 0.5, 1];
     addElements = {
+      // Simplest way to define elements is to just use text
       simple: {
         a: 'a',
         b: 'b',
         c: 'c',
       },
+      // Different elements can be added at different times
+      add1: {
+        a: 'a',
+        b: 'b',
+      },
+      add2: {
+        c: 'c',
+      },
+      // Fonts will be italic for text and normal for numbers and known words
       autoFontSelection: {
         a: 'a',
         _1: '1',
       },
+      // Elements can also be defined in object form
       simpleObject: {
         a: 'a',
         b: {
           text: 'b',
         },
       },
+      // Options can be used in the object to override default options
       textOverrides: {
         a: 'a',
         b: {
@@ -60,7 +72,7 @@ describe('Diagram Equations From Object', () => {
             0.3, '300', 'right', 'alphabetic', modColor1,
           ),
         },
-        d: {              // font overrides style, color overrides font
+        d: {         // font overrides style, color overrides font
           text: 'd',
           style: 'normal',
           color: modColor2,
@@ -70,10 +82,15 @@ describe('Diagram Equations From Object', () => {
           ),
         },
       },
-      symbol: {
+      // Equation symbols are DiagramElementPrimatives or Collections
+      symbol: {     // Symbols can be auto generated from string, or passed in
         a: 'a',
-        'v': { symbol: 'vinculum' },
+        v: { symbol: 'vinculum' },
+        v1: eqn.eqn.functions.vinculum(),
+        v2: diagram.shapes.horizontalLine(new Point(0, 0), 1, 0.1, 0, defaultColor),
       },
+      // Elements all become DiagramElementPrimatives/Collections and their
+      // properties can be overwritten with elementOptions
       elementOptions: {
         a: 'a',
         b: {
@@ -91,10 +108,6 @@ describe('Diagram Equations From Object', () => {
           },
         },
       },
-      diagramElements: {
-        a: 'a',
-        v: diagram.shapes.horizontalLine(new Point(0, 0), 1, 0.1, 0, defaultColor),
-      },
     };
   });
   test('Equation instantiation', () => {
@@ -109,6 +122,13 @@ describe('Diagram Equations From Object', () => {
     // expect(eqn.__2.drawingObject.text[0].font.style).toBe('normal');
     // console.log(eqn._a.drawingObject.text[0])
     // expect(eqn._a.drawingObject.text[0])
+  });
+  test('Multi add steps', () => {
+    eqn.addElements(addElements.add1);
+    eqn.addElements(addElements.add2);
+    expect(eqn._a.drawingObject.text[0].text).toBe('a');
+    expect(eqn._b.drawingObject.text[0].text).toBe('b');
+    expect(eqn._c.drawingObject.text[0].text).toBe('c');
   });
   test('Italics for text, normal for numbers', () => {
     eqn.addElements(addElements.autoFontSelection);
@@ -150,6 +170,11 @@ describe('Diagram Equations From Object', () => {
     eqn.addElements(addElements.symbol);
     expect(eqn._a.drawingObject.text[0].text).toBe('a');
     expect(eqn._v.drawingObject).toBeInstanceOf(VertexHorizontalLine);
+    expect(eqn._v1.drawingObject).toBeInstanceOf(VertexHorizontalLine);
+    expect(eqn._v2.drawingObject).toBeInstanceOf(VertexHorizontalLine);
+
+    expect(eqn._a.color).toEqual([1, 0, 0, 1]);
+    expect(eqn._v.color).toEqual(defaultColor);
   });
   test('ElementOptions', () => {
     eqn.addElements(addElements.elementOptions);
@@ -165,14 +190,14 @@ describe('Diagram Equations From Object', () => {
     expect(eqn._b.color).toEqual(modColor1);
     expect(eqn._v.color).toEqual(modColor1);
   });
-  test('Diagram Elements', () => {
-    eqn.addElements(addElements.diagramElements);
-    expect(eqn._a.drawingObject.text[0].text).toBe('a');
-    expect(eqn._v.drawingObject).toBeInstanceOf(VertexHorizontalLine);
+  // test('Diagram Elements', () => {
+  //   eqn.addElements(addElements.diagramElements);
+  //   expect(eqn._a.drawingObject.text[0].text).toBe('a');
+  //   expect(eqn._v.drawingObject).toBeInstanceOf(VertexHorizontalLine);
 
-    expect(eqn._a.color).toEqual([1, 0, 0, 1]);
-    expect(eqn._v.color).toEqual(defaultColor);
-  });
+  //   expect(eqn._a.color).toEqual([1, 0, 0, 1]);
+  //   expect(eqn._v.color).toEqual(defaultColor);
+  // });
   test('Create elements as part of initial diagram', () => {
     const equationOptions = {
       elements: addElements.simple,

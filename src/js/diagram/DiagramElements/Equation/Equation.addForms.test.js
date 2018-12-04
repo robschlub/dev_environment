@@ -33,6 +33,7 @@ describe('Diagram Equations From Object', () => {
         a: 'a',
         b: 'b',
         c: 'c',
+        v: { symbol: 'vinculum' },
       },
     });
     // modColor1 = [0.95, 0, 0, 1];
@@ -45,6 +46,18 @@ describe('Diagram Equations From Object', () => {
       arrayTwoForms: {
         '0': ['a', 'b', 'c'],
         '1': ['b', 'a', 'c'],
+      },
+      frac: {
+        '0': [{ frac: ['a', 'b', 'c'] }],
+        '1': [
+          {
+            frac: {
+              numerator: 'a',
+              denominator: 'b',
+              symbol: 'v',
+            },
+          },
+        ],
       },
     };
     ({ forms } = eqn.eqn);
