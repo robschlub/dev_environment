@@ -1,6 +1,7 @@
 import {
-  EquationForm, createEquationElements, Equation,
+  createEquationElements, Equation,
 } from './GLEquation';
+import EquationForm from './EquationForm'
 import { Point } from '../../tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -54,14 +55,14 @@ describe('Equation Form', () => {
         eqn.createEq(['a', 'b', 'c']);
         expect(eqn.content).toHaveLength(3);
       });
-      test('Fraction', () => {
-        eqn.createEq([eqn.frac('a', 'b', 'c')]);
-        expect(eqn.content).toHaveLength(1);
-        const c = eqn.content[0];
-        expect(c.vinculum).toBe(collection._c);
-        expect(c.numerator.content[0].content).toBe(collection._a);
-        expect(c.denominator.content[0].content).toBe(collection._b);
-      });
+      // test('Fraction', () => {
+      //   eqn.createEq([eqn.frac('a', 'b', 'c')]);
+      //   expect(eqn.content).toHaveLength(1);
+      //   const c = eqn.content[0];
+      //   expect(c.vinculum).toBe(collection._c);
+      //   expect(c.numerator.content[0].content).toBe(collection._a);
+      //   expect(c.denominator.content[0].content).toBe(collection._b);
+      // });
     });
     describe('arrange', () => {
       test('Fixed to left baseline', () => {
