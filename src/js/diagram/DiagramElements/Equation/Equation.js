@@ -173,7 +173,11 @@ class EquationFunctions {
     );
   }
 
-  vinculum(color: Array<number> = [1, 1, 1, 1]) {
+  vinculum(options: { color?: Array<number> } = {}) {
+    let { color } = options;
+    if (color == null) {
+      color = [0.5, 0.5, 0.5, 1];
+    }
     return this.collection.shapes.horizontalLine(
       new Point(0, 0),
       1, 1, 0,
@@ -183,18 +187,20 @@ class EquationFunctions {
   }
 }
 
+// Priority:
+//   1. symbol
+//   2. text
 export type TypeEquationElements = {
   [elementName: string]: string | {
+    // Text only
     text?: string;
-    textOptions?: {
-      font?: DiagramFont;
-      style?: 'italics' | 'normal' | null;
-    };
+    font?: DiagramFont;
+    style?: 'italics' | 'normal' | null;
+    // Symbol Only
     symbol?: string;
-    symbolOptions?: {
-      numLines?: number;
-      orientation?: 'up' | 'left' | 'down' | 'right';
-    },
+    numLines?: number;
+    orientation?: 'up' | 'left' | 'down' | 'right';
+    // Both Text and Symbol
     color?: Array<number>;
     elementOptions?: {};
   } | DiagramElementPrimative | DiagramElementCollection;
@@ -226,6 +232,7 @@ export class EquationNew extends DiagramElementCollection {
       [subFormName: string]: EquationForm;  // Sub forms may differ in units
       name: string;                         // Name of form
     } };
+    functions: {};
     currentForm: string;
     currentSubForm: string;
     fontMath: DiagramFont;
@@ -308,13 +315,13 @@ export class EquationNew extends DiagramElementCollection {
       formSeries: {},
       currentFormSeries: '',
       defaultFormAlignment: optionsToUse.defaultFormAlignment,
-      functions: new EquationFunctions(this, this.shapes),
+      functions: new EquationFunctions(this),
       fontMath: optionsToUse.fontMath,
       fontText: optionsToUse.fontText,
     };
 
     if (optionsToUse.elements != null) {
-      this.addElements(optionsToUse.elements, this.color);
+      this.addElements(optionsToUse.elements);
     }
   }
 
@@ -332,31 +339,7 @@ export class EquationNew extends DiagramElementCollection {
     elems: Object,
     // colorOrFont: Array<number> | DiagramFont = [],
   ) {
-    // let color = [1, 1, 1, 1];
-    // if (Array.isArray(colorOrFont)) {
-    //   color = colorOrFont.slice();
-    // }
-    // let font = new DiagramFont(
-    //   'Times New Roman',
-    //   'normal',
-    //   0.2, '200', 'left', 'alphabetic', color,
-    // );
-    // let fontItalic = new DiagramFont(
-    //   'Times New Roman',
-    //   'italic',
-    //   0.2, '200', 'left', 'alphabetic', color,
-    // );
-    // if (colorOrFont instanceof DiagramFont) {
-    //   font = colorOrFont._dup();
-    //   font.style = 'normal';
-    //   fontItalic = colorOrFont._dup();
-    //   fontItalic.style = 'italic';
-    //   if (font.color != null) {
-    //     color = RGBToArray(font.color);
-    //   }
-    // }
-
-    const makeElem = (options: { text: string, font?: DiagramFont, style?: 'italics' | 'normal', color?: Array<number> }) => {
+    const makeTextElem = (options: { text: string, font?: DiagramFont, style?: 'italics' | 'normal', color?: Array<number> }) => {
       // Priority:
       //  1. color
       //  2. font
@@ -385,30 +368,49 @@ export class EquationNew extends DiagramElementCollection {
       return p;
     };
 
+    const makeSymbolElem = (options: { symbol: string, numLines?: number,
+    orientation?: 'up' | 'left' | 'down' | 'right', color?: Array<number>}) => {
+      let symbol = null;
+      if (this.eqn.functions[options.symbol] != null) {
+        symbol = this.eqn.functions[options.symbol](options);
+      } else {
+        symbol = makeTextElem({
+          text: `Symbol ${options.symbol} not valid`,
+        });
+      }
+      if (options.color == null) {
+        symbol.setColor(this.color);
+      }
+      return symbol;
+    };
+
     // const makeSymbol = (options: { symbol: string, })
 
     Object.keys(elems).forEach((key) => {
       if (typeof elems[key] === 'string') {
         if (!key.startsWith('space')) {
-          this.add(key, makeElem({ text: elems[key] }));
+          this.add(key, makeTextElem({ text: elems[key] }));
         }
       } else if (elems[key] instanceof DiagramElementPrimative) {
         this.add(key, elems[key]);
       } else if (elems[key] instanceof DiagramElementCollection) {
         this.add(key, elems[key]);
       } else {
+        let elem;
         const {
-          text, symbol, textOptions, symbolOptions, color, elementOptions,
+          text, symbol, elementOptions,
         } = elems[key];
-
-        const elem = makeElem(text, fontOrStyle);
-        if (elementOptions != null) {
-          elem.setProperties(elementOptions);
+        if (symbol != null) {
+          elem = makeSymbolElem(elems[key]);
+        } else if (text != null) {
+          elem = makeTextElem(elems[key]);
         }
-        if (col != null) {
-          elem.setColor(col);
+        if (elem != null) {
+          if (elementOptions != null) {
+            elem.setProperties(elementOptions);
+          }
+          this.add(key, elem);
         }
-        this.add(key, elem);
       }
     });
 
