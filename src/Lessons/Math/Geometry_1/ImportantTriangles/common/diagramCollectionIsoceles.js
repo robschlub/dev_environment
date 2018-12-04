@@ -118,12 +118,16 @@ export default class IsocelesCollection extends CommonDiagramCollection {
           },
         },
         c: 'c',
+        d: 'd',
+        e: 'e',
+        f: 'f',
         v: {
           symbol: 'vinculum',
           elementOptions: {
             isTouchable: true,
           },
         },
+        v1: { symbol: 'vinculum' },
       },
       forms: {
         '0': ['.frac', ['a', 'b', 'v'], 'c'],
@@ -228,11 +232,11 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       '1': [
         {
           frac: {
-            numerator: 'a',
+            numerator: { sfrac: ['d', 'e', 'v1', 0.5] },
             denominator: 'b',
             symbol: 'v',
           },
-        }, 'c'
+        }, 'c',
       ],
     });
     this.diagram.equation.makeEqnFromOptions({

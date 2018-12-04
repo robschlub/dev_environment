@@ -224,52 +224,102 @@ export type TypeEquationPhrase =
   string
   | Array<string
     | TypeEquationPhrase
-    | {                                 // Fraction and SmallFraction
-      numerator: TypeEquationPhrase;
-      denominator: TypeEquationPhrase;
-      symbol: string;
-      scaleModifier?: number;
+    | {                                 // Fraction
+      frac: {
+        numerator: TypeEquationPhrase;
+        denominator: TypeEquationPhrase;
+        symbol: string;
+      };
+    }
+    | {                                 // Scaled Fraction
+      sfrac: {
+        numerator: TypeEquationPhrase;
+        denominator: TypeEquationPhrase;
+        symbol: string;
+        scaleModifier?: number;
+      }
+    }
+    | {
+      sup: {                            // Superscript
+        content: TypeEquationPhrase;
+        superscript: TypeEquationPhrase;
+      }
+    }
+    | {
+      sub: {                            // Subscript
+        content: TypeEquationPhrase;
+        subscript: TypeEquationPhrase;
+      }
     }
     | {                                 // Superscript and Subscript
-      content: TypeEquationPhrase;
-      subscript?: TypeEquationPhrase;
-      superscript?: TypeEquationPhrase;
+      supsub: {
+        content: TypeEquationPhrase;
+        subscript?: TypeEquationPhrase;
+        superscript?: TypeEquationPhrase;
+      }
     }
     | {                                 // Strike
-      content: TypeEquationPhrase;
-      symbol: string;
-      strikeInSize?: boolean;
+      strike: {
+        content: TypeEquationPhrase;
+        symbol: string;
+        strikeInSize?: boolean;
+      }
     }
     | {                                 // Annotation
-      content: TypeEquationPhrase;
-      annotationArray: Array<{
+      annotate: {
         content: TypeEquationPhrase;
-        xPosition?: 'left' | 'right' | 'center';
-        yPosition?: 'bottom' | 'top' | 'middle' | 'baseline';
-        xAlign?: 'left' | 'right' | 'center';
-        yAlign?: 'bottom' | 'top' | 'middle' | 'baseline';
-        scale?: number;
-      }>;
-      annotationInSize?: boolean;
+        annotationArray: Array<{
+          content: TypeEquationPhrase;
+          xPosition?: 'left' | 'right' | 'center';
+          yPosition?: 'bottom' | 'top' | 'middle' | 'baseline';
+          xAlign?: 'left' | 'right' | 'center';
+          yAlign?: 'bottom' | 'top' | 'middle' | 'baseline';
+          scale?: number;
+        }>;
+        annotationInSize?: boolean;
+      }
     }
     | {                                 // Bracket
-      content: TypeEquationPhrase;
-      symbol: string;
-      symbol: string;
-      space?: number;
+      brac: {
+        content: TypeEquationPhrase;
+        leftSymbol?: string;
+        rightSymbol?: string;
+        space?: number;
+      }
     }
-    | {                                 // Top and Bottom Bar
-      content: TypeEquationPhrase;
-      symbol: string;
-      space?: number;
-      outsideSpace?: number;
+    | {                                 // Top
+      topBar: {
+        content: TypeEquationPhrase;
+        symbol: string;
+        space?: number;
+        outsideSpace?: number;
+      }
     }
-    | {                                 // Top and Bottom Comment
-      content: TypeEquationPhrase;
-      comment: TypeEquationPhrase;
-      symbol: string;
-      space?: number;
-      outsideSpace?: number;
+    | {                                 // Bottom Bar
+      bottomBar: {
+        content: TypeEquationPhrase;
+        symbol: string;
+        space?: number;
+        outsideSpace?: number;
+      }
+    }
+    | {                                 // Top Comment
+      topComment: {
+        content: TypeEquationPhrase;
+        comment: TypeEquationPhrase;
+        symbol?: string;
+        space?: number;
+        outsideSpace?: number;
+      }
+    }
+    | {                                 // Bottom Comment
+      bottomComment: {
+        content: TypeEquationPhrase;
+        comment: TypeEquationPhrase;
+        symbol?: string;
+        space?: number;
+        outsideSpace?: number;
+      }
     }>;
 
 // Priority:
@@ -541,18 +591,35 @@ export class EquationNew extends DiagramElementCollection {
       if (typeof phrase === 'string') {
         return phrase;
       }
-      phrase.forEach((phraseElem) => {
+      let phraseToUse = phrase;
+      if (!Array.isArray(phrase)) {
+        phraseToUse = [phrase];
+      }
+      phraseToUse.forEach((phraseElem) => {
         if (typeof phraseElem === 'string') {
           out.push(phraseElem);
         } else if (Array.isArray(phraseElem)) {
           const result = makePhrase(phraseElem);
-          result.forEach((resultElem) => {
-            out.push(resultElem);
-          });
+          if (Array.isArray(result)) {
+            result.forEach((resultElem) => {
+              out.push(resultElem);
+            });
+          } else {
+            out.push(result);
+          }
         } else {
           const method = Object.keys(phraseElem)[0];
           if (method != null) {
             const methodOptions = phraseElem[method];
+            const specialTerms = [
+              'content', 'numerator', 'denominator', 'subscript',
+              'superscript',
+            ];
+            Object.keys(methodOptions).forEach((key) => {
+              if (specialTerms.indexOf(key) > -1) {
+                methodOptions[key] = makePhrase(methodOptions[key]);
+              }
+            });
             if (this.eqn.functions[method] != null) {
               out.push(this.eqn.functions[method](methodOptions));
             }

@@ -34,7 +34,12 @@ describe('Diagram Equations From Object', () => {
         a: 'a',
         b: 'b',
         c: 'c',
+        d: 'd',
+        e: 'e',
+        f: 'f',
         v: { symbol: 'vinculum' },
+        v1: { symbol: 'vinculum' },
+        v2: { symbol: 'vinculum' },
       },
     });
     // modColor1 = [0.95, 0, 0, 1];
@@ -60,6 +65,24 @@ describe('Diagram Equations From Object', () => {
               denominator: 'b',
               symbol: 'v',
             },
+          },
+        ],
+      },
+      multiFrac: {
+        '0': [
+          { frac: ['a', 'b', 'v'] },
+          'c',
+          { frac: ['d', 'e', 'v1'] },
+        ],
+      },
+      nestedFrac: {
+        '0': [
+          {
+            frac: [
+              { frac: ['d', 'e', 'v1'] },
+              'b',
+              'v',
+            ],
           },
         ],
       },
@@ -89,7 +112,6 @@ describe('Diagram Equations From Object', () => {
   });
   test('Nested Arrays', () => {
     eqn.addForms(addForms.nestedArrays);
-    const { content } = forms['0'].base;
     expect(forms['0'].base.content[0].content).toBe(eqn._a);
     expect(forms['0'].base.content[1].content).toBe(eqn._b);
     expect(forms['0'].base.content[2].content).toBe(eqn._c);
@@ -103,5 +125,28 @@ describe('Diagram Equations From Object', () => {
     expect(content0[0].vinculum).toBe(eqn._v);
     const content1 = forms['0'].base.content;
     expect(content1).toEqual(content0);
+  });
+  test('Multi Frac', () => {
+    eqn.addForms(addForms.multiFrac);
+    const { content } = forms['0'].base;
+    expect(content[0]).toBeInstanceOf(Fraction);
+    expect(content[0].numerator.content[0].content).toBe(eqn._a);
+    expect(content[0].denominator.content[0].content).toBe(eqn._b);
+    expect(content[0].vinculum).toBe(eqn._v);
+    expect(content[1].content).toBe(eqn._c);
+    expect(content[2]).toBeInstanceOf(Fraction);
+    expect(content[2].numerator.content[0].content).toBe(eqn._d);
+    expect(content[2].denominator.content[0].content).toBe(eqn._e);
+    expect(content[2].vinculum).toBe(eqn._v1);
+  });
+  test('Nested Frac', () => {
+    eqn.addForms(addForms.nestedFrac);
+    const { content } = forms['0'].base;
+    expect(content[0]).toBeInstanceOf(Fraction);
+    expect(content[0].denominator.content[0].content).toBe(eqn._b);
+    expect(content[0].vinculum).toBe(eqn._v);
+    const contentN = content[0].numerator.content[0];
+    console.log(contentN)
+    expect(contentN.numerator.content[0].content).toBe(eqn._d);
   });
 });
