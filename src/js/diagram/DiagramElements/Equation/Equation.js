@@ -430,6 +430,9 @@ export class EquationNew extends DiagramElementCollection {
       //  3. style
       //  4. fontMath or fontText based on actual text
       let fontToUse: DiagramFont = this.eqn.fontMath;
+      if (options.text.match(/[A-Z,a-z]/)) {
+        fontToUse = this.eqn.fontText;
+      }
       if (options.style != null) {
         if (options.style === 'italic') {
           fontToUse = this.eqn.fontText;
@@ -437,10 +440,9 @@ export class EquationNew extends DiagramElementCollection {
         if (options.style === 'normal') {
           fontToUse = this.eqn.fontMath;
         }
-      } else if (options.font != null) {
+      }
+      if (options.font != null) {
         fontToUse = options.font;
-      } else if (options.text.match(/[A-Z,a-z]/)) {
-        fontToUse = this.eqn.fontText;
       }
       const p = this.shapes.txt(
         options.text,
