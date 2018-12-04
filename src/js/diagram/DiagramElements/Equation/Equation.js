@@ -138,17 +138,10 @@ function contentToElement(
 //   +showForm: (EquationForm | string, ?string) => {};
 // };
 
-export type TypeEquationOptions = {
-  defaultFormAlignment?: {
-    fixTo?: Point,
-    hAlign?: TypeHAlign,
-    vAlign?: TypeVAlign,
-  };
-};
-
 class EquationFunctions {
   // eslint-disable-next-line no-use-before-define
   collection: EquationNew;
+  shapes: {};
 
   // eslint-disable-next-line no-use-before-define
   constructor(collection: EquationNew) {
@@ -179,7 +172,48 @@ class EquationFunctions {
       getDiagramElement(this.collection, symbol),
     );
   }
+
+  vinculum(color: Array<number> = [1, 1, 1, 1]) {
+    return this.collection.shapes.horizontalLine(
+      new Point(0, 0),
+      1, 1, 0,
+      color,
+      new Transform('vinculum').scale(1, 1).translate(0, 0),
+    );
+  }
 }
+
+export type TypeEquationElements = {
+  [elementName: string]: string | {
+    text?: string;
+    textOptions?: {
+      font?: DiagramFont;
+      style?: 'italics' | 'normal' | null;
+    };
+    symbol?: string;
+    symbolOptions?: {
+      numLines?: number;
+      orientation?: 'up' | 'left' | 'down' | 'right';
+    },
+    color?: Array<number>;
+    elementOptions?: {};
+  } | DiagramElementPrimative | DiagramElementCollection;
+}
+
+export type TypeEquationOptions = {
+  color?: Array<number>;
+  fontMath?: DiagramFont;
+  fontText?: DiagramFont;
+  position?: Point;
+  defaultFormAlignment?: {
+    fixTo?: Point;
+    hAlign?: TypeHAlign;
+    vAlign?: TypeVAlign;
+  };
+  //
+  elements: TypeEquationElements;
+  //
+};
 
 // An Equation is a collection of elements that can be arranged into different
 // forms.
@@ -194,12 +228,14 @@ export class EquationNew extends DiagramElementCollection {
     } };
     currentForm: string;
     currentSubForm: string;
-    getCurrentForm: () => ?EquationForm;
+    fontMath: DiagramFont;
+    fontText: DiagramFont;
+
     subFormPriority: Array<string>,
     //
     formSeries: { [seriesName: String]: Array<EquationForm> };
     currentFormSeries: string;
-    getCurrentFormSeries: () => ?Array<EquationForm>;
+
     //
     defaultFormAlignment: {
       fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
@@ -207,6 +243,9 @@ export class EquationNew extends DiagramElementCollection {
       vAlign: TypeVAlign;
       scale: number,
     };
+
+    getCurrentFormSeries: () => ?Array<EquationForm>;
+    getCurrentForm: () => ?EquationForm;
     //
     showForm: (EquationForm | string, ?string) => {};
     //
@@ -224,8 +263,22 @@ export class EquationNew extends DiagramElementCollection {
     // animateNextFrame: void => void,
     options: TypeEquationOptions = {},
   ) {
+    let { color } = options;
+    if (color == null) {
+      color = [0.5, 0.5, 0.5, 1];
+    }
     const defaultOptions = {
-      color: [0.5, 0.5, 0.5, 1],
+      color,
+      fontMath: new DiagramFont(
+        'Times New Roman',
+        'normal',
+        0.2, '200', 'left', 'alphabetic', color,
+      ),
+      fontText: new DiagramFont(
+        'Times New Roman',
+        'italics',
+        0.2, '200', 'left', 'alphabetic', color,
+      ),
       position: new Point(0, 0),
       defaultFormAlignment: {
         fixTo: new Point(0, 0),
@@ -233,6 +286,7 @@ export class EquationNew extends DiagramElementCollection {
         vAlign: 'baseline',
         scale: 0.7,
       },
+      elements: {},
     };
     const optionsToUse = joinObjects({}, defaultOptions, options);
     super(new Transform('Equation')
@@ -254,7 +308,9 @@ export class EquationNew extends DiagramElementCollection {
       formSeries: {},
       currentFormSeries: '',
       defaultFormAlignment: optionsToUse.defaultFormAlignment,
-      functions: new EquationFunctions(this),
+      functions: new EquationFunctions(this, this.shapes),
+      fontMath: optionsToUse.fontMath,
+      fontText: optionsToUse.fontText,
     };
 
     if (optionsToUse.elements != null) {
@@ -262,66 +318,79 @@ export class EquationNew extends DiagramElementCollection {
     }
   }
 
+  // addElements(
+  //   elems: Object,
+  //   // colorOrFont: Array<number> | DiagramFont = [],
+  //   // descriptionElement: DiagramElementPrimative | null = null,
+  //   // descriptionPosition: Point = new Point(0, 0),
+  // ) {
+  //   this.addEquationElements(elems);
+  //   // this.addDescriptionElement(descriptionElement, descriptionPosition);
+  // }
+
   addElements(
     elems: Object,
-    colorOrFont: Array<number> | DiagramFont = [],
-    // descriptionElement: DiagramElementPrimative | null = null,
-    // descriptionPosition: Point = new Point(0, 0),
+    // colorOrFont: Array<number> | DiagramFont = [],
   ) {
-    this.addEquationElements(elems, colorOrFont);
-    // this.addDescriptionElement(descriptionElement, descriptionPosition);
-  }
+    // let color = [1, 1, 1, 1];
+    // if (Array.isArray(colorOrFont)) {
+    //   color = colorOrFont.slice();
+    // }
+    // let font = new DiagramFont(
+    //   'Times New Roman',
+    //   'normal',
+    //   0.2, '200', 'left', 'alphabetic', color,
+    // );
+    // let fontItalic = new DiagramFont(
+    //   'Times New Roman',
+    //   'italic',
+    //   0.2, '200', 'left', 'alphabetic', color,
+    // );
+    // if (colorOrFont instanceof DiagramFont) {
+    //   font = colorOrFont._dup();
+    //   font.style = 'normal';
+    //   fontItalic = colorOrFont._dup();
+    //   fontItalic.style = 'italic';
+    //   if (font.color != null) {
+    //     color = RGBToArray(font.color);
+    //   }
+    // }
 
-  addEquationElements(
-    elems: Object,
-    colorOrFont: Array<number> | DiagramFont = [],
-  ) {
-    let color = [1, 1, 1, 1];
-    if (Array.isArray(colorOrFont)) {
-      color = colorOrFont.slice();
-    }
-    let font = new DiagramFont(
-      'Times New Roman',
-      'normal',
-      0.2, '200', 'left', 'alphabetic', color,
-    );
-    let fontItalic = new DiagramFont(
-      'Times New Roman',
-      'italic',
-      0.2, '200', 'left', 'alphabetic', color,
-    );
-    if (colorOrFont instanceof DiagramFont) {
-      font = colorOrFont._dup();
-      font.style = 'normal';
-      fontItalic = colorOrFont._dup();
-      fontItalic.style = 'italic';
-      if (font.color != null) {
-        color = RGBToArray(font.color);
-      }
-    }
-
-    const makeElem = (text: string, fontOrStyle: DiagramFont | string | null) => {
-      let fontToUse: DiagramFont = font;
-      if (fontOrStyle instanceof DiagramFont) {
-        fontToUse = fontOrStyle;
-      } else if (fontOrStyle === 'italic') {
-        fontToUse = fontItalic;
-      } else if (fontOrStyle === 'normal') {
-        fontToUse = font;
-      } else if (text.match(/[A-Z,a-z]/)) {
-        fontToUse = fontItalic;
+    const makeElem = (options: { text: string, font?: DiagramFont, style?: 'italics' | 'normal', color?: Array<number> }) => {
+      // Priority:
+      //  1. color
+      //  2. font
+      //  3. style
+      //  4. fontMath or fontText based on actual text
+      let fontToUse: DiagramFont = this.eqn.fontMath;
+      if (options.style != null) {
+        if (options.style === 'italics') {
+          fontToUse = this.eqn.fontText;
+        }
+        if (options.style === 'normal') {
+          fontToUse = this.eqn.fontMath;
+        }
+      } else if (options.font != null) {
+        fontToUse = options.font;
+      } else if (options.text.match(/[A-Z,a-z]/)) {
+        fontToUse = this.eqn.fontText;
       }
       const p = this.shapes.txt(
-        text,
+        options.text,
         { location: new Point(0, 0), font: fontToUse },
       );
+      if (options.color != null) {
+        p.setColor(options.color);
+      }
       return p;
     };
+
+    // const makeSymbol = (options: { symbol: string, })
 
     Object.keys(elems).forEach((key) => {
       if (typeof elems[key] === 'string') {
         if (!key.startsWith('space')) {
-          this.add(key, makeElem(elems[key], null));
+          this.add(key, makeElem({ text: elems[key] }));
         }
       } else if (elems[key] instanceof DiagramElementPrimative) {
         this.add(key, elems[key]);
@@ -329,8 +398,9 @@ export class EquationNew extends DiagramElementCollection {
         this.add(key, elems[key]);
       } else {
         const {
-          text, fontOrStyle, col, elementOptions,
+          text, symbol, textOptions, symbolOptions, color, elementOptions,
         } = elems[key];
+
         const elem = makeElem(text, fontOrStyle);
         if (elementOptions != null) {
           elem.setProperties(elementOptions);
