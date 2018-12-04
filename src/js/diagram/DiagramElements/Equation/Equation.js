@@ -222,9 +222,7 @@ class EquationFunctions {
 
 export type TypeEquationPhrase =
   string
-  | Array<string
-    | TypeEquationPhrase
-    | {                                 // Fraction
+  | {                                 // Fraction
       frac: {
         numerator: TypeEquationPhrase;
         denominator: TypeEquationPhrase;
@@ -320,7 +318,8 @@ export type TypeEquationPhrase =
         space?: number;
         outsideSpace?: number;
       }
-    }>;
+    }
+  | Array<TypeEquationPhrase>;
 
 // Priority:
 //   1. symbol
@@ -591,52 +590,85 @@ export class EquationNew extends DiagramElementCollection {
       if (typeof phrase === 'string') {
         return phrase;
       }
-      let phraseToUse = phrase;
-      if (!Array.isArray(phrase)) {
-        phraseToUse = [phrase];
+      if (Array.isArray(phrase)) {
+        phrase.forEach((phraseElem) => {
+          out.push(makePhrase(phraseElem));
+        });
+        return out;
       }
-      phraseToUse.forEach((phraseElem) => {
-        if (typeof phraseElem === 'string') {
-          out.push(phraseElem);
-        } else if (Array.isArray(phraseElem)) {
-          const result = makePhrase(phraseElem);
-          if (Array.isArray(result)) {
-            result.forEach((resultElem) => {
-              out.push(resultElem);
-            });
-          } else {
-            out.push(result);
-          }
+      // otherwise the phrase is an object with a single key which
+      // is the function that should be run
+      const [method, parameters] = Object.entries(phrase)[0];
+      if (method != null) {
+        let parametersToUse = parameters;
+        if (Array.isArray(parameters)) {
+          parametersToUse = makePhrase(parameters);
         } else {
-          let [method, methodOptions] = Object.entries(phraseElem)[0];
-          console.log(method, methodOptions)
-          if (method != null
-              && methodOptions != null
-              // && typeof methodOptions === 'object'
-          ) {
-            if (Array.isArray(methodOptions)) {
-              methodOptions = makePhrase(methodOptions);
-            } else if (typeof methodOptions === 'object') {
-              const specialTerms = [
-                'content', 'numerator', 'denominator', 'subscript',
-                'superscript',
-              ];
-              Object.entries(methodOptions).forEach((entry) => {
-                const [key, value] = entry;
-                if (specialTerms.indexOf(key) > -1) {
-                  methodOptions[key] = makePhrase(value);
-                }
-              });
+          Object.entries(parametersToUse).forEach((entry) => {
+            const [key, value] = entry;
+            const specialTerms = [
+              'content', 'numerator', 'denominator', 'subscript',
+              'superscript',
+            ];
+            if (specialTerms.indexOf(key) > -1) {
+              parametersToUse[key] = makePhrase(value);
             }
-            console.log(methodOptions)
-            if (this.eqn.functions[method] != null) {
-              out.push(this.eqn.functions[method](methodOptions));
-            }
-          }
+          });
         }
-      });
+        if (this.eqn.functions[method] != null) {
+          out.push(this.eqn.functions[method](parametersToUse));
+        }
+      }
       return out;
     };
+      // {
+      // let phraseToUse = phrase;
+      // if (!Array.isArray(phrase)) {
+      //   phraseToUse = [phrase];
+      // }
+      // phraseToUse.forEach((phraseElem) => {
+      //   if (typeof phraseElem === 'string') {
+      //     out.push(phraseElem);
+      //   } else if (Array.isArray(phraseElem)) {
+      //     const result = makePhrase(phraseElem);
+      //     if (Array.isArray(result)) {
+      //       result.forEach((resultElem) => {
+      //         out.push(resultElem);
+      //       });
+      //     } else {
+      //       out.push(result);
+      //     }
+      //   } else {
+      //     let [method, methodOptions] = Object.entries(phraseElem)[0];
+      //     console.log(method, methodOptions)
+      //     if (method != null
+      //         && methodOptions != null
+      //         // && typeof methodOptions === 'object'
+      //     ) {
+      //       if (Array.isArray(methodOptions)) {
+      //         methodOptions = makePhrase(methodOptions);
+      //       } else if (typeof methodOptions === 'object') {
+      //         const specialTerms = [
+      //           'content', 'numerator', 'denominator', 'subscript',
+      //           'superscript',
+      //         ];
+      //         Object.entries(methodOptions).forEach((entry) => {
+      //           const [key, value] = entry;
+      //           if (specialTerms.indexOf(key) > -1) {
+      //             methodOptions[key] = makePhrase(value);
+      //           }
+      //         });
+      //       }
+      //       console.log(methodOptions)
+      //       if (this.eqn.functions[method] != null) {
+      //         out.push(this.eqn.functions[method](methodOptions));
+      //       }
+      //     }
+        // }
+        // }
+      // });
+    //   return out;
+    // };
     Object.keys(forms).forEach((name) => {
       const form = forms[name];
       if (Array.isArray(form)) {
