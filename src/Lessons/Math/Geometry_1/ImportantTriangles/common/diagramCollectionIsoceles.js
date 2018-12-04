@@ -129,6 +129,76 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         '0': ['.frac', ['a', 'b', 'v'], 'c'],
         '1': [{ frac: ['a', 'c', 'v'] }, 'b'],
         '2': ['b', 'b', 'c'],
+
+        // '1c': {
+        //   setup: {
+        //     half: {
+        //       frac: {
+        //         numerator: ['a'],
+        //         denominator: 'b',
+        //         symbol: 'v',
+        //       },
+        //     },
+        //   },
+        //   content: [
+        //     'half', 'equals', 'c',
+        //   ],
+        // },
+        // '1b': [
+        //   frac('a', 'b', 'v'),
+        //   frac({ num: 'a', den: 'b', sym: 'v'}),
+        //   {
+        //     frac: {
+        //       numerator: ['a'],
+        //       denominator: 'b',
+        //       symbol: 'v',
+        //     },
+        //   },
+        //   { frac: ['a', 'b', 'v'] },
+        //   {
+        //     strike: {
+        //       content: ['a'],
+        //       widthSymbol: 'x',
+        //     },
+        //   },
+        //   { strike: ['a', 'x'] },
+
+        //   annotate(['_2', 'a', 'plus', 'b_'], {
+        //     withAnnotation: ['minus_', 'b__'],
+        //     relativeToContent: ['center', -0.4],
+        //     relativeToAnnotation: ['center', 'top'],
+        //     size: 0.6,
+        //   }),
+          
+        //   {
+        //     annotate: {
+        //       content:              ['_2', 'a', 'plus', 'b_'],
+        //       withAnnotation:       ['minus_', 'b__'],
+        //       relativeToContent:    ['center', -0.4],
+        //       relativeToAnnotation: ['center', 'top'],
+        //       size: 0.6,
+        //     },
+        //   },
+        //   {
+        //     annotate: {
+        //       content: ['_2', 'a', 'plus', 'b_'],
+        //       withAnnotations: [
+        //         {
+        //           annotation: ['minus_', 'b__'],
+        //           relativeToContent: ['center', -0.4],
+        //           relativeToAnnotation: ['center', 'top'],
+        //           size: 0.6,
+        //         },
+        //         {
+        //           annotation: ['minus_', 'b__'],
+        //           relativeToContent: ['right', 1.4],
+        //           relativeToAnnotation: ['left', 'bottom'],
+        //           size: 0.6,
+        //         },
+        //       ],
+        //     },
+        //   },
+        // ],
       },
     });
     this.diagram.equation.makeEqnFromOptions({
@@ -192,60 +262,6 @@ export default class IsocelesCollection extends CommonDiagramCollection {
               'center', -0.4, 'center', 'top', 0.6],
             ],
           ],
-        ],
-        '1b': [
-          frac('a', 'b', 'v'),
-          frac({ num: 'a', den: 'b', sym: 'v'}),
-          {
-            frac: {
-              numerator: ['a'],
-              denominator: 'b',
-              symbol: 'v',
-            },
-          },
-          { frac: ['a', 'b', 'v'] },
-          {
-            strike: {
-              content: ['a'],
-              widthSymbol: 'x',
-            },
-          },
-          { strike: ['a', 'x'] },
-
-          annotate(['_2', 'a', 'plus', 'b_'], {
-            withAnnotation: ['minus_', 'b__'],
-            relativeToContent: ['center', -0.4],
-            relativeToAnnotation: ['center', 'top'],
-            size: 0.6,
-          }),
-          {
-            annotate: {
-              content:              ['_2', 'a', 'plus', 'b_'],
-              withAnnotation:       ['minus_', 'b__'],
-              relativeToContent:    ['center', -0.4],
-              relativeToAnnotation: ['center', 'top'],
-              size: 0.6,
-            },
-          },
-          {
-            annotate: {
-              content: ['_2', 'a', 'plus', 'b_'],
-              withAnnotations: [
-                {
-                  annotation: ['minus_', 'b__'],
-                  relativeToContent: ['center', -0.4],
-                  relativeToAnnotation: ['center', 'top'],
-                  size: 0.6,
-                },
-                {
-                  annotation: ['minus_', 'b__'],
-                  relativeToContent: ['right', 1.4],
-                  relativeToAnnotation: ['left', 'bottom'],
-                  size: 0.6,
-                },
-              ],
-            },
-          },
         ],
         '1a': [
           {
