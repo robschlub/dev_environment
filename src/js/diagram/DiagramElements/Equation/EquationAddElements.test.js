@@ -1,18 +1,9 @@
-// import {
-//   DiagramElementPrimative,
-//   DiagramElementCollection,
-//   // AnimationPhase,
-// } from '../Element';
-// import Diagram from '../Diagram';
 import {
-  Point, Rect,
+  Point, // Rect,
 } from '../../tools/g2';
-import {
-  round,
-} from '../../tools/mathtools';
-// import webgl from '../../__mocks__/WebGLInstanceMock';
-// import DrawContext2D from '../../__mocks__/DrawContext2DMock';
-// import VertexPolygon from '../DrawingObjects/VertexObject/VertexPolygon';
+// import {
+//   round,
+// } from '../../tools/mathtools';
 import * as tools from '../../../tools/tools';
 import makeDiagram from '../../../__mocks__/makeDiagram';
 import { EquationNew } from './Equation';
@@ -26,7 +17,6 @@ tools.isTouchDevice = jest.fn();
 jest.mock('../../Gesture');
 jest.mock('../../webgl/webgl');
 jest.mock('../../DrawContext2D');
-// jest.mock('../../tools/tools');
 
 describe('Diagram Equations From Object', () => {
   let diagram;
@@ -101,6 +91,10 @@ describe('Diagram Equations From Object', () => {
           },
         },
       },
+      diagramElements: {
+        a: 'a',
+        v: diagram.shapes.horizontalLine(new Point(0, 0), 1, 0.1, 0, defaultColor),
+      },
     };
   });
   test('Equation instantiation', () => {
@@ -170,5 +164,13 @@ describe('Diagram Equations From Object', () => {
     expect(eqn._a.color).toEqual([1, 0, 0, 1]);
     expect(eqn._b.color).toEqual(modColor1);
     expect(eqn._v.color).toEqual(modColor1);
+  });
+  test('Diagram Elements', () => {
+    eqn.addElements(addElements.diagramElements);
+    expect(eqn._a.drawingObject.text[0].text).toBe('a');
+    expect(eqn._v.drawingObject).toBeInstanceOf(VertexHorizontalLine);
+
+    expect(eqn._a.color).toEqual([1, 0, 0, 1]);
+    expect(eqn._v.color).toEqual(defaultColor);
   });
 });
