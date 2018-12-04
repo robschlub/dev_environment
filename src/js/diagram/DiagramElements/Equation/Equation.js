@@ -187,6 +187,59 @@ class EquationFunctions {
   }
 }
 
+
+export type TypeEquationPhrase =
+  string
+  | Array<string
+    | TypeEquationPhrase
+    | {                                 // Fraction and SmallFraction
+      numerator: TypeEquationPhrase;
+      denominator: TypeEquationPhrase;
+      symbol: string;
+      scaleModifier?: number;
+    }
+    | {                                 // Superscript and Subscript
+      content: TypeEquationPhrase;
+      subscript?: TypeEquationPhrase;
+      superscript?: TypeEquationPhrase;
+    }
+    | {                                 // Strike
+      content: TypeEquationPhrase;
+      symbol: string;
+      strikeInSize?: boolean;
+    }
+    | {                                 // Annotation
+      content: TypeEquationPhrase;
+      annotationArray: Array<{
+        content: TypeEquationPhrase;
+        xPosition?: 'left' | 'right' | 'center';
+        yPosition?: 'bottom' | 'top' | 'middle' | 'baseline';
+        xAlign?: 'left' | 'right' | 'center';
+        yAlign?: 'bottom' | 'top' | 'middle' | 'baseline';
+        scale?: number;
+      }>;
+      annotationInSize?: boolean;
+    }
+    | {                                 // Bracket
+      content: TypeEquationPhrase;
+      symbol: string;
+      symbol: string;
+      space?: number;
+    }
+    | {                                 // Top and Bottom Bar
+      content: TypeEquationPhrase;
+      symbol: string;
+      space?: number;
+      outsideSpace?: number;
+    }
+    | {                                 // Top and Bottom Comment
+      content: TypeEquationPhrase;
+      comment: TypeEquationPhrase;
+      symbol: string;
+      space?: number;
+      outsideSpace?: number;
+    }>;
+
 // Priority:
 //   1. symbol
 //   2. text
@@ -205,6 +258,32 @@ export type TypeEquationElements = {
     elementOptions?: {};
   } | DiagramElementPrimative | DiagramElementCollection;
 }
+
+type TypeEquationFormObject = {
+  content: TypeEquationPhrase,
+  elementMods?: {
+    [elementName: string]: {
+      color?: Array<number>,
+      direction: 'fromPrev' | 'fromNext' | 'fromAny' | null,
+      elementOptions?: {},
+    }
+  },
+  subForm?: string,
+  alignment?: {
+    fixTo?: Point | string,
+    scale?: number,
+    alignH?: TypeHAlign | null,
+    alignV?: TypeVAlign | null,
+  },
+};
+
+export type TypeEquationForms = {
+  [formName: string]: TypeEquationPhrase
+    | TypeEquationFormObject
+    | {
+      [subFormName: string]: TypeEquationFormObject;
+    }
+};
 
 export type TypeEquationOptions = {
   color?: Array<number>;
@@ -323,6 +402,10 @@ export class EquationNew extends DiagramElementCollection {
     if (optionsToUse.elements != null) {
       this.addElements(optionsToUse.elements);
     }
+
+    if (optionsToUse.forms != null) {
+      this.addForms(optionsToUse.forms);
+    }
   }
 
   // addElements(
@@ -336,9 +419,10 @@ export class EquationNew extends DiagramElementCollection {
   // }
 
   addElements(
-    elems: Object,
+    elems: TypeEquationElements,
     // colorOrFont: Array<number> | DiagramFont = [],
   ) {
+    // Helper function to add text element
     const makeTextElem = (options: { text: string, font?: DiagramFont, style?: 'italic' | 'normal', color?: Array<number> }) => {
       // Priority:
       //  1. color
@@ -368,6 +452,7 @@ export class EquationNew extends DiagramElementCollection {
       return p;
     };
 
+    // Helper function to add symbol element
     const makeSymbolElem = (options: { symbol: string, numLines?: number,
     orientation?: 'up' | 'left' | 'down' | 'right', color?: Array<number>}) => {
       let symbol = null;
@@ -384,8 +469,7 @@ export class EquationNew extends DiagramElementCollection {
       return symbol;
     };
 
-    // const makeSymbol = (options: { symbol: string, })
-
+    // Go through each element and add it
     Object.keys(elems).forEach((key) => {
       if (typeof elems[key] === 'string') {
         if (!key.startsWith('space')) {
@@ -417,6 +501,9 @@ export class EquationNew extends DiagramElementCollection {
     this.setFirstTransform(this.transform);
   }
 
+  addForms(forms: TypeEquationForms,) {
+
+  }
 
   addForm(
     name: string,

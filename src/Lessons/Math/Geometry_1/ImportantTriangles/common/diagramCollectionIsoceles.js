@@ -128,7 +128,27 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       forms: {
         '0': ['.frac', ['a', 'b', 'v'], 'c'],
         '1': [{ frac: ['a', 'c', 'v'] }, 'b'],
-        '2': ['b', 'b', 'c'],
+        '2': ['b', 'a', 'c'],
+        '3': {
+          content: ['b', 'a', 'c'],
+          elementMods: {
+            b: {
+              color: [1, 0, 0, 1],
+            },
+          },
+          subForm: 'deg',
+        },
+        '4': {
+          'deg': ['b', 'a', 'c'],
+          'rad': {
+            content: ['b', 'a', 'c'],
+            elementMods: {
+              b: {
+                color: [1, 0, 0, 1],
+              },
+            },
+          },
+        },
 
         // '1c': {
         //   setup: {
