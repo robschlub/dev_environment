@@ -47,6 +47,9 @@ describe('Diagram Equations From Object', () => {
         '0': ['a', 'b', 'c'],
         '1': ['b', 'a', 'c'],
       },
+      nestedArrays: {
+        '0': ['a', ['b', 'c']],
+      },
       frac: {
         '0': [{ frac: ['a', 'b', 'c'] }],
         '1': [
@@ -69,9 +72,10 @@ describe('Diagram Equations From Object', () => {
     eqn.addForms(addForms.arraySingleForm);
     expect(forms).toHaveProperty('0');
     expect(forms['0']).toHaveProperty('base');
-    expect(forms['0'].base.content[0].content.drawingObject.text[0].text).toBe('a');
-    expect(forms['0'].base.content[1].content.drawingObject.text[0].text).toBe('b');
-    expect(forms['0'].base.content[2].content.drawingObject.text[0].text).toBe('c');
+    const { content } = forms['0'].base;
+    expect(content[0].content.drawingObject.text[0].text).toBe('a');
+    expect(content[1].content.drawingObject.text[0].text).toBe('b');
+    expect(content[2].content.drawingObject.text[0].text).toBe('c');
   });
   test('Array Two Forms', () => {
     eqn.addForms(addForms.arrayTwoForms);
@@ -81,5 +85,12 @@ describe('Diagram Equations From Object', () => {
     expect(forms['1']).toHaveProperty('base');
     expect(forms['0'].base.content[0].content.drawingObject.text[0].text).toBe('a');
     expect(forms['1'].base.content[0].content.drawingObject.text[0].text).toBe('b');
+  });
+  test('Nested Arrays', () => {
+    eqn.addForms(addForms.nestedArrays);
+    const { content } = forms['0'].base;
+    expect(content[0].content.drawingObject.text[0].text).toBe('a');
+    expect(content[1].content.drawingObject.text[0].text).toBe('b');
+    expect(content[2].content.drawingObject.text[0].text).toBe('c');
   });
 });

@@ -504,10 +504,35 @@ export class EquationNew extends DiagramElementCollection {
   }
 
   addForms(forms: TypeEquationForms) {
+    const makePhrase = (phrase: TypeEquationPhrase) => {
+      const out = [];
+      if (typeof phrase === 'string') {
+        return phrase;
+      }
+      phrase.forEach((phraseElem) => {
+        if (typeof phraseElem === 'string') {
+          out.push(phraseElem);
+        } else if (Array.isArray(phraseElem)) {
+          const result = makePhrase(phraseElem);
+          result.forEach((resultElem) => {
+            out.push(resultElem);
+          });
+        } else {
+          const method = Object.keys(phraseElem)[0];
+          if (method != null) {
+            const methodOptions = phraseElem[method];
+            if (this.eqn.functions[method] != null) {
+              out.push(this.eqn.functions[method](methodOptions));
+            }
+          }
+        }
+      });
+      return out;
+    };
     Object.keys(forms).forEach((name) => {
       const form = forms[name];
       if (Array.isArray(form)) {
-        this.addForm(name, form);
+        this.addForm(name, makePhrase(form));
       }
     });
   }
