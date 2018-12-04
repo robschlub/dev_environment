@@ -7,10 +7,11 @@ import {
 import * as tools from '../../../tools/tools';
 import makeDiagram from '../../../__mocks__/makeDiagram';
 import { EquationNew } from './Equation';
-import {
-  DiagramFont,
-} from '../../DrawingObjects/TextObject/TextObject';
-import VertexHorizontalLine from '../../DrawingObjects/VertexObject/VertexHorizontalLine';
+import Fraction from './Elements/Fraction';
+// import {
+//   DiagramFont,
+// } from '../../DrawingObjects/TextObject/TextObject';
+// import VertexHorizontalLine from '../../DrawingObjects/VertexObject/VertexHorizontalLine';
 
 tools.isTouchDevice = jest.fn();
 
@@ -51,7 +52,7 @@ describe('Diagram Equations From Object', () => {
         '0': ['a', ['b', 'c']],
       },
       frac: {
-        '0': [{ frac: ['a', 'b', 'c'] }],
+        '0': [{ frac: ['a', 'b', 'v'] }],
         '1': [
           {
             frac: {
@@ -92,5 +93,15 @@ describe('Diagram Equations From Object', () => {
     expect(content[0].content.drawingObject.text[0].text).toBe('a');
     expect(content[1].content.drawingObject.text[0].text).toBe('b');
     expect(content[2].content.drawingObject.text[0].text).toBe('c');
+  });
+  test('frac', () => {
+    eqn.addForms(addForms.frac);
+    const content0 = forms['0'].base.content;
+    expect(content0[0]).toBeInstanceOf(Fraction);
+    expect(content0[0].numerator.content[0].content).toBe(eqn._a);
+    expect(content0[0].denominator.content[0].content).toBe(eqn._b);
+    expect(content0[0].vinculum).toBe(eqn._v);
+    const content1 = forms['0'].base.content;
+    expect(content1).toEqual(content0);
   });
 });

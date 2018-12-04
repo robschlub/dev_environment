@@ -173,6 +173,38 @@ class EquationFunctions {
     );
   }
 
+  sfrac(options: {
+      numerator: TypeEquationInput,
+      denominator: TypeEquationInput,
+      symbol: string | DiagramElementPrimative | DiagramElementCollection,
+      scale?: number,
+    }
+    | [
+        TypeEquationInput,
+        TypeEquationInput,
+        string | DiagramElementPrimative | DiagramElementCollection,
+        ?number,
+      ]) {
+    let numerator;
+    let denominator;
+    let symbol;
+    let scale;
+    if (Array.isArray(options)) {
+      [numerator, denominator, symbol, scale] = options;
+    } else {
+      ({
+        numerator, denominator, symbol, scale,
+      } = options);
+    }
+    const f = new Fraction(
+      contentToElement(this.collection, numerator),
+      contentToElement(this.collection, denominator),
+      getDiagramElement(this.collection, symbol),
+    );
+    f.scaleModifier = scale;
+    return f;
+  }
+
   vinculum(options: { color?: Array<number> } = {}) {
     let { color } = options;
     if (color == null) {
