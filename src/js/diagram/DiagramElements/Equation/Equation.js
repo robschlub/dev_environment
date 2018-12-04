@@ -195,7 +195,7 @@ export type TypeEquationElements = {
     // Text only
     text?: string;
     font?: DiagramFont;
-    style?: 'italics' | 'normal' | null;
+    style?: 'italic' | 'normal' | null;
     // Symbol Only
     symbol?: string;
     numLines?: number;
@@ -283,7 +283,7 @@ export class EquationNew extends DiagramElementCollection {
       ),
       fontText: new DiagramFont(
         'Times New Roman',
-        'italics',
+        'italic',
         0.2, '200', 'left', 'alphabetic', color,
       ),
       position: new Point(0, 0),
@@ -339,7 +339,7 @@ export class EquationNew extends DiagramElementCollection {
     elems: Object,
     // colorOrFont: Array<number> | DiagramFont = [],
   ) {
-    const makeTextElem = (options: { text: string, font?: DiagramFont, style?: 'italics' | 'normal', color?: Array<number> }) => {
+    const makeTextElem = (options: { text: string, font?: DiagramFont, style?: 'italic' | 'normal', color?: Array<number> }) => {
       // Priority:
       //  1. color
       //  2. font
@@ -347,7 +347,7 @@ export class EquationNew extends DiagramElementCollection {
       //  4. fontMath or fontText based on actual text
       let fontToUse: DiagramFont = this.eqn.fontMath;
       if (options.style != null) {
-        if (options.style === 'italics') {
+        if (options.style === 'italic') {
           fontToUse = this.eqn.fontText;
         }
         if (options.style === 'normal') {
