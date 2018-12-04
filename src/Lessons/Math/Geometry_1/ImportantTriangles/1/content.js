@@ -57,6 +57,8 @@ class Content extends LessonContent {
         iso.show();
         iso._isoEqn.showAll();
         iso.eqns.isoEqn.showForm('3');
+        iso._testEqn.showAll();
+        iso._testEqn.showForm('0');
         // iso._grid.showAll();
         // iso.eqns.test.nextForm();
       },

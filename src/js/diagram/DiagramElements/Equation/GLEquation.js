@@ -2242,7 +2242,7 @@ export class EquationNew extends DiagramElementCollection {
       subFormPriority: [],
       formSeries: {},
       currentFormSeries: '',
-      defaultFormAlignment: optionsToUse.defaultOptions,
+      defaultFormAlignment: optionsToUse.defaultFormAlignment,
       functions: new EquationFunctions(this),
     };
   }
@@ -2369,6 +2369,7 @@ export class EquationNew extends DiagramElementCollection {
     // form[subForm].name = subForm;
     form[subForm].description = description;
     form[subForm].modifiers = modifiers;
+    form[subForm].name = name;
     form[subForm].subForm = subForm;
     form[subForm].elementMods = {};
     if (typeof time === 'number') {
@@ -2399,26 +2400,105 @@ export class EquationNew extends DiagramElementCollection {
     });
     // const form = this.form[name][formType];
     form[subForm].createEq(content);
-    form[subForm].type = formType;
+    // form[subForm].subForm = formType;
     form[subForm].arrange(
-      this.defaultFormAlignment.scale,
-      this.defaultFormAlignment.hAlign,
-      this.defaultFormAlignment.vAlign,
-      this.defaultFormAlignment.fixTo,
+      this.eqn.defaultFormAlignment.scale,
+      this.eqn.defaultFormAlignment.hAlign,
+      this.eqn.defaultFormAlignment.vAlign,
+      this.eqn.defaultFormAlignment.fixTo,
     );
-    if (addToSeries) {
-      if (this.formSeries == null) {
-        this.formSeries = [];
-      }
-      this.formSeries.push(this.form[name]);
-    }
+    // if (addToSeries != null && addToSeries !== '') {
+    //   if (this.eqn.formSeries[addToSeries] == null) {
+    //     this.eqn.formSeries[addToSeries] = [];
+    //   }
+    //   this.eqn.formSeries[addToSeries].push(this.eqn.forms[name]);
+    // }
     // make the first form added also equal to the base form as always
     // need a base form for some functions
-    if (this.form[name].base === undefined) {
+    if (this.eqn.forms[name].base === undefined) {
       const baseOptions = Object.assign({}, options);
-      baseOptions.formType = 'base';
+      baseOptions.subForm = 'base';
       this.addForm(name, content, baseOptions);
     }
+  }
+
+  getCurrentForm() {
+    if (this.eqn.forms[this.eqn.currentForm] == null) {
+      return null;
+    }
+    if (this.eqn.forms[this.eqn.currentForm][this.eqn.currentSubForm] == null) {
+      return null;
+    }
+    return this.eqn.forms[this.eqn.currentForm][this.eqn.currentSubForm];
+  }
+
+  render() {
+    const form = this.getCurrentForm();
+    if (form != null) {
+      form.showHide();
+      this.show();
+      form.setPositions();
+      // this.updateDescription();
+    }
+  }
+
+  setCurrentForm(
+    formOrName: EquationForm | string,
+    subForm: string = 'base',
+  ) {
+    if (typeof formOrName === 'string') {
+      this.eqn.currentForm = '';
+      this.eqn.currentSubForm = '';
+      if (formOrName in this.eqn.forms) {
+        this.eqn.currentForm = formOrName;
+        if (subForm in this.eqn.forms[formOrName]) {
+          this.currentSubForm = subForm;
+        }
+      }
+    } else {
+      this.eqn.currentForm = formOrName.name;
+      this.eqn.currentSubForm = formOrName.type;
+    }
+  }
+
+  showForm(
+    formOrName: EquationForm | string,
+    subForm: ?string = null,
+  ) {
+    this.show();
+    let form = formOrName;
+    if (typeof formOrName === 'string') {
+      form = this.getForm(formOrName, subForm);
+    }
+    if (form) {
+      this.setCurrentForm(form);
+      this.render();
+    }
+  }
+
+  getForm(
+    formOrName: string | EquationForm,
+    subForm: ?string,
+  ): null | EquationForm {
+    if (formOrName instanceof EquationForm) {
+      return formOrName;
+    }
+    // console.log(formType, this.form[formOrName])
+    if (formOrName in this.eqn.forms) {
+      let formTypeToUse = subForm;
+      if (formTypeToUse == null) {
+        const possibleFormTypes
+          = this.eqn.subFormPriority.filter(fType => fType in this.eqns.forms[formOrName]);
+        if (possibleFormTypes.length) {
+          // eslint-disable-next-line prefer-destructuring
+          formTypeToUse = possibleFormTypes[0];
+        }
+      }
+      if (formTypeToUse != null) {
+        return this.eqn.forms[formOrName][formTypeToUse];
+      }
+    }
+    return null;
   }
 }
 
