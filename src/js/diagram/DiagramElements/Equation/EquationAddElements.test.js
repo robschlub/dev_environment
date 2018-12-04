@@ -173,4 +173,13 @@ describe('Diagram Equations From Object', () => {
     expect(eqn._a.color).toEqual([1, 0, 0, 1]);
     expect(eqn._v.color).toEqual(defaultColor);
   });
+  test('Create elements as part of initial diagram', () => {
+    const equationOptions = {
+      elements: addElements.simple,
+    };
+    const eqn1 = new EquationNew(diagram.shapes, equationOptions);
+    expect(eqn1._a.drawingObject.text[0].text).toBe('a');
+    expect(eqn1._b.drawingObject.text[0].text).toBe('b');
+    expect(eqn1._c.drawingObject.text[0].text).toBe('c');
+  });
 });
