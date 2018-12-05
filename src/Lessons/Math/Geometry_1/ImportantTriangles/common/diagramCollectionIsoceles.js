@@ -226,6 +226,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       },
     });
     // $FlowFixMe
+    this._testEqn.setFormSeries(['11', '1', '90']);
+    // $FlowFixMe
     this._testEqn.addForms({
       '11': ['a', 'b', 'c'],
       '13': ['a', ['b', 'c']],
@@ -236,7 +238,6 @@ export default class IsocelesCollection extends CommonDiagramCollection {
             color: [1, 0, 0, 1],
           },
         },
-        addToSeries: 'series1',
         subForm: 'deg',
       },
       '90': {
@@ -246,7 +247,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
             color: [1, 0, 0, 1],
           },
         },
-        addToSeries: 'series2',
+        time: 2,
         subForm: 'deg',
       },
       '1d': {

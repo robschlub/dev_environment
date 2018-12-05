@@ -460,7 +460,6 @@ export class EquationNew extends DiagramElementCollection {
       .translate(0, 0), shapes.limits);
     this.shapes = shapes;
     this.color = optionsToUse.color;
-    this.setPosition(optionsToUse.position);
     // this.isTouchDevice = isTouchDevice;
     // this.animateNextFrame = animateNextFrame;
 
@@ -480,6 +479,8 @@ export class EquationNew extends DiagramElementCollection {
       descriptionElement: null,
       descriptionPosition: new Point(0, 0),
     };
+
+    this.setPosition(optionsToUse.position);
 
     if (optionsToUse.elements != null) {
       this.addElements(optionsToUse.elements);
@@ -604,7 +605,8 @@ export class EquationNew extends DiagramElementCollection {
   setPosition(pointOrX: Point | number, y: number = 0) {
     super.setPosition(pointOrX, y);
     const position = this.getDiagramPosition();
-    if (this.eqn.descriptionElement) {
+    // console.log(this.eqn, this.eqn.descriptionElement)
+    if (this.eqn.descriptionElement != null) {
       this.eqn.descriptionElement.setPosition(position.add(this.eqn.descriptionPosition));
     }
   }
@@ -935,11 +937,12 @@ export class EquationNew extends DiagramElementCollection {
     } else if (typeof name === 'number') {
       nextIndex = name;
     } else {
-      this.eqn.formSeries.forEach((formName, index) => {
-        if (formName === name) {
-          nextIndex = index;
-        }
-      });
+      nextIndex = this.eqn.formSeries.indexOf(name);
+      // this.eqn.formSeries.forEach((formName, index) => {
+      //   if (formName === name) {
+      //     nextIndex = index;
+      //   }
+      // });
     }
 
     const nextForm = this.eqn.forms[this.eqn.formSeries[nextIndex]];
@@ -969,7 +972,7 @@ export class EquationNew extends DiagramElementCollection {
           }
         };
         if (animate) {
-          let timeToUse = null;
+          let timeToUse = time;
           // $FlowFixMe - this is going to be ok
           if (nextSubForm.time != null && nextSubForm.time[fromWhere] != null) {
             timeToUse = nextSubForm.time[fromWhere];
