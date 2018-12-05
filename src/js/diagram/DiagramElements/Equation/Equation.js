@@ -170,9 +170,14 @@ class EquationFunctions {
       return this.stringToElement(content);
     }
     if (Array.isArray(content)) {
-      const elementArray = [];
+      let elementArray = [];
       content.forEach((c) => {
-        elementArray.push(this.parseContent(c));
+        const result = this.parseContent(c);
+        if (Array.isArray(result)) {
+          elementArray = [...elementArray, ...result];
+        } else {
+          elementArray.push(this.parseContent(c));
+        }
       });
       return elementArray;
     }
@@ -195,6 +200,7 @@ class EquationFunctions {
     if (!Array.isArray(elementArray)) {
       elementArray = [elementArray];
     }
+    console.log(elementArray)
     return new Elements(elementArray);
   }
 

@@ -110,7 +110,7 @@ describe('Diagram Equations From Object', () => {
     expect(forms['0'].base.content[0].content[0].content).toBe(eqn._a);
     expect(forms['1'].base.content[0].content[0].content).toBe(eqn._b);
   });
-  test.only('Nested Arrays', () => {
+  test('Nested Arrays', () => {
     eqn.addForms(addForms.nestedArrays);
     expect(forms['0'].base.content[0].content[0].content).toBe(eqn._a);
     expect(forms['0'].base.content[0].content[1].content).toBe(eqn._b);
