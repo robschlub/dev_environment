@@ -305,31 +305,6 @@ class EquationFunctions {
       numerator: TypeEquationInput,
       denominator: TypeEquationInput,
       symbol: string | DiagramElementPrimative | DiagramElementCollection,
-    }
-    | [
-        TypeEquationInput,
-        TypeEquationInput,
-        string | DiagramElementPrimative | DiagramElementCollection
-      ]) {
-    let numerator;
-    let denominator;
-    let symbol;
-    if (Array.isArray(options)) {
-      [numerator, denominator, symbol] = options;
-    } else {
-      ({ numerator, denominator, symbol } = options);
-    }
-    return new Fraction(
-      this.contentToElement(numerator),
-      this.contentToElement(denominator),
-      getDiagramElement(this.collection, symbol),
-    );
-  }
-
-  sfrac(options: {
-      numerator: TypeEquationInput,
-      denominator: TypeEquationInput,
-      symbol: string | DiagramElementPrimative | DiagramElementCollection,
       scale?: number,
     }
     | [
@@ -354,7 +329,9 @@ class EquationFunctions {
       this.contentToElement(denominator),
       getDiagramElement(this.collection, symbol),
     );
-    f.scaleModifier = scale;
+    if (scale != null) {
+      f.scaleModifier = scale;
+    }
     return f;
   }
 
