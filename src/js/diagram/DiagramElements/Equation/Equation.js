@@ -45,99 +45,6 @@ export function getDiagramElement(
 
 type TypeEquationInput = Array<Elements | Element | string> | Elements | Element | string;
 
-function contentToElement1(
-  collection: DiagramElementCollection,
-  content: TypeEquationInput,
-): Elements {
-  // If input is alread an Elements object, then return it
-  if (content instanceof Elements) {
-    return content._dup();
-  }
-
-  // If it is not an Elements object, then create an Element(s) array
-  // and create a new Elements Object
-  const elementArray: Array<Elements | Element | null> = [];
-
-  // If the content is a string, then find the corresponding
-  // DiagramElement associated with the string
-  if (typeof content === 'string') {
-    if (content.startsWith('space')) {
-      const spaceNum = parseFloat(content.replace(/space[_]*/, '')) || 0.03;
-      elementArray.push(new Element(new BlankElement(spaceNum)));
-    } else {
-      const diagramElement = getDiagramElement(collection, content);
-      if (diagramElement) {
-        elementArray.push(new Element(diagramElement));
-      }
-    }
-  // Otherwise, if the input content is an array, then process each element
-  // and add it to the ElementArray
-  } else if (Array.isArray(content)) {
-    content.forEach((c) => {
-      if (typeof c === 'string') {
-        if (c.startsWith('space')) {
-          const spaceNum = parseFloat(c.replace(/space[_]*/, '')) || 0.03;
-          elementArray.push(new Element(new BlankElement(spaceNum)));
-        } else {
-          const diagramElement = getDiagramElement(collection, c);
-          if (diagramElement) {
-            elementArray.push(new Element(diagramElement));
-          }
-        }
-      } else if (c !== null) {
-        elementArray.push(c);
-      }
-    });
-  // Otherwise, if the input is an Element or Elements object, so just add
-  // it to the ElementsArray
-  } else if (content !== null) {
-    elementArray.push(content);
-  }
-  return new Elements(elementArray);
-}
-
-// export type TypeEquation = {
-//   +collection: DiagramElementCollection;
-//   diagramLimits: Rect;
-//   firstTransform: Transform;
-//   _dup: () => TypeEquation;
-//   form: Object;
-//   unitsForm: Object;
-//   currentForm: ?EquationForm;
-//   // currentFormName: string;
-//   formAlignment: {
-//     vAlign: TypeVAlign;
-//     hAlign: TypeHAlign;
-//     fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
-//     scale: number;
-//   };
-//   addForm: (string, Array<Elements | Element | string>) => void;
-//   scaleForm: (string, number) => void;
-//   setElem: (DiagramElementCollection | DiagramElementPrimative | string,
-//             Array<number> | null,
-//             boolean,
-//             'up' | 'down' | 'left' | 'right' | '',
-//             number) => void;
-//   frac: (
-//       TypeEquationInput,
-//       TypeEquationInput,
-//       string | DiagramElementPrimative | DiagramElementCollection,
-//     ) => Fraction;
-//   sfrac: (
-//       TypeEquationInput,
-//       TypeEquationInput,
-//       string | DiagramElementPrimative | DiagramElementCollection, number,
-//     ) => Fraction;
-//   setCurrentForm: (EquationForm | string) => void;
-//   render: () => void;
-//   setPosition: (Point) => void;
-//   stop: () => void;
-//   scale: (number) => void;
-//   isAnimating: boolean;
-
-//   +showForm: (EquationForm | string, ?string) => {};
-// };
-
 export type TypeEquationPhrase =
   string
   | {                                 // Fraction
@@ -680,7 +587,8 @@ export class EquationNew extends DiagramElementCollection {
       }
     });
     // const form = this.form[name][formType];
-    form[subForm].createEq(content);
+    // form[subForm].createEq(content);
+    form[subForm].content = content;
     // form[subForm].subForm = formType;
     form[subForm].arrange(
       this.eqn.defaultFormAlignment.scale,
@@ -711,7 +619,6 @@ export class EquationNew extends DiagramElementCollection {
   }
 
   getCurrentForm() {
-    console.log(this.eqn.currentForm, this.eqn.currentSubForm, this.eqn.forms)
     if (this.eqn.forms[this.eqn.currentForm] == null) {
       return null;
     }

@@ -92,11 +92,11 @@ describe('Diagram Equations From Object', () => {
   test('Equation instantiation', () => {
     expect(eqn).not.toBe(null);
   });
-  test.only('Array Single Form', () => {
+  test('Array Single Form', () => {
     eqn.addForms(addForms.arraySingleForm);
     expect(forms).toHaveProperty('0');
     expect(forms['0']).toHaveProperty('base');
-    const { content } = forms['0'].base;
+    const { content } = forms['0'].base.content[0];
     expect(content[0].content.drawingObject.text[0].text).toBe('a');
     expect(content[1].content.drawingObject.text[0].text).toBe('b');
     expect(content[2].content.drawingObject.text[0].text).toBe('c');
@@ -107,18 +107,18 @@ describe('Diagram Equations From Object', () => {
     expect(forms).toHaveProperty('1');
     expect(forms['0']).toHaveProperty('base');
     expect(forms['1']).toHaveProperty('base');
-    expect(forms['0'].base.content[0].content).toBe(eqn._a);
-    expect(forms['1'].base.content[0].content).toBe(eqn._b);
+    expect(forms['0'].base.content[0].content[0].content).toBe(eqn._a);
+    expect(forms['1'].base.content[0].content[0].content).toBe(eqn._b);
   });
   test('Nested Arrays', () => {
     eqn.addForms(addForms.nestedArrays);
-    expect(forms['0'].base.content[0].content).toBe(eqn._a);
-    expect(forms['0'].base.content[1].content).toBe(eqn._b);
-    expect(forms['0'].base.content[2].content).toBe(eqn._c);
+    expect(forms['0'].base.content[0].content[0].content).toBe(eqn._a);
+    expect(forms['0'].base.content[0].content[1].content).toBe(eqn._b);
+    expect(forms['0'].base.content[0].content[2].content).toBe(eqn._c);
   });
-  test('frac', () => {
+  test.only('frac', () => {
     eqn.addForms(addForms.frac);
-    const content0 = forms['0'].base.content;
+    const content0 = forms['0'].base.content[0].content;
     expect(content0[0]).toBeInstanceOf(Fraction);
     expect(content0[0].numerator.content[0].content).toBe(eqn._a);
     expect(content0[0].denominator.content[0].content).toBe(eqn._b);

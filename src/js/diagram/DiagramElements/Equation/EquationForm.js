@@ -113,6 +113,7 @@ export default class EquationForm extends Elements {
       }
       this.content = elements;
     });
+    // this.content = content;
   }
 
   // An Equation collection is a flat collection of DiagramElements.
