@@ -143,6 +143,14 @@ describe('Diagram Equations From Object', () => {
           },
         },
       },
+      separateTimes: {
+        first: {
+          '0': ['a', 'b', 'c'],
+        },
+        second: {
+          '1': ['b', 'a', 'c'],
+        },
+      },
     };
     ({ forms } = eqn.eqn);
   });
@@ -259,5 +267,28 @@ describe('Diagram Equations From Object', () => {
 
     const method = forms['0'].method.content[0].content[0];
     expect(method).toBeInstanceOf(Fraction);
+  });
+  test('Separate Times', () => {
+    eqn.addForms(addForms.separateTimes.first);
+    eqn.addForms(addForms.separateTimes.second);
+    expect(forms['0'].base.content[0].content[0].content).toBe(eqn._a);
+    expect(forms['1'].base.content[0].content[0].content).toBe(eqn._b);
+  });
+  test('Create forms as part of initial euation creation', () => {
+    const equationOptions = {
+      elements: {
+        a: 'a',
+        b: 'b',
+        c: 'c',
+      },
+      forms: {
+        '0': ['a', 'b', 'c'],
+        '1': ['b', 'a', 'c'],
+      },
+    };
+    const eqn1 = new EquationNew(diagram.shapes, equationOptions);
+    const forms1 = eqn1.eqn.forms;
+    expect(forms1['0'].base.content[0].content[0].content).toBe(eqn1._a);
+    expect(forms1['1'].base.content[0].content[0].content).toBe(eqn1._b);
   });
 });
