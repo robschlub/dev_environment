@@ -495,19 +495,8 @@ export class EquationNew extends DiagramElementCollection {
     }
   }
 
-  // addElements(
-  //   elems: Object,
-  //   // colorOrFont: Array<number> | DiagramFont = [],
-  //   // descriptionElement: DiagramElementPrimative | null = null,
-  //   // descriptionPosition: Point = new Point(0, 0),
-  // ) {
-  //   this.addEquationElements(elems);
-  //   // this.addDescriptionElement(descriptionElement, descriptionPosition);
-  // }
-
   addElements(
     elems: TypeEquationElements,
-    // colorOrFont: Array<number> | DiagramFont = [],
   ) {
     // Helper function to add text element
     const makeTextElem = (options: { text: string, font?: DiagramFont, style?: 'italic' | 'normal', color?: Array<number> }) => {
@@ -879,7 +868,6 @@ export class EquationNew extends DiagramElementCollection {
     if (formOrName instanceof EquationForm) {
       return formOrName;
     }
-    // console.log(formType, this.form[formOrName])
     if (formOrName in this.eqn.forms) {
       let formTypeToUse = subForm;
       if (formTypeToUse == null) {
@@ -938,11 +926,9 @@ export class EquationNew extends DiagramElementCollection {
       nextIndex = name;
     } else {
       nextIndex = this.eqn.formSeries.indexOf(name);
-      // this.eqn.formSeries.forEach((formName, index) => {
-      //   if (formName === name) {
-      //     nextIndex = index;
-      //   }
-      // });
+      if (nextIndex < 0) {
+        nextIndex = 0;
+      }
     }
 
     const nextForm = this.eqn.forms[this.eqn.formSeries[nextIndex]];
