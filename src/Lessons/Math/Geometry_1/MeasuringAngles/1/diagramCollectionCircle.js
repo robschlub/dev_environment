@@ -4,8 +4,9 @@ import Diagram from '../../../../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../../../js/diagram/Element';
 import { Point, Transform } from '../../../../../js/diagram/tools/g2';
-import { Equation, EquationForm }
+import { Equation }
   from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
+import EquationForm from '../../../../../js/diagram/DiagramElements/Equation/EquationForm';
 import AngleCircle from '../../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType }
   from '../../../../LessonsCommon/AngleCircle/AngleCircle';

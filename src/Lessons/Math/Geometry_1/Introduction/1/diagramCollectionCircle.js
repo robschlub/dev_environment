@@ -10,7 +10,7 @@ import {
 import {
   Point, Transform, Rect,
 } from '../../../../../js/diagram/tools/g2';
-import { EquationForm } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
+import EquationForm from '../../../../../js/diagram/DiagramElements/Equation/EquationForm';
 import textureMap from '../../../../LessonsCommon/images/textureMaps/circles.png';
 
 import lessonLayout from './layout';

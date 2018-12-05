@@ -221,6 +221,7 @@ class EquationFunctions {
     // if (this[method] != null) {
     // return this[method](params);
     // }
+    // $FlowFixMe
     return this.eqnMethod(method, params);
   }
 
@@ -240,6 +241,7 @@ class EquationFunctions {
 
   eqnMethod(name: string, params: {}) {
     if (name === 'frac') {
+      // $FlowFixMe
       return this.frac(params);
     }
     return null;
@@ -339,12 +341,15 @@ type TypeEquationFormObject = {
   },
 };
 
+type TypeEquationForm = TypeEquationPhrase
+                        | TypeEquationFormObject
+                        | {
+                          [subFormName: string]: TypeEquationFormObject
+                                                 | TypeEquationPhrase;
+                        };
+
 export type TypeEquationForms = {
-  [formName: string]: TypeEquationPhrase
-    | TypeEquationFormObject
-    | {
-      [subFormName: string]: TypeEquationFormObject;
-    }
+  [formName: string]: TypeEquationForm
 };
 
 export type TypeEquationOptions = {
@@ -369,10 +374,11 @@ export type TypeEquationOptions = {
 export class EquationNew extends DiagramElementCollection {
   eqn: {
     forms: { [formName: string]: {
-      base: EquationForm;                   // There is always a base form
-      [subFormName: string]: EquationForm;  // Sub forms may differ in units
-      name: string;                         // Name of form
-    } };
+        base: EquationForm;                   // There is always a base form
+        [subFormName: string]: EquationForm;  // Sub forms may differ in units
+        name: string;                         // Name of form
+      }
+    };
     functions: EquationFunctions;
     currentForm: string;
     currentSubForm: string;
@@ -573,6 +579,7 @@ export class EquationNew extends DiagramElementCollection {
         return false;
       }
       if (form != null && typeof form === 'object') {
+        // $FlowFixMe
         const keys = Object.keys(form);
         if (keys.length === 1 && keys[0] in this.eqn.functions) {
           return true;
@@ -590,16 +597,18 @@ export class EquationNew extends DiagramElementCollection {
       return false;
     };
 
-    Object.entries(forms).forEach((entry) => {
-      const [name, form] = entry;
+    Object.keys(forms).forEach((name) => {
+      const form: TypeEquationForm = forms[name];
       if (isFormString(form) || isFormArray(form) || isFormMethod(form)) {
+        // $FlowFixMe
         const formContent = [this.eqn.functions.contentToElement(form)];
         this.addForm(name, formContent);
       } else if (isFormFullObject(form)) {
+        // $FlowFixMe
         const formContent = [this.eqn.functions.contentToElement(form.content)];
         const {
-          subForm, addToSeries, elementMods, animationTime,
-          description, modifiers,
+          // $FlowFixMe
+          subForm, addToSeries, elementMods, animationTime, description, modifiers,
         } = form;
         const options = {
           subForm,
@@ -609,19 +618,22 @@ export class EquationNew extends DiagramElementCollection {
           description,
           modifiers,
         };
+        // $FlowFixMe
         this.addForm(name, formContent, options);
       } else {
         Object.entries(form).forEach((subFormEntry) => {
           const [subFormName, subForm] = subFormEntry;
           const subFormOption = { subForm: subFormName };
           if (isFormString(subForm) || isFormArray(subForm) || isFormMethod(subForm)) {
+            // $FlowFixMe
             const formContent = [this.eqn.functions.contentToElement(subForm)];
             this.addForm(name, formContent, subFormOption);
           } else {
+            // $FlowFixMe
             const formContent = [this.eqn.functions.contentToElement(subForm.content)];
             const {
-              addToSeries, elementMods, animationTime,
-              description, modifiers,
+              // $FlowFixMe
+              addToSeries, elementMods, animationTime, description, modifiers,
             } = subForm;
             const options = joinObjects({
               subForm,
@@ -680,7 +692,7 @@ export class EquationNew extends DiagramElementCollection {
 
   addForm(
     name: string,
-    content: Array<Elements | Element | string>,
+    content: Array<Elements | Element>,
     options: {
       subForm?: string,
       addToSeries?: string,
@@ -691,6 +703,7 @@ export class EquationNew extends DiagramElementCollection {
     } = {},
   ) {
     if (!(name in this.eqn.forms)) {
+      // $FlowFixMe   - its ok for this to start undefined, it will be filled.
       this.eqn.forms[name] = {};
     }
     const defaultOptions = {

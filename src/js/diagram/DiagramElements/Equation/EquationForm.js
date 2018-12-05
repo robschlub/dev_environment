@@ -56,11 +56,12 @@ export type TypeEquationForm = {
 export default class EquationForm extends Elements {
   collection: DiagramElementCollection;
   name: string;
-  type: string;
+  type: string;   // deprecate
   description: string | null;
   modifiers: Object;
   elementMods: Object;
-  time: number | null;
+  time: number | null | { fromPrev: number, fromNext: number, fromAny: number };
+  subForm: string;
 
   constructor(collection: DiagramElementCollection) {
     super([]);
@@ -69,6 +70,7 @@ export default class EquationForm extends Elements {
     this.modifiers = {};
     this.elementMods = {};
     this.time = null;
+    this.subForm = '';
   }
 
   getNamedElements() {

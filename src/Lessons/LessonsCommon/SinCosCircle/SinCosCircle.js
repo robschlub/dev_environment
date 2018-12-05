@@ -9,7 +9,7 @@ import {
 } from '../../../js/diagram/Element';
 import AngleCircle from '../AngleCircle/AngleCircle';
 import type { circleType, varStateType, angleAnnotationType } from '../AngleCircle/AngleCircle';
-import { EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import EquationForm from '../../../js/diagram/DiagramElements/Equation/EquationForm';
 import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
 
 type rightAngleType = {

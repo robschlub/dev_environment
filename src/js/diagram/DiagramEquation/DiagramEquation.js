@@ -1308,7 +1308,7 @@ export default class DiagramEquation {
         equation.eqn.defaultFormAlignment.alignV = formOptions.alignment.alignV;
         equation.eqn.defaultFormAlignment.scale = formOptions.alignment.scale;
         equation.addForm(
-          name,
+          name, // $FlowFixMe
           makePhrase(formOptions.content),
           {
             animationTime: formOptions.animationTime,

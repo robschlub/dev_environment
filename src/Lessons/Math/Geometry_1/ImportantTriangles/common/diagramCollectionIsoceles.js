@@ -225,6 +225,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         // ],
       },
     });
+    // $FlowFixMe
     this._testEqn.addForms({
       '11': ['a', 'b', 'c'],
       '13': ['a', ['b', 'c']],
