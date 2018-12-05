@@ -111,6 +111,30 @@ describe('Diagram Equations From Object', () => {
           },
         ],
       },
+      fullObject: {
+        '0': {
+          content: ['b', 'a', 'c'],
+          elementMods: {
+            b: {
+              color: [1, 0, 0, 1],
+            },
+          },
+          subForm: 'deg',
+        },
+      },
+      subFormObject: {
+        '4': {
+          'deg': ['b', 'a', 'c'],
+          'rad': {
+            content: ['b', 'a', 'c'],
+            elementMods: {
+              b: {
+                color: [1, 0, 0, 1],
+              },
+            },
+          },
+        },
+      },
     };
     ({ forms } = eqn.eqn);
   });

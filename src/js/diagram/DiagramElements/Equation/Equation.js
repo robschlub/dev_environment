@@ -136,6 +136,7 @@ class EquationFunctions {
   // eslint-disable-next-line no-use-before-define
   collection: EquationNew;
   shapes: {};
+  contentToElement: (TypeEquationPhrase | Elements) => Elements;
 
   // [methodName: string]: (TypeEquationPhrase) => {};
 
@@ -317,7 +318,7 @@ export class EquationNew extends DiagramElementCollection {
       [subFormName: string]: EquationForm;  // Sub forms may differ in units
       name: string;                         // Name of form
     } };
-    functions: {};
+    functions: EquationFunctions;
     currentForm: string;
     currentSubForm: string;
     fontMath: DiagramFont;
@@ -512,8 +513,40 @@ export class EquationNew extends DiagramElementCollection {
   addForms(forms: TypeEquationForms) {
     Object.entries(forms).forEach((entry) => {
       const [name, form] = entry;
-      const formContent = [this.eqn.functions.contentToElement(form)];
-      this.addForm(name, formContent);
+      let formContent;
+      let options = {};
+      // If array or string, then it's a simple form with no options
+      if (typeof form === 'string'
+        || Array.isArray(form)) {
+        formContent = [this.eqn.functions.contentToElement(form)];
+      } else if (form != null && typeof form === 'object') {
+        // If object with just one key and the key name is the same as
+        // a method in eqn.functions, then it's a simple form with no
+        // options
+        const keys = Object.keys(form);
+        if (keys.length === 1 && this.eqn.functions[keys[0]] != null) {
+          formContent = [this.eqn.functions.contentToElement(form)];
+        } else if (form.content != null) {
+          formContent = this.eqn.functions.contentToElement(form.content);
+          const {
+            subForm, addToSeries, elementMods, animationTime,
+            description, modifiers,
+          } = forms;
+          options = {
+            subForm,
+            addToSeries,
+            elementMods,
+            animationTime,
+            description,
+            modifiers,
+          };
+        } else if (form.content === null) {
+          //
+        }
+      }
+      if (formContent != null) {
+        this.addForm(name, formContent, options);
+      }
       // console.log(name, form, )
       // this.addForm(name, this.eqn.functions.contentToElement(form));
     });
