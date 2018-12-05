@@ -270,8 +270,11 @@ function joinObjects(...objects: Array<Object>): Object {
         || typeof value._dup === 'function'
         || Array.isArray(value)
       ) {
-        // eslint-disable-next-line no-param-reassign
-        toObject[key] = value;
+        // console.log(value, toObject[key])
+        if (value !== undefined || toObject[key] === undefined) {
+          // eslint-disable-next-line no-param-reassign
+          toObject[key] = value;
+        }
       } else {
         const toValue = toObject[key];
         if (typeof toValue === 'number'

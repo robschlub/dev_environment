@@ -540,7 +540,6 @@ export class EquationNew extends DiagramElementCollection {
             description,
             modifiers,
           };
-          console.log(options)
         } else if (form.content === null) {
           //
         }
@@ -578,8 +577,9 @@ export class EquationNew extends DiagramElementCollection {
     };
     let optionsToUse = defaultOptions;
     if (options) {
-      optionsToUse = Object.assign({}, defaultOptions, options);
+      optionsToUse = joinObjects({}, defaultOptions, options);
     }
+    console.log(defaultOptions, optionsToUse, content)
     const {
       subForm, description, modifiers,
       animationTime, elementMods,
