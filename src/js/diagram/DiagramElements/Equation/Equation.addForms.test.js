@@ -218,4 +218,16 @@ describe('Diagram Equations From Object', () => {
     const content1 = forms['1'].base.content[0].content;
     expect(content1).toEqual(content0);
   });
+  test('Full Object', () => {
+    eqn.addForms(addForms.fullObject);
+    const { content } = forms['0'].base.content[0];
+    expect(content[0].content.drawingObject.text[0].text).toBe('b');
+    expect(content[1].content.drawingObject.text[0].text).toBe('a');
+    expect(content[2].content.drawingObject.text[0].text).toBe('c');
+
+    const deg = forms['0'].deg.content[0].content;
+    expect(deg[0].content.drawingObject.text[0].text).toBe('b');
+    expect(deg[1].content.drawingObject.text[0].text).toBe('a');
+    expect(deg[2].content.drawingObject.text[0].text).toBe('c');
+  });
 });

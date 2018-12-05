@@ -531,7 +531,7 @@ export class EquationNew extends DiagramElementCollection {
           const {
             subForm, addToSeries, elementMods, animationTime,
             description, modifiers,
-          } = forms;
+          } = form;
           options = {
             subForm,
             addToSeries,
@@ -540,6 +540,7 @@ export class EquationNew extends DiagramElementCollection {
             description,
             modifiers,
           };
+          console.log(options)
         } else if (form.content === null) {
           //
         }
