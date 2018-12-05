@@ -110,25 +110,26 @@ describe('Diagram Equations From Object', () => {
     expect(forms['0'].base.content[0].content[0].content).toBe(eqn._a);
     expect(forms['1'].base.content[0].content[0].content).toBe(eqn._b);
   });
-  test('Nested Arrays', () => {
+  test.only('Nested Arrays', () => {
     eqn.addForms(addForms.nestedArrays);
     expect(forms['0'].base.content[0].content[0].content).toBe(eqn._a);
     expect(forms['0'].base.content[0].content[1].content).toBe(eqn._b);
     expect(forms['0'].base.content[0].content[2].content).toBe(eqn._c);
   });
-  test.only('frac', () => {
+  test('frac', () => {
     eqn.addForms(addForms.frac);
     const content0 = forms['0'].base.content[0].content;
+    // console.log(content0)
     expect(content0[0]).toBeInstanceOf(Fraction);
     expect(content0[0].numerator.content[0].content).toBe(eqn._a);
     expect(content0[0].denominator.content[0].content).toBe(eqn._b);
     expect(content0[0].vinculum).toBe(eqn._v);
-    const content1 = forms['0'].base.content;
+    const content1 = forms['1'].base.content[0].content;
     expect(content1).toEqual(content0);
   });
   test('Multi Frac', () => {
     eqn.addForms(addForms.multiFrac);
-    const { content } = forms['0'].base;
+    const { content } = forms['0'].base.content[0];
     expect(content[0]).toBeInstanceOf(Fraction);
     expect(content[0].numerator.content[0].content).toBe(eqn._a);
     expect(content[0].denominator.content[0].content).toBe(eqn._b);
@@ -141,12 +142,11 @@ describe('Diagram Equations From Object', () => {
   });
   test('Nested Frac', () => {
     eqn.addForms(addForms.nestedFrac);
-    const { content } = forms['0'].base;
+    const { content } = forms['0'].base.content[0];
     expect(content[0]).toBeInstanceOf(Fraction);
     expect(content[0].denominator.content[0].content).toBe(eqn._b);
     expect(content[0].vinculum).toBe(eqn._v);
     const contentN = content[0].numerator.content[0];
-    console.log(contentN)
     expect(contentN.numerator.content[0].content).toBe(eqn._d);
   });
 });
