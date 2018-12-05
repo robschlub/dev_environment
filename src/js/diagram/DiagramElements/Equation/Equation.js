@@ -17,8 +17,8 @@ import type {
 } from './EquationForm';
 import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 import * as html from '../../../tools/htmlGenerator';
-
-// import Strike from './Elements/Strike';
+import Strike from './Elements/Strike';
+import DiagramPrimatives from '../../DiagramPrimatives/DiagramPrimatives';
 // import SuperSub from './Elements/SuperSub';
 // import { Brackets, Bar } from './Elements/Brackets';
 // import { Annotation, AnnotationInformation } from './Elements/Annotation';
@@ -39,17 +39,12 @@ export function getDiagramElement(
 
 // type TypeEquationInput = Array<Elements | Element | string> | Elements | Element | string;
 
+/* eslint-disable no-use-before-define */
 export type TypeEquationPhrase =
   string
   | number
-  | {                                 // Fraction
-    frac: {
-      numerator: TypeEquationPhrase;
-      denominator: TypeEquationPhrase;
-      symbol: string;
-      scale?: number;
-    };
-  }
+  | { frac: TypeFracObject } | TypeFracArray
+  | { strike: TypeStrikeObject } | TypeStrikeArray
   | [
     TypeEquationPhrase,
     TypeEquationPhrase,
@@ -83,18 +78,6 @@ export type TypeEquationPhrase =
     TypeEquationPhrase,
     ?TypeEquationPhrase,
     ?TypeEquationPhrase,
-  ]
-  | {                                 // Strike
-    strike: {
-      content: TypeEquationPhrase;
-      symbol: string;
-      strikeInSize?: boolean;
-    }
-  }
-  | [
-    TypeEquationPhrase,
-    string,
-    ?boolean,
   ]
   | {                                 // Annotation
     annotate: {
@@ -173,6 +156,33 @@ export type TypeEquationPhrase =
   }
   | Array<TypeEquationPhrase>;
 
+/* eslint-enable no-use-before-define */
+export type TypeFracObject = {
+  numerator: TypeEquationPhrase;
+  denominator: TypeEquationPhrase;
+  symbol: string;
+  scale?: number;
+};
+
+export type TypeFracArray = [
+  TypeEquationPhrase,
+  TypeEquationPhrase,
+  string,
+  ?number,
+];
+
+export type TypeStrikeObject = {
+  content: TypeEquationPhrase;
+  symbol: string;
+  strikeInSize?: boolean;
+};
+
+export type TypeStrikeArray = [
+  TypeEquationPhrase,
+  string,
+  ?boolean,
+];
+
 class EquationFunctions {
   // eslint-disable-next-line no-use-before-define
   collection: EquationNew;
@@ -246,21 +256,14 @@ class EquationFunctions {
       // $FlowFixMe
       return this.frac(params);
     }
+    if (name === 'strike') {
+      // $FlowFixMe
+      return this.strike(params);
+    }
     return null;
   }
 
-  frac(options: {
-      numerator: TypeEquationPhrase,
-      denominator: TypeEquationPhrase,
-      symbol: string | DiagramElementPrimative | DiagramElementCollection,
-      scale?: number,
-    }
-    | [
-        TypeEquationPhrase,
-        TypeEquationPhrase,
-        string | DiagramElementPrimative | DiagramElementCollection,
-        ?number,
-      ]) {
+  frac(options: TypeFracObject | TypeFracArray) {
     let numerator;
     let denominator;
     let symbol;
@@ -283,9 +286,51 @@ class EquationFunctions {
     return f;
   }
 
-  symbols(name: string, options: { color?: Array<number> }) {
+  strike(options: TypeStrikeObject | TypeStrikeArray) {
+    let content;
+    let symbol;
+    let strikeInSize;
+    if (Array.isArray(options)) {
+      [content, symbol, strikeInSize] = options;
+    } else {
+      ({
+        content, symbol, strikeInSize,
+      } = options);
+    }
+    console.log(content, symbol, strikeInSize);
+    return new Strike(
+      this.contentToElement(content),
+      getDiagramElement(this.collection, symbol),
+      strikeInSize,
+    );
+  }
+}
+
+class EquationSymbols {
+  // eslint-disable-next-line no-use-before-define
+  shapes: DiagramPrimatives;
+  defaultColor: Array<number>;
+
+  // [methodName: string]: (TypeEquationPhrase) => {};
+
+  // eslint-disable-next-line no-use-before-define
+  constructor(
+    shapes: DiagramPrimatives,
+    defaultColor: Array<number>,
+  ) {
+    this.shapes = shapes;
+    this.defaultColor = defaultColor;
+  }
+
+  get(name: string, options: { color?: Array<number> }) {
     if (name === 'vinculum') {
       return this.vinculum(options);
+    }
+    if (name === 'strike') {
+      return this.strike(options);
+    }
+    if (name === 'xStrike') {
+      return this.xStrike(options);
     }
     return null;
   }
@@ -293,14 +338,46 @@ class EquationFunctions {
   vinculum(options: { color?: Array<number> } = {}) {
     let { color } = options;
     if (color == null) {
-      color = [0.5, 0.5, 0.5, 1];
+      color = this.defaultColor;
     }
-    return this.collection.shapes.horizontalLine(
+    return this.shapes.horizontalLine(
       new Point(0, 0),
       1, 1, 0,
       color,
       new Transform('vinculum').scale(1, 1).translate(0, 0),
     );
+  }
+
+  strike(options: { color?: Array<number> } = {}) {
+    let { color } = options;
+    if (color == null) {
+      color = this.defaultColor;
+    }
+    return this.shapes.horizontalLine(
+      new Point(0, 0),
+      1, 1, 0,
+      color,
+      new Transform('strike').scale(1, 1).rotate(0).translate(0, 0),
+    );
+  }
+
+  xStrike(options: { color?: Array<number> } = {}) {
+    let { color } = options;
+    if (color == null) {
+      color = this.defaultColor;
+    }
+    const cross = this.shapes.collection(new Transform('xStrike').scale(1, 1).rotate(0).translate(0, 0));
+    cross.color = color;
+    const strike1 = this.shapes.horizontalLine(
+      new Point(0, 0),
+      1, 1, 0,
+      color,
+      new Transform('strikeLine').scale(1, 1).rotate(0).translate(0, 0),
+    );
+    const strike2 = strike1._dup();
+    cross.add('s1', strike1);
+    cross.add('s2', strike2);
+    return cross;
   }
 }
 
@@ -384,6 +461,7 @@ export class EquationNew extends DiagramElementCollection {
       }
     };
     functions: EquationFunctions;
+    symbols: EquationSymbols;
     currentForm: string;
     currentSubForm: string;
     fontMath: DiagramFont;
@@ -473,6 +551,7 @@ export class EquationNew extends DiagramElementCollection {
       currentFormSeries: '',
       defaultFormAlignment: optionsToUse.defaultFormAlignment,
       functions: new EquationFunctions(this),
+      symbols: new EquationSymbols(this.shapes, this.color),
       fontMath: optionsToUse.fontMath,
       fontText: optionsToUse.fontText,
       isAnimating: false,
@@ -533,7 +612,7 @@ export class EquationNew extends DiagramElementCollection {
     // Helper function to add symbol element
     const makeSymbolElem = (options: { symbol: string, numLines?: number,
     orientation?: 'up' | 'left' | 'down' | 'right', color?: Array<number>}) => {
-      let symbol = this.eqn.functions.symbols(options.symbol, options);
+      let symbol = this.eqn.symbols.get(options.symbol, options);
       if (symbol == null) {
         symbol = makeTextElem({
           text: `Symbol ${options.symbol} not valid`,

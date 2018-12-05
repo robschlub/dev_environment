@@ -104,8 +104,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
 
   addEquations() {
     const strikeCol = this.layout.colors.diagram.disabled;
-    this.diagram.equation.addEquation(this, {
-      name: 'testEqn',
+    this.diagram.equation.addEquation(this, 'testEqn', {
       color: this.layout.colors.diagram.text.base,
       elements: {
         a: 'a',
@@ -128,6 +127,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
           },
         },
         v1: { symbol: 'vinculum' },
+        x: { symbol: 'xStrike' },
+        s: { symbol: 'strike' },
       },
       forms: {
       //   '0': ['.frac', ['a', 'b', 'v'], 'c'],
@@ -231,7 +232,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this._testEqn.addForms({
       '11': ['a', 'b', 'c'],
       '13': ['a', ['b', 'c']],
-      '1': {
+      '15': {
         content: ['b', 'a', 'c'],
         elementMods: {
           b: {
@@ -240,6 +241,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         },
         subForm: 'deg',
       },
+      '1': ['a', 'b', 'c'],
+      // '2': [{ frac: ['a', 'b', 'v'] }],
+      '2': [{ strike: ['a', 's'] }, 'b', 'c'],
       '90': {
         content: ['a', 'b', 'c'],
         elementMods: {
@@ -268,7 +272,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //     },
       //   }, 'c',
       // ],
-      '2': [
+      '2a': [
         {
           frac: {
             numerator: { frac: ['d', 'e', 'v1', 0.5] },

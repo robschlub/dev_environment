@@ -60,7 +60,7 @@ class Content extends LessonContent {
         iso._testEqn.setPosition(1, 1);
         // iso._testEqn.showAll();
         iso._testEqn.showForm('1');
-        iso._testEqn.animateToForm('90', 3);
+        iso._testEqn.animateToForm('2', 2);
         // console.log(iso._testEqn)
         // iso._testEqn.goToForm('90', 3, 0);
         // iso._testEqn.nextForm();

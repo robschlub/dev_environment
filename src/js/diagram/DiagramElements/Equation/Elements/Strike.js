@@ -11,7 +11,7 @@ import { Element, Elements } from './Element';
 // // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
 // // and arranges their size in a )
 
-export default class StrikeOut extends Elements {
+export default class Strike extends Elements {
   mainContent: Elements;
   strike: DiagramElementPrimative | null | DiagramElementCollection;
   scaleModifier: number;
@@ -24,7 +24,7 @@ export default class StrikeOut extends Elements {
   constructor(
     mainContent: Elements,
     strike: DiagramElementPrimative | null | DiagramElementCollection,
-    strikeInSize: boolean = false,
+    strikeInSize: ?boolean = false,
   ) {
     if (strike) {
       super([mainContent, new Element(strike)]);
@@ -35,7 +35,11 @@ export default class StrikeOut extends Elements {
     this.scaleModifier = 1;
     this.lineWidth = 0.1;
     this.mainContent = mainContent;
-    this.strikeInSize = strikeInSize;
+    if (strikeInSize == null) {
+      this.strikeInSize = false;
+    } else {
+      this.strikeInSize = strikeInSize;
+    }
   }
 
   _dup(namedCollection?: Object) {
@@ -45,12 +49,12 @@ export default class StrikeOut extends Elements {
     } else {
       ({ strike } = this);
     }
-    const strikeOutCopy = new StrikeOut(
+    const strikeCopy = new Strike(
       this.mainContent._dup(namedCollection),
       strike,
     );
-    duplicateFromTo(this, strikeOutCopy, ['strike', 'mainContent']);
-    return strikeOutCopy;
+    duplicateFromTo(this, strikeCopy, ['strike', 'mainContent']);
+    return strikeCopy;
   }
 
   calcSize(location: Point, incomingScale: number) {

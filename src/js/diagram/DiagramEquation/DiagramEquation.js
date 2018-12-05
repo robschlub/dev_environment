@@ -26,6 +26,7 @@ import type {
   TypeHAlign, TypeVAlign,
 } from '../DiagramElements/Equation/EquationForm';
 import HTMLEquation from '../DiagramElements/Equation/HTMLEquation';
+import type { TypeEquationOptions } from '../DiagramElements/Equation/Equation';
 
 export type TypeEquationPhrase =
   string
@@ -782,9 +783,19 @@ export default class DiagramEquation {
     return eqn;
   }
 
+  addEquation(
+    parent: DiagramElementCollection,
+    name: string,
+    options: TypeEquationOptions = {},
+  ) {
+    // $FlowFixMe
+    const equation = new EquationNew(this.shapes, options);
+    parent.add(name, equation);
+  }
+
   // Make an Equation Diagram Collection
   // eslint-disable-next-line class-methods-use-this
-  addEquation(
+  addEquationLegacy(
     parent: DiagramElementCollection, // Parent collection
     ...options: Array<{
       name: string,                   // Element name within parent collection

@@ -11,6 +11,9 @@ import {
   DiagramFont,
 } from '../../DrawingObjects/TextObject/TextObject';
 import VertexHorizontalLine from '../../DrawingObjects/VertexObject/VertexHorizontalLine';
+import { 
+  DiagramElementCollection,
+} from '../../Element';
 
 tools.isTouchDevice = jest.fn();
 
@@ -22,14 +25,14 @@ describe('Diagram Equations From Object', () => {
   let diagram;
   let eqn;
   let addElements;
-  let modColor1;
-  let modColor2;
+  let color1;
+  let color2;
   let defaultColor;
   beforeEach(() => {
     diagram = makeDiagram();
     eqn = new EquationNew(diagram.shapes);
-    modColor1 = [0.95, 0, 0, 1];
-    modColor2 = [0, 0.95, 0, 1];
+    color1 = [0.95, 0, 0, 1];
+    color2 = [0, 0.95, 0, 1];
     defaultColor = [0.5, 0.5, 0.5, 1];
     addElements = {
       // Simplest way to define elements is to just use text
@@ -69,24 +72,24 @@ describe('Diagram Equations From Object', () => {
           text: 'c',
           font: new DiagramFont(
             'Helvetica', 'normal',
-            0.3, '300', 'right', 'alphabetic', modColor1,
+            0.3, '300', 'right', 'alphabetic', color1,
           ),
         },
         d: {         // font overrides style, color overrides font
           text: 'd',
           style: 'normal',
-          color: modColor2,
+          color: color2,
           font: new DiagramFont(
             'Helvetica', 'italic',
-            0.3, '300', 'right', 'alphabetic', modColor1,
+            0.3, '300', 'right', 'alphabetic', color1,
           ),
         },
       },
       // Equation symbols are DiagramElementPrimatives or Collections
-      symbol: {     // Symbols can be auto generated from string, or passed in
+      symbols: {     // Symbols can be auto generated from string, or passed in
         a: 'a',
         v: { symbol: 'vinculum' },
-        v1: eqn.eqn.functions.vinculum(),
+        v1: eqn.eqn.symbols.vinculum(),
         v2: diagram.shapes.horizontalLine(new Point(0, 0), 1, 0.1, 0, defaultColor),
       },
       // Elements all become DiagramElementPrimatives/Collections and their
@@ -95,18 +98,27 @@ describe('Diagram Equations From Object', () => {
         a: 'a',
         b: {
           text: 'b',
-          color: modColor1,
+          color: color1,
           elementOptions: {
             isTouchable: true,
           },
         },
         'v': {
           symbol: 'vinculum',
-          color: modColor1,
+          color: color1,
           elementOptions: {
             isTouchable: true,
           },
         },
+      },
+      vinculum: {
+        v: { symbol: 'vinculum', color: color1 },
+      },
+      strike: {
+        s: { symbol: 'strike', color: color1 },
+      },
+      xStrike: {
+        x: { symbol: 'xStrike', color: color1 },
       },
     };
   });
@@ -162,19 +174,16 @@ describe('Diagram Equations From Object', () => {
     expect(eqn._b.drawingObject.text[0].font.color)
       .toBe(tools.colorArrayToRGBA(defaultColor));
     expect(eqn._c.drawingObject.text[0].font.color)
-      .toBe(tools.colorArrayToRGBA(modColor1));
+      .toBe(tools.colorArrayToRGBA(color1));
     expect(eqn._d.drawingObject.text[0].font.color)
-      .toBe(tools.colorArrayToRGBA(modColor2));
+      .toBe(tools.colorArrayToRGBA(color2));
   });
   test('Symbol', () => {
-    eqn.addElements(addElements.symbol);
+    eqn.addElements(addElements.symbols);
     expect(eqn._a.drawingObject.text[0].text).toBe('a');
     expect(eqn._v.drawingObject).toBeInstanceOf(VertexHorizontalLine);
     expect(eqn._v1.drawingObject).toBeInstanceOf(VertexHorizontalLine);
     expect(eqn._v2.drawingObject).toBeInstanceOf(VertexHorizontalLine);
-
-    expect(eqn._a.color).toEqual([1, 0, 0, 1]);
-    expect(eqn._v.color).toEqual(defaultColor);
   });
   test('ElementOptions', () => {
     eqn.addElements(addElements.elementOptions);
@@ -187,17 +196,9 @@ describe('Diagram Equations From Object', () => {
     expect(eqn._v.isTouchable).toBe(true);
 
     expect(eqn._a.color).toEqual([1, 0, 0, 1]);
-    expect(eqn._b.color).toEqual(modColor1);
-    expect(eqn._v.color).toEqual(modColor1);
+    expect(eqn._b.color).toEqual(color1);
+    expect(eqn._v.color).toEqual(color1);
   });
-  // test('Diagram Elements', () => {
-  //   eqn.addElements(addElements.diagramElements);
-  //   expect(eqn._a.drawingObject.text[0].text).toBe('a');
-  //   expect(eqn._v.drawingObject).toBeInstanceOf(VertexHorizontalLine);
-
-  //   expect(eqn._a.color).toEqual([1, 0, 0, 1]);
-  //   expect(eqn._v.color).toEqual(defaultColor);
-  // });
   test('Create elements as part of initial diagram', () => {
     const equationOptions = {
       elements: addElements.simple,
@@ -206,5 +207,21 @@ describe('Diagram Equations From Object', () => {
     expect(eqn1._a.drawingObject.text[0].text).toBe('a');
     expect(eqn1._b.drawingObject.text[0].text).toBe('b');
     expect(eqn1._c.drawingObject.text[0].text).toBe('c');
+  });
+  test('Symbol: Vinculum', () => {
+    eqn.addElements(addElements.vinculum);
+    expect(eqn._v.drawingObject).toBeInstanceOf(VertexHorizontalLine);
+    expect(eqn._v.color).toEqual(color1);
+  });
+  test('Symbol: Strike', () => {
+    eqn.addElements(addElements.strike);
+    expect(eqn._s.drawingObject).toBeInstanceOf(VertexHorizontalLine);
+    expect(eqn._s.color).toEqual(color1);
+  });
+  test('Symbol: xStrike', () => {
+    eqn.addElements(addElements.xStrike);
+    expect(eqn._x._s1.drawingObject).toBeInstanceOf(VertexHorizontalLine);
+    expect(eqn._x._s2.drawingObject).toBeInstanceOf(VertexHorizontalLine);
+    expect(eqn._x.color).toEqual(color1);
   });
 });
