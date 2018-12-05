@@ -245,7 +245,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       },
       '1': ['a', 'b', 'c'],
       // '2': [{ frac: ['a', 'b', 'v'] }],
-      '2': [{ brac: ['b', 'lb', 'rb'] }, 'a', 'c'],
+      // '2': [{ brac: ['b', 'lb', 'rb'] }, 'a', 'c'],
+      '2': [{ supSub: ['a', 'b', 'c'] }],
       '90': {
         content: ['a', 'b', 'c'],
         elementMods: {

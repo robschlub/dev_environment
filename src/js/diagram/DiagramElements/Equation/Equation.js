@@ -19,7 +19,7 @@ import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 import * as html from '../../../tools/htmlGenerator';
 import Strike from './Elements/Strike';
 import DiagramPrimatives from '../../DiagramPrimatives/DiagramPrimatives';
-// import SuperSub from './Elements/SuperSub';
+import SuperSub from './Elements/SuperSub';
 import { Brackets, Bar } from './Elements/Brackets';
 // import { Annotation, AnnotationInformation } from './Elements/Annotation';
 import EquationSymbols from './EquationSymbols';
@@ -47,39 +47,14 @@ export type TypeEquationPhrase =
   | { frac: TypeFracObject } | TypeFracArray
   | { strike: TypeStrikeObject } | TypeStrikeArray
   | { brac: TypeBracketObject } | TypeBracketArray
+  | { sub: TypeSubObject } | TypeSubArray
+  | { sup: TypeSupObject } | TypeSupArray
+  | { sup: TypeSupSubObject } | TypeSupubArray
   | [
     TypeEquationPhrase,
     TypeEquationPhrase,
     string,
     ?number,
-  ]
-  | {
-    sup: {                            // Superscript
-      content: TypeEquationPhrase;
-      superscript: TypeEquationPhrase;
-    }
-  }
-  | {
-    sub: {                            // Subscript
-      content: TypeEquationPhrase;
-      subscript: TypeEquationPhrase;
-    }
-  }
-  | [
-    TypeEquationPhrase,
-    TypeEquationPhrase,
-  ]
-  | {                                 // Superscript and Subscript
-    supsub: {
-      content: TypeEquationPhrase;
-      subscript?: TypeEquationPhrase;
-      superscript?: TypeEquationPhrase;
-    }
-  }
-  | [
-    TypeEquationPhrase,
-    ?TypeEquationPhrase,
-    ?TypeEquationPhrase,
   ]
   | {                                 // Annotation
     annotate: {
@@ -185,6 +160,33 @@ export type TypeBracketArray = [
   ?number,
 ];
 
+export type TypeSubObject = {
+  content: TypeEquationPhrase;
+  subscript: TypeEquationPhrase;
+};
+export type TypeSubArray = [
+  TypeEquationPhrase,
+  TypeEquationPhrase,
+];
+export type TypeSupObject = {
+  content: TypeEquationPhrase;
+  subscript: TypeEquationPhrase;
+};
+export type TypeSupArray = [
+  TypeEquationPhrase,
+  TypeEquationPhrase,
+];
+export type TypeSupSubObject = {
+  content: TypeEquationPhrase;
+  subscript?: TypeEquationPhrase;
+  superscript?: TypeEquationPhrase;
+};
+export type TypeSupSubArray = [
+  TypeEquationPhrase,
+  ?TypeEquationPhrase,
+  ?TypeEquationPhrase,
+];
+
 class EquationFunctions {
   // eslint-disable-next-line no-use-before-define
   collection: EquationNew;
@@ -266,6 +268,18 @@ class EquationFunctions {
       // $FlowFixMe
       return this.brac(params);
     }
+    if (name === 'sub') {
+      // $FlowFixMe
+      return this.sub(params);
+    }
+    if (name === 'sup') {
+      // $FlowFixMe
+      return this.sup(params);
+    }
+    if (name === 'supSub') {
+      // $FlowFixMe
+      return this.supSub(params);
+    }
     return null;
   }
 
@@ -327,6 +341,58 @@ class EquationFunctions {
       getDiagramElement(this.collection, left),
       getDiagramElement(this.collection, right),
       space,
+    );
+  }
+
+  sub(options: TypeSubObject | TypeSubArray) {
+    let content;
+    let subscript;
+    if (Array.isArray(options)) {
+      [content, subscript] = options;
+    } else {
+      ({
+        content, subscript,
+      } = options);
+    }
+    return new SuperSub(
+      this.contentToElement(content),
+      null,
+      this.contentToElement(subscript),
+    );
+  }
+
+  sup(options: TypeSupObject | TypeSupArray) {
+    let content;
+    let superscript;
+    if (Array.isArray(options)) {
+      [content, subscript] = options;
+    } else {
+      ({
+        content, superscript,
+      } = options);
+    }
+    return new SuperSub(
+      this.contentToElement(content),
+      this.contentToElement(superscript),
+      null,
+    );
+  }
+
+  supSub(options: TypeSupObject | TypeSupArray) {
+    let content;
+    let superscript;
+    let subscript;
+    if (Array.isArray(options)) {
+      [content, superscript, subscript] = options;
+    } else {
+      ({
+        content, superscript, subscript,
+      } = options);
+    }
+    return new SuperSub(
+      this.contentToElement(content),
+      this.contentToElement(superscript),
+      this.contentToElement(subscript),
     );
   }
 }
