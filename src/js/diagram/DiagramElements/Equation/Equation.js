@@ -401,6 +401,8 @@ export class EquationNew extends DiagramElementCollection {
       scale: number,
     };
 
+    isAnimating: bool;
+
     // getCurrentFormSeries: () => ?Array<EquationForm>;
     // getCurrentForm: () => ?EquationForm;
     //
@@ -469,6 +471,7 @@ export class EquationNew extends DiagramElementCollection {
       functions: new EquationFunctions(this),
       fontMath: optionsToUse.fontMath,
       fontText: optionsToUse.fontText,
+      isAnimating: false,
     };
 
     if (optionsToUse.elements != null) {
@@ -838,5 +841,220 @@ export class EquationNew extends DiagramElementCollection {
       }
     }
     return null;
+  }
+
+  goToForm(
+    name: ?string | number = null,
+    time: number | null = null,
+    delay: number = 0,
+    fromWhere: 'fromPrev' | 'fromNext' | 'fromAny' | null = 'fromAny',
+    animate: boolean = true,
+    callback: null | () => void = null,
+  ) {
+    if (this.eqn.isAnimating) {
+      this.stop(true, true);
+      this.stop(true, true);
+      this.eqn.isAnimating = false;
+      const currentForm = this.getCurrentForm();
+      if (currentForm != null) {
+        this.showForm(currentForm);
+      }
+      return;
+    }
+    this.stop();
+    this.stop();
+    this.eqn.isAnimating = false;
+
+    // By default go to the next form in a series
+    let nextIndex = 0;
+    if (name == null) {
+      let index = 0;
+      const currentForm = this.getCurrentForm();
+      if (currentForm != null) {
+        index = this.eqn.formSeries.indexOf(currentForm.name);
+        if (index < 0) {
+          index = 0;
+        }
+      }
+      nextIndex = index + 1;
+      if (nextIndex === this.eqn.formSeries.length) {
+        nextIndex = 0;
+      }
+    } else if (typeof name === 'number') {
+      nextIndex = name;
+    } else {
+      this.eqn.formSeries.forEach((formName, index) => {
+        if (formName === name) {
+          nextIndex = index;
+        }
+      });
+    }
+
+    const nextForm = this.eqn.forms[this.eqn.formSeries[nextIndex]];
+    let nextSubForm = null;
+    let subFormToUse = null;
+    const possibleSubForms
+          = this.eqn.subFormPriority.filter(sf => sf in nextForm);
+    if (possibleSubForms.length) {
+      // eslint-disable-next-line prefer-destructuring
+      subFormToUse = possibleSubForms[0];
+    }
+
+    if (subFormToUse != null) {
+      // $FlowFixMe
+      nextSubForm = nextForm[subFormToUse];
+      if (time === 0) {
+        this.showForm(nextSubForm);
+        if (callback != null) {
+          callback();
+        }
+      } else {
+        this.eqn.isAnimating = true;
+        const end = () => {
+          this.eqn.isAnimating = false;
+          if (callback != null) {
+            callback();
+          }
+        };
+        if (animate) {
+          let timeToUse = null;
+          // $FlowFixMe - this is going to be ok
+          if (nextSubForm.time != null && nextSubForm.time[fromWhere] != null) {
+            timeToUse = nextSubForm.time[fromWhere];
+          }
+          nextSubForm.animatePositionsTo(delay, 0.4, timeToUse, 0.4, end);
+        } else {
+          nextSubForm.allHideShow(delay, 0.5, 0.2, 0.5, end);
+        }
+        this.setCurrentForm(nextSubForm);
+      }
+      this.updateDescription();
+    }
+  }
+
+  getFormIndex(formToGet: EquationForm | string) {
+    const form = this.getForm(formToGet);
+    let index = -1;
+    if (form != null) {
+      index = this.eqn.formSeries.indexOf(form.name);
+    }
+    return index;
+  }
+
+  prevForm(time: number | null = null, delay: number = 0) {
+    const currentForm = this.getCurrentForm();
+    if (currentForm == null) {
+      return;
+    }
+    let index = this.getFormIndex(currentForm);
+    if (index > -1) {
+      index -= 1;
+      if (index < 0) {
+        index = this.eqn.formSeries.length - 1;
+      }
+      this.goToForm(index, time, delay, 'fromNext');
+    }
+  }
+
+  nextForm(time: number | null = null, delay: number = 0) {
+    let animate = true;
+    const currentForm = this.getCurrentForm();
+    if (currentForm == null) {
+      return;
+    }
+    let index = this.getFormIndex(currentForm);
+    if (index > -1) {
+      index += 1;
+      if (index > this.eqn.formSeries.length - 1) {
+        index = 0;
+        animate = false;
+      }
+      this.goToForm(index, time, delay, 'fromPrev', animate);
+    }
+  }
+
+  replayCurrentForm(time: number) {
+    if (this.eqn.isAnimating) {
+      this.stop(true, true);
+      this.stop(true, true);
+      this.eqn.isAnimating = false;
+      const currentForm = this.getCurrentForm();
+      if (currentForm != null) {
+        this.showForm(currentForm);
+      }
+      return;
+    }
+    this.stop();
+    this.stop();
+    this.eqn.isAnimating = false;
+    this.prevForm(0);
+    this.nextForm(time, 0.5);
+  }
+
+  animateToForm(
+    name: string,
+    time: number | null = null,
+    delay: number = 0,
+    callback: null | () => void = null,
+  ) {
+    this.stopAnimatingColor(true, true);
+    this.stopAnimatingColor(true, true);
+    this.stop();
+    this.stop();
+    const form = this.getForm(name);
+    if (form != null) {
+      form.animatePositionsTo(delay, 0.4, time, 0.4, callback);
+    }
+    this.setCurrentForm(name);
+  }
+
+  
+  changeDescription(
+    formOrName: EquationForm | string,
+    description: string = '',
+    modifiers: Object = {},
+    formType: string = 'base',
+  ) {
+    const form = this.getForm(formOrName, formType);
+    if (form != null) {
+      form.description = `${description}`;
+      form.modifiers = modifiers;
+    }
+  }
+
+  updateDescription(
+    formOrName: EquationForm | string | null = null,
+    formType: string = 'base',
+  ) {
+    const element = this.descriptionElement;
+    if (element == null) {
+      return;
+    }
+    if (element.isShown === false) {
+      return;
+    }
+    let form = null;
+    if (formOrName == null) {
+      form = this.getCurrentForm();
+    } else if (typeof formOrName === 'string') {
+      form = this.getForm(formOrName, formType);
+    } else {
+      form = formOrName;
+    }
+    if (form == null) {
+      return;
+    }
+    if (form.description == null) {
+      return;
+    }
+
+    const { drawingObject } = element;
+    if (drawingObject instanceof HTMLObject) {
+      drawingObject.change(
+        html.applyModifiers(form.description, form.modifiers),
+        element.lastDrawTransform.m(),
+      );
+      html.setOnClicks(form.modifiers);
+    }
   }
 }
