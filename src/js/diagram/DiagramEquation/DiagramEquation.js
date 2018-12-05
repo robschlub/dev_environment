@@ -274,6 +274,7 @@ export default class DiagramEquation {
       alignV?: TypeVAlign | null,
     },
     forms?: {
+      // $FlowFixMe
       [formName: string]: TypeEquationArray | {
         content: TypeEquationArray,
         elementMods?: {
@@ -859,6 +860,7 @@ export default class DiagramEquation {
     };
 
     const equationOptionsToUse = joinObjects({}, defaultEquationOptions, ...options);
+    // $FlowFixMe
     const equation = new EquationNew(this.shapes, {
       defaultFormAlignment: equationOptionsToUse.defaultFormAlignment,
     });
@@ -935,7 +937,7 @@ export default class DiagramEquation {
       if (elementToAdd != null) {
         const elementObject = {};
         elementObject[elementName] = elementToAdd;
-        equation.addElements(elementObject, elementToAdd.color);
+        equation.addElements(elementObject);
       }
     });
     equation.reorder();
@@ -973,7 +975,7 @@ export default class DiagramEquation {
         const element = phrase[i];
         if (typeof element === 'string') {
           if (i < phrase.length - 1) {
-            const methodName = element
+            const methodName = element;
             if (element === '.frac') {
               const parameters = phrase[i + 1];
               out.push(equation.eqn.functions.frac(parameters));
@@ -1255,7 +1257,9 @@ export default class DiagramEquation {
         } else {
           const methodName = Object.keys(element)[0];
           const methodParams = Object.values(element)[0];
+          // $FlowFixMe
           if (equation.eqn.functions[methodName]) {
+            // $FlowFixMe
             out.push(equation.eqn.functions[methodName](methodParams));
           }
         }
@@ -1300,8 +1304,8 @@ export default class DiagramEquation {
         } else {
           equation.eqn.defaultFormAlignment.fixTo = formOptions.alignment.fixTo;
         }
-        equation.eqn.defaultFormAlignment.hAlign = formOptions.alignment.hAlign;
-        equation.eqn.defaultFormAlignment.vAlign = formOptions.alignment.vAlign;
+        equation.eqn.defaultFormAlignment.alignH = formOptions.alignment.alignH;
+        equation.eqn.defaultFormAlignment.alignV = formOptions.alignment.alignV;
         equation.eqn.defaultFormAlignment.scale = formOptions.alignment.scale;
         equation.addForm(
           name,

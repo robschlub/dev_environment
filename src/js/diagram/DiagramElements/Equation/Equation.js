@@ -222,7 +222,6 @@ class EquationFunctions {
     // return this[method](params);
     // }
     return this.eqnMethod(method, params);
-    // return null;
   }
 
   contentToElement(
@@ -239,20 +238,9 @@ class EquationFunctions {
     return new Elements(elementArray);
   }
 
-  eqnMethod(name: string, options: {
-      numerator: TypeEquationPhrase,
-      denominator: TypeEquationPhrase,
-      symbol: string | DiagramElementPrimative | DiagramElementCollection,
-      scale?: number,
-    }
-    | [
-        TypeEquationPhrase,
-        TypeEquationPhrase,
-        string | DiagramElementPrimative | DiagramElementCollection,
-        ?number,
-    ]) {
+  eqnMethod(name: string, params: {}) {
     if (name === 'frac') {
-      return this.frac(options);
+      return this.frac(params);
     }
     return null;
   }
@@ -289,6 +277,13 @@ class EquationFunctions {
       f.scaleModifier = scale;
     }
     return f;
+  }
+
+  symbols(name: string, options: { color?: Array<number> }) {
+    if (name === 'vinculum') {
+      return this.vinculum(options);
+    }
+    return null;
   }
 
   vinculum(options: { color?: Array<number> } = {}) {
@@ -361,7 +356,7 @@ export type TypeEquationOptions = {
     alignV?: TypeVAlign;
   };
   //
-  elements: TypeEquationElements;
+  elements?: TypeEquationElements;
   //
 };
 
@@ -395,10 +390,10 @@ export class EquationNew extends DiagramElementCollection {
       scale: number,
     };
 
-    getCurrentFormSeries: () => ?Array<EquationForm>;
-    getCurrentForm: () => ?EquationForm;
+    // getCurrentFormSeries: () => ?Array<EquationForm>;
+    // getCurrentForm: () => ?EquationForm;
     //
-    showForm: (EquationForm | string, ?string) => {};
+    // showForm: (EquationForm | string, ?string) => {};
     //
   };
 
@@ -523,10 +518,8 @@ export class EquationNew extends DiagramElementCollection {
     // Helper function to add symbol element
     const makeSymbolElem = (options: { symbol: string, numLines?: number,
     orientation?: 'up' | 'left' | 'down' | 'right', color?: Array<number>}) => {
-      let symbol = null;
-      if (this.eqn.functions[options.symbol] != null) {
-        symbol = this.eqn.functions[options.symbol](options);
-      } else {
+      let symbol = this.eqn.functions.symbols(options.symbol, options);
+      if (symbol == null) {
         symbol = makeTextElem({
           text: `Symbol ${options.symbol} not valid`,
         });
