@@ -22,6 +22,7 @@ import DiagramPrimatives from '../../DiagramPrimatives/DiagramPrimatives';
 // import SuperSub from './Elements/SuperSub';
 // import { Brackets, Bar } from './Elements/Brackets';
 // import { Annotation, AnnotationInformation } from './Elements/Annotation';
+import EquationSymbols from './EquationSymbols';
 
 export function getDiagramElement(
   collection: DiagramElementCollection,
@@ -297,7 +298,6 @@ class EquationFunctions {
         content, symbol, strikeInSize,
       } = options);
     }
-    console.log(content, symbol, strikeInSize);
     return new Strike(
       this.contentToElement(content),
       getDiagramElement(this.collection, symbol),
@@ -306,80 +306,80 @@ class EquationFunctions {
   }
 }
 
-class EquationSymbols {
-  // eslint-disable-next-line no-use-before-define
-  shapes: DiagramPrimatives;
-  defaultColor: Array<number>;
+// class EquationSymbols {
+//   // eslint-disable-next-line no-use-before-define
+//   shapes: DiagramPrimatives;
+//   defaultColor: Array<number>;
 
-  // [methodName: string]: (TypeEquationPhrase) => {};
+//   // [methodName: string]: (TypeEquationPhrase) => {};
 
-  // eslint-disable-next-line no-use-before-define
-  constructor(
-    shapes: DiagramPrimatives,
-    defaultColor: Array<number>,
-  ) {
-    this.shapes = shapes;
-    this.defaultColor = defaultColor;
-  }
+//   // eslint-disable-next-line no-use-before-define
+//   constructor(
+//     shapes: DiagramPrimatives,
+//     defaultColor: Array<number>,
+//   ) {
+//     this.shapes = shapes;
+//     this.defaultColor = defaultColor;
+//   }
 
-  get(name: string, options: { color?: Array<number> }) {
-    if (name === 'vinculum') {
-      return this.vinculum(options);
-    }
-    if (name === 'strike') {
-      return this.strike(options);
-    }
-    if (name === 'xStrike') {
-      return this.xStrike(options);
-    }
-    return null;
-  }
+//   get(name: string, options: { color?: Array<number> }) {
+//     if (name === 'vinculum') {
+//       return this.vinculum(options);
+//     }
+//     if (name === 'strike') {
+//       return this.strike(options);
+//     }
+//     if (name === 'xStrike') {
+//       return this.xStrike(options);
+//     }
+//     return null;
+//   }
 
-  vinculum(options: { color?: Array<number> } = {}) {
-    let { color } = options;
-    if (color == null) {
-      color = this.defaultColor;
-    }
-    return this.shapes.horizontalLine(
-      new Point(0, 0),
-      1, 1, 0,
-      color,
-      new Transform('vinculum').scale(1, 1).translate(0, 0),
-    );
-  }
+//   vinculum(options: { color?: Array<number> } = {}) {
+//     let { color } = options;
+//     if (color == null) {
+//       color = this.defaultColor;
+//     }
+//     return this.shapes.horizontalLine(
+//       new Point(0, 0),
+//       1, 1, 0,
+//       color,
+//       new Transform('vinculum').scale(1, 1).translate(0, 0),
+//     );
+//   }
 
-  strike(options: { color?: Array<number> } = {}) {
-    let { color } = options;
-    if (color == null) {
-      color = this.defaultColor;
-    }
-    return this.shapes.horizontalLine(
-      new Point(0, 0),
-      1, 1, 0,
-      color,
-      new Transform('strike').scale(1, 1).rotate(0).translate(0, 0),
-    );
-  }
+//   strike(options: { color?: Array<number> } = {}) {
+//     let { color } = options;
+//     if (color == null) {
+//       color = this.defaultColor;
+//     }
+//     return this.shapes.horizontalLine(
+//       new Point(0, 0),
+//       1, 1, 0,
+//       color,
+//       new Transform('strike').scale(1, 1).rotate(0).translate(0, 0),
+//     );
+//   }
 
-  xStrike(options: { color?: Array<number> } = {}) {
-    let { color } = options;
-    if (color == null) {
-      color = this.defaultColor;
-    }
-    const cross = this.shapes.collection(new Transform('xStrike').scale(1, 1).rotate(0).translate(0, 0));
-    cross.color = color;
-    const strike1 = this.shapes.horizontalLine(
-      new Point(0, 0),
-      1, 1, 0,
-      color,
-      new Transform('strikeLine').scale(1, 1).rotate(0).translate(0, 0),
-    );
-    const strike2 = strike1._dup();
-    cross.add('s1', strike1);
-    cross.add('s2', strike2);
-    return cross;
-  }
-}
+//   xStrike(options: { color?: Array<number> } = {}) {
+//     let { color } = options;
+//     if (color == null) {
+//       color = this.defaultColor;
+//     }
+//     const cross = this.shapes.collection(new Transform('xStrike').scale(1, 1).rotate(0).translate(0, 0));
+//     cross.color = color;
+//     const strike1 = this.shapes.horizontalLine(
+//       new Point(0, 0),
+//       1, 1, 0,
+//       color,
+//       new Transform('strikeLine').scale(1, 1).rotate(0).translate(0, 0),
+//     );
+//     const strike2 = strike1._dup();
+//     cross.add('s1', strike1);
+//     cross.add('s2', strike2);
+//     return cross;
+//   }
+// }
 
 // Priority:
 //   1. symbol
@@ -613,6 +613,7 @@ export class EquationNew extends DiagramElementCollection {
     const makeSymbolElem = (options: { symbol: string, numLines?: number,
     orientation?: 'up' | 'left' | 'down' | 'right', color?: Array<number>}) => {
       let symbol = this.eqn.symbols.get(options.symbol, options);
+      console.log('got', symbol)
       if (symbol == null) {
         symbol = makeTextElem({
           text: `Symbol ${options.symbol} not valid`,

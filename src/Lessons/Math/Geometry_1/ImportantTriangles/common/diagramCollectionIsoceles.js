@@ -128,7 +128,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         },
         v1: { symbol: 'vinculum' },
         x: { symbol: 'xStrike' },
-        s: { symbol: 'strike' },
+        s: { symbol: 'integral' },
       },
       forms: {
       //   '0': ['.frac', ['a', 'b', 'v'], 'c'],
