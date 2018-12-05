@@ -236,6 +236,17 @@ export default class IsocelesCollection extends CommonDiagramCollection {
             color: [1, 0, 0, 1],
           },
         },
+        addToSeries: 'series1',
+        subForm: 'deg',
+      },
+      '90': {
+        content: ['a', 'b', 'c'],
+        elementMods: {
+          b: {
+            color: [1, 0, 0, 1],
+          },
+        },
+        addToSeries: 'series2',
         subForm: 'deg',
       },
       '1d': {

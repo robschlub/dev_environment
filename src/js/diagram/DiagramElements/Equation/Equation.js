@@ -647,46 +647,6 @@ export class EquationNew extends DiagramElementCollection {
           }
         });
       }
-
-      // // If array or string, then it's a simple form with no options
-      // if (typeof form === 'string'
-      //   || Array.isArray(form)) {
-      //   formContent = [this.eqn.functions.contentToElement(form)];
-      // //
-      // // If object with just one key and the key name is the same as
-      // // a method in eqn.functions, then it's a simple form with no
-      // // options
-      // } else if (form != null && typeof form === 'object') {
-      //   const keys = Object.keys(form);
-      //   if (keys.length === 1 && this.eqn.functions[keys[0]] != null) {
-      //     formContent = [this.eqn.functions.contentToElement(form)];
-      //   //
-      //   // If object has a content field, then the remaining fields are the
-      //   // options
-      //   } else if (form.content != null) {
-      //     formContent = [this.eqn.functions.contentToElement(form.content)];
-      //     const {
-      //       subForm, addToSeries, elementMods, animationTime,
-      //       description, modifiers,
-      //     } = form;
-      //     options = {
-      //       subForm,
-      //       addToSeries,
-      //       elementMods,
-      //       animationTime,
-      //       description,
-      //       modifiers,
-      //     };
-      //   } else if (form.content == null) {
-      //     // If object does not have a content field, then each key is a
-      //     // subForm, and each value a form definition
-      //   }
-      // }
-      // if (formContent != null) {
-      //   this.addForm(name, formContent, options);
-      // }
-      // console.log(name, form, )
-      // this.addForm(name, this.eqn.functions.contentToElement(form));
     });
   }
 
@@ -695,7 +655,6 @@ export class EquationNew extends DiagramElementCollection {
     content: Array<Elements | Element>,
     options: {
       subForm?: string,
-      addToSeries?: string,
       elementMods?: Object,
       time?: number | null | { fromPrev?: number, fromNext?: number },
       description?: string,
@@ -708,7 +667,6 @@ export class EquationNew extends DiagramElementCollection {
     }
     const defaultOptions = {
       subForm: 'base',
-      addToSeries: '',
       elementMods: {},
       animationTime: null,          // use velocities instead of time
       description: '',
@@ -758,27 +716,26 @@ export class EquationNew extends DiagramElementCollection {
         };
       }
     });
-    // const form = this.form[name][formType];
-    // form[subForm].createEq(content);
+
     form[subForm].content = content;
-    // console.log(form[subForm].content, this.eqn.defaultFormAlignment)
-    // form[subForm].subForm = formType;
     form[subForm].arrange(
       this.eqn.defaultFormAlignment.scale,
       this.eqn.defaultFormAlignment.alignH,
       this.eqn.defaultFormAlignment.alignV,
       this.eqn.defaultFormAlignment.fixTo,
     );
-    // if (addToSeries != null && addToSeries !== '') {
+    // const { addToSeries } = optionsToUse;
+    // console.log(addToSeries)
+    // if (addToSeries != null && addToSeries !== '' && typeof addToSeries === 'string') {
     //   if (this.eqn.formSeries[addToSeries] == null) {
     //     this.eqn.formSeries[addToSeries] = [];
     //   }
-    //   this.eqn.formSeries[addToSeries].push(this.eqn.forms[name]);
+    //   this.eqn.formSeries[addToSeries].push(form);
     // }
     // make the first form added also equal to the base form as always
     // need a base form for some functions
     if (this.eqn.forms[name].base === undefined) {
-      const baseOptions = Object.assign({}, options);
+      const baseOptions = joinObjects({}, optionsToUse);
       baseOptions.subForm = 'base';
       this.addForm(name, content, baseOptions);
     }

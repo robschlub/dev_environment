@@ -133,6 +133,14 @@ describe('Diagram Equations From Object', () => {
               },
             },
           },
+          method: {
+            frac: {
+              numerator: 'a',
+              denominator: 'b',
+              symbol: 'v',
+              scale: 0.5,
+            },
+          },
         },
       },
     };
@@ -248,5 +256,8 @@ describe('Diagram Equations From Object', () => {
     expect(rad[1].content.drawingObject.text[0].text).toBe('a');
     expect(rad[2].content.drawingObject.text[0].text).toBe('c');
     expect(forms['0'].rad.elementMods.b.color).toEqual(color1);
+
+    const method = forms['0'].method.content[0].content[0];
+    expect(method).toBeInstanceOf(Fraction);
   });
 });
