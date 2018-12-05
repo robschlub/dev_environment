@@ -35,7 +35,7 @@ export function getDiagramElement(
   return name;
 }
 
-type TypeEquationInput = Array<Elements | Element | string> | Elements | Element | string;
+// type TypeEquationInput = Array<Elements | Element | string> | Elements | Element | string;
 
 export type TypeEquationPhrase =
   string
@@ -48,6 +48,12 @@ export type TypeEquationPhrase =
       scale?: number;
     };
   }
+  | [
+    TypeEquationPhrase,
+    TypeEquationPhrase,
+    string,
+    ?number,
+  ]
   | {
     sup: {                            // Superscript
       content: TypeEquationPhrase;
@@ -60,6 +66,10 @@ export type TypeEquationPhrase =
       subscript: TypeEquationPhrase;
     }
   }
+  | [
+    TypeEquationPhrase,
+    TypeEquationPhrase,
+  ]
   | {                                 // Superscript and Subscript
     supsub: {
       content: TypeEquationPhrase;
@@ -67,6 +77,11 @@ export type TypeEquationPhrase =
       superscript?: TypeEquationPhrase;
     }
   }
+  | [
+    TypeEquationPhrase,
+    ?TypeEquationPhrase,
+    ?TypeEquationPhrase,
+  ]
   | {                                 // Strike
     strike: {
       content: TypeEquationPhrase;
@@ -74,6 +89,11 @@ export type TypeEquationPhrase =
       strikeInSize?: boolean;
     }
   }
+  | [
+    TypeEquationPhrase,
+    string,
+    ?boolean,
+  ]
   | {                                 // Annotation
     annotate: {
       content: TypeEquationPhrase;
@@ -96,6 +116,12 @@ export type TypeEquationPhrase =
       space?: number;
     }
   }
+  | [
+    TypeEquationPhrase,
+    ?string,
+    ?string,
+    ?number,
+  ]
   | {                                 // Top
     topBar: {
       content: TypeEquationPhrase;
@@ -104,6 +130,12 @@ export type TypeEquationPhrase =
       outsideSpace?: number;
     }
   }
+  | [
+    TypeEquationPhrase,
+    string,
+    ?number,
+    ?number,
+  ]
   | {                                 // Bottom Bar
     bottomBar: {
       content: TypeEquationPhrase;
@@ -121,6 +153,13 @@ export type TypeEquationPhrase =
       outsideSpace?: number;
     }
   }
+  | [
+    TypeEquationPhrase,
+    TypeEquationPhrase,
+    string,
+    ?number,
+    ?number,
+  ]
   | {                                 // Bottom Comment
     bottomComment: {
       content: TypeEquationPhrase;
@@ -158,7 +197,7 @@ class EquationFunctions {
     return null;
   }
 
-  parseContent(content: TypeEquationPhrase) {
+  parseContent(content: ?TypeEquationPhrase) {
     if (content == null) {
       return null;
     }
@@ -172,17 +211,18 @@ class EquationFunctions {
         if (Array.isArray(result)) {
           elementArray = [...elementArray, ...result];
         } else {
-          elementArray.push(this.parseContent(c));
+          elementArray.push(result);
         }
       });
       return elementArray;
     }
     // Otherwise its an object
     const [method, params] = Object.entries(content)[0];
-    if (this[method] != null) {
-      return this[method](params);
-    }
-    return null;
+    // if (this[method] != null) {
+    // return this[method](params);
+    // }
+    return this.eqnMethod(method, params);
+    // return null;
   }
 
   contentToElement(
@@ -199,15 +239,33 @@ class EquationFunctions {
     return new Elements(elementArray);
   }
 
-  frac(options: {
-      numerator: TypeEquationInput,
-      denominator: TypeEquationInput,
+  eqnMethod(name: string, options: {
+      numerator: TypeEquationPhrase,
+      denominator: TypeEquationPhrase,
       symbol: string | DiagramElementPrimative | DiagramElementCollection,
       scale?: number,
     }
     | [
-        TypeEquationInput,
-        TypeEquationInput,
+        TypeEquationPhrase,
+        TypeEquationPhrase,
+        string | DiagramElementPrimative | DiagramElementCollection,
+        ?number,
+    ]) {
+    if (name === 'frac') {
+      return this.frac(options);
+    }
+    return null;
+  }
+
+  frac(options: {
+      numerator: TypeEquationPhrase,
+      denominator: TypeEquationPhrase,
+      symbol: string | DiagramElementPrimative | DiagramElementCollection,
+      scale?: number,
+    }
+    | [
+        TypeEquationPhrase,
+        TypeEquationPhrase,
         string | DiagramElementPrimative | DiagramElementCollection,
         ?number,
       ]) {
