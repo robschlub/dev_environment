@@ -161,6 +161,25 @@ describe('Diagram Equations From Object', () => {
           '1': ['b', 'a', 'c'],
         },
       },
+      // AnimationTime can be defined either as a single time or a time
+      // for different transitions in a formSeries
+      time: {
+        '0': {
+          content: ['b', 'a', 'c'],
+        },
+        '1': {
+          content: ['b', 'a', 'c'],
+          time: 10,
+        },
+        '2': {
+          content: ['b', 'a', 'c'],
+          time: { fromPrev: 20, fromNext: 30, fromAny: 40 },
+        },
+        '3': {
+          content: ['b', 'a', 'c'],
+          time: { fromPrev: 20 },
+        },
+      },
       // Fractions can have scale defined
       fracWithScale: {
         '0': [{ frac: ['a', 'b', 'v', 0.5] }],
@@ -299,5 +318,16 @@ describe('Diagram Equations From Object', () => {
     const forms1 = eqn1.eqn.forms;
     expect(forms1['0'].base.content[0].content[0].content).toBe(eqn1._a);
     expect(forms1['1'].base.content[0].content[0].content).toBe(eqn1._b);
+  });
+  test('Time', () => {
+    eqn.addForms(addForms.time);
+    const time0 = forms['0'].base.time;
+    const time1 = forms['1'].base.time;
+    const time2 = forms['2'].base.time;
+    const time3 = forms['3'].base.time;
+    expect(time0).toBe(null);
+    expect(time1).toEqual({ fromPrev: 10, fromNext: 10, fromAny: 10 });
+    expect(time2).toEqual({ fromPrev: 20, fromNext: 30, fromAny: 40 });
+    expect(time3).toEqual({ fromPrev: 20, fromNext: null, fromAny: null });
   });
 });

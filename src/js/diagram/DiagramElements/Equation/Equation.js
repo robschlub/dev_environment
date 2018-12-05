@@ -608,13 +608,13 @@ export class EquationNew extends DiagramElementCollection {
         const formContent = [this.eqn.functions.contentToElement(form.content)];
         const {
           // $FlowFixMe
-          subForm, addToSeries, elementMods, animationTime, description, modifiers,
+          subForm, addToSeries, elementMods, time, description, modifiers,
         } = form;
         const options = {
           subForm,
           addToSeries,
           elementMods,
-          animationTime,
+          time,
           description,
           modifiers,
         };
@@ -633,13 +633,13 @@ export class EquationNew extends DiagramElementCollection {
             const formContent = [this.eqn.functions.contentToElement(subForm.content)];
             const {
               // $FlowFixMe
-              addToSeries, elementMods, animationTime, description, modifiers,
+              addToSeries, elementMods, time, description, modifiers,
             } = subForm;
             const options = joinObjects({
               subForm,
               addToSeries,
               elementMods,
-              animationTime,
+              time,
               description,
               modifiers,
             }, subFormOption);
@@ -668,7 +668,7 @@ export class EquationNew extends DiagramElementCollection {
     const defaultOptions = {
       subForm: 'base',
       elementMods: {},
-      animationTime: null,          // use velocities instead of time
+      time: null,                // use velocities instead of time
       description: '',
       modifiers: {},
     };
@@ -678,9 +678,8 @@ export class EquationNew extends DiagramElementCollection {
     }
     const {
       subForm, description, modifiers,
-      animationTime, elementMods,
+      time, elementMods,
     } = optionsToUse;
-    const time = animationTime;
     this.eqn.forms[name].name = name;
     const form = this.eqn.forms[name];
     form[subForm] = new EquationForm(this);
@@ -691,11 +690,14 @@ export class EquationNew extends DiagramElementCollection {
     form[subForm].subForm = subForm;
     form[subForm].elementMods = {};
     if (typeof time === 'number') {
-      form[name].time = {
+      form[subForm].time = {
         fromPrev: time, fromNext: time, fromAny: time,
       };
+    } else if (time == null) {
+      form[subForm].time = null;
     } else {
-      form[subForm].time = time;
+      const defaultTime = { fromPrev: null, fromNext: null, fromAny: null };
+      form[subForm].time = joinObjects(defaultTime, time);
     }
     Object.keys(elementMods).forEach((elementName) => {
       const diagramElement = getDiagramElement(this, elementName);
