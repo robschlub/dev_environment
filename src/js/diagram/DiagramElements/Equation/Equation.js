@@ -20,7 +20,7 @@ import * as html from '../../../tools/htmlGenerator';
 import Strike from './Elements/Strike';
 import DiagramPrimatives from '../../DiagramPrimatives/DiagramPrimatives';
 // import SuperSub from './Elements/SuperSub';
-// import { Brackets, Bar } from './Elements/Brackets';
+import { Brackets, Bar } from './Elements/Brackets';
 // import { Annotation, AnnotationInformation } from './Elements/Annotation';
 import EquationSymbols from './EquationSymbols';
 
@@ -46,6 +46,7 @@ export type TypeEquationPhrase =
   | number
   | { frac: TypeFracObject } | TypeFracArray
   | { strike: TypeStrikeObject } | TypeStrikeArray
+  | { brac: TypeBracketObject } | TypeBracketArray
   | [
     TypeEquationPhrase,
     TypeEquationPhrase,
@@ -94,20 +95,6 @@ export type TypeEquationPhrase =
       annotationInSize?: boolean;
     }
   }
-  | {                                 // Bracket
-    brac: {
-      content: TypeEquationPhrase;
-      leftSymbol?: string;
-      rightSymbol?: string;
-      space?: number;
-    }
-  }
-  | [
-    TypeEquationPhrase,
-    ?string,
-    ?string,
-    ?number,
-  ]
   | {                                 // Top
     topBar: {
       content: TypeEquationPhrase;
@@ -182,6 +169,20 @@ export type TypeStrikeArray = [
   TypeEquationPhrase,
   string,
   ?boolean,
+];
+
+export type TypeBracketObject = {
+  content: TypeEquationPhrase;
+  leftSymbol?: string;
+  rightSymbol?: string;
+  space?: number;
+};
+
+export type TypeBracketArray = [
+  TypeEquationPhrase,
+  ?string,
+  ?string,
+  ?number,
 ];
 
 class EquationFunctions {
@@ -261,6 +262,10 @@ class EquationFunctions {
       // $FlowFixMe
       return this.strike(params);
     }
+    if (name === 'brac') {
+      // $FlowFixMe
+      return this.brac(params);
+    }
     return null;
   }
 
@@ -302,6 +307,26 @@ class EquationFunctions {
       this.contentToElement(content),
       getDiagramElement(this.collection, symbol),
       strikeInSize,
+    );
+  }
+
+  brac(options: TypeBracketObject | TypeBracketArray) {
+    let content;
+    let left;
+    let right;
+    let space;
+    if (Array.isArray(options)) {
+      [content, left, right, space] = options;
+    } else {
+      ({
+        content, left, right, space,
+      } = options);
+    }
+    return new Brackets(
+      this.contentToElement(content),
+      getDiagramElement(this.collection, left),
+      getDiagramElement(this.collection, right),
+      space,
     );
   }
 }

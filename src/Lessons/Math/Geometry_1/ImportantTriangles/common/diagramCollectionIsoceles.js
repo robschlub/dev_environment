@@ -128,7 +128,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         },
         v1: { symbol: 'vinculum' },
         x: { symbol: 'xStrike' },
-        s: { symbol: 'integral' },
+        s: { symbol: 'strike' },
+        lb: { symbol: 'bar', side: 'left', color: [1, 0, 0, 1] },
+        rb: { symbol: 'roundedSquareBracket', side: 'right' },
       },
       forms: {
       //   '0': ['.frac', ['a', 'b', 'v'], 'c'],
@@ -243,7 +245,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       },
       '1': ['a', 'b', 'c'],
       // '2': [{ frac: ['a', 'b', 'v'] }],
-      '2': [{ strike: ['a', 's'] }, 'b', 'c'],
+      '2': [{ brac: ['b', 'lb', 'rb'] }, 'a', 'c'],
       '90': {
         content: ['a', 'b', 'c'],
         elementMods: {
