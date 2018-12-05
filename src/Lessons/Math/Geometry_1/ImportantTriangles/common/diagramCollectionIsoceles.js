@@ -226,27 +226,36 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       },
     });
     this._testEqn.addForms({
-      '1': ['b', 'a', 'c'],
+      '1a': ['b', 'a', 'c'],
       '1b': [{ frac: ['b', 'a', 'v'] }, 'c'],
-      '1c': [{ sfrac: ['b', 'a', 'v', 0.5] }, 'c'],
-      '1d': [
+      '1g': [{ sfrac: ['b', 'a', 'v', 0.5] }, 'c'],
+      '1': [
         {
           frac: {
-            numerator: { sfrac: ['d', 'e', 'v1', 0.5] },
+            numerator: ['a', 'd'],
             denominator: 'b',
             symbol: 'v',
           },
         }, 'c',
       ],
-      '1g': [
-        {
-          frac: [
-            { sfrac: ['d', 'e', 'v1', 0.5] },
-            'b',
-            'v',
-          ],
-        }, 'c',
-      ],
+      // '1': [
+      //   {
+      //     frac: {
+      //       numerator: { sfrac: ['d', 'e', 'v1', 0.5] },
+      //       denominator: 'b',
+      //       symbol: 'v',
+      //     },
+      //   }, 'c',
+      // ],
+      // '1g': [
+      //   {
+      //     frac: [
+      //       { sfrac: ['d', 'e', 'v1', 0.5] },
+      //       'b',
+      //       'v',
+      //     ],
+      //   }, 'c',
+      // ],
     });
     this.diagram.equation.makeEqnFromOptions({
       name: 'isoEqn',

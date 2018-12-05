@@ -255,7 +255,7 @@ class EquationFunctions {
       const spaceNum = parseFloat(content.replace(/space[_]*/, '')) || 0.03;
       return new Element(new BlankElement(spaceNum));
     } else {
-      const diagramElement = getDiagramElement(collection, content);
+      const diagramElement = getDiagramElement(this.collection, content);
       if (diagramElement) {
         return new Element(diagramElement);
       }
@@ -286,16 +286,14 @@ class EquationFunctions {
   }
 
   contentToElement(
-    collection: DiagramElementCollection,
     content: TypeEquationInput,
   ): Elements {
     // If input is alread an Elements object, then return it
     if (content instanceof Elements) {
       return content._dup();
     }
-
     let elementArray = this.parseContent(content);
-    if ( !Array.isArray(elementArray)) {
+    if (!Array.isArray(elementArray)) {
       elementArray = [elementArray];
     }
     return new Elements(elementArray);
@@ -371,8 +369,6 @@ class EquationFunctions {
     );
   }
 }
-
-
 
 // Priority:
 //   1. symbol
@@ -640,7 +636,10 @@ export class EquationNew extends DiagramElementCollection {
   addForms(forms: TypeEquationForms) {
     Object.entries(forms).forEach((entry) => {
       const [name, form] = entry;
-      this.addForm(name, this.eqn.functions.contentToElement(form));
+      const formContent = [this.eqn.functions.contentToElement(form)];
+      this.addForm(name, formContent)
+      // console.log(name, form, )
+      // this.addForm(name, this.eqn.functions.contentToElement(form));
     });
   }
 
