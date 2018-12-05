@@ -1,17 +1,11 @@
-import {
-  Point, // Rect,
-} from '../../tools/g2';
 // import {
-//   round,
-// } from '../../tools/mathtools';
+//   Point, // Rect,
+// } from '../../tools/g2';
+
 import * as tools from '../../../tools/tools';
 import makeDiagram from '../../../__mocks__/makeDiagram';
 import { EquationNew } from './Equation';
 import Fraction from './Elements/Fraction';
-// import {
-//   DiagramFont,
-// } from '../../DrawingObjects/TextObject/TextObject';
-// import VertexHorizontalLine from '../../DrawingObjects/VertexObject/VertexHorizontalLine';
 
 tools.isTouchDevice = jest.fn();
 
@@ -26,10 +20,9 @@ describe('Diagram Equations From Object', () => {
   let forms;
   let color1;
   let equationOptions;
-  // let modColor2;
-  // let defaultColor;
   beforeEach(() => {
     diagram = makeDiagram();
+    // Some default elements
     eqn = new EquationNew(diagram.shapes, {
       elements: {
         a: 'a',
@@ -44,8 +37,22 @@ describe('Diagram Equations From Object', () => {
       },
     });
     color1 = [0.95, 0, 0, 1];
-    // modColor2 = [0, 0.95, 0, 1];
-    // defaultColor = [0.5, 0.5, 0.5, 1];
+
+    // Forms can be created when creating the equation
+    equationOptions = {
+      elements: {
+        a: 'a',
+        b: 'b',
+        c: 'c',
+      },
+      forms: {
+        '0': ['a', 'b', 'c'],
+        '1': ['b', 'a', 'c'],
+      },
+    };
+
+    // Forms can be created after creating the equation
+    // This also shows all the different ways forms can be defined
     addForms = {
       // A form can be defined just as the text element
       textOnly: {
@@ -167,17 +174,6 @@ describe('Diagram Equations From Object', () => {
             },
           },
         ],
-      },
-    };
-    equationOptions = {
-      elements: {
-        a: 'a',
-        b: 'b',
-        c: 'c',
-      },
-      forms: {
-        '0': ['a', 'b', 'c'],
-        '1': ['b', 'a', 'c'],
       },
     };
     ({ forms } = eqn.eqn);
