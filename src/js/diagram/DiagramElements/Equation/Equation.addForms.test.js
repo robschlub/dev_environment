@@ -98,6 +98,19 @@ describe('Diagram Equations From Object', () => {
           },
         ],
       },
+      fracWithScale: {
+        '0': [{ frac: ['a', 'b', 'v', 0.5] }],
+        '1': [
+          {
+            frac: {
+              numerator: 'a',
+              denominator: 'b',
+              symbol: 'v',
+              scale: 0.5,
+            },
+          },
+        ],
+      },
     };
     ({ forms } = eqn.eqn);
   });
@@ -172,5 +185,13 @@ describe('Diagram Equations From Object', () => {
     expect(content[0].vinculum).toBe(eqn._v);
     const contentN = content[0].numerator.content[0];
     expect(contentN.numerator.content[0].content).toBe(eqn._d);
+  });
+  test('Frac with scale', () => {
+    eqn.addForms(addForms.fracWithScale);
+    const content0 = forms['0'].base.content[0].content;
+    expect(content0[0]).toBeInstanceOf(Fraction);
+    expect(content0[0].scaleModifier).toBe(0.5);
+    const content1 = forms['1'].base.content[0].content;
+    expect(content1).toEqual(content0);
   });
 });
