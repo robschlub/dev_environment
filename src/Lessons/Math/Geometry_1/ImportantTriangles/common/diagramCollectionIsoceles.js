@@ -227,7 +227,14 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     });
     this._testEqn.addForms({
       '11': ['a', 'b', 'c'],
-      '1': ['a', ['b', 'c']],
+      '12': ['a', ['b', 'c']],
+      '1': {
+        frac: {
+          numerator: 'a',
+          denominator: 'b',
+          symbol: 'v',
+        },
+      },
       // '1b': [{ frac: ['b', 'a', 'v'] }, 'c'],
       // '1g': [{ sfrac: ['b', 'a', 'v', 0.5] }, 'c'],
       // '1h': [

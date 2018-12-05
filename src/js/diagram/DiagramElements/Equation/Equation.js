@@ -200,7 +200,6 @@ class EquationFunctions {
     if (!Array.isArray(elementArray)) {
       elementArray = [elementArray];
     }
-    console.log(elementArray)
     return new Elements(elementArray);
   }
 

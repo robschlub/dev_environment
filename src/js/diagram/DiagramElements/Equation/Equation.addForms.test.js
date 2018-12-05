@@ -46,6 +46,9 @@ describe('Diagram Equations From Object', () => {
     // modColor2 = [0, 0.95, 0, 1];
     // defaultColor = [0.5, 0.5, 0.5, 1];
     addForms = {
+      textOnly: {
+        '0': 'a',
+      },
       arraySingleForm: {
         '0': ['a', 'b', 'c'],
       },
@@ -67,6 +70,16 @@ describe('Diagram Equations From Object', () => {
             },
           },
         ],
+      },
+      fracNotInArray: {
+        '0': {
+            frac: {
+              numerator: 'a',
+              denominator: 'b',
+              symbol: 'v',
+            },
+          },
+        },
       },
       multiFrac: {
         '0': [
@@ -91,6 +104,11 @@ describe('Diagram Equations From Object', () => {
   });
   test('Equation instantiation', () => {
     expect(eqn).not.toBe(null);
+  });
+  test('Text only', () => {
+    eqn.addForms(addForms.textOnly);
+    const { content } = forms['0'].base.content[0];
+    expect(content[0].content.drawingObject.text[0].text).toBe('a');
   });
   test('Array Single Form', () => {
     eqn.addForms(addForms.arraySingleForm);
