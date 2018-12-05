@@ -15,6 +15,8 @@ import EquationForm from './EquationForm';
 import type {
   TypeHAlign, TypeVAlign,
 } from './EquationForm';
+import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
+import * as html from '../../../tools/htmlGenerator';
 
 // import Strike from './Elements/Strike';
 // import SuperSub from './Elements/SuperSub';
@@ -401,7 +403,10 @@ export class EquationNew extends DiagramElementCollection {
       scale: number,
     };
 
-    isAnimating: bool;
+    isAnimating: boolean;
+
+    descriptionElement: DiagramElementPrimative | null;
+    descriptionPosition: Point;
 
     // getCurrentFormSeries: () => ?Array<EquationForm>;
     // getCurrentForm: () => ?EquationForm;
@@ -472,6 +477,8 @@ export class EquationNew extends DiagramElementCollection {
       fontMath: optionsToUse.fontMath,
       fontText: optionsToUse.fontText,
       isAnimating: false,
+      descriptionElement: null,
+      descriptionPosition: new Point(0, 0),
     };
 
     if (optionsToUse.elements != null) {
@@ -580,6 +587,51 @@ export class EquationNew extends DiagramElementCollection {
 
     this.setFirstTransform(this.transform);
   }
+
+  addDescriptionElement(
+    descriptionElement: DiagramElementPrimative | null = null,
+    descriptionPosition: Point = new Point(0, 0),
+  ) {
+    this.eqn.descriptionElement = descriptionElement;
+    this.eqn.descriptionPosition = descriptionPosition;
+    if (this.eqn.descriptionElement) {
+      this.eqn.descriptionElement
+        .setPosition(this.getDiagramPosition()
+          .add(descriptionPosition));
+    }
+  }
+
+  setPosition(pointOrX: Point | number, y: number = 0) {
+    super.setPosition(pointOrX, y);
+    const position = this.getDiagramPosition();
+    if (this.eqn.descriptionElement) {
+      this.eqn.descriptionElement.setPosition(position.add(this.eqn.descriptionPosition));
+    }
+  }
+
+  // scaleForm(name: string, scale: number, subForm: string = 'base') {
+  //   // console.log(name, this.form, formType, this.form[name][formType])
+  //   if (name in this.eqn.forms) {
+  //     if (subForm in this.eqn.forms[name]) {
+  //       this.eqn.forms[name][subForm].arrange(
+  //         scale,
+  //         this.eqn.formAlignment.hAlign,
+  //         this.eqn.formAlignment.vAlign,
+  //         this.eqn.formAlignment.fixTo,
+  //       );
+  //     }
+  //   }
+  // }
+
+  // scale(scale: number) {
+  //   Object.keys(this.form).forEach((name) => {
+  //     Object.keys(this.form[name]).forEach((formType) => {
+  //       if (formType !== 'name') {
+  //         this.scaleForm(name, scale, formType);
+  //       }
+  //     });
+  //   });
+  // }
 
   addForms(forms: TypeEquationForms) {
     const isFormString = form => typeof form === 'string';
@@ -829,7 +881,7 @@ export class EquationNew extends DiagramElementCollection {
     if (formOrName in this.eqn.forms) {
       let formTypeToUse = subForm;
       if (formTypeToUse == null) {
-        const possibleFormTypes
+        const possibleFormTypes     // $FlowFixMe
           = this.eqn.subFormPriority.filter(fType => fType in this.eqn.forms[formOrName]);
         if (possibleFormTypes.length) {
           // eslint-disable-next-line prefer-destructuring
@@ -1008,14 +1060,14 @@ export class EquationNew extends DiagramElementCollection {
     this.setCurrentForm(name);
   }
 
-  
+
   changeDescription(
     formOrName: EquationForm | string,
     description: string = '',
     modifiers: Object = {},
-    formType: string = 'base',
+    subForm: string = 'base',
   ) {
-    const form = this.getForm(formOrName, formType);
+    const form = this.getForm(formOrName, subForm);
     if (form != null) {
       form.description = `${description}`;
       form.modifiers = modifiers;
@@ -1024,9 +1076,9 @@ export class EquationNew extends DiagramElementCollection {
 
   updateDescription(
     formOrName: EquationForm | string | null = null,
-    formType: string = 'base',
+    subForm: string = 'base',
   ) {
-    const element = this.descriptionElement;
+    const element = this.eqn.descriptionElement;
     if (element == null) {
       return;
     }
@@ -1037,7 +1089,7 @@ export class EquationNew extends DiagramElementCollection {
     if (formOrName == null) {
       form = this.getCurrentForm();
     } else if (typeof formOrName === 'string') {
-      form = this.getForm(formOrName, formType);
+      form = this.getForm(formOrName, subForm);
     } else {
       form = formOrName;
     }
