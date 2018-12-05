@@ -130,29 +130,29 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         v1: { symbol: 'vinculum' },
       },
       forms: {
-        '0': ['.frac', ['a', 'b', 'v'], 'c'],
-        '1': [{ frac: ['a', 'c', 'v'] }, 'b'],
-        '2': ['b', 'a', 'c'],
-        '3': {
-          content: ['b', 'a', 'c'],
-          elementMods: {
-            b: {
-              color: [1, 0, 0, 1],
-            },
-          },
-          subForm: 'deg',
-        },
-        '4': {
-          'deg': ['b', 'a', 'c'],
-          'rad': {
-            content: ['b', 'a', 'c'],
-            elementMods: {
-              b: {
-                color: [1, 0, 0, 1],
-              },
-            },
-          },
-        },
+      //   '0': ['.frac', ['a', 'b', 'v'], 'c'],
+      //   '1': [{ frac: ['a', 'c', 'v'] }, 'b'],
+      //   '2': ['b', 'a', 'c'],
+      //   '3': {
+      //     content: ['b', 'a', 'c'],
+      //     elementMods: {
+      //       b: {
+      //         color: [1, 0, 0, 1],
+      //       },
+      //     },
+      //     subForm: 'deg',
+      //   },
+      //   '4': {
+      //     'deg': ['b', 'a', 'c'],
+      //     'rad': {
+      //       content: ['b', 'a', 'c'],
+      //       elementMods: {
+      //         b: {
+      //           color: [1, 0, 0, 1],
+      //         },
+      //       },
+      //     },
+      //   },
 
         // '1c': {
         //   setup: {
@@ -226,13 +226,22 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       },
     });
     this._testEqn.addForms({
-      '1a': ['b', 'a', 'c'],
-      '1b': [{ frac: ['b', 'a', 'v'] }, 'c'],
-      '1g': [{ sfrac: ['b', 'a', 'v', 0.5] }, 'c'],
+      // '1a': ['b', 'a', 'c'],
+      // '1b': [{ frac: ['b', 'a', 'v'] }, 'c'],
+      // '1g': [{ sfrac: ['b', 'a', 'v', 0.5] }, 'c'],
+      // '1h': [
+      //   {
+      //     frac: {
+      //       numerator: ['a', 'd'],
+      //       denominator: 'b',
+      //       symbol: 'v',
+      //     },
+      //   }, 'c',
+      // ],
       '1': [
         {
           frac: {
-            numerator: ['a', 'd'],
+            numerator: { sfrac: ['d', 'e', 'v1', 0.5] },
             denominator: 'b',
             symbol: 'v',
           },
@@ -240,17 +249,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       ],
       // '1': [
       //   {
-      //     frac: {
-      //       numerator: { sfrac: ['d', 'e', 'v1', 0.5] },
-      //       denominator: 'b',
-      //       symbol: 'v',
-      //     },
-      //   }, 'c',
-      // ],
-      // '1g': [
-      //   {
       //     frac: [
-      //       { sfrac: ['d', 'e', 'v1', 0.5] },
+      //       { frac: ['d', 'e', 'v1'] },
       //       'b',
       //       'v',
       //     ],

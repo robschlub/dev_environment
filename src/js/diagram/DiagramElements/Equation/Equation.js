@@ -45,7 +45,7 @@ export function getDiagramElement(
 
 type TypeEquationInput = Array<Elements | Element | string> | Elements | Element | string;
 
-function contentToElement(
+function contentToElement1(
   collection: DiagramElementCollection,
   content: TypeEquationInput,
 ): Elements {
@@ -279,6 +279,7 @@ class EquationFunctions {
     }
     // Otherwise its an object
     const [method, params] = Object.entries(content)[0];
+    console.log('parse', content, method, params)
     if (this[method] != null) {
       return this[method](params);
     }
@@ -296,6 +297,7 @@ class EquationFunctions {
     if (!Array.isArray(elementArray)) {
       elementArray = [elementArray];
     }
+    console.log(elementArray)
     return new Elements(elementArray);
   }
 
@@ -318,8 +320,8 @@ class EquationFunctions {
       ({ numerator, denominator, symbol } = options);
     }
     return new Fraction(
-      contentToElement(this.collection, numerator),
-      contentToElement(this.collection, denominator),
+      this.contentToElement(numerator),
+      this.contentToElement(denominator),
       getDiagramElement(this.collection, symbol),
     );
   }
@@ -348,8 +350,8 @@ class EquationFunctions {
       } = options);
     }
     const f = new Fraction(
-      contentToElement(this.collection, numerator),
-      contentToElement(this.collection, denominator),
+      this.contentToElement(numerator),
+      this.contentToElement(denominator),
       getDiagramElement(this.collection, symbol),
     );
     f.scaleModifier = scale;
@@ -636,6 +638,7 @@ export class EquationNew extends DiagramElementCollection {
   addForms(forms: TypeEquationForms) {
     Object.entries(forms).forEach((entry) => {
       const [name, form] = entry;
+      console.log('form', form)
       const formContent = [this.eqn.functions.contentToElement(form)];
       this.addForm(name, formContent)
       // console.log(name, form, )
