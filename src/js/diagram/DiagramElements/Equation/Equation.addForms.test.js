@@ -25,6 +25,7 @@ describe('Diagram Equations From Object', () => {
   let addForms;
   let forms;
   let color1;
+  let equationOptions;
   // let modColor2;
   // let defaultColor;
   beforeEach(() => {
@@ -46,22 +47,37 @@ describe('Diagram Equations From Object', () => {
     // modColor2 = [0, 0.95, 0, 1];
     // defaultColor = [0.5, 0.5, 0.5, 1];
     addForms = {
+      // A form can be defined just as the text element
       textOnly: {
         '0': 'a',
       },
+      // A form can be defined as an array of text elements
       arraySingleForm: {
         '0': ['a', 'b', 'c'],
       },
+      // Many forms with different names can be defined
       arrayTwoForms: {
         '0': ['a', 'b', 'c'],
         '1': ['b', 'a', 'c'],
       },
+      // Text arrays can be nested in text arrays (but there isn't really
+      // a need to)
       nestedArrays: {
         '0': ['a', ['b', 'c']],
       },
-      frac: {
-        '0': [{ frac: ['a', 'b', 'v'] }],
-        '1': [
+      // Forms can include methods either as the object by themselves
+      // (0 and 2), or as part of an array
+      methods: {
+        '0': { frac: ['a', 'b', 'v'] },
+        '1': [{ frac: ['a', 'b', 'v'] }],
+        '2': {
+          frac: {
+            numerator: 'a',
+            denominator: 'b',
+            symbol: 'v',
+          },
+        },
+        '3': [
           {
             frac: {
               numerator: 'a',
@@ -71,23 +87,16 @@ describe('Diagram Equations From Object', () => {
           },
         ],
       },
-      methodOnly: {
-        '0': {
-          frac: {
-            numerator: 'a',
-            denominator: 'b',
-            symbol: 'v',
-          },
-        },
-      },
-      multiFrac: {
+      // Form arrays can have multiple methods in them
+      multiMethod: {
         '0': [
           { frac: ['a', 'b', 'v'] },
           'c',
           { frac: ['d', 'e', 'v1'] },
         ],
       },
-      nestedFrac: {
+      // Form methods can be nested in each other
+      nestedMethod: {
         '0': [
           {
             frac: [
@@ -98,19 +107,9 @@ describe('Diagram Equations From Object', () => {
           },
         ],
       },
-      fracWithScale: {
-        '0': [{ frac: ['a', 'b', 'v', 0.5] }],
-        '1': [
-          {
-            frac: {
-              numerator: 'a',
-              denominator: 'b',
-              symbol: 'v',
-              scale: 0.5,
-            },
-          },
-        ],
-      },
+      // Forms can be defined as objects to include additional data like
+      // subForm name, elementMods, animationTime, description and description
+      // modifiers
       fullObject: {
         '0': {
           content: ['b', 'a', 'c'],
@@ -122,6 +121,9 @@ describe('Diagram Equations From Object', () => {
           subForm: 'deg',
         },
       },
+      // If multiple sub forms exist, and all being defined at once, then need
+      // to split the form object into subForm objects, where each subform
+      // object can be defined as any form above
       subFormObject: {
         '0': {
           deg: ['b', 'a', 'c'],
@@ -143,13 +145,39 @@ describe('Diagram Equations From Object', () => {
           },
         },
       },
-      separateTimes: {
+      // addForms can be called multiple times
+      addFormsMultipleTimes: {
         first: {
           '0': ['a', 'b', 'c'],
         },
         second: {
           '1': ['b', 'a', 'c'],
         },
+      },
+      // Fractions can have scale defined
+      fracWithScale: {
+        '0': [{ frac: ['a', 'b', 'v', 0.5] }],
+        '1': [
+          {
+            frac: {
+              numerator: 'a',
+              denominator: 'b',
+              symbol: 'v',
+              scale: 0.5,
+            },
+          },
+        ],
+      },
+    };
+    equationOptions = {
+      elements: {
+        a: 'a',
+        b: 'b',
+        c: 'c',
+      },
+      forms: {
+        '0': ['a', 'b', 'c'],
+        '1': ['b', 'a', 'c'],
       },
     };
     ({ forms } = eqn.eqn);
@@ -186,26 +214,29 @@ describe('Diagram Equations From Object', () => {
     expect(forms['0'].base.content[0].content[1].content).toBe(eqn._b);
     expect(forms['0'].base.content[0].content[2].content).toBe(eqn._c);
   });
-  test('frac', () => {
-    eqn.addForms(addForms.frac);
-    const content0 = forms['0'].base.content[0].content;
-    // console.log(content0)
+  test('Methods', () => {
+    eqn.addForms(addForms.methods);
+    const content0 = forms['0'].base.content[0].content; 
     expect(content0[0]).toBeInstanceOf(Fraction);
     expect(content0[0].numerator.content[0].content).toBe(eqn._a);
     expect(content0[0].denominator.content[0].content).toBe(eqn._b);
     expect(content0[0].vinculum).toBe(eqn._v);
     const content1 = forms['1'].base.content[0].content;
     expect(content1).toEqual(content0);
+    const content2 = forms['2'].base.content[0].content;
+    expect(content2).toEqual(content0);
+    const content3 = forms['3'].base.content[0].content;
+    expect(content3).toEqual(content0);
   });
-  test('Method only', () => {
-    eqn.addForms(addForms.methodOnly);
-    const content0 = forms['0'].base.content[0].content;
-    expect(content0[0]).toBeInstanceOf(Fraction);
-    expect(content0[0].numerator.content[0].content).toBe(eqn._a);
-    expect(content0[0].denominator.content[0].content).toBe(eqn._b);
-  });
-  test('Multi Frac', () => {
-    eqn.addForms(addForms.multiFrac);
+  // test('Method only', () => {
+  //   eqn.addForms(addForms.methodOnly);
+  //   const content0 = forms['0'].base.content[0].content;
+  //   expect(content0[0]).toBeInstanceOf(Fraction);
+  //   expect(content0[0].numerator.content[0].content).toBe(eqn._a);
+  //   expect(content0[0].denominator.content[0].content).toBe(eqn._b);
+  // });
+  test('Multi Method', () => {
+    eqn.addForms(addForms.multiMethod);
     const { content } = forms['0'].base.content[0];
     expect(content[0]).toBeInstanceOf(Fraction);
     expect(content[0].numerator.content[0].content).toBe(eqn._a);
@@ -217,8 +248,8 @@ describe('Diagram Equations From Object', () => {
     expect(content[2].denominator.content[0].content).toBe(eqn._e);
     expect(content[2].vinculum).toBe(eqn._v1);
   });
-  test('Nested Frac', () => {
-    eqn.addForms(addForms.nestedFrac);
+  test('Nested Method', () => {
+    eqn.addForms(addForms.nestedMethod);
     const { content } = forms['0'].base.content[0];
     expect(content[0]).toBeInstanceOf(Fraction);
     expect(content[0].denominator.content[0].content).toBe(eqn._b);
@@ -268,24 +299,13 @@ describe('Diagram Equations From Object', () => {
     const method = forms['0'].method.content[0].content[0];
     expect(method).toBeInstanceOf(Fraction);
   });
-  test('Separate Times', () => {
-    eqn.addForms(addForms.separateTimes.first);
-    eqn.addForms(addForms.separateTimes.second);
+  test('AddForms called multiple times', () => {
+    eqn.addForms(addForms.addFormsMultipleTimes.first);
+    eqn.addForms(addForms.addFormsMultipleTimes.second);
     expect(forms['0'].base.content[0].content[0].content).toBe(eqn._a);
     expect(forms['1'].base.content[0].content[0].content).toBe(eqn._b);
   });
   test('Create forms as part of initial euation creation', () => {
-    const equationOptions = {
-      elements: {
-        a: 'a',
-        b: 'b',
-        c: 'c',
-      },
-      forms: {
-        '0': ['a', 'b', 'c'],
-        '1': ['b', 'a', 'c'],
-      },
-    };
     const eqn1 = new EquationNew(diagram.shapes, equationOptions);
     const forms1 = eqn1.eqn.forms;
     expect(forms1['0'].base.content[0].content[0].content).toBe(eqn1._a);
