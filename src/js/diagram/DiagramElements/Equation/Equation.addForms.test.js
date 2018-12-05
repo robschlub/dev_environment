@@ -49,6 +49,7 @@ describe('Diagram Equations From Object', () => {
         '0': ['a', 'b', 'c'],
         '1': ['b', 'a', 'c'],
       },
+      formSeries: ['0', '1'],
     };
 
     // Forms can be created after creating the equation
@@ -337,6 +338,7 @@ describe('Diagram Equations From Object', () => {
     const forms1 = eqn1.eqn.forms;
     expect(forms1['0'].base.content[0].content[0].content).toBe(eqn1._a);
     expect(forms1['1'].base.content[0].content[0].content).toBe(eqn1._b);
+    expect(eqn1.eqn.formSeries).toEqual(['0', '1']);
   });
   test('Time', () => {
     eqn.addForms(addForms.time);

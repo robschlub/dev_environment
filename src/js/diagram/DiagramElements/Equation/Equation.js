@@ -364,6 +364,8 @@ export type TypeEquationOptions = {
   };
   //
   elements?: TypeEquationElements;
+  forms?: TypeEquationForms;
+  formSeries?: Array<string>;
   //
 };
 
@@ -387,7 +389,8 @@ export class EquationNew extends DiagramElementCollection {
 
     subFormPriority: Array<string>,
     //
-    formSeries: { [seriesName: String]: Array<EquationForm> };
+    // formSeries: { [seriesName: String]: Array<EquationForm> };
+    formSeries: Array<string>;
     currentFormSeries: string;
 
     //
@@ -460,7 +463,7 @@ export class EquationNew extends DiagramElementCollection {
       currentForm: '',
       currentSubForm: '',
       subFormPriority: ['base'],
-      formSeries: {},
+      formSeries: [],
       currentFormSeries: '',
       defaultFormAlignment: optionsToUse.defaultFormAlignment,
       functions: new EquationFunctions(this),
@@ -474,6 +477,10 @@ export class EquationNew extends DiagramElementCollection {
 
     if (optionsToUse.forms != null) {
       this.addForms(optionsToUse.forms);
+    }
+
+    if (optionsToUse.formSeries != null) {
+      this.setFormSeries(optionsToUse.formSeries);
     }
   }
 
@@ -748,6 +755,10 @@ export class EquationNew extends DiagramElementCollection {
     if (this.eqn.currentSubForm === '') {
       this.eqn.currentSubForm = 'base';
     }
+  }
+
+  setFormSeries(series: Array<string>) {
+    this.eqn.formSeries = series.slice();
   }
 
   getCurrentForm() {
