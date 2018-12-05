@@ -512,42 +512,113 @@ export class EquationNew extends DiagramElementCollection {
   }
 
   addForms(forms: TypeEquationForms) {
-    Object.entries(forms).forEach((entry) => {
-      const [name, form] = entry;
-      let formContent;
-      let options = {};
-      // If array or string, then it's a simple form with no options
-      if (typeof form === 'string'
-        || Array.isArray(form)) {
-        formContent = [this.eqn.functions.contentToElement(form)];
-      } else if (form != null && typeof form === 'object') {
-        // If object with just one key and the key name is the same as
-        // a method in eqn.functions, then it's a simple form with no
-        // options
+    const isFormString = form => typeof form === 'string';
+    const isFormArray = form => Array.isArray(form);
+    const isFormMethod = (form) => {
+      if (isFormString(form) || isFormArray(form)) {
+        return false;
+      }
+      if (form != null && typeof form === 'object') {
         const keys = Object.keys(form);
         if (keys.length === 1 && this.eqn.functions[keys[0]] != null) {
-          formContent = [this.eqn.functions.contentToElement(form)];
-        } else if (form.content != null) {
-          formContent = [this.eqn.functions.contentToElement(form.content)];
-          const {
-            subForm, addToSeries, elementMods, animationTime,
-            description, modifiers,
-          } = form;
-          options = {
-            subForm,
-            addToSeries,
-            elementMods,
-            animationTime,
-            description,
-            modifiers,
-          };
-        } else if (form.content === null) {
-          //
+          return true;
         }
       }
-      if (formContent != null) {
-        this.addForm(name, formContent, options);
+      return false;
+    };
+    const isFormFullObject = (form) => {
+      if (isFormString(form) || isFormArray(form) || isFormMethod(form)) {
+        return false;
       }
+      if (form != null && typeof form === 'object' && form.content != null) {
+        return true;
+      }
+      return false;
+    };
+
+    Object.entries(forms).forEach((entry) => {
+      const [name, form] = entry;
+      if (isFormString(form) || isFormArray(form) || isFormMethod(form)) {
+        const formContent = [this.eqn.functions.contentToElement(form)];
+        this.addForm(name, formContent);
+      } else if (isFormFullObject(form)) {
+        const formContent = [this.eqn.functions.contentToElement(form.content)];
+        const {
+          subForm, addToSeries, elementMods, animationTime,
+          description, modifiers,
+        } = form;
+        const options = {
+          subForm,
+          addToSeries,
+          elementMods,
+          animationTime,
+          description,
+          modifiers,
+        };
+        this.addForm(name, formContent, options);
+      } else {
+        Object.entries(form).forEach((subFormEntry) => {
+          const [subFormName, subForm] = subFormEntry;
+          const subFormOption = { subForm: subFormName };
+          if (isFormString(subForm) || isFormArray(subForm) || isFormMethod(subForm)) {
+            const formContent = [this.eqn.functions.contentToElement(subForm)];
+            this.addForm(name, formContent, subFormOption);
+          } else {
+            const formContent = [this.eqn.functions.contentToElement(subForm.content)];
+            const {
+              addToSeries, elementMods, animationTime,
+              description, modifiers,
+            } = subForm;
+            const options = joinObjects({
+              subForm,
+              addToSeries,
+              elementMods,
+              animationTime,
+              description,
+              modifiers,
+            }, subFormOption);
+            this.addForm(name, formContent, options);
+          }
+        });
+      }
+
+      // // If array or string, then it's a simple form with no options
+      // if (typeof form === 'string'
+      //   || Array.isArray(form)) {
+      //   formContent = [this.eqn.functions.contentToElement(form)];
+      // //
+      // // If object with just one key and the key name is the same as
+      // // a method in eqn.functions, then it's a simple form with no
+      // // options
+      // } else if (form != null && typeof form === 'object') {
+      //   const keys = Object.keys(form);
+      //   if (keys.length === 1 && this.eqn.functions[keys[0]] != null) {
+      //     formContent = [this.eqn.functions.contentToElement(form)];
+      //   //
+      //   // If object has a content field, then the remaining fields are the
+      //   // options
+      //   } else if (form.content != null) {
+      //     formContent = [this.eqn.functions.contentToElement(form.content)];
+      //     const {
+      //       subForm, addToSeries, elementMods, animationTime,
+      //       description, modifiers,
+      //     } = form;
+      //     options = {
+      //       subForm,
+      //       addToSeries,
+      //       elementMods,
+      //       animationTime,
+      //       description,
+      //       modifiers,
+      //     };
+      //   } else if (form.content == null) {
+      //     // If object does not have a content field, then each key is a
+      //     // subForm, and each value a form definition
+      //   }
+      // }
+      // if (formContent != null) {
+      //   this.addForm(name, formContent, options);
+      // }
       // console.log(name, form, )
       // this.addForm(name, this.eqn.functions.contentToElement(form));
     });

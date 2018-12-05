@@ -123,13 +123,13 @@ describe('Diagram Equations From Object', () => {
         },
       },
       subFormObject: {
-        '4': {
-          'deg': ['b', 'a', 'c'],
-          'rad': {
+        '0': {
+          deg: ['b', 'a', 'c'],
+          rad: {
             content: ['b', 'a', 'c'],
             elementMods: {
               b: {
-                color: [1, 0, 0, 1],
+                color: color1,
               },
             },
           },
@@ -230,5 +230,23 @@ describe('Diagram Equations From Object', () => {
     expect(deg[1].content.drawingObject.text[0].text).toBe('a');
     expect(deg[2].content.drawingObject.text[0].text).toBe('c');
     expect(forms['0'].deg.elementMods.b.color).toEqual(color1);
+  });
+  test('Sub form Object', () => {
+    eqn.addForms(addForms.subFormObject);
+    const { content } = forms['0'].base.content[0];
+    expect(content[0].content.drawingObject.text[0].text).toBe('b');
+    expect(content[1].content.drawingObject.text[0].text).toBe('a');
+    expect(content[2].content.drawingObject.text[0].text).toBe('c');
+
+    const deg = forms['0'].deg.content[0].content;
+    expect(deg[0].content.drawingObject.text[0].text).toBe('b');
+    expect(deg[1].content.drawingObject.text[0].text).toBe('a');
+    expect(deg[2].content.drawingObject.text[0].text).toBe('c');
+
+    const rad = forms['0'].rad.content[0].content;
+    expect(rad[0].content.drawingObject.text[0].text).toBe('b');
+    expect(rad[1].content.drawingObject.text[0].text).toBe('a');
+    expect(rad[2].content.drawingObject.text[0].text).toBe('c');
+    expect(forms['0'].rad.elementMods.b.color).toEqual(color1);
   });
 });
