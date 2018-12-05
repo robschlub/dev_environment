@@ -212,7 +212,7 @@ describe('Diagram Equations From Object', () => {
   });
   test('Methods', () => {
     eqn.addForms(addForms.methods);
-    const content0 = forms['0'].base.content[0].content; 
+    const content0 = forms['0'].base.content[0].content;
     expect(content0[0]).toBeInstanceOf(Fraction);
     expect(content0[0].numerator.content[0].content).toBe(eqn._a);
     expect(content0[0].denominator.content[0].content).toBe(eqn._b);
@@ -224,13 +224,6 @@ describe('Diagram Equations From Object', () => {
     const content3 = forms['3'].base.content[0].content;
     expect(content3).toEqual(content0);
   });
-  // test('Method only', () => {
-  //   eqn.addForms(addForms.methodOnly);
-  //   const content0 = forms['0'].base.content[0].content;
-  //   expect(content0[0]).toBeInstanceOf(Fraction);
-  //   expect(content0[0].numerator.content[0].content).toBe(eqn._a);
-  //   expect(content0[0].denominator.content[0].content).toBe(eqn._b);
-  // });
   test('Multi Method', () => {
     eqn.addForms(addForms.multiMethod);
     const { content } = forms['0'].base.content[0];
