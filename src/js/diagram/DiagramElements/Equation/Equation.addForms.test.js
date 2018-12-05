@@ -161,7 +161,7 @@ describe('Diagram Equations From Object', () => {
           '1': ['b', 'a', 'c'],
         },
       },
-      // AnimationTime can be defined either as a single time or a time
+      // Form time can be defined either as a single time or a time
       // for different transitions in a formSeries
       time: {
         '0': {
@@ -178,6 +178,25 @@ describe('Diagram Equations From Object', () => {
         '3': {
           content: ['b', 'a', 'c'],
           time: { fromPrev: 20 },
+        },
+      },
+      // ElementMods can be used to modify the DiagramElement properties
+      // after creation
+      elementMods: {
+        '0': {
+          content: ['b', 'a', 'c'],
+        },
+        '1': {
+          content: ['b', 'a', 'c'],
+          elementMods: {
+            b: {
+              color: color1,
+              elementOptions: {
+                isTouchable: true,
+                animate: { transform: { translation: { options: { magnitude: 2 } } } },
+              },
+            },
+          },
         },
       },
       // Fractions can have scale defined
@@ -329,5 +348,19 @@ describe('Diagram Equations From Object', () => {
     expect(time1).toEqual({ fromPrev: 10, fromNext: 10, fromAny: 10 });
     expect(time2).toEqual({ fromPrev: 20, fromNext: 30, fromAny: 40 });
     expect(time3).toEqual({ fromPrev: 20, fromNext: null, fromAny: null });
+  });
+  test('Element Modifications', () => {
+    eqn.addForms(addForms.elementMods);
+    expect(forms['0'].base.elementMods).toEqual({});
+    expect(forms['1'].base.elementMods).toEqual({
+      b: {
+        color: color1,
+        element: eqn._b,
+        elementOptions: {
+          isTouchable: true,
+          animate: { transform: { translation: { options: { magnitude: 2 } } } },
+        },
+      },
+    });
   });
 });
