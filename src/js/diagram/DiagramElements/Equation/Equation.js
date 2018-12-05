@@ -299,8 +299,8 @@ export type TypeEquationOptions = {
   position?: Point;
   defaultFormAlignment?: {
     fixTo?: Point;
-    hAlign?: TypeHAlign;
-    vAlign?: TypeVAlign;
+    alignH?: TypeHAlign;
+    alignV?: TypeVAlign;
   };
   //
   elements: TypeEquationElements;
@@ -332,8 +332,8 @@ export class EquationNew extends DiagramElementCollection {
     //
     defaultFormAlignment: {
       fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
-      hAlign: TypeHAlign;
-      vAlign: TypeVAlign;
+      alignH: TypeHAlign;
+      alignV: TypeVAlign;
       scale: number,
     };
 
@@ -375,13 +375,14 @@ export class EquationNew extends DiagramElementCollection {
       position: new Point(0, 0),
       defaultFormAlignment: {
         fixTo: new Point(0, 0),
-        hAlign: 'left',
-        vAlign: 'baseline',
+        alignH: 'left',
+        alignV: 'baseline',
         scale: 0.7,
       },
       elements: {},
     };
     const optionsToUse = joinObjects({}, defaultOptions, options);
+
     super(new Transform('Equation')
       .scale(1, 1)
       .rotate(0)
@@ -527,7 +528,7 @@ export class EquationNew extends DiagramElementCollection {
         if (keys.length === 1 && this.eqn.functions[keys[0]] != null) {
           formContent = [this.eqn.functions.contentToElement(form)];
         } else if (form.content != null) {
-          formContent = this.eqn.functions.contentToElement(form.content);
+          formContent = [this.eqn.functions.contentToElement(form.content)];
           const {
             subForm, addToSeries, elementMods, animationTime,
             description, modifiers,
@@ -579,7 +580,6 @@ export class EquationNew extends DiagramElementCollection {
     if (options) {
       optionsToUse = joinObjects({}, defaultOptions, options);
     }
-    console.log(defaultOptions, optionsToUse, content)
     const {
       subForm, description, modifiers,
       animationTime, elementMods,
@@ -623,11 +623,12 @@ export class EquationNew extends DiagramElementCollection {
     // const form = this.form[name][formType];
     // form[subForm].createEq(content);
     form[subForm].content = content;
+    // console.log(form[subForm].content, this.eqn.defaultFormAlignment)
     // form[subForm].subForm = formType;
     form[subForm].arrange(
       this.eqn.defaultFormAlignment.scale,
-      this.eqn.defaultFormAlignment.hAlign,
-      this.eqn.defaultFormAlignment.vAlign,
+      this.eqn.defaultFormAlignment.alignH,
+      this.eqn.defaultFormAlignment.alignV,
       this.eqn.defaultFormAlignment.fixTo,
     );
     // if (addToSeries != null && addToSeries !== '') {

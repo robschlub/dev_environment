@@ -24,7 +24,7 @@ describe('Diagram Equations From Object', () => {
   let eqn;
   let addForms;
   let forms;
-  // let modColor1;
+  let color1;
   // let modColor2;
   // let defaultColor;
   beforeEach(() => {
@@ -42,7 +42,7 @@ describe('Diagram Equations From Object', () => {
         v2: { symbol: 'vinculum' },
       },
     });
-    // modColor1 = [0.95, 0, 0, 1];
+    color1 = [0.95, 0, 0, 1];
     // modColor2 = [0, 0.95, 0, 1];
     // defaultColor = [0.5, 0.5, 0.5, 1];
     addForms = {
@@ -116,7 +116,7 @@ describe('Diagram Equations From Object', () => {
           content: ['b', 'a', 'c'],
           elementMods: {
             b: {
-              color: [1, 0, 0, 1],
+              color: color1,
             },
           },
           subForm: 'deg',
@@ -229,5 +229,6 @@ describe('Diagram Equations From Object', () => {
     expect(deg[0].content.drawingObject.text[0].text).toBe('b');
     expect(deg[1].content.drawingObject.text[0].text).toBe('a');
     expect(deg[2].content.drawingObject.text[0].text).toBe('c');
+    expect(forms['0'].deg.elementMods.b.color).toEqual(color1);
   });
 });
