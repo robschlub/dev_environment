@@ -303,8 +303,7 @@ class EquationFunctions {
 // Priority:
 //   1. symbol
 //   2. text
-export type TypeEquationElements = {
-  [elementName: string]: string | {
+type TypeEquationElement = string | {
     // Text only
     text?: string;
     font?: DiagramFont;
@@ -317,6 +316,9 @@ export type TypeEquationElements = {
     color?: Array<number>;
     elementOptions?: {};
   } | DiagramElementPrimative | DiagramElementCollection;
+
+export type TypeEquationElements = {
+  [elementName: string]: TypeEquationElement;
 }
 
 type TypeEquationFormObject = {
@@ -532,29 +534,30 @@ export class EquationNew extends DiagramElementCollection {
 
     // Go through each element and add it
     Object.keys(elems).forEach((key) => {
-      if (typeof elems[key] === 'string') {
+      // const [key, elem] = entry;
+      const elem = elems[key];
+      if (typeof elem === 'string') {
         if (!key.startsWith('space')) {
-          this.add(key, makeTextElem({ text: elems[key] }));
+          this.add(key, makeTextElem({ text: elem }));
         }
-      } else if (elems[key] instanceof DiagramElementPrimative) {
-        this.add(key, elems[key]);
-      } else if (elems[key] instanceof DiagramElementCollection) {
-        this.add(key, elems[key]);
+      } else if (elem instanceof DiagramElementPrimative) {
+        this.add(key, elem);
+      } else if (elem instanceof DiagramElementCollection) {
+        this.add(key, elem);
       } else {
-        let elem;
-        const {
-          text, symbol, elementOptions,
-        } = elems[key];
-        if (symbol != null) {
-          elem = makeSymbolElem(elems[key]);
-        } else if (text != null) {
-          elem = makeTextElem(elems[key]);
+        let diagramElem;
+        if (elem.symbol != null && typeof elem.symbol === 'string') {
+          // $FlowFixMe
+          diagramElem = makeSymbolElem(elem);
+        } else if (elem.text != null && elem.text) {
+          // $FlowFixMe
+          diagramElem = makeTextElem(elem);
         }
-        if (elem != null) {
-          if (elementOptions != null) {
-            elem.setProperties(elementOptions);
+        if (diagramElem != null) {
+          if (elem.elementOptions != null) {
+            diagramElem.setProperties(elem.elementOptions);
           }
-          this.add(key, elem);
+          this.add(key, diagramElem);
         }
       }
     });
@@ -571,7 +574,7 @@ export class EquationNew extends DiagramElementCollection {
       }
       if (form != null && typeof form === 'object') {
         const keys = Object.keys(form);
-        if (keys.length === 1 && this.eqn.functions[keys[0]] != null) {
+        if (keys.length === 1 && keys[0] in this.eqn.functions) {
           return true;
         }
       }
