@@ -2,18 +2,13 @@
 import {
   Point, Transform,
 } from '../../tools/g2';
-// import { roundNum } from '../../tools/mathtools';
-import { RGBToArray, joinObjects } from '../../../tools/tools';
+import { joinObjects } from '../../../tools/tools';
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../Element';
 import {
-  DiagramText, DiagramFont, TextObject,
+  DiagramFont,
 } from '../../DrawingObjects/TextObject/TextObject';
-// import DrawContext2D from '../../DrawContext2D';
-// import * as html from '../../../tools/htmlGenerator';
-// import { TextObject } from './DrawingObjects/TextObject/TextObject';
-// import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 import { BlankElement, Element, Elements } from './Elements/Element';
 import Fraction from './Elements/Fraction';
 import EquationForm from './EquationForm';
@@ -25,9 +20,6 @@ import type {
 // import SuperSub from './Elements/SuperSub';
 // import { Brackets, Bar } from './Elements/Brackets';
 // import { Annotation, AnnotationInformation } from './Elements/Annotation';
-// // Equation is a class that takes a set of drawing objects (TextObjects,
-// // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
-// // and arranges their size in a )
 
 export function getDiagramElement(
   collection: DiagramElementCollection,
@@ -47,102 +39,105 @@ type TypeEquationInput = Array<Elements | Element | string> | Elements | Element
 
 export type TypeEquationPhrase =
   string
+  | number
   | {                                 // Fraction
-      frac: {
-        numerator: TypeEquationPhrase;
-        denominator: TypeEquationPhrase;
-        symbol: string;
+    frac: {
+      numerator: TypeEquationPhrase;
+      denominator: TypeEquationPhrase;
+      symbol: string;
+      scale?: number;
+    };
+  }
+  | {
+    sup: {                            // Superscript
+      content: TypeEquationPhrase;
+      superscript: TypeEquationPhrase;
+    }
+  }
+  | {
+    sub: {                            // Subscript
+      content: TypeEquationPhrase;
+      subscript: TypeEquationPhrase;
+    }
+  }
+  | {                                 // Superscript and Subscript
+    supsub: {
+      content: TypeEquationPhrase;
+      subscript?: TypeEquationPhrase;
+      superscript?: TypeEquationPhrase;
+    }
+  }
+  | {                                 // Strike
+    strike: {
+      content: TypeEquationPhrase;
+      symbol: string;
+      strikeInSize?: boolean;
+    }
+  }
+  | {                                 // Annotation
+    annotate: {
+      content: TypeEquationPhrase;
+      annotationArray: Array<{
+        content: TypeEquationPhrase;
+        xPosition?: 'left' | 'right' | 'center';
+        yPosition?: 'bottom' | 'top' | 'middle' | 'baseline';
+        xAlign?: 'left' | 'right' | 'center';
+        yAlign?: 'bottom' | 'top' | 'middle' | 'baseline';
         scale?: number;
-      };
+      }>;
+      annotationInSize?: boolean;
     }
-    | {
-      sup: {                            // Superscript
-        content: TypeEquationPhrase;
-        superscript: TypeEquationPhrase;
-      }
+  }
+  | {                                 // Bracket
+    brac: {
+      content: TypeEquationPhrase;
+      leftSymbol?: string;
+      rightSymbol?: string;
+      space?: number;
     }
-    | {
-      sub: {                            // Subscript
-        content: TypeEquationPhrase;
-        subscript: TypeEquationPhrase;
-      }
+  }
+  | {                                 // Top
+    topBar: {
+      content: TypeEquationPhrase;
+      symbol: string;
+      space?: number;
+      outsideSpace?: number;
     }
-    | {                                 // Superscript and Subscript
-      supsub: {
-        content: TypeEquationPhrase;
-        subscript?: TypeEquationPhrase;
-        superscript?: TypeEquationPhrase;
-      }
+  }
+  | {                                 // Bottom Bar
+    bottomBar: {
+      content: TypeEquationPhrase;
+      symbol: string;
+      space?: number;
+      outsideSpace?: number;
     }
-    | {                                 // Strike
-      strike: {
-        content: TypeEquationPhrase;
-        symbol: string;
-        strikeInSize?: boolean;
-      }
+  }
+  | {                                 // Top Comment
+    topComment: {
+      content: TypeEquationPhrase;
+      comment: TypeEquationPhrase;
+      symbol?: string;
+      space?: number;
+      outsideSpace?: number;
     }
-    | {                                 // Annotation
-      annotate: {
-        content: TypeEquationPhrase;
-        annotationArray: Array<{
-          content: TypeEquationPhrase;
-          xPosition?: 'left' | 'right' | 'center';
-          yPosition?: 'bottom' | 'top' | 'middle' | 'baseline';
-          xAlign?: 'left' | 'right' | 'center';
-          yAlign?: 'bottom' | 'top' | 'middle' | 'baseline';
-          scale?: number;
-        }>;
-        annotationInSize?: boolean;
-      }
+  }
+  | {                                 // Bottom Comment
+    bottomComment: {
+      content: TypeEquationPhrase;
+      comment: TypeEquationPhrase;
+      symbol?: string;
+      space?: number;
+      outsideSpace?: number;
     }
-    | {                                 // Bracket
-      brac: {
-        content: TypeEquationPhrase;
-        leftSymbol?: string;
-        rightSymbol?: string;
-        space?: number;
-      }
-    }
-    | {                                 // Top
-      topBar: {
-        content: TypeEquationPhrase;
-        symbol: string;
-        space?: number;
-        outsideSpace?: number;
-      }
-    }
-    | {                                 // Bottom Bar
-      bottomBar: {
-        content: TypeEquationPhrase;
-        symbol: string;
-        space?: number;
-        outsideSpace?: number;
-      }
-    }
-    | {                                 // Top Comment
-      topComment: {
-        content: TypeEquationPhrase;
-        comment: TypeEquationPhrase;
-        symbol?: string;
-        space?: number;
-        outsideSpace?: number;
-      }
-    }
-    | {                                 // Bottom Comment
-      bottomComment: {
-        content: TypeEquationPhrase;
-        comment: TypeEquationPhrase;
-        symbol?: string;
-        space?: number;
-        outsideSpace?: number;
-      }
-    }
+  }
   | Array<TypeEquationPhrase>;
 
 class EquationFunctions {
   // eslint-disable-next-line no-use-before-define
   collection: EquationNew;
   shapes: {};
+
+  // [methodName: string]: (TypeEquationPhrase) => {};
 
   // eslint-disable-next-line no-use-before-define
   constructor(collection: EquationNew) {
@@ -190,7 +185,7 @@ class EquationFunctions {
   }
 
   contentToElement(
-    content: TypeEquationInput,
+    content: TypeEquationPhrase | Elements,
   ): Elements {
     // If input is alread an Elements object, then return it
     if (content instanceof Elements) {
@@ -518,7 +513,7 @@ export class EquationNew extends DiagramElementCollection {
     Object.entries(forms).forEach((entry) => {
       const [name, form] = entry;
       const formContent = [this.eqn.functions.contentToElement(form)];
-      this.addForm(name, formContent)
+      this.addForm(name, formContent);
       // console.log(name, form, )
       // this.addForm(name, this.eqn.functions.contentToElement(form));
     });
@@ -553,7 +548,7 @@ export class EquationNew extends DiagramElementCollection {
     }
     const {
       subForm, description, modifiers,
-      animationTime, elementMods, addToSeries,
+      animationTime, elementMods,
     } = optionsToUse;
     const time = animationTime;
     this.eqn.forms[name].name = name;

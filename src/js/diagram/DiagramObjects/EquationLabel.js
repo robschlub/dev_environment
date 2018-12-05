@@ -7,7 +7,7 @@ import {
 import { Equation } from '../DiagramElements/Equation/GLEquation';
 import type {
   TypeVAlign, TypeHAlign,
-} from '../DiagramElements/Equation/GLEquation';
+} from '../DiagramElements/Equation/EquationForm';
 import { joinObjects } from '../../tools/tools';
 // export type TypeEquationLabel = {
 //   eqn: Equation;
