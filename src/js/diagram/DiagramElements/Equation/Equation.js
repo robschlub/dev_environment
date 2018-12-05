@@ -138,88 +138,6 @@ function contentToElement(
 //   +showForm: (EquationForm | string, ?string) => {};
 // };
 
-class EquationFunctions {
-  // eslint-disable-next-line no-use-before-define
-  collection: EquationNew;
-  shapes: {};
-
-  // eslint-disable-next-line no-use-before-define
-  constructor(collection: EquationNew) {
-    this.collection = collection;
-  }
-
-  frac(options: {
-      numerator: TypeEquationInput,
-      denominator: TypeEquationInput,
-      symbol: string | DiagramElementPrimative | DiagramElementCollection,
-    }
-    | [
-        TypeEquationInput,
-        TypeEquationInput,
-        string | DiagramElementPrimative | DiagramElementCollection
-      ]) {
-    let numerator;
-    let denominator;
-    let symbol;
-    if (Array.isArray(options)) {
-      [numerator, denominator, symbol] = options;
-    } else {
-      ({ numerator, denominator, symbol } = options);
-    }
-    return new Fraction(
-      contentToElement(this.collection, numerator),
-      contentToElement(this.collection, denominator),
-      getDiagramElement(this.collection, symbol),
-    );
-  }
-
-  sfrac(options: {
-      numerator: TypeEquationInput,
-      denominator: TypeEquationInput,
-      symbol: string | DiagramElementPrimative | DiagramElementCollection,
-      scale?: number,
-    }
-    | [
-        TypeEquationInput,
-        TypeEquationInput,
-        string | DiagramElementPrimative | DiagramElementCollection,
-        ?number,
-      ]) {
-    let numerator;
-    let denominator;
-    let symbol;
-    let scale;
-    if (Array.isArray(options)) {
-      [numerator, denominator, symbol, scale] = options;
-    } else {
-      ({
-        numerator, denominator, symbol, scale,
-      } = options);
-    }
-    const f = new Fraction(
-      contentToElement(this.collection, numerator),
-      contentToElement(this.collection, denominator),
-      getDiagramElement(this.collection, symbol),
-    );
-    f.scaleModifier = scale;
-    return f;
-  }
-
-  vinculum(options: { color?: Array<number> } = {}) {
-    let { color } = options;
-    if (color == null) {
-      color = [0.5, 0.5, 0.5, 1];
-    }
-    return this.collection.shapes.horizontalLine(
-      new Point(0, 0),
-      1, 1, 0,
-      color,
-      new Transform('vinculum').scale(1, 1).translate(0, 0),
-    );
-  }
-}
-
-
 export type TypeEquationPhrase =
   string
   | {                                 // Fraction
@@ -320,6 +238,141 @@ export type TypeEquationPhrase =
       }
     }
   | Array<TypeEquationPhrase>;
+
+class EquationFunctions {
+  // eslint-disable-next-line no-use-before-define
+  collection: EquationNew;
+  shapes: {};
+
+  // eslint-disable-next-line no-use-before-define
+  constructor(collection: EquationNew) {
+    this.collection = collection;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  stringToElement(content: string) {
+    if (content.startsWith('space')) {
+      const spaceNum = parseFloat(content.replace(/space[_]*/, '')) || 0.03;
+      return new Element(new BlankElement(spaceNum));
+    } else {
+      const diagramElement = getDiagramElement(collection, content);
+      if (diagramElement) {
+        return new Element(diagramElement);
+      }
+    }
+    return null;
+  }
+
+  parseContent(content: TypeEquationPhrase) {
+    if (content == null) {
+      return null;
+    }
+    if (typeof content === 'string') {
+      return this.stringToElement(content);
+    }
+    if (Array.isArray(content)) {
+      const elementArray = [];
+      content.forEach((c) => {
+        elementArray.push(this.parseContent(c));
+      });
+      return elementArray;
+    }
+    // Otherwise its an object
+    const [method, params] = Object.entries(content)[0];
+    if (this[method] != null) {
+      return this[method](params);
+    }
+    return null;
+  }
+
+  contentToElement(
+    collection: DiagramElementCollection,
+    content: TypeEquationInput,
+  ): Elements {
+    // If input is alread an Elements object, then return it
+    if (content instanceof Elements) {
+      return content._dup();
+    }
+
+    let elementArray = this.parseContent(content);
+    if ( !Array.isArray(elementArray)) {
+      elementArray = [elementArray];
+    }
+    return new Elements(elementArray);
+  }
+
+  frac(options: {
+      numerator: TypeEquationInput,
+      denominator: TypeEquationInput,
+      symbol: string | DiagramElementPrimative | DiagramElementCollection,
+    }
+    | [
+        TypeEquationInput,
+        TypeEquationInput,
+        string | DiagramElementPrimative | DiagramElementCollection
+      ]) {
+    let numerator;
+    let denominator;
+    let symbol;
+    if (Array.isArray(options)) {
+      [numerator, denominator, symbol] = options;
+    } else {
+      ({ numerator, denominator, symbol } = options);
+    }
+    return new Fraction(
+      contentToElement(this.collection, numerator),
+      contentToElement(this.collection, denominator),
+      getDiagramElement(this.collection, symbol),
+    );
+  }
+
+  sfrac(options: {
+      numerator: TypeEquationInput,
+      denominator: TypeEquationInput,
+      symbol: string | DiagramElementPrimative | DiagramElementCollection,
+      scale?: number,
+    }
+    | [
+        TypeEquationInput,
+        TypeEquationInput,
+        string | DiagramElementPrimative | DiagramElementCollection,
+        ?number,
+      ]) {
+    let numerator;
+    let denominator;
+    let symbol;
+    let scale;
+    if (Array.isArray(options)) {
+      [numerator, denominator, symbol, scale] = options;
+    } else {
+      ({
+        numerator, denominator, symbol, scale,
+      } = options);
+    }
+    const f = new Fraction(
+      contentToElement(this.collection, numerator),
+      contentToElement(this.collection, denominator),
+      getDiagramElement(this.collection, symbol),
+    );
+    f.scaleModifier = scale;
+    return f;
+  }
+
+  vinculum(options: { color?: Array<number> } = {}) {
+    let { color } = options;
+    if (color == null) {
+      color = [0.5, 0.5, 0.5, 1];
+    }
+    return this.collection.shapes.horizontalLine(
+      new Point(0, 0),
+      1, 1, 0,
+      color,
+      new Transform('vinculum').scale(1, 1).translate(0, 0),
+    );
+  }
+}
+
+
 
 // Priority:
 //   1. symbol
@@ -585,95 +638,9 @@ export class EquationNew extends DiagramElementCollection {
   }
 
   addForms(forms: TypeEquationForms) {
-    const makePhrase = (phrase: TypeEquationPhrase) => {
-      const out = [];
-      if (typeof phrase === 'string') {
-        return phrase;
-      }
-      if (Array.isArray(phrase)) {
-        phrase.forEach((phraseElem) => {
-          out.push(makePhrase(phraseElem));
-        });
-        return out;
-      }
-      // otherwise the phrase is an object with a single key which
-      // is the function that should be run
-      const [method, parameters] = Object.entries(phrase)[0];
-      if (method != null) {
-        let parametersToUse = parameters;
-        if (Array.isArray(parameters)) {
-          parametersToUse = makePhrase(parameters);
-        } else {
-          Object.entries(parametersToUse).forEach((entry) => {
-            const [key, value] = entry;
-            const specialTerms = [
-              'content', 'numerator', 'denominator', 'subscript',
-              'superscript',
-            ];
-            if (specialTerms.indexOf(key) > -1) {
-              parametersToUse[key] = makePhrase(value);
-            }
-          });
-        }
-        if (this.eqn.functions[method] != null) {
-          out.push(this.eqn.functions[method](parametersToUse));
-        }
-      }
-      return out;
-    };
-      // {
-      // let phraseToUse = phrase;
-      // if (!Array.isArray(phrase)) {
-      //   phraseToUse = [phrase];
-      // }
-      // phraseToUse.forEach((phraseElem) => {
-      //   if (typeof phraseElem === 'string') {
-      //     out.push(phraseElem);
-      //   } else if (Array.isArray(phraseElem)) {
-      //     const result = makePhrase(phraseElem);
-      //     if (Array.isArray(result)) {
-      //       result.forEach((resultElem) => {
-      //         out.push(resultElem);
-      //       });
-      //     } else {
-      //       out.push(result);
-      //     }
-      //   } else {
-      //     let [method, methodOptions] = Object.entries(phraseElem)[0];
-      //     console.log(method, methodOptions)
-      //     if (method != null
-      //         && methodOptions != null
-      //         // && typeof methodOptions === 'object'
-      //     ) {
-      //       if (Array.isArray(methodOptions)) {
-      //         methodOptions = makePhrase(methodOptions);
-      //       } else if (typeof methodOptions === 'object') {
-      //         const specialTerms = [
-      //           'content', 'numerator', 'denominator', 'subscript',
-      //           'superscript',
-      //         ];
-      //         Object.entries(methodOptions).forEach((entry) => {
-      //           const [key, value] = entry;
-      //           if (specialTerms.indexOf(key) > -1) {
-      //             methodOptions[key] = makePhrase(value);
-      //           }
-      //         });
-      //       }
-      //       console.log(methodOptions)
-      //       if (this.eqn.functions[method] != null) {
-      //         out.push(this.eqn.functions[method](methodOptions));
-      //       }
-      //     }
-        // }
-        // }
-      // });
-    //   return out;
-    // };
-    Object.keys(forms).forEach((name) => {
-      const form = forms[name];
-      if (Array.isArray(form)) {
-        this.addForm(name, makePhrase(form));
-      }
+    Object.entries(forms).forEach((entry) => {
+      const [name, form] = entry;
+      this.addForm(name, this.eqn.functions.contentToElement(form));
     });
   }
 
