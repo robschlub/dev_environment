@@ -71,13 +71,12 @@ describe('Diagram Equations From Object', () => {
           },
         ],
       },
-      fracNotInArray: {
+      methodOnly: {
         '0': {
-            frac: {
-              numerator: 'a',
-              denominator: 'b',
-              symbol: 'v',
-            },
+          frac: {
+            numerator: 'a',
+            denominator: 'b',
+            symbol: 'v',
           },
         },
       },
@@ -144,6 +143,13 @@ describe('Diagram Equations From Object', () => {
     expect(content0[0].vinculum).toBe(eqn._v);
     const content1 = forms['1'].base.content[0].content;
     expect(content1).toEqual(content0);
+  });
+  test('Method only', () => {
+    eqn.addForms(addForms.methodOnly);
+    const content0 = forms['0'].base.content[0].content;
+    expect(content0[0]).toBeInstanceOf(Fraction);
+    expect(content0[0].numerator.content[0].content).toBe(eqn._a);
+    expect(content0[0].denominator.content[0].content).toBe(eqn._b);
   });
   test('Multi Frac', () => {
     eqn.addForms(addForms.multiFrac);
