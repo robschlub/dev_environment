@@ -92,7 +92,7 @@ describe('Diagram Equations From Object', () => {
   test('Equation instantiation', () => {
     expect(eqn).not.toBe(null);
   });
-  test('Array Single Form', () => {
+  test.only('Array Single Form', () => {
     eqn.addForms(addForms.arraySingleForm);
     expect(forms).toHaveProperty('0');
     expect(forms['0']).toHaveProperty('base');

@@ -145,15 +145,8 @@ export type TypeEquationPhrase =
         numerator: TypeEquationPhrase;
         denominator: TypeEquationPhrase;
         symbol: string;
+        scale?: number;
       };
-    }
-    | {                                 // Scaled Fraction
-      sfrac: {
-        numerator: TypeEquationPhrase;
-        denominator: TypeEquationPhrase;
-        symbol: string;
-        scaleModifier?: number;
-      }
     }
     | {
       sup: {                            // Superscript
@@ -254,11 +247,10 @@ class EquationFunctions {
     if (content.startsWith('space')) {
       const spaceNum = parseFloat(content.replace(/space[_]*/, '')) || 0.03;
       return new Element(new BlankElement(spaceNum));
-    } else {
-      const diagramElement = getDiagramElement(this.collection, content);
-      if (diagramElement) {
-        return new Element(diagramElement);
-      }
+    }
+    const diagramElement = getDiagramElement(this.collection, content);
+    if (diagramElement) {
+      return new Element(diagramElement);
     }
     return null;
   }
@@ -279,7 +271,6 @@ class EquationFunctions {
     }
     // Otherwise its an object
     const [method, params] = Object.entries(content)[0];
-    console.log('parse', content, method, params)
     if (this[method] != null) {
       return this[method](params);
     }
@@ -297,7 +288,6 @@ class EquationFunctions {
     if (!Array.isArray(elementArray)) {
       elementArray = [elementArray];
     }
-    console.log(elementArray)
     return new Elements(elementArray);
   }
 
@@ -615,7 +605,6 @@ export class EquationNew extends DiagramElementCollection {
   addForms(forms: TypeEquationForms) {
     Object.entries(forms).forEach((entry) => {
       const [name, form] = entry;
-      console.log('form', form)
       const formContent = [this.eqn.functions.contentToElement(form)];
       this.addForm(name, formContent)
       // console.log(name, form, )
