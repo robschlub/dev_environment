@@ -437,6 +437,53 @@ class EquationFunctions {
       'bottom',
     );
   }
+
+  annotate(options: TypeAnnotateObject | TypeAnnotateArray
+    // content: TypeEquationInput,
+    // annotationArray: Array<AnnotationInformation>,
+    // annotationInSize: boolean = false,
+  ) {
+    let content;
+    let annotationArray;
+    let annotationInSize;
+    if (Array.isArray(options)) {
+      [content, annotationArray, annotationInSize] = options;
+    } else {
+      ({
+        content, annotationArray, annotationInSize,
+      } = options);
+    }
+    return new Annotation(
+      this.contentToElement(content),
+      annotationArray,
+      annotationInSize,
+    );
+  }
+
+  annotation(
+    content: TypeEquationInput,
+    xPosition: 'left' | 'right' | 'center' | number = 'right',
+    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'top',
+    xAlign: 'left' | 'right' | 'center' | number = 'left',
+    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'bottom',
+    annotationScale: number = 0.5,
+  ) {
+    let annotationContent;
+    let contentH,
+    let contentV,
+    let annotationH,
+    let annotationV,
+    let annotationScale,
+
+    return new AnnotationInformation(
+      this.contentToElement(content),
+      xPosition,
+      yPosition,
+      xAlign,
+      yAlign,
+      annotationScale,
+    );
+  }
 }
 
 // class EquationSymbols {
