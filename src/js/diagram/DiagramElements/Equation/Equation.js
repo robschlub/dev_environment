@@ -18,7 +18,7 @@ import type {
 import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 import * as html from '../../../tools/htmlGenerator';
 import Strike from './Elements/Strike';
-import DiagramPrimatives from '../../DiagramPrimatives/DiagramPrimatives';
+// import DiagramPrimatives from '../../DiagramPrimatives/DiagramPrimatives';
 import SuperSub from './Elements/SuperSub';
 import { Brackets, Bar } from './Elements/Brackets';
 import { Annotation, AnnotationInformation } from './Elements/Annotation';
@@ -192,12 +192,13 @@ export type TypeAnnotationArray = [
 ];
 export type TypeAnnotateObject = {
   content: TypeEquationPhrase,
-  withAnnotations: Array<TypeAnnotationObject | TypeAnnotationArray>,
+  // withAnnotations: Array<TypeAnnotationObject | TypeAnnotationArray>,
+  withAnnotations: Array<TypeEquationPhrase>,
   includeAnnotationInSize?: boolean,
 };
 export type TypeAnnotateArray = [
   TypeEquationPhrase,
-  Array<TypeAnnotationObject | TypeAnnotationArray>,
+  Array<TypeEquationPhrase>,
   ?boolean,
 ];
 
@@ -496,25 +497,22 @@ class EquationFunctions {
       ({
         content, withAnnotations, includeAnnotationInSize,
       } = options);
-    } 
-    const annotations = withAnnotations.map((annotation) => {
-      return this.parseContent(annotation)
-    });
+    }
+    const annotations = withAnnotations.map(
+      annotation => this.parseContent(annotation),
+    );
+    let includeAnnotationInSizeToUse = true;
+    if (includeAnnotationInSize != null) {
+      includeAnnotationInSizeToUse = includeAnnotationInSize;
+    }
     return new Annotation(
-      this.contentToElement(content),
+      this.contentToElement(content),    // $FlowFixMe
       annotations,
-      includeAnnotationInSize,
+      includeAnnotationInSizeToUse,
     );
   }
 
-  annotation(options: TypeAnnotationObject | TypeAnnotationArray
-    // content: TypeEquationInput,
-    // xPosition: 'left' | 'right' | 'center' | number = 'right',
-    // yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'top',
-    // xAlign: 'left' | 'right' | 'center' | number = 'left',
-    // yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'bottom',
-    // annotationScale: number = 0.5,
-  ) {
+  annotation(options: TypeAnnotationObject | TypeAnnotationArray) {
     let annotation;
     let relativeToContentH;
     let relativeToContentV;
@@ -546,81 +544,6 @@ class EquationFunctions {
     );
   }
 }
-
-// class EquationSymbols {
-//   // eslint-disable-next-line no-use-before-define
-//   shapes: DiagramPrimatives;
-//   defaultColor: Array<number>;
-
-//   // [methodName: string]: (TypeEquationPhrase) => {};
-
-//   // eslint-disable-next-line no-use-before-define
-//   constructor(
-//     shapes: DiagramPrimatives,
-//     defaultColor: Array<number>,
-//   ) {
-//     this.shapes = shapes;
-//     this.defaultColor = defaultColor;
-//   }
-
-//   get(name: string, options: { color?: Array<number> }) {
-//     if (name === 'vinculum') {
-//       return this.vinculum(options);
-//     }
-//     if (name === 'strike') {
-//       return this.strike(options);
-//     }
-//     if (name === 'xStrike') {
-//       return this.xStrike(options);
-//     }
-//     return null;
-//   }
-
-//   vinculum(options: { color?: Array<number> } = {}) {
-//     let { color } = options;
-//     if (color == null) {
-//       color = this.defaultColor;
-//     }
-//     return this.shapes.horizontalLine(
-//       new Point(0, 0),
-//       1, 1, 0,
-//       color,
-//       new Transform('vinculum').scale(1, 1).translate(0, 0),
-//     );
-//   }
-
-//   strike(options: { color?: Array<number> } = {}) {
-//     let { color } = options;
-//     if (color == null) {
-//       color = this.defaultColor;
-//     }
-//     return this.shapes.horizontalLine(
-//       new Point(0, 0),
-//       1, 1, 0,
-//       color,
-//       new Transform('strike').scale(1, 1).rotate(0).translate(0, 0),
-//     );
-//   }
-
-//   xStrike(options: { color?: Array<number> } = {}) {
-//     let { color } = options;
-//     if (color == null) {
-//       color = this.defaultColor;
-//     }
-//     const cross = this.shapes.collection(new Transform('xStrike').scale(1, 1).rotate(0).translate(0, 0));
-//     cross.color = color;
-//     const strike1 = this.shapes.horizontalLine(
-//       new Point(0, 0),
-//       1, 1, 0,
-//       color,
-//       new Transform('strikeLine').scale(1, 1).rotate(0).translate(0, 0),
-//     );
-//     const strike2 = strike1._dup();
-//     cross.add('s1', strike1);
-//     cross.add('s2', strike2);
-//     return cross;
-//   }
-// }
 
 // Priority:
 //   1. symbol
