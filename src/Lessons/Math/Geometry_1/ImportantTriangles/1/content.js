@@ -59,7 +59,7 @@ class Content extends LessonContent {
         iso.eqns.isoEqn.showForm('3');
         iso._testEqn.setPosition(1, 1);
         // iso._testEqn.showAll();
-        iso._testEqn.showForm('3');
+        iso._testEqn.showForm('6');
         // console.log(iso._testEqn._bar.color)
         // iso._testEqn.animateToForm('2', 2);
         // console.log(iso._testEqn)

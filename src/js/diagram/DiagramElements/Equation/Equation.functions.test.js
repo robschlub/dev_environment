@@ -43,50 +43,73 @@ describe('Equation Functions', () => {
         eqn.addElements(elements);
         eqn.addForms({
           '0': {
+            content: {
+              frac: {
+                numerator: {
+                  frac: {
+                    numerator: 'a',
+                    denominator: 'b',
+                    symbol: 'v',
+                    scale: 0.5,
+                  },
+                },
+                denominator: 'c',
+                symbol: 'v1',
+              }
+            },
+          },
+          '1': {
             frac: {
               numerator: {
                 frac: {
                   numerator: 'a',
                   denominator: 'b',
                   symbol: 'v',
+                  scale: 0.5,
                 },
               },
               denominator: 'c',
               symbol: 'v1',
             }
           },
-          '1': {
+          '2': {
             frac: [
               {
-                frac: ['a', 'b', 'v']
+                frac: ['a', 'c', 'v', 0.5]
               },
               'c',
               'v1',
             ]
           },
-          '2': [{ frac: [{ frac: ['a', 'b', 'v'] }, 'c', 'v1'] }],
-          '3': e.frac([
+          '3': [{ frac: [{ frac: ['a', 'b', 'v', 0.5] }, 'c', 'v1'] }],
+          '4': e.frac([
             {
-              frac: ['a', 'b', 'v']
+              frac: ['a', 'b', 'v', 0.5]
             },
             'c',
             'v1',
           ]),
-          '4': e.frac([e.frac(['a', 'b', 'v']), 'c', 'v1']),
-          '5': frac(frac('a', 'b', 'v'), 'c', 'v1'),
+          '5': e.frac([e.frac(['a', 'b', 'v', 0.5]), 'c', 'v1']),
+          '6': frac(frac('a', 'b', 'v', 0.5), 'c', 'v1'),
         });
-        eqn.showForm('0');
-        // ({ forms } = eqn.eqn);
       },
     };
   });
   test('Fraction', () => {
     functions.fraction();
+    const elems = [eqn._a, eqn._b, eqn._c, eqn._v, eqn._v1];
+    const formsToTest = ['1', '2', '3', '4', '5', '6'];
 
-    // Check all fractions are the same
-    const c0 = eqn.eqn.forms['0'].base.content[0].content;
-    const c1 = eqn.eqn.forms['1'].base.content[0].content;
-    expect(c0).toEqual(c1);
+    eqn.showForm('0');
+
+    const positions0 = elems.map(elem => round(elem.transform.mat).slice())
+    console.log('0', positions0)
+    formsToTest.forEach((f) => {
+      eqn.showForm(f);
+      const positions = elems.map(elem => round(elem.transform.mat).slice());
+      console.log(f, positions)
+      expect(positions0).toEqual(positions);
+    })
 
     // Record position of elements in a snapshot
     tools.cleanUIDs(eqn);

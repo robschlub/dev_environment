@@ -301,7 +301,6 @@ export class EquationFunctions {
         } = optionsOrNum);
       }
     }
-    console.log(numerator, denominator, symbol)
     const f = new Fraction(
       this.contentToElement(numerator),
       this.contentToElement(denominator),
@@ -310,7 +309,6 @@ export class EquationFunctions {
     if (scale != null) {
       f.scaleModifier = scale;
     }
-    console.log('return', f)
     return f;
   }
 

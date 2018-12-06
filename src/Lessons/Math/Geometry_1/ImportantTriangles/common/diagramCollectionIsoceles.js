@@ -121,37 +121,54 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     eqn.addElements(elements);
     eqn.addForms({
       '0': {
+        content: {
+          frac: {
+            numerator: {
+              frac: {
+                numerator: 'a',
+                denominator: 'b',
+                symbol: 'v',
+                scale: 0.5,
+              },
+            },
+            denominator: 'c',
+            symbol: 'v1',
+          }
+        },
+      },
+      '1': {
         frac: {
           numerator: {
             frac: {
               numerator: 'a',
               denominator: 'b',
               symbol: 'v',
+              scale: 0.5,
             },
           },
           denominator: 'c',
           symbol: 'v1',
         }
       },
-      '1': {
+      '2': {
         frac: [
           {
-            frac: ['a', 'b', 'v']
+            frac: ['a', 'b', 'v', 0.5]
           },
           'c',
           'v1',
         ]
       },
-      '2': [{ frac: [{ frac: ['a', 'b', 'v'] }, 'c', 'v1'] }],
-      '3': e.frac([
+      '3': [{ frac: [{ frac: ['a', 'b', 'v', 0.5] }, 'c', 'v1'] }],
+      '4': e.frac([
         {
-          frac: ['a', 'b', 'v']
+          frac: ['a', 'b', 'v', 0.5]
         },
         'c',
         'v1',
       ]),
-      // '3': e.frac([e.frac(['a', 'b', 'v']), 'c', 'v1']),
-      // '4': frac(frac('a', 'b', 'v'), 'c', 'v1'),
+      '5': e.frac([e.frac(['a', 'b', 'v', 0.5]), 'c', 'v1']),
+      '6': frac(frac('a', 'b', 'v', 0.5), 'c', 'v1'),
     });
     eqn.showForm('0');
 

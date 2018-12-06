@@ -389,10 +389,10 @@ export class EquationNew extends DiagramElementCollection {
       }
       return false;
     };
-    const isFormMethod = (form) => typeof form === 'function';
+    const isFormElements = (form) => form instanceof Elements;
     const isFormFullObject = (form) => {
       if (isFormString(form) || isFormArray(form)
-        || isFormMethodDefinition(form) || isFormMethod(form)
+        || isFormMethodDefinition(form) || isFormElements(form)
       ) {
         return false;
       }
@@ -405,7 +405,7 @@ export class EquationNew extends DiagramElementCollection {
     Object.keys(forms).forEach((name) => {
       const form: TypeEquationForm = forms[name];
       if (isFormString(form) || isFormArray(form)
-        || isFormMethodDefinition(form) || isFormMethod(form)
+        || isFormMethodDefinition(form) || isFormElements(form)
       ) {
         // $FlowFixMe
         const formContent = [this.eqn.functions.contentToElement(form)];
@@ -431,7 +431,7 @@ export class EquationNew extends DiagramElementCollection {
         Object.entries(form).forEach((subFormEntry) => {
           const [subFormName, subForm] = subFormEntry;
           const subFormOption = { subForm: subFormName };
-          if (isFormString(subForm) || isFormArray(subForm) || isFormMethodDefinition(subForm) || isFormMethod(form)
+          if (isFormString(subForm) || isFormArray(subForm) || isFormMethodDefinition(subForm) || isFormElements(form)
           ) {
             // $FlowFixMe
             const formContent = [this.eqn.functions.contentToElement(subForm)];
