@@ -79,6 +79,7 @@ export type TypeEquationOptions = {
     fixTo?: Point;
     alignH?: TypeHAlign;
     alignV?: TypeVAlign;
+    scale?: number,
   };
   //
   elements?: TypeEquationElements;
@@ -169,6 +170,8 @@ export class EquationNew extends DiagramElementCollection {
         scale: 0.7,
       },
       elements: {},
+      forms: {},
+      formSeries: [],
     };
     const optionsToUse = joinObjects({}, defaultOptions, options);
 
