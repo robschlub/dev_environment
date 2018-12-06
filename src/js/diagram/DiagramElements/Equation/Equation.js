@@ -150,7 +150,7 @@ export type TypeCommentArray = [
   string,
   ?number,
   ?number,
-  ?scale,
+  ?number,
 ];
 export type TypeAnnotationObject = {
   annotation: TypeEquationPhrase,
