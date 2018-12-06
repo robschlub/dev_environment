@@ -480,10 +480,13 @@ class EquationFunctions {
       ({
         content, withAnnotations, includeAnnotationInSize,
       } = options);
-    }
+    } 
+    const annotations = withAnnotations.map((annotation) => {
+      return this.parseContent(annotation)
+    });
     return new Annotation(
       this.contentToElement(content),
-      withAnnotations,
+      annotations,
       includeAnnotationInSize,
     );
   }
@@ -842,7 +845,6 @@ export class EquationNew extends DiagramElementCollection {
         });
       }
       if (options.color == null) {
-        console.log('o', this.color)
         symbol.setColor(this.color);
       }
       return symbol;

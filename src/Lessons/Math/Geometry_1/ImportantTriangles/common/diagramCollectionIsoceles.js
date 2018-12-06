@@ -131,6 +131,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         x: { symbol: 'xStrike' },
         s: { symbol: 'strike' },
         bar: { symbol: 'bar' },
+        brace: { symbol: 'brace', side: 'top' },
         lb: { symbol: 'brace', side: 'left', color: [1, 0, 0, 1] },
         rb: { symbol: 'roundedSquareBracket', side: 'right' },
       },
@@ -252,13 +253,21 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       '2': [
         {
           annotate: {
-            content: ['a', 'b'],
+            content: { topBar: [['a', 'b'], 'brace'] },
             withAnnotations: [
               {
                 annotation: {
                   annotation: 'c',
                   relativeToContent: ['left', -0.4],
                   relativeToAnnotation: ['right', 'top'],
+                  scale: 0.8,
+                },
+              },
+              {
+                annotation: {
+                  annotation: 'e',
+                  relativeToContent: [0.5, 1.2],
+                  relativeToAnnotation: ['center', 'bottom'],
                   scale: 0.8,
                 },
               },
