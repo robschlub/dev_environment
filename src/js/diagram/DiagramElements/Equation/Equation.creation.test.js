@@ -42,7 +42,7 @@ describe('Different ways to make an equation', () => {
       allTextInConstructorAllOptions: () => {
         eqn = new EquationNew(diagram.shapes, {
           color: color1,
-          position: new Point(1, 1),
+          position: [1, 1],           // Points can be defined as arrays
           elements: {
             a: 'a',
             b: 'b',
@@ -51,7 +51,7 @@ describe('Different ways to make an equation', () => {
             v: { symbol: 'vinculum' },
           },
           defaultFormAlignment: {
-            fixTo: new Point(2, 2),
+            fixTo: { x: 2, y: 2 },    // Points can also be defined as objects
             alignH: 'right',
             alignV: 'top',
             scale: 0.45,
@@ -93,8 +93,13 @@ describe('Different ways to make an equation', () => {
     expect(eqn._a.drawingObject.text[0].font.color)
       .toBe(tools.colorArrayToRGBA(color1));
 
-    // Check math vs number style
-    expect(eqn._a.drawingObject.text[0].font.style).toBe('italic');
-    expect(eqn.__2.drawingObject.text[0].font.style).toBe('normal');
+    // Check position
+    expect(eqn.transform.t()).toEqual(new Point(1, 1));
+
+    // Check default form alignment
+    expect(eqn.eqn.defaultFormAlignment.fixTo).toEqual(new Point(2, 2));
+    expect(eqn.eqn.defaultFormAlignment.alignH).toEqual('right');
+    expect(eqn.eqn.defaultFormAlignment.alignV).toEqual('top');
+    expect(eqn.eqn.defaultFormAlignment.scale).toEqual(0.45);
   });
 });

@@ -20,6 +20,29 @@ import EquationSymbols from './EquationSymbols';
 import { getDiagramElement, EquationFunctions } from './EquationFunctions';
 import type { TypeEquationPhrase } from './EquationFunctions';
 
+// point can be defined as:
+//    - Point instance
+//    - [1, 1]
+//    - { x: 1, y: 1 }
+const parsePoint = (point: Point | Array<number> | { x: number, y: number }) => {
+  if (point instanceof Point) {
+    return point;
+  }
+  if (Array.isArray(point)) {
+    if (point.length === 2) {
+      return new Point(point[0], point[1]);
+    } else {
+      return point;
+    }
+  }
+  if (typeof (point) === 'object') {
+    const keys = Object.keys(point);
+    if (keys.indexOf('x') > -1 && keys.indexOf('y') > -1) {
+      return new Point(point.x, point.y)
+    }
+  }
+  return point;
+}
 // Priority:
 //   1. symbol
 //   2. text
@@ -174,6 +197,8 @@ export class EquationNew extends DiagramElementCollection {
       formSeries: [],
     };
     const optionsToUse = joinObjects({}, defaultOptions, options);
+    optionsToUse.position = parsePoint(optionsToUse.position);
+    optionsToUse.defaultFormAlignment.fixTo = parsePoint(optionsToUse.defaultFormAlignment.fixTo);
 
     super(new Transform('Equation')
       .scale(1, 1)
