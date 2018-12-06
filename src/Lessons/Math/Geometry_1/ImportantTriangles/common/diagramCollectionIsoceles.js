@@ -104,244 +104,272 @@ export default class IsocelesCollection extends CommonDiagramCollection {
 
   addEquations() {
     const strikeCol = this.layout.colors.diagram.disabled;
-    this.diagram.equation.addEquation(this, 'testEqn', {
-      color: this.layout.colors.diagram.text.base,
-      // color: [0, 1, 0, 1],
-      elements: {
-        a: 'a',
-        b: {
-          text: 'b',
-          color: this.layout.colors.angles,
-          elementOptions: {
-            isTouchable: true,
-            animate: { transform: { translation: { options: { magnitude: 0.23 } } } },
+    this.diagram.equation.addEquation(this, 'testEqn', { color: this.layout.colors.diagram.text.base });
+    const e = this._testEqn.eqn.functions;
+    const frac = e.frac.bind(e);
+    const eqn = this._testEqn;
+    eqn.addElements({
+      a: 'a',
+      b: 'b',
+      c: 'c',
+      _2: '2',
+      v: { symbol: 'vinculum' },
+      v1: { symbol: 'vinculum' },
+    });
+    eqn.addForms({
+      '0': {
+        frac: [
+          {
+            frac: ['a', 'b', 'v']
           },
-        },
-        c: 'c',
-        d: 'd',
-        e: 'e',
-        f: 'f',
-        v: {
-          symbol: 'vinculum',
-          elementOptions: {
-            isTouchable: true,
-          },
-        },
-        v1: { symbol: 'vinculum' },
-        x: { symbol: 'xStrike' },
-        s: { symbol: 'strike' },
-        bar: { symbol: 'bar' },
-        brace: { symbol: 'brace', side: 'bottom' },
-        lb: { symbol: 'brace', side: 'left', color: [1, 0, 0, 1] },
-        rb: { symbol: 'roundedSquareBracket', side: 'right' },
+          'c',
+          'v1',
+        ]
       },
-      forms: {
-      //   '0': ['.frac', ['a', 'b', 'v'], 'c'],
-      //   '1': [{ frac: ['a', 'c', 'v'] }, 'b'],
-      //   '2': ['b', 'a', 'c'],
-      //   '3': {
-      //     content: ['b', 'a', 'c'],
-      //     elementMods: {
-      //       b: {
-      //         color: [1, 0, 0, 1],
-      //       },
-      //     },
-      //     subForm: 'deg',
-      //   },
-      //   '4': {
-      //     'deg': ['b', 'a', 'c'],
-      //     'rad': {
-      //       content: ['b', 'a', 'c'],
-      //       elementMods: {
-      //         b: {
-      //           color: [1, 0, 0, 1],
-      //         },
-      //       },
-      //     },
-      //   },
+      '2': e.frac([e.frac(['a', 'b', 'v']), 'c', 'v1']),
+      '1': frac(frac('a', 'b', 'v'), 'c', 'v1'),
+    });
+    eqn.setFormSeries(['0', '1', '2']);
+    eqn.showForm('1');
 
-        // '1c': {
-        //   setup: {
-        //     half: {
-        //       frac: {
-        //         numerator: ['a'],
-        //         denominator: 'b',
-        //         symbol: 'v',
-        //       },
-        //     },
-        //   },
-        //   content: [
-        //     'half', 'equals', 'c',
-        //   ],
-        // },
-        // '1b': [
-        //   frac('a', 'b', 'v'),
-        //   frac({ num: 'a', den: 'b', sym: 'v'}),
-        //   {
-        //     frac: {
-        //       numerator: ['a'],
-        //       denominator: 'b',
-        //       symbol: 'v',
-        //     },
-        //   },
-        //   { frac: ['a', 'b', 'v'] },
-        //   {
-        //     strike: {
-        //       content: ['a'],
-        //       widthSymbol: 'x',
-        //     },
-        //   },
-        //   { strike: ['a', 'x'] },
+    // this.diagram.equation.addEquation(this, 'testEqn', {
+    //   color: this.layout.colors.diagram.text.base,
+    //   // color: [0, 1, 0, 1],
+    //   elements: {
+    //     a: 'a',
+    //     b: {
+    //       text: 'b',
+    //       color: this.layout.colors.angles,
+    //       elementOptions: {
+    //         isTouchable: true,
+    //         animate: { transform: { translation: { options: { magnitude: 0.23 } } } },
+    //       },
+    //     },
+    //     c: 'c',
+    //     d: 'd',
+    //     e: 'e',
+    //     f: 'f',
+    //     v: {
+    //       symbol: 'vinculum',
+    //       elementOptions: {
+    //         isTouchable: true,
+    //       },
+    //     },
+    //     v1: { symbol: 'vinculum' },
+    //     x: { symbol: 'xStrike' },
+    //     s: { symbol: 'strike' },
+    //     bar: { symbol: 'bar' },
+    //     brace: { symbol: 'brace', side: 'bottom' },
+    //     lb: { symbol: 'brace', side: 'left', color: [1, 0, 0, 1] },
+    //     rb: { symbol: 'roundedSquareBracket', side: 'right' },
+    //   },
+    //   forms: {
+    //   //   '0': ['.frac', ['a', 'b', 'v'], 'c'],
+    //   //   '1': [{ frac: ['a', 'c', 'v'] }, 'b'],
+    //   //   '2': ['b', 'a', 'c'],
+    //   //   '3': {
+    //   //     content: ['b', 'a', 'c'],
+    //   //     elementMods: {
+    //   //       b: {
+    //   //         color: [1, 0, 0, 1],
+    //   //       },
+    //   //     },
+    //   //     subForm: 'deg',
+    //   //   },
+    //   //   '4': {
+    //   //     'deg': ['b', 'a', 'c'],
+    //   //     'rad': {
+    //   //       content: ['b', 'a', 'c'],
+    //   //       elementMods: {
+    //   //         b: {
+    //   //           color: [1, 0, 0, 1],
+    //   //         },
+    //   //       },
+    //   //     },
+    //   //   },
 
-        //   annotate(['_2', 'a', 'plus', 'b_'], {
-        //     withAnnotation: ['minus_', 'b__'],
-        //     relativeToContent: ['center', -0.4],
-        //     relativeToAnnotation: ['center', 'top'],
-        //     size: 0.6,
-        //   }),
+    //     // '1c': {
+    //     //   setup: {
+    //     //     half: {
+    //     //       frac: {
+    //     //         numerator: ['a'],
+    //     //         denominator: 'b',
+    //     //         symbol: 'v',
+    //     //       },
+    //     //     },
+    //     //   },
+    //     //   content: [
+    //     //     'half', 'equals', 'c',
+    //     //   ],
+    //     // },
+    //     // '1b': [
+    //     //   frac('a', 'b', 'v'),
+    //     //   frac({ num: 'a', den: 'b', sym: 'v'}),
+    //     //   {
+    //     //     frac: {
+    //     //       numerator: ['a'],
+    //     //       denominator: 'b',
+    //     //       symbol: 'v',
+    //     //     },
+    //     //   },
+    //     //   { frac: ['a', 'b', 'v'] },
+    //     //   {
+    //     //     strike: {
+    //     //       content: ['a'],
+    //     //       widthSymbol: 'x',
+    //     //     },
+    //     //   },
+    //     //   { strike: ['a', 'x'] },
+
+    //     //   annotate(['_2', 'a', 'plus', 'b_'], {
+    //     //     withAnnotation: ['minus_', 'b__'],
+    //     //     relativeToContent: ['center', -0.4],
+    //     //     relativeToAnnotation: ['center', 'top'],
+    //     //     size: 0.6,
+    //     //   }),
           
-        //   {
-        //     annotate: {
-        //       content:              ['_2', 'a', 'plus', 'b_'],
-        //       withAnnotation:       ['minus_', 'b__'],
-        //       relativeToContent:    ['center', -0.4],
-        //       relativeToAnnotation: ['center', 'top'],
-        //       size: 0.6,
-        //     },
-        //   },
-        //   {
-        //     annotate: {
-        //       content: ['_2', 'a', 'plus', 'b_'],
-        //       withAnnotations: [
-        //         {
-        //           annotation: ['minus_', 'b__'],
-        //           relativeToContent: ['center', -0.4],
-        //           relativeToAnnotation: ['center', 'top'],
-        //           size: 0.6,
-        //         },
-        //         {
-        //           annotation: ['minus_', 'b__'],
-        //           relativeToContent: ['right', 1.4],
-        //           relativeToAnnotation: ['left', 'bottom'],
-        //           size: 0.6,
-        //         },
-        //       ],
-        //     },
-        //   },
-        // ],
-      },
-    });
-    // $FlowFixMe
-    this._testEqn.setFormSeries(['1', '2']);
-    // $FlowFixMe
-    this._testEqn.addForms({
-      '11': ['a', 'b', 'c'],
-      '13': ['a', ['b', 'c']],
-      '15': {
-        content: ['b', 'a', 'c'],
-        elementMods: {
-          b: {
-            color: [1, 0, 0, 1],
-          },
-        },
-        subForm: 'deg',
-      },
-      '1': ['a', 'b', 'c'],
-      // '2': [{ frac: ['a', 'b', 'v'] }],
-      // '2': [{ brac: ['b', 'lb', 'rb'] }, 'a', 'c'],
-      // '2': [{ brac: [[{ bottomBar: [['a', 'b'], 'bar', 1, 1] }, 'c'], 'lb', 'rb'] }],
-      '2': {
-        bottomComment: {
-          content: ['a', 'b'],
-          comment: ['c', 'd'],
-          symbol: 'brace',
-          contentSpace: 0.05,
-          commentSpace: 0.05,
-          scale: 0.6,
-        },
-      },
-      // '2': [
-      //   {
-      //     annotate: {
-      //       content: { topBar: [['a', 'b'], 'brace'] },
-      //       withAnnotations: [
-      //         {
-      //           annotation: {
-      //             annotation: 'c',
-      //             relativeToContent: ['left', -0.4],
-      //             relativeToAnnotation: ['right', 'top'],
-      //             scale: 0.8,
-      //           },
-      //         },
-      //         {
-      //           annotation: {
-      //             annotation: 'e',
-      //             relativeToContent: [0.5, 1.2],
-      //             relativeToAnnotation: ['center', 'bottom'],
-      //             scale: 0.8,
-      //           },
-      //         },
-      //       ],
-      //     },
-      //   },
-      // ],
-      '90': {
-        content: ['a', 'b', 'c'],
-        elementMods: {
-          b: {
-            color: [1, 0, 0, 1],
-          },
-        },
-        time: 2,
-        subForm: 'deg',
-      },
-      '1d': {
-        frac: {
-          numerator: 'a',
-          denominator: 'b',
-          symbol: 'v',
-        },
-      },
-      // '1b': [{ frac: ['b', 'a', 'v'] }, 'c'],
-      // '1g': [{ sfrac: ['b', 'a', 'v', 0.5] }, 'c'],
-      // '1h': [
-      //   {
-      //     frac: {
-      //       numerator: ['a', 'd'],
-      //       denominator: 'b',
-      //       symbol: 'v',
-      //     },
-      //   }, 'c',
-      // ],
-      '2a': [
-        {
-          frac: {
-            numerator: { frac: ['d', 'e', 'v1', 0.5] },
-            denominator: 'b',
-            symbol: 'v',
-          },
-        }, 'c',
-      ],
-      '3': [{ frac: ['a', 'b', 'v'] }],
-      '4': [
-        {
-          frac: {
-            numerator: 'a',
-            denominator: 'b',
-            symbol: 'v',
-          },
-        },
-      ],
-      // '1': [
-      //   {
-      //     frac: [
-      //       { frac: ['d', 'e', 'v1'] },
-      //       'b',
-      //       'v',
-      //     ],
-      //   }, 'c',
-      // ],
-    });
+    //     //   {
+    //     //     annotate: {
+    //     //       content:              ['_2', 'a', 'plus', 'b_'],
+    //     //       withAnnotation:       ['minus_', 'b__'],
+    //     //       relativeToContent:    ['center', -0.4],
+    //     //       relativeToAnnotation: ['center', 'top'],
+    //     //       size: 0.6,
+    //     //     },
+    //     //   },
+    //     //   {
+    //     //     annotate: {
+    //     //       content: ['_2', 'a', 'plus', 'b_'],
+    //     //       withAnnotations: [
+    //     //         {
+    //     //           annotation: ['minus_', 'b__'],
+    //     //           relativeToContent: ['center', -0.4],
+    //     //           relativeToAnnotation: ['center', 'top'],
+    //     //           size: 0.6,
+    //     //         },
+    //     //         {
+    //     //           annotation: ['minus_', 'b__'],
+    //     //           relativeToContent: ['right', 1.4],
+    //     //           relativeToAnnotation: ['left', 'bottom'],
+    //     //           size: 0.6,
+    //     //         },
+    //     //       ],
+    //     //     },
+    //     //   },
+    //     // ],
+    //   },
+    // });
+    // // $FlowFixMe
+    // this._testEqn.setFormSeries(['1', '2']);
+    // // $FlowFixMe
+    // this._testEqn.addForms({
+    //   '11': ['a', 'b', 'c'],
+    //   '13': ['a', ['b', 'c']],
+    //   '15': {
+    //     content: ['b', 'a', 'c'],
+    //     elementMods: {
+    //       b: {
+    //         color: [1, 0, 0, 1],
+    //       },
+    //     },
+    //     subForm: 'deg',
+    //   },
+    //   '1': ['a', 'b', 'c'],
+    //   // '2': [{ frac: ['a', 'b', 'v'] }],
+    //   // '2': [{ brac: ['b', 'lb', 'rb'] }, 'a', 'c'],
+    //   // '2': [{ brac: [[{ bottomBar: [['a', 'b'], 'bar', 1, 1] }, 'c'], 'lb', 'rb'] }],
+    //   '2': {
+    //     bottomComment: {
+    //       content: ['a', 'b'],
+    //       comment: ['c', 'd'],
+    //       symbol: 'brace',
+    //       contentSpace: 0.05,
+    //       commentSpace: 0.05,
+    //       scale: 0.6,
+    //     },
+    //   },
+    //   // '2': [
+    //   //   {
+    //   //     annotate: {
+    //   //       content: { topBar: [['a', 'b'], 'brace'] },
+    //   //       withAnnotations: [
+    //   //         {
+    //   //           annotation: {
+    //   //             annotation: 'c',
+    //   //             relativeToContent: ['left', -0.4],
+    //   //             relativeToAnnotation: ['right', 'top'],
+    //   //             scale: 0.8,
+    //   //           },
+    //   //         },
+    //   //         {
+    //   //           annotation: {
+    //   //             annotation: 'e',
+    //   //             relativeToContent: [0.5, 1.2],
+    //   //             relativeToAnnotation: ['center', 'bottom'],
+    //   //             scale: 0.8,
+    //   //           },
+    //   //         },
+    //   //       ],
+    //   //     },
+    //   //   },
+    //   // ],
+    //   '90': {
+    //     content: ['a', 'b', 'c'],
+    //     elementMods: {
+    //       b: {
+    //         color: [1, 0, 0, 1],
+    //       },
+    //     },
+    //     time: 2,
+    //     subForm: 'deg',
+    //   },
+    //   '1d': {
+    //     frac: {
+    //       numerator: 'a',
+    //       denominator: 'b',
+    //       symbol: 'v',
+    //     },
+    //   },
+    //   // '1b': [{ frac: ['b', 'a', 'v'] }, 'c'],
+    //   // '1g': [{ sfrac: ['b', 'a', 'v', 0.5] }, 'c'],
+    //   // '1h': [
+    //   //   {
+    //   //     frac: {
+    //   //       numerator: ['a', 'd'],
+    //   //       denominator: 'b',
+    //   //       symbol: 'v',
+    //   //     },
+    //   //   }, 'c',
+    //   // ],
+    //   '2a': [
+    //     {
+    //       frac: {
+    //         numerator: { frac: ['d', 'e', 'v1', 0.5] },
+    //         denominator: 'b',
+    //         symbol: 'v',
+    //       },
+    //     }, 'c',
+    //   ],
+    //   '3': [{ frac: ['a', 'b', 'v'] }],
+    //   '4': [
+    //     {
+    //       frac: {
+    //         numerator: 'a',
+    //         denominator: 'b',
+    //         symbol: 'v',
+    //       },
+    //     },
+    //   ],
+    //   // '1': [
+    //   //   {
+    //   //     frac: [
+    //   //       { frac: ['d', 'e', 'v1'] },
+    //   //       'b',
+    //   //       'v',
+    //   //     ],
+    //   //   }, 'c',
+    //   // ],
+    // });
     this.diagram.equation.makeEqnFromOptions({
       name: 'isoEqn',
       addToCollection: this,

@@ -488,3 +488,59 @@ DiagramElementPrimative {
   "uid": "0000000000",
 }
 `;
+
+exports[`Different ways to make an equation Separate All Text 1`] = `
+Array [
+  0.7,
+  0,
+  0.0042,
+  0,
+  0.7,
+  0.08624,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Different ways to make an equation Separate All Text 2`] = `
+Array [
+  0.7,
+  0,
+  0.0042,
+  0,
+  0.7,
+  -0.0252,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Different ways to make an equation Separate All Text 3`] = `
+Array [
+  0.0364,
+  0,
+  0,
+  0,
+  0.008,
+  0.049,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Different ways to make an equation Separate All Text 4`] = `
+Array [
+  0.7,
+  0,
+  0.0364,
+  0,
+  0.7,
+  0,
+  0,
+  0,
+  1,
+]
+`;

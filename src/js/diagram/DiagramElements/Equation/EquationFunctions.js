@@ -1,28 +1,28 @@
 // @flow
-import {
-  Point, Transform,
-} from '../../tools/g2';
-import { joinObjects } from '../../../tools/tools';
+// import {
+//   Point, Transform,
+// } from '../../tools/g2';
+// import { joinObjects } from '../../../tools/tools';
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../Element';
-import {
-  DiagramFont,
-} from '../../DrawingObjects/TextObject/TextObject';
+// import {
+//   DiagramFont,
+// } from '../../DrawingObjects/TextObject/TextObject';
 import { BlankElement, Element, Elements } from './Elements/Element';
 import Fraction from './Elements/Fraction';
-import EquationForm from './EquationForm';
-import type {
-  TypeHAlign, TypeVAlign,
-} from './EquationForm';
-import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
-import * as html from '../../../tools/htmlGenerator';
+// import EquationForm from './EquationForm';
+// import type {
+//   TypeHAlign, TypeVAlign,
+// } from './EquationForm';
+// import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
+// import * as html from '../../../tools/htmlGenerator';
 import Strike from './Elements/Strike';
 // import DiagramPrimatives from '../../DiagramPrimatives/DiagramPrimatives';
 import SuperSub from './Elements/SuperSub';
 import { Brackets, Bar } from './Elements/Brackets';
 import { Annotation, AnnotationInformation } from './Elements/Annotation';
-import EquationSymbols from './EquationSymbols';
+// import EquationSymbols from './EquationSymbols';
 
 export function getDiagramElement(
   collection: DiagramElementCollection,
@@ -277,18 +277,33 @@ export class EquationFunctions {
     return null;
   }
 
-  frac(options: TypeFracObject | TypeFracArray) {
+  frac(
+    optionsOrNum: TypeFracObject | TypeFracArray | TypeEquationPhrase,
+    den: TypeEquationPhrase | null = null,
+    sym: string | null = null,
+    fractionScale?: number = null,
+  ) {
     let numerator;
     let denominator;
     let symbol;
     let scale;
-    if (Array.isArray(options)) {
-      [numerator, denominator, symbol, scale] = options;
+    if ( !(den == null && sym == null && fractionScale == null)) {
+      numerator = optionsOrNum;
+      denominator = den;
+      symbol = sym;
+      scale = fractionScale;
+      console.log('1', numerator, denominator, symbol, scale)
     } else {
-      ({
-        numerator, denominator, symbol, scale,
-      } = options);
+      if (Array.isArray(optionsOrNum)) {
+        [numerator, denominator, symbol, scale] = optionsOrNum;
+      } else {
+        ({
+          numerator, denominator, symbol, scale,
+        } = optionsOrNum);
+      }
     }
+    console.log('2', numerator, this)
+    console.log('3', this.contentToElement(numerator))
     const f = new Fraction(
       this.contentToElement(numerator),
       this.contentToElement(denominator),

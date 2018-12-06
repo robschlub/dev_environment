@@ -1,7 +1,9 @@
 import {
   Point,
 } from '../../tools/g2';
-
+import {
+  round,
+} from '../../tools/mathtools';
 import * as tools from '../../../tools/tools';
 import makeDiagram from '../../../__mocks__/makeDiagram';
 import { EquationNew } from './Equation';
@@ -92,6 +94,55 @@ describe('Different ways to make an equation', () => {
           formSeries: ['0', '1'],
         });
       },
+      separateAllText: () => {
+        eqn = new EquationNew(diagram.shapes, { color: color1 });
+        eqn.addElements({
+          a: 'a',
+          b: 'b',
+        });
+        eqn.addElements({
+          a: 'a',
+          b: 'b',
+          c: 'c',
+          _2: '2',
+          v: { symbol: 'vinculum' },
+        });
+        eqn.addForms({
+          '0': ['a', 'b', 'c'],
+          '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+        });
+        eqn.addForms({
+          '2': ['a', 'b', 'c'],
+        });
+        eqn.setFormSeries(['0', '1', '2']);
+        eqn.showForm('1');
+      },
+      nonTextFunctions: () => {
+        eqn = new EquationNew(diagram.shapes, { color: color1 });
+        const e = eqn.eqn.functions;
+        eqn.addElements({
+          a: 'a',
+          b: 'b',
+          c: 'c',
+          _2: '2',
+          v: { symbol: 'vinculum' },
+          v1: { symbol: 'vinculum' },
+        });
+        eqn.addForms({
+          '0': {
+            frac: [
+              {
+                frac: ['a', 'b', 'v']
+              },
+              'c',
+              'v1'
+            ]
+          },
+          '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+        });
+        eqn.setFormSeries(['0', '1', '2']);
+        eqn.showForm('1');
+      }
     };
   });
   test('All Text in constructor', () => {
@@ -133,5 +184,24 @@ describe('Different ways to make an equation', () => {
 
     cleanUIDs(eqn);
     expect(eqn._a).toMatchSnapshot();
+  });
+  test('Separate All Text', () => {
+    ways.separateAllText();
+    expect(eqn).toHaveProperty('_a');
+    expect(eqn).toHaveProperty('_b');
+    expect(eqn).toHaveProperty('_c');
+    expect(eqn).toHaveProperty('__2');
+    expect(eqn).toHaveProperty('_v');
+
+    // Check color
+    expect(eqn._a.drawingObject.text[0].font.color)
+      .toBe(tools.colorArrayToRGBA(color1));
+
+    // Test locations of all elements
+    cleanUIDs(eqn);
+    expect(round(eqn._a.transform.mat)).toMatchSnapshot();
+    expect(round(eqn.__2.transform.mat)).toMatchSnapshot();
+    expect(round(eqn._v.transform.mat)).toMatchSnapshot();
+    expect(round(eqn._c.transform.mat)).toMatchSnapshot();
   });
 });
