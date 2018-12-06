@@ -249,32 +249,32 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       '1': ['a', 'b', 'c'],
       // '2': [{ frac: ['a', 'b', 'v'] }],
       // '2': [{ brac: ['b', 'lb', 'rb'] }, 'a', 'c'],
-      // '2': [{ bottomBar: [['a', 'b'], 'bar'] }, 'c'],
-      '2': [
-        {
-          annotate: {
-            content: { topBar: [['a', 'b'], 'brace'] },
-            withAnnotations: [
-              {
-                annotation: {
-                  annotation: 'c',
-                  relativeToContent: ['left', -0.4],
-                  relativeToAnnotation: ['right', 'top'],
-                  scale: 0.8,
-                },
-              },
-              {
-                annotation: {
-                  annotation: 'e',
-                  relativeToContent: [0.5, 1.2],
-                  relativeToAnnotation: ['center', 'bottom'],
-                  scale: 0.8,
-                },
-              },
-            ],
-          },
-        },
-      ],
+      '2': [{ brac: [[{ bottomBar: [['a', 'b'], 'bar', 1, 1] }, 'c'], 'lb', 'rb'] }],
+      // '2': [
+      //   {
+      //     annotate: {
+      //       content: { topBar: [['a', 'b'], 'brace'] },
+      //       withAnnotations: [
+      //         {
+      //           annotation: {
+      //             annotation: 'c',
+      //             relativeToContent: ['left', -0.4],
+      //             relativeToAnnotation: ['right', 'top'],
+      //             scale: 0.8,
+      //           },
+      //         },
+      //         {
+      //           annotation: {
+      //             annotation: 'e',
+      //             relativeToContent: [0.5, 1.2],
+      //             relativeToAnnotation: ['center', 'bottom'],
+      //             scale: 0.8,
+      //           },
+      //         },
+      //       ],
+      //     },
+      //   },
+      // ],
       '90': {
         content: ['a', 'b', 'c'],
         elementMods: {

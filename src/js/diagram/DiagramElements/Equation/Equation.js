@@ -152,24 +152,22 @@ export type TypeSupArray = [
 ];
 export type TypeSupSubObject = {
   content: TypeEquationPhrase;
-  subscript?: TypeEquationPhrase;
-  superscript?: TypeEquationPhrase;
+  subscript: TypeEquationPhrase;
+  superscript: TypeEquationPhrase;
 };
 export type TypeSupSubArray = [
   TypeEquationPhrase,
-  ?TypeEquationPhrase,
-  ?TypeEquationPhrase,
+  TypeEquationPhrase,
+  TypeEquationPhrase,
 ];
 export type TypeBarObject = {
   content: TypeEquationPhrase;
   symbol: string;
   space?: number;
-  outsideSpace?: number;
 };
 export type TypeBarArray = [
   TypeEquationPhrase,
   string,
-  ?number,
   ?number,
 ];
 export type TypeAnnotationObject = {
@@ -368,11 +366,23 @@ class EquationFunctions {
         content, left, right, space,
       } = options);
     }
+    let leftBracket = null;
+    if (left != null) {
+      leftBracket = getDiagramElement(this.collection, left);
+    }
+    let rightBracket = null;
+    if (right != null) {
+      rightBracket = getDiagramElement(this.collection, right);
+    }
+    let spaceToUse = 0.03;
+    if (space != null) {
+      spaceToUse = space;
+    }
     return new Brackets(
       this.contentToElement(content),
-      getDiagramElement(this.collection, left),
-      getDiagramElement(this.collection, right),
-      space,
+      leftBracket,
+      rightBracket,
+      spaceToUse,
     );
   }
 
@@ -412,8 +422,8 @@ class EquationFunctions {
 
   supSub(options: TypeSupSubObject | TypeSupSubArray) {
     let content;
-    let superscript;
-    let subscript;
+    let superscript = null;
+    let subscript = null;
     if (Array.isArray(options)) {
       [content, superscript, subscript] = options;
     } else {
@@ -430,42 +440,48 @@ class EquationFunctions {
 
   topBar(options: TypeBarObject | TypeBarArray) {
     let content;
-    let bar;
+    let symbol;
     let space;
-    let outsideSpace;
     if (Array.isArray(options)) {
-      [content, bar, space, outsideSpace] = options;
+      [content, symbol, space] = options;
     } else {
       ({
-        content, bar, space, outsideSpace,
+        content, symbol, space,
       } = options);
+    }
+    let spaceToUse = 0.03;
+    if (space != null) {
+      spaceToUse = space;
     }
     return new Bar(
       this.contentToElement(content),
-      getDiagramElement(this.collection, bar),
-      space,
-      outsideSpace,
+      getDiagramElement(this.collection, symbol),
+      spaceToUse,
+      0.03,
       'top',
     );
   }
 
   bottomBar(options: TypeBarObject | TypeBarArray) {
     let content;
-    let bar;
+    let symbol;
     let space;
-    let outsideSpace;
     if (Array.isArray(options)) {
-      [content, bar, space, outsideSpace] = options;
+      [content, symbol, space] = options;
     } else {
       ({
-        content, superscript, space, outsideSpace,
+        content, symbol, space,
       } = options);
+    }
+    let spaceToUse = 0.03;
+    if (space != null) {
+      spaceToUse = space;
     }
     return new Bar(
       this.contentToElement(content),
-      getDiagramElement(this.collection, bar),
-      space,
-      outsideSpace,
+      getDiagramElement(this.collection, symbol),
+      spaceToUse,
+      0.03,
       'bottom',
     );
   }
