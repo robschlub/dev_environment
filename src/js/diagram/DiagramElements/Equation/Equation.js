@@ -52,26 +52,14 @@ export type TypeEquationPhrase =
   | { supSub: TypeSupSubObject } | TypeSupSubArray
   | { topBar: TypeBarObject } | TypeBarArray
   | { bottomBar: TypeBarObject } | TypeBarArray
+  | { annotation: TypeAnnotationObject } | TypeAnnotationArray
+  | { annotate: TypeAnnotateObject } | TypeAnnotateArray
   | [
     TypeEquationPhrase,
     TypeEquationPhrase,
     string,
     ?number,
   ]
-  | {                                 // Annotation
-    annotate: {
-      content: TypeEquationPhrase;
-      annotationArray: Array<{
-        content: TypeEquationPhrase;
-        xPosition?: 'left' | 'right' | 'center';
-        yPosition?: 'bottom' | 'top' | 'middle' | 'baseline';
-        xAlign?: 'left' | 'right' | 'center';
-        yAlign?: 'bottom' | 'top' | 'middle' | 'baseline';
-        scale?: number;
-      }>;
-      annotationInSize?: boolean;
-    }
-  }
   | {                                 // Top Comment
     topComment: {
       content: TypeEquationPhrase;
