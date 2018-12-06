@@ -556,7 +556,7 @@ type TypeEquationElement = string | {
     // Symbol Only
     symbol?: string;
     numLines?: number;
-    orientation?: 'up' | 'left' | 'down' | 'right';
+    side?: 'top' | 'left' | 'bottom' | 'right';
     // Both Text and Symbol
     color?: Array<number>;
     elementOptions?: {};
@@ -775,7 +775,7 @@ export class EquationNew extends DiagramElementCollection {
 
     // Helper function to add symbol element
     const makeSymbolElem = (options: { symbol: string, numLines?: number,
-    orientation?: 'up' | 'left' | 'down' | 'right', color?: Array<number>}) => {
+    side?: 'top' | 'left' | 'bottom' | 'right', color?: Array<number>}) => {
       let symbol = this.eqn.symbols.get(options.symbol, options);
       // console.log('got', symbol)
       if (symbol == null) {

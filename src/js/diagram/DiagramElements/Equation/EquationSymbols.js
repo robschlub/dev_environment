@@ -25,7 +25,14 @@ export default class EquationSymbols {
     this.defaultColor = defaultColor;
   }
 
-  get(name: string, options: { color?: Array<number>, numLines?: number }) {
+  get(
+    name: string,
+    options: {
+      color?: Array<number>,
+      numLines?: number,
+      side?: 'left' | 'right' | 'bottom' | 'top',
+    },
+  ) {
     if (name === 'vinculum') {
       return this.vinculum(options);
     }
@@ -118,14 +125,14 @@ export default class EquationSymbols {
 
 
   bracket(options: {
-    side: 'left' | 'right' | 'top' | 'bottom',
-    numLines: number,
-    color: Array<number>,
+    side?: 'left' | 'right' | 'top' | 'bottom',
+    numLines?: number,
+    color?: Array<number>,
   }) {
     const defaultOptions = {
       side: 'left',
       numLines: 1,
-      color: this.defaultColor
+      color: this.defaultColor,
     };
     const optionsToUse = joinObjects(defaultOptions, options);
     return new Bracket(
@@ -134,15 +141,15 @@ export default class EquationSymbols {
       optionsToUse.side,
       optionsToUse.numLines,
       new Transform('bracket').scale(1, 1).translate(0, 0),
-      this.limits,
+      this.shapes.limits,
     );
   }
 
 
   bar(options: {
-    side: 'left' | 'right' | 'top' | 'bottom',
-    numLines: number,
-    color: Array<number>,
+    side?: 'left' | 'right' | 'top' | 'bottom',
+    numLines?: number,
+    color?: Array<number>,
   }) {
     const defaultOptions = {
       side: 'top',
@@ -156,19 +163,19 @@ export default class EquationSymbols {
       optionsToUse.side,
       optionsToUse.numLines,
       new Transform('bar').scale(1, 1).translate(0, 0),
-      this.limits,
+      this.shapes.limits,
     );
   }
 
   squareBracket(options: {
-    side: 'left' | 'right' | 'top' | 'bottom',
-    numLines: number,
-    color: Array<number>,
+    side?: 'left' | 'right' | 'top' | 'bottom',
+    numLines?: number,
+    color?: Array<number>,
   }) {
     const defaultOptions = {
       side: 'left',
       numLines: 1,
-      color: this.defaultColor
+      color: this.defaultColor,
     };
     const optionsToUse = joinObjects(defaultOptions, options);
     return new SquareBracket(
@@ -177,19 +184,19 @@ export default class EquationSymbols {
       optionsToUse.side,
       optionsToUse.numLines,
       new Transform('bar').scale(1, 1).translate(0, 0),
-      this.limits,
+      this.shapes.limits,
     );
   }
 
   brace(options: {
-    side: 'left' | 'right' | 'top' | 'bottom',
-    numLines: number,
-    color: Array<number>,
+    side?: 'left' | 'right' | 'top' | 'bottom',
+    numLines?: number,
+    color?: Array<number>,
   }) {
     const defaultOptions = {
       side: 'left',
       numLines: 1,
-      color: this.defaultColor
+      color: this.defaultColor,
     };
     const optionsToUse = joinObjects(defaultOptions, options);
     return new Brace(
@@ -198,19 +205,19 @@ export default class EquationSymbols {
       optionsToUse.side,
       optionsToUse.numLines,
       new Transform('bar').scale(1, 1).translate(0, 0),
-      this.limits,
+      this.shapes.limits,
     );
   }
 
   roundedSquareBracket(options: {
-    side: 'left' | 'right' | 'top' | 'bottom',
-    numLines: number,
-    color: Array<number>,
+    side?: 'left' | 'right' | 'top' | 'bottom',
+    numLines?: number,
+    color?: Array<number>,
   }) {
     const defaultOptions = {
       side: 'left',
       numLines: 1,
-      color: this.defaultColor
+      color: this.defaultColor,
     };
     const optionsToUse = joinObjects(defaultOptions, options);
     return new RoundedSquareBracket(
@@ -219,7 +226,7 @@ export default class EquationSymbols {
       optionsToUse.side,
       optionsToUse.numLines,
       new Transform('bar').scale(1, 1).translate(0, 0),
-      this.limits,
+      this.shapes.limits,
     );
   }
 }
