@@ -49,7 +49,9 @@ export type TypeEquationPhrase =
   | { brac: TypeBracketObject } | TypeBracketArray
   | { sub: TypeSubObject } | TypeSubArray
   | { sup: TypeSupObject } | TypeSupArray
-  | { sup: TypeSupSubObject } | TypeSupubArray
+  | { supSub: TypeSupSubObject } | TypeSupSubArray
+  | { topBar: TypeBarObject } | TypeBarArray
+  | { bottomBar: TypeBarObject } | TypeBarArray
   | [
     TypeEquationPhrase,
     TypeEquationPhrase,
@@ -68,28 +70,6 @@ export type TypeEquationPhrase =
         scale?: number;
       }>;
       annotationInSize?: boolean;
-    }
-  }
-  | {                                 // Top
-    topBar: {
-      content: TypeEquationPhrase;
-      symbol: string;
-      space?: number;
-      outsideSpace?: number;
-    }
-  }
-  | [
-    TypeEquationPhrase,
-    string,
-    ?number,
-    ?number,
-  ]
-  | {                                 // Bottom Bar
-    bottomBar: {
-      content: TypeEquationPhrase;
-      symbol: string;
-      space?: number;
-      outsideSpace?: number;
     }
   }
   | {                                 // Top Comment
@@ -186,6 +166,18 @@ export type TypeSupSubArray = [
   ?TypeEquationPhrase,
   ?TypeEquationPhrase,
 ];
+export type TypeBarObject = {
+  content: TypeEquationPhrase;
+  symbol: string;
+  space?: number;
+  outsideSpace?: number;
+};
+export type TypeBarArray = [
+  TypeEquationPhrase,
+  string,
+  ?number,
+  ?number,
+];
 
 class EquationFunctions {
   // eslint-disable-next-line no-use-before-define
@@ -279,6 +271,14 @@ class EquationFunctions {
     if (name === 'supSub') {
       // $FlowFixMe
       return this.supSub(params);
+    }
+    if (name === 'topBar') {
+      // $FlowFixMe
+      return this.topBar(params);
+    }
+    if (name === 'bottomBar') {
+      // $FlowFixMe
+      return this.bottomBar(params);
     }
     return null;
   }
@@ -393,6 +393,48 @@ class EquationFunctions {
       this.contentToElement(content),
       this.contentToElement(superscript),
       this.contentToElement(subscript),
+    );
+  }
+
+  topBar(options: TypeBarObject | TypeBarArray) {
+    let content;
+    let bar;
+    let space;
+    let outsideSpace;
+    if (Array.isArray(options)) {
+      [content, bar, space, outsideSpace] = options;
+    } else {
+      ({
+        content, superscript, space, outsideSpace,
+      } = options);
+    }
+    return new Bar(
+      this.contentToElement(content),
+      getDiagramElement(this.collection, bar),
+      space,
+      outsideSpace,
+      'top',
+    );
+  }
+
+  bottomBar(options: TypeBarObject | TypeBarArray) {
+    let content;
+    let bar;
+    let space;
+    let outsideSpace;
+    if (Array.isArray(options)) {
+      [content, bar, space, outsideSpace] = options;
+    } else {
+      ({
+        content, superscript, space, outsideSpace,
+      } = options);
+    }
+    return new Bar(
+      this.contentToElement(content),
+      getDiagramElement(this.collection, bar),
+      space,
+      outsideSpace,
+      'bottom',
     );
   }
 }
@@ -704,13 +746,14 @@ export class EquationNew extends DiagramElementCollection {
     const makeSymbolElem = (options: { symbol: string, numLines?: number,
     orientation?: 'up' | 'left' | 'down' | 'right', color?: Array<number>}) => {
       let symbol = this.eqn.symbols.get(options.symbol, options);
-      console.log('got', symbol)
+      // console.log('got', symbol)
       if (symbol == null) {
         symbol = makeTextElem({
           text: `Symbol ${options.symbol} not valid`,
         });
       }
       if (options.color == null) {
+        console.log('o', this.color)
         symbol.setColor(this.color);
       }
       return symbol;
@@ -731,6 +774,7 @@ export class EquationNew extends DiagramElementCollection {
       } else {
         let diagramElem;
         if (elem.symbol != null && typeof elem.symbol === 'string') {
+          // console.log(elem.symbol)
           // $FlowFixMe
           diagramElem = makeSymbolElem(elem);
         } else if (elem.text != null && elem.text) {

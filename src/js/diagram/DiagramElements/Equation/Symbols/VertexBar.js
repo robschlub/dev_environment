@@ -6,7 +6,7 @@ import VertexBracket from './VertexBracket';
 
 class VertexBar extends VertexBracket {
   getPoints() {
-    let w = 1 / 30;
+    let w = 1 / 15;
 
     if (this.numLines > 1) {
       w /= this.numLines;

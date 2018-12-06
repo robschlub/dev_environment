@@ -145,9 +145,9 @@ export default class EquationSymbols {
     color: Array<number>,
   }) {
     const defaultOptions = {
-      side: 'left',
+      side: 'top',
       numLines: 1,
-      color: this.defaultColor
+      color: this.defaultColor,
     };
     const optionsToUse = joinObjects(defaultOptions, options);
     return new Bar(

@@ -106,6 +106,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     const strikeCol = this.layout.colors.diagram.disabled;
     this.diagram.equation.addEquation(this, 'testEqn', {
       color: this.layout.colors.diagram.text.base,
+      // color: [0, 1, 0, 1],
       elements: {
         a: 'a',
         b: {
@@ -129,7 +130,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         v1: { symbol: 'vinculum' },
         x: { symbol: 'xStrike' },
         s: { symbol: 'strike' },
-        lb: { symbol: 'bar', side: 'left', color: [1, 0, 0, 1] },
+        bar: { symbol: 'bar' },
+        lb: { symbol: 'brace', side: 'left', color: [1, 0, 0, 1] },
         rb: { symbol: 'roundedSquareBracket', side: 'right' },
       },
       forms: {
@@ -229,7 +231,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       },
     });
     // $FlowFixMe
-    this._testEqn.setFormSeries(['11', '1', '90']);
+    this._testEqn.setFormSeries(['1', '2']);
     // $FlowFixMe
     this._testEqn.addForms({
       '11': ['a', 'b', 'c'],
@@ -246,7 +248,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       '1': ['a', 'b', 'c'],
       // '2': [{ frac: ['a', 'b', 'v'] }],
       // '2': [{ brac: ['b', 'lb', 'rb'] }, 'a', 'c'],
-      '2': [{ supSub: ['a', 'b', 'c'] }],
+      '2': [{ bottomBar: [['a', 'b'], 'bar'] }, 'c'],
       '90': {
         content: ['a', 'b', 'c'],
         elementMods: {

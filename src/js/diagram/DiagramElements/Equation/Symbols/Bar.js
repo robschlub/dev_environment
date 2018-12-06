@@ -22,5 +22,6 @@ export default function Bracket(
   } else {
     transform = transformOrLocation._dup();
   }
+
   return new DiagramElementPrimative(vertices, transform, color, diagramLimits);
 }
