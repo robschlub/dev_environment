@@ -131,7 +131,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
         x: { symbol: 'xStrike' },
         s: { symbol: 'strike' },
         bar: { symbol: 'bar' },
-        brace: { symbol: 'brace', side: 'top' },
+        brace: { symbol: 'brace', side: 'bottom' },
         lb: { symbol: 'brace', side: 'left', color: [1, 0, 0, 1] },
         rb: { symbol: 'roundedSquareBracket', side: 'right' },
       },
@@ -249,7 +249,17 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       '1': ['a', 'b', 'c'],
       // '2': [{ frac: ['a', 'b', 'v'] }],
       // '2': [{ brac: ['b', 'lb', 'rb'] }, 'a', 'c'],
-      '2': [{ brac: [[{ bottomBar: [['a', 'b'], 'bar', 1, 1] }, 'c'], 'lb', 'rb'] }],
+      // '2': [{ brac: [[{ bottomBar: [['a', 'b'], 'bar', 1, 1] }, 'c'], 'lb', 'rb'] }],
+      '2': {
+        bottomComment: {
+          content: ['a', 'b'],
+          comment: ['c', 'd'],
+          symbol: 'brace',
+          contentSpace: 0.05,
+          commentSpace: 0.05,
+          scale: 0.6,
+        },
+      },
       // '2': [
       //   {
       //     annotate: {

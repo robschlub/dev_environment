@@ -54,38 +54,16 @@ export type TypeEquationPhrase =
   | { bottomBar: TypeBarObject } | TypeBarArray
   | { annotation: TypeAnnotationObject } | TypeAnnotationArray
   | { annotate: TypeAnnotateObject } | TypeAnnotateArray
+  | { topComment: TypeCommentObject } | TypeCommentArray
+  | { bottomComment: TypeCommentObject } | TypeCommentArray
   | [
     TypeEquationPhrase,
     TypeEquationPhrase,
     string,
     ?number,
   ]
-  | {                                 // Top Comment
-    topComment: {
-      content: TypeEquationPhrase;
-      comment: TypeEquationPhrase;
-      symbol?: string;
-      space?: number;
-      outsideSpace?: number;
-    }
-  }
-  | [
-    TypeEquationPhrase,
-    TypeEquationPhrase,
-    string,
-    ?number,
-    ?number,
-  ]
-  | {                                 // Bottom Comment
-    bottomComment: {
-      content: TypeEquationPhrase;
-      comment: TypeEquationPhrase;
-      symbol?: string;
-      space?: number;
-      outsideSpace?: number;
-    }
-  }
-  | Array<TypeEquationPhrase>;
+  | Array<TypeEquationPhrase>
+  | DiagramElementPrimative | DiagramElementCollection | Elements | Element;
 
 /* eslint-enable no-use-before-define */
 export type TypeFracObject = {
@@ -158,6 +136,22 @@ export type TypeBarArray = [
   string,
   ?number,
 ];
+export type TypeCommentObject = {
+  content: TypeEquationPhrase;
+  comment: TypeEquationPhrase;
+  symbol?: string;
+  contentSpace?: number;
+  commentSpace?: number;
+  scale?: number;
+};
+export type TypeCommentArray = [
+  TypeEquationPhrase,
+  TypeEquationPhrase,
+  string,
+  ?number,
+  ?number,
+  ?scale,
+];
 export type TypeAnnotationObject = {
   annotation: TypeEquationPhrase,
   relativeToContent: [
@@ -168,7 +162,7 @@ export type TypeAnnotationObject = {
     'left' | 'right' | 'center' | number,
     'bottom' | 'top' | 'middle' | 'baseline' | number,
   ],
-  scale: number,
+  scale?: number,
 };
 export type TypeAnnotationArray = [
   TypeEquationPhrase,
@@ -176,7 +170,7 @@ export type TypeAnnotationArray = [
   'bottom' | 'top' | 'middle' | 'baseline' | number,
   'left' | 'right' | 'center' | number,
   'bottom' | 'top' | 'middle' | 'baseline' | number,
-  number,
+  ?number,
 ];
 export type TypeAnnotateObject = {
   content: TypeEquationPhrase,
@@ -220,6 +214,9 @@ class EquationFunctions {
     if (content == null) {
       return null;
     }
+    if (content instanceof Elements) {
+      return content;
+    }
     if (typeof content === 'string') {
       return this.stringToElement(content);
     }
@@ -259,46 +256,23 @@ class EquationFunctions {
   }
 
   eqnMethod(name: string, params: {}) {
-    if (name === 'frac') {
-      // $FlowFixMe
-      return this.frac(params);
-    }
-    if (name === 'strike') {
-      // $FlowFixMe
-      return this.strike(params);
-    }
-    if (name === 'brac') {
-      // $FlowFixMe
-      return this.brac(params);
-    }
-    if (name === 'sub') {
-      // $FlowFixMe
-      return this.sub(params);
-    }
-    if (name === 'sup') {
-      // $FlowFixMe
-      return this.sup(params);
-    }
-    if (name === 'supSub') {
-      // $FlowFixMe
-      return this.supSub(params);
-    }
-    if (name === 'topBar') {
-      // $FlowFixMe
-      return this.topBar(params);
-    }
-    if (name === 'bottomBar') {
-      // $FlowFixMe
-      return this.bottomBar(params);
-    }
-    if (name === 'annotate') {
-      // $FlowFixMe
-      return this.annotate(params);
-    }
-    if (name === 'annotation') {
-      // $FlowFixMe
-      return this.annotation(params);
-    }
+    // $FlowFixMe
+    if (name === 'frac') { return this.frac(params); }        // $FlowFixMe
+    if (name === 'strike') { return this.strike(params); }    // $FlowFixMe
+    if (name === 'brac') { return this.brac(params); }        // $FlowFixMe
+    if (name === 'sub') { return this.sub(params); }          // $FlowFixMe
+    if (name === 'sup') { return this.sup(params); }          // $FlowFixMe
+    if (name === 'supSub') { return this.supSub(params); }    // $FlowFixMe
+    if (name === 'topBar') { return this.topBar(params); }    // $FlowFixMe
+    if (name === 'bottomBar') { return this.bottomBar(params); }
+    // $FlowFixMe
+    if (name === 'annotate') { return this.annotate(params); }
+    // $FlowFixMe
+    if (name === 'annotation') { return this.annotation(params); }
+    // $FlowFixMe
+    if (name === 'bottomComment') { return this.bottomComment(params); }
+    // $FlowFixMe
+    if (name === 'topComment') { return this.topComment(params); }
     return null;
   }
 
@@ -475,6 +449,109 @@ class EquationFunctions {
     );
   }
 
+  bottomComment(options: TypeCommentObject | TypeCommentArray) {
+    let content;
+    let comment;
+    let symbol;
+    let contentSpace;
+    let commentSpace;
+    let scale;
+    if (Array.isArray(options)) {
+      [content, comment, symbol, contentSpace, commentSpace, scale] = options;
+    } else {
+      ({
+        content, comment, symbol, contentSpace, commentSpace, scale,
+      } = options);
+    }
+    let contentSpaceToUse = 0.03;
+    if (contentSpace != null) {
+      contentSpaceToUse = contentSpace;
+    }
+    let commentSpaceToUse = 0.03;
+    if (commentSpace != null) {
+      commentSpaceToUse = commentSpace;
+    }
+    let scaleToUse = 0.6;
+    if (scale != null) {
+      scaleToUse = scale;
+    }
+    let contentToUse;
+    if (symbol) {
+      contentToUse = new Bar(
+        this.contentToElement(content),
+        getDiagramElement(this.collection, symbol),
+        contentSpaceToUse,
+        commentSpaceToUse,
+        'bottom',
+      );
+    } else {
+      contentToUse = content;
+    }
+    return this.annotate({
+      content: contentToUse,
+      withAnnotations: [
+        this.annotation({
+          annotation: comment,
+          relativeToContent: ['center', 'bottom'],
+          relativeToAnnotation: ['center', 'top'],
+          scale: scaleToUse,
+        }),
+      ],
+    });
+  }
+
+  topComment(options: TypeCommentObject | TypeCommentArray) {
+    let content;
+    let comment;
+    let symbol;
+    let contentSpace;
+    let commentSpace;
+    let scale;
+    if (Array.isArray(options)) {
+      [content, comment, symbol, contentSpace, commentSpace, scale] = options;
+    } else {
+      ({
+        content, comment, symbol, contentSpace, commentSpace, scale,
+      } = options);
+    }
+    let contentSpaceToUse = 0.03;
+    if (contentSpace != null) {
+      contentSpaceToUse = contentSpace;
+    }
+    let commentSpaceToUse = 0.03;
+    if (commentSpace != null) {
+      commentSpaceToUse = commentSpace;
+    }
+    let scaleToUse = 0.6;
+    if (scale != null) {
+      scaleToUse = scale;
+    }
+
+    let contentToUse;
+    if (symbol) {
+      contentToUse = new Bar(
+        this.contentToElement(content),
+        getDiagramElement(this.collection, symbol),
+        contentSpaceToUse,
+        commentSpaceToUse,
+        'top',
+      );
+    } else {
+      contentToUse = content;
+    }
+    return this.annotate({
+      content: contentToUse,
+      withAnnotations: [
+        this.annotation({
+          annotation: comment,
+          relativeToContent: ['center', 'top'],
+          relativeToAnnotation: ['center', 'bottom'],
+          scale: scaleToUse,
+        }),
+      ],
+    });
+  }
+
   annotate(options: TypeAnnotateObject | TypeAnnotateArray) {
     let content;
     let withAnnotations;
@@ -487,7 +564,12 @@ class EquationFunctions {
       } = options);
     }
     const annotations = withAnnotations.map(
-      annotation => this.parseContent(annotation),
+      (annotation) => {
+        if (annotation instanceof AnnotationInformation) {
+          return annotation;
+        }
+        return this.parseContent(annotation);
+      },
     );
     let includeAnnotationInSizeToUse = true;
     if (includeAnnotationInSize != null) {
@@ -522,13 +604,18 @@ class EquationFunctions {
       [relativeToAnnotationH, relativeToAnnotationV] = relativeToAnnotation;
     }
 
+    let scaleToUse = 0.6;
+    if (scale != null) {
+      scaleToUse = scale;
+    }
+
     return new AnnotationInformation(
       this.contentToElement(annotation),
       relativeToContentH,
       relativeToContentV,
       relativeToAnnotationH,
       relativeToAnnotationV,
-      scale,
+      scaleToUse,
     );
   }
 }
