@@ -162,16 +162,19 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       '3': [{ frac: [{ frac: ['a', 'b', 'v', 0.5] }, 'c', 'v1'] }],
       '4': e.frac([
         {
-          frac: ['a', 'b', 'v', 0.5]
+          frac: ['a', 'b', 'v', 0.3]
         },
         'c',
         'v1',
       ]),
-      '5': e.frac([e.frac(['a', 'b', 'v', 0.5]), 'c', 'v1']),
+      '5': e.frac([e.frac(['a', 'b', 'v', 0.3]), 'c', 'v1']),
       '6': frac(frac('a', 'b', 'v', 0.5), 'c', 'v1'),
     });
     eqn.showForm('0');
-
+    eqn.showForm('4');
+    console.log(eqn.eqn.forms['4'].base.height)
+    eqn.showForm('5');
+    console.log(eqn.eqn.forms['5'].base.height)
     // const e = this._testEqn.eqn.functions;
     // const frac = e.frac.bind(e);
     // const eqn = this._testEqn;

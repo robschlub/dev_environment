@@ -41,6 +41,7 @@ describe('Equation Functions', () => {
         const e = eqn.eqn.functions;
         const frac = e.frac.bind(e);
         eqn.addElements(elements);
+        const s = 0.6;
         eqn.addForms({
           '0': {
             content: {
@@ -50,7 +51,7 @@ describe('Equation Functions', () => {
                     numerator: 'a',
                     denominator: 'b',
                     symbol: 'v',
-                    scale: 0.5,
+                    scale: s,
                   },
                 },
                 denominator: 'c',
@@ -65,7 +66,7 @@ describe('Equation Functions', () => {
                   numerator: 'a',
                   denominator: 'b',
                   symbol: 'v',
-                  scale: 0.5,
+                  scale: s,
                 },
               },
               denominator: 'c',
@@ -75,22 +76,22 @@ describe('Equation Functions', () => {
           '2': {
             frac: [
               {
-                frac: ['a', 'c', 'v', 0.5]
+                frac: ['a', 'b', 'v', s]
               },
               'c',
               'v1',
             ]
           },
-          '3': [{ frac: [{ frac: ['a', 'b', 'v', 0.5] }, 'c', 'v1'] }],
+          '3': [{ frac: [{ frac: ['a', 'b', 'v', s] }, 'c', 'v1'] }],
           '4': e.frac([
             {
-              frac: ['a', 'b', 'v', 0.5]
+              frac: ['a', 'b', 'v', s]
             },
             'c',
             'v1',
           ]),
-          '5': e.frac([e.frac(['a', 'b', 'v', 0.5]), 'c', 'v1']),
-          '6': frac(frac('a', 'b', 'v', 0.5), 'c', 'v1'),
+          '5': e.frac([e.frac(['a', 'b', 'v', s]), 'c', 'v1']),
+          '6': frac(frac('a', 'b', 'v', s), 'c', 'v1'),
         });
       },
     };
@@ -101,7 +102,6 @@ describe('Equation Functions', () => {
     const formsToTest = ['1', '2', '3', '4', '5', '6'];
 
     eqn.showForm('0');
-
     const positions0 = elems.map(elem => round(elem.transform.mat).slice())
     console.log('0', positions0)
     formsToTest.forEach((f) => {
@@ -111,8 +111,22 @@ describe('Equation Functions', () => {
       expect(positions0).toEqual(positions);
     })
 
+    // eqn.showForm('4');
+    // // const positions7 = elems.map(elem => elem.transform.t())
+    // const positions7 = elems.map(elem => round(elem.transform.mat).slice())
+    // eqn.showForm('5');
+    // // const positions8 = elems.map(elem => elem.transform.t())
+    // const positions8 = elems.map(elem => round(elem.transform.mat).slice())
+    
+    // console.log(positions7)
+    // console.log(positions8)
+    // console.log(eqn.eqn.forms['4'].base.height)
+    // console.log(eqn.eqn.forms['5'].base.height)
+    // expect(positions7).toEqual(positions8);
     // Record position of elements in a snapshot
     tools.cleanUIDs(eqn);
+    
+    // expect(eqn.eqn.forms['4'].base).toEqual(eqn.eqn.forms['5'])
     expect(round(eqn._a.transform.mat)).toMatchSnapshot();
     expect(round(eqn._b.transform.mat)).toMatchSnapshot();
     expect(round(eqn._c.transform.mat)).toMatchSnapshot();
