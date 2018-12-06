@@ -248,7 +248,24 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       '1': ['a', 'b', 'c'],
       // '2': [{ frac: ['a', 'b', 'v'] }],
       // '2': [{ brac: ['b', 'lb', 'rb'] }, 'a', 'c'],
-      '2': [{ bottomBar: [['a', 'b'], 'bar'] }, 'c'],
+      // '2': [{ bottomBar: [['a', 'b'], 'bar'] }, 'c'],
+      '2': [
+        {
+          annotate: {
+            content: ['a', 'b'],
+            withAnnotations: [
+              {
+                annotation: {
+                  annotation: 'c',
+                  relativeToContent: ['left', -0.4],
+                  relativeToAnnotation: ['right', 'top'],
+                  scale: 0.8,
+                },
+              },
+            ],
+          },
+        },
+      ],
       '90': {
         content: ['a', 'b', 'c'],
         elementMods: {

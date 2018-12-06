@@ -21,7 +21,7 @@ import Strike from './Elements/Strike';
 import DiagramPrimatives from '../../DiagramPrimatives/DiagramPrimatives';
 import SuperSub from './Elements/SuperSub';
 import { Brackets, Bar } from './Elements/Brackets';
-// import { Annotation, AnnotationInformation } from './Elements/Annotation';
+import { Annotation, AnnotationInformation } from './Elements/Annotation';
 import EquationSymbols from './EquationSymbols';
 
 export function getDiagramElement(
@@ -106,40 +106,34 @@ export type TypeFracObject = {
   symbol: string;
   scale?: number;
 };
-
 export type TypeFracArray = [
   TypeEquationPhrase,
   TypeEquationPhrase,
   string,
   ?number,
 ];
-
 export type TypeStrikeObject = {
   content: TypeEquationPhrase;
   symbol: string;
   strikeInSize?: boolean;
 };
-
 export type TypeStrikeArray = [
   TypeEquationPhrase,
   string,
   ?boolean,
 ];
-
 export type TypeBracketObject = {
   content: TypeEquationPhrase;
-  leftSymbol?: string;
-  rightSymbol?: string;
+  left?: string;
+  right?: string;
   space?: number;
 };
-
 export type TypeBracketArray = [
   TypeEquationPhrase,
   ?string,
   ?string,
   ?number,
 ];
-
 export type TypeSubObject = {
   content: TypeEquationPhrase;
   subscript: TypeEquationPhrase;
@@ -150,7 +144,7 @@ export type TypeSubArray = [
 ];
 export type TypeSupObject = {
   content: TypeEquationPhrase;
-  subscript: TypeEquationPhrase;
+  superscript: TypeEquationPhrase;
 };
 export type TypeSupArray = [
   TypeEquationPhrase,
@@ -177,6 +171,36 @@ export type TypeBarArray = [
   string,
   ?number,
   ?number,
+];
+export type TypeAnnotationObject = {
+  annotation: TypeEquationPhrase,
+  relativeToContent: [
+    'left' | 'right' | 'center' | number,
+    'bottom' | 'top' | 'middle' | 'baseline' | number,
+  ],
+  relativeToAnnotation: [
+    'left' | 'right' | 'center' | number,
+    'bottom' | 'top' | 'middle' | 'baseline' | number,
+  ],
+  scale: number,
+};
+export type TypeAnnotationArray = [
+  TypeEquationPhrase,
+  'left' | 'right' | 'center' | number,
+  'bottom' | 'top' | 'middle' | 'baseline' | number,
+  'left' | 'right' | 'center' | number,
+  'bottom' | 'top' | 'middle' | 'baseline' | number,
+  number,
+];
+export type TypeAnnotateObject = {
+  content: TypeEquationPhrase,
+  withAnnotations: Array<TypeAnnotationObject | TypeAnnotationArray>,
+  includeAnnotationInSize?: boolean,
+};
+export type TypeAnnotateArray = [
+  TypeEquationPhrase,
+  Array<TypeAnnotationObject | TypeAnnotationArray>,
+  ?boolean,
 ];
 
 class EquationFunctions {
@@ -280,6 +304,14 @@ class EquationFunctions {
       // $FlowFixMe
       return this.bottomBar(params);
     }
+    if (name === 'annotate') {
+      // $FlowFixMe
+      return this.annotate(params);
+    }
+    if (name === 'annotation') {
+      // $FlowFixMe
+      return this.annotation(params);
+    }
     return null;
   }
 
@@ -365,7 +397,7 @@ class EquationFunctions {
     let content;
     let superscript;
     if (Array.isArray(options)) {
-      [content, subscript] = options;
+      [content, superscript] = options;
     } else {
       ({
         content, superscript,
@@ -378,7 +410,7 @@ class EquationFunctions {
     );
   }
 
-  supSub(options: TypeSupObject | TypeSupArray) {
+  supSub(options: TypeSupSubObject | TypeSupSubArray) {
     let content;
     let superscript;
     let subscript;
@@ -405,7 +437,7 @@ class EquationFunctions {
       [content, bar, space, outsideSpace] = options;
     } else {
       ({
-        content, superscript, space, outsideSpace,
+        content, bar, space, outsideSpace,
       } = options);
     }
     return new Bar(
@@ -438,50 +470,60 @@ class EquationFunctions {
     );
   }
 
-  annotate(options: TypeAnnotateObject | TypeAnnotateArray
-    // content: TypeEquationInput,
-    // annotationArray: Array<AnnotationInformation>,
-    // annotationInSize: boolean = false,
-  ) {
+  annotate(options: TypeAnnotateObject | TypeAnnotateArray) {
     let content;
-    let annotationArray;
-    let annotationInSize;
+    let withAnnotations;
+    let includeAnnotationInSize;
     if (Array.isArray(options)) {
-      [content, annotationArray, annotationInSize] = options;
+      [content, withAnnotations, includeAnnotationInSize] = options;
     } else {
       ({
-        content, annotationArray, annotationInSize,
+        content, withAnnotations, includeAnnotationInSize,
       } = options);
     }
     return new Annotation(
       this.contentToElement(content),
-      annotationArray,
-      annotationInSize,
+      withAnnotations,
+      includeAnnotationInSize,
     );
   }
 
-  annotation(
-    content: TypeEquationInput,
-    xPosition: 'left' | 'right' | 'center' | number = 'right',
-    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'top',
-    xAlign: 'left' | 'right' | 'center' | number = 'left',
-    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'bottom',
-    annotationScale: number = 0.5,
+  annotation(options: TypeAnnotationObject | TypeAnnotationArray
+    // content: TypeEquationInput,
+    // xPosition: 'left' | 'right' | 'center' | number = 'right',
+    // yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'top',
+    // xAlign: 'left' | 'right' | 'center' | number = 'left',
+    // yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'bottom',
+    // annotationScale: number = 0.5,
   ) {
-    let annotationContent;
-    let contentH,
-    let contentV,
-    let annotationH,
-    let annotationV,
-    let annotationScale,
+    let annotation;
+    let relativeToContentH;
+    let relativeToContentV;
+    let relativeToAnnotationH;
+    let relativeToAnnotationV;
+    let scale;
+    if (Array.isArray(options)) {
+      [
+        annotation, relativeToContentH, relativeToContentV,
+        relativeToAnnotationH, relativeToAnnotationV, scale,
+      ] = options;
+    } else {
+      let relativeToContent;
+      let relativeToAnnotation;
+      ({
+        annotation, relativeToContent, relativeToAnnotation, scale,
+      } = options);
+      [relativeToContentH, relativeToContentV] = relativeToContent;
+      [relativeToAnnotationH, relativeToAnnotationV] = relativeToAnnotation;
+    }
 
     return new AnnotationInformation(
-      this.contentToElement(content),
-      xPosition,
-      yPosition,
-      xAlign,
-      yAlign,
-      annotationScale,
+      this.contentToElement(annotation),
+      relativeToContentH,
+      relativeToContentV,
+      relativeToAnnotationH,
+      relativeToAnnotationV,
+      scale,
     );
   }
 }
