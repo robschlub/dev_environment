@@ -13,6 +13,35 @@ jest.mock('../../Gesture');
 jest.mock('../../webgl/webgl');
 jest.mock('../../DrawContext2D');
 
+const cleanUIDs = (objectToClean: {}) => {
+  const genericUID = '0000000000';
+  if (objectToClean == null) {
+    return;
+  }
+  if (objectToClean.uid != null) {
+    if (objectToClean.uid === genericUID) {
+      return;
+    }
+    objectToClean.uid = genericUID;
+  }
+  const keys = Object.keys(objectToClean);
+  for (let i = 0; i < keys.length; i += 1) {
+    const key = keys[i];
+    const value = objectToClean[key];
+    if (
+      typeof value === 'object'
+      && !Array.isArray(value)
+      && value != null
+      && typeof value !== 'function'
+      && typeof value !== 'number'
+      && typeof value !== 'boolean'
+      && typeof value !== 'string'
+      ) {
+        cleanUIDs(value);
+    }
+  };
+}
+
 describe('Different ways to make an equation', () => {
   let diagram;
   let eqn;
@@ -101,5 +130,8 @@ describe('Different ways to make an equation', () => {
     expect(eqn.eqn.defaultFormAlignment.alignH).toEqual('right');
     expect(eqn.eqn.defaultFormAlignment.alignV).toEqual('top');
     expect(eqn.eqn.defaultFormAlignment.scale).toEqual(0.45);
+
+    cleanUIDs(eqn);
+    expect(eqn._a).toMatchSnapshot();
   });
 });
