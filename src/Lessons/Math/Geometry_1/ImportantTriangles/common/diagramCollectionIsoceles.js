@@ -103,23 +103,26 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   }
 
   addEquations() {
-    const strikeCol = this.layout.colors.diagram.disabled;
-    this.diagram.equation.addEquation(this, 'testEqn', { color: this.layout.colors.diagram.text.base });
-    const e = this._testEqn.eqn.functions;
-    const frac = e.frac.bind(e);
-    const eqn = this._testEqn;
-    eqn.addElements({
+    const elements = {
       a: 'a',
       b: 'b',
       c: 'c',
-      _2: '2',
+      d: 'd',
+      e: 'e',
+      f: 'f',
       v: { symbol: 'vinculum' },
       v1: { symbol: 'vinculum' },
-    });
+    };
+    const strikeCol = this.layout.colors.diagram.disabled;
+    this.diagram.equation.addEquation(this, 'testEqn', { color: this.layout.colors.diagram.text.base });
+    const eqn = this._testEqn;
+    const e = eqn.eqn.functions;
+    const frac = e.frac.bind(e);
+    eqn.addElements(elements);
     eqn.addForms({
       '0': {
         frac: {
-          nemerator: {
+          numerator: {
             frac: {
               numerator: 'a',
               denominator: 'b',
@@ -130,7 +133,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
           symbol: 'v1',
         }
       },
-      '0': {
+      '1': {
         frac: [
           {
             frac: ['a', 'b', 'v']
@@ -139,11 +142,58 @@ export default class IsocelesCollection extends CommonDiagramCollection {
           'v1',
         ]
       },
-      '2': e.frac([e.frac(['a', 'b', 'v']), 'c', 'v1']),
-      '1': frac(frac('a', 'b', 'v'), 'c', 'v1'),
+      '2': [{ frac: [{ frac: ['a', 'b', 'v'] }, 'c', 'v1'] }],
+      '3': e.frac([
+        {
+          frac: ['a', 'b', 'v']
+        },
+        'c',
+        'v1',
+      ]),
+      // '3': e.frac([e.frac(['a', 'b', 'v']), 'c', 'v1']),
+      // '4': frac(frac('a', 'b', 'v'), 'c', 'v1'),
     });
-    eqn.setFormSeries(['0', '1', '2']);
-    eqn.showForm('1');
+    eqn.showForm('0');
+
+    // const e = this._testEqn.eqn.functions;
+    // const frac = e.frac.bind(e);
+    // const eqn = this._testEqn;
+    // eqn.addElements({
+    //   a: 'a',
+    //   b: 'b',
+    //   c: 'c',
+    //   _2: '2',
+    //   v: { symbol: 'vinculum' },
+    //   v1: { symbol: 'vinculum' },
+    // });
+    // eqn.addForms({
+    //   '0': {
+    //     frac: {
+    //       nemerator: {
+    //         frac: {
+    //           numerator: 'a',
+    //           denominator: 'b',
+    //           symbol: 'v',
+    //         },
+    //       },
+    //       denominator: 'c',
+    //       symbol: 'v1',
+    //     }
+    //   },
+    //   '0': {
+    //     frac: [
+    //       {
+    //         frac: ['a', 'b', 'v']
+    //       },
+    //       'c',
+    //       'v1',
+    //     ]
+    //   },
+    //   '2': e.frac([e.frac(['a', 'b', 'v']), 'c', 'v1']),
+    //   '1': frac(frac('a', 'b', 'v'), 'c', 'v1'),
+    // });
+    // eqn.setFormSeries(['0', '1', '2']);
+    // eqn.showForm('1');
 
     // this.diagram.equation.addEquation(this, 'testEqn', {
     //   color: this.layout.colors.diagram.text.base,

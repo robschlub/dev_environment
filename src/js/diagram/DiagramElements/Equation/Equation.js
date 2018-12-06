@@ -376,7 +376,7 @@ export class EquationNew extends DiagramElementCollection {
   addForms(forms: TypeEquationForms) {
     const isFormString = form => typeof form === 'string';
     const isFormArray = form => Array.isArray(form);
-    const isFormMethod = (form) => {
+    const isFormMethodDefinition = (form) => {
       if (isFormString(form) || isFormArray(form)) {
         return false;
       }
@@ -389,8 +389,11 @@ export class EquationNew extends DiagramElementCollection {
       }
       return false;
     };
+    const isFormMethod = (form) => typeof form === 'function';
     const isFormFullObject = (form) => {
-      if (isFormString(form) || isFormArray(form) || isFormMethod(form)) {
+      if (isFormString(form) || isFormArray(form)
+        || isFormMethodDefinition(form) || isFormMethod(form)
+      ) {
         return false;
       }
       if (form != null && typeof form === 'object' && form.content != null) {
@@ -401,7 +404,9 @@ export class EquationNew extends DiagramElementCollection {
 
     Object.keys(forms).forEach((name) => {
       const form: TypeEquationForm = forms[name];
-      if (isFormString(form) || isFormArray(form) || isFormMethod(form)) {
+      if (isFormString(form) || isFormArray(form)
+        || isFormMethodDefinition(form) || isFormMethod(form)
+      ) {
         // $FlowFixMe
         const formContent = [this.eqn.functions.contentToElement(form)];
         this.addForm(name, formContent);
@@ -426,7 +431,8 @@ export class EquationNew extends DiagramElementCollection {
         Object.entries(form).forEach((subFormEntry) => {
           const [subFormName, subForm] = subFormEntry;
           const subFormOption = { subForm: subFormName };
-          if (isFormString(subForm) || isFormArray(subForm) || isFormMethod(subForm)) {
+          if (isFormString(subForm) || isFormArray(subForm) || isFormMethodDefinition(subForm) || isFormMethod(form)
+          ) {
             // $FlowFixMe
             const formContent = [this.eqn.functions.contentToElement(subForm)];
             this.addForm(name, formContent, subFormOption);

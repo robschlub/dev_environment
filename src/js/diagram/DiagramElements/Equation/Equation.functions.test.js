@@ -21,6 +21,7 @@ describe('Equation Functions', () => {
   let color1;
   let elements;
   let functions;
+  // let forms;
   beforeEach(() => {
     diagram = makeDiagram();
     color1 = [0.95, 0, 0, 1];
@@ -37,13 +38,13 @@ describe('Equation Functions', () => {
     functions = {
       fraction: () => {
         eqn = new EquationNew(diagram.shapes, { color: color1 });
-        const e = eqn.functions;
+        const e = eqn.eqn.functions;
         const frac = e.frac.bind(e);
         eqn.addElements(elements);
-        addForms({
+        eqn.addForms({
           '0': {
             frac: {
-              nemerator: {
+              numerator: {
                 frac: {
                   numerator: 'a',
                   denominator: 'b',
@@ -63,29 +64,36 @@ describe('Equation Functions', () => {
               'v1',
             ]
           },
-          '2': e.frac([e.frac(['a', 'b', 'v']), 'c', 'v1']),
-          '3': frac(frac('a', 'b', 'v'), 'c', 'v1'),
+          '2': [{ frac: [{ frac: ['a', 'b', 'v'] }, 'c', 'v1'] }],
+          '3': e.frac([
+            {
+              frac: ['a', 'b', 'v']
+            },
+            'c',
+            'v1',
+          ]),
+          '4': e.frac([e.frac(['a', 'b', 'v']), 'c', 'v1']),
+          '5': frac(frac('a', 'b', 'v'), 'c', 'v1'),
         });
+        eqn.showForm('0');
+        // ({ forms } = eqn.eqn);
       },
     };
   });
   test('Fraction', () => {
     functions.fraction();
-    expect(eqn).toHaveProperty('_a');
-    expect(eqn).toHaveProperty('_b');
-    expect(eqn).toHaveProperty('_c');
-    expect(eqn).toHaveProperty('_d');
-    expect(eqn).toHaveProperty('_v');
 
-    // Check color
-    expect(eqn._a.drawingObject.text[0].font.color)
-      .toBe(tools.colorArrayToRGBA(color1));
+    // Check all fractions are the same
+    const c0 = eqn.eqn.forms['0'].base.content[0].content;
+    const c1 = eqn.eqn.forms['1'].base.content[0].content;
+    expect(c0).toEqual(c1);
 
-    // Test locations of all elements
-    // cleanUIDs(eqn);
-    // expect(round(eqn._a.transform.mat)).toMatchSnapshot();
-    // expect(round(eqn.__2.transform.mat)).toMatchSnapshot();
-    // expect(round(eqn._v.transform.mat)).toMatchSnapshot();
-    // expect(round(eqn._c.transform.mat)).toMatchSnapshot();
+    // Record position of elements in a snapshot
+    tools.cleanUIDs(eqn);
+    expect(round(eqn._a.transform.mat)).toMatchSnapshot();
+    expect(round(eqn._b.transform.mat)).toMatchSnapshot();
+    expect(round(eqn._c.transform.mat)).toMatchSnapshot();
+    expect(round(eqn._v.transform.mat)).toMatchSnapshot();
+    expect(round(eqn._v1.transform.mat)).toMatchSnapshot();
   });
 });

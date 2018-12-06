@@ -292,7 +292,6 @@ export class EquationFunctions {
       denominator = den;
       symbol = sym;
       scale = fractionScale;
-      console.log('1', numerator, denominator, symbol, scale)
     } else {
       if (Array.isArray(optionsOrNum)) {
         [numerator, denominator, symbol, scale] = optionsOrNum;
@@ -302,8 +301,7 @@ export class EquationFunctions {
         } = optionsOrNum);
       }
     }
-    console.log('2', numerator, this)
-    console.log('3', this.contentToElement(numerator))
+    console.log(numerator, denominator, symbol)
     const f = new Fraction(
       this.contentToElement(numerator),
       this.contentToElement(denominator),
@@ -312,6 +310,7 @@ export class EquationFunctions {
     if (scale != null) {
       f.scaleModifier = scale;
     }
+    console.log('return', f)
     return f;
   }
 
