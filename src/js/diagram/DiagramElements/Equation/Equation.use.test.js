@@ -15,34 +15,34 @@ jest.mock('../../Gesture');
 jest.mock('../../webgl/webgl');
 jest.mock('../../DrawContext2D');
 
-const cleanUIDs = (objectToClean: {}) => {
-  const genericUID = '0000000000';
-  if (objectToClean == null) {
-    return;
-  }
-  if (objectToClean.uid != null) {
-    if (objectToClean.uid === genericUID) {
-      return;
-    }
-    objectToClean.uid = genericUID;
-  }
-  const keys = Object.keys(objectToClean);
-  for (let i = 0; i < keys.length; i += 1) {
-    const key = keys[i];
-    const value = objectToClean[key];
-    if (
-      typeof value === 'object'
-      && !Array.isArray(value)
-      && value != null
-      && typeof value !== 'function'
-      && typeof value !== 'number'
-      && typeof value !== 'boolean'
-      && typeof value !== 'string'
-      ) {
-        cleanUIDs(value);
-    }
-  };
-}
+// const cleanUIDs = (objectToClean: {}) => {
+//   const genericUID = '0000000000';
+//   if (objectToClean == null) {
+//     return;
+//   }
+//   if (objectToClean.uid != null) {
+//     if (objectToClean.uid === genericUID) {
+//       return;
+//     }
+//     objectToClean.uid = genericUID;
+//   }
+//   const keys = Object.keys(objectToClean);
+//   for (let i = 0; i < keys.length; i += 1) {
+//     const key = keys[i];
+//     const value = objectToClean[key];
+//     if (
+//       typeof value === 'object'
+//       && !Array.isArray(value)
+//       && value != null
+//       && typeof value !== 'function'
+//       && typeof value !== 'number'
+//       && typeof value !== 'boolean'
+//       && typeof value !== 'string'
+//       ) {
+//         cleanUIDs(value);
+//     }
+//   };
+// }
 
 describe('Different ways to make an equation', () => {
   let diagram;
@@ -182,7 +182,7 @@ describe('Different ways to make an equation', () => {
     expect(eqn.eqn.defaultFormAlignment.alignV).toEqual('top');
     expect(eqn.eqn.defaultFormAlignment.scale).toEqual(0.45);
 
-    cleanUIDs(eqn);
+    tools.cleanUIDs(eqn);
     expect(eqn._a).toMatchSnapshot();
   });
   test('Separate All Text', () => {
@@ -198,7 +198,7 @@ describe('Different ways to make an equation', () => {
       .toBe(tools.colorArrayToRGBA(color1));
 
     // Test locations of all elements
-    cleanUIDs(eqn);
+    tools.cleanUIDs(eqn);
     expect(round(eqn._a.transform.mat)).toMatchSnapshot();
     expect(round(eqn.__2.transform.mat)).toMatchSnapshot();
     expect(round(eqn._v.transform.mat)).toMatchSnapshot();

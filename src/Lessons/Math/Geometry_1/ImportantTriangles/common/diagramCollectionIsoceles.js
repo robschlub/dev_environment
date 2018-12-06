@@ -118,6 +118,19 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     });
     eqn.addForms({
       '0': {
+        frac: {
+          nemerator: {
+            frac: {
+              numerator: 'a',
+              denominator: 'b',
+              symbol: 'v',
+            },
+          },
+          denominator: 'c',
+          symbol: 'v1',
+        }
+      },
+      '0': {
         frac: [
           {
             frac: ['a', 'b', 'v']

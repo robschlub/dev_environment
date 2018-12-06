@@ -338,10 +338,40 @@ function isTouchDevice() {
   return mq(query);
 }
 
+
+const cleanUIDs = (objectToClean: {}) => {
+  const genericUID = '0000000000';
+  if (objectToClean == null) {
+    return;
+  }
+  if (objectToClean.uid != null) {
+    if (objectToClean.uid === genericUID) {
+      return;
+    }
+    objectToClean.uid = genericUID;
+  }
+  const keys = Object.keys(objectToClean);
+  for (let i = 0; i < keys.length; i += 1) {
+    const key = keys[i];
+    const value = objectToClean[key];
+    if (
+      typeof value === 'object'
+      && !Array.isArray(value)
+      && value != null
+      && typeof value !== 'function'
+      && typeof value !== 'number'
+      && typeof value !== 'boolean'
+      && typeof value !== 'string'
+      ) {
+        cleanUIDs(value);
+    }
+  };
+}
+
 export {
   divide, mulToString, add, Console,
   classify, extractFrom, ObjectKeyPointer, getElement,
   RGBToArray, HexToArray, cssColorToArray, colorArrayToRGB,
   colorArrayToRGBA, addToObject, duplicateFromTo, isTouchDevice,
-  generateUniqueId, joinObjects,
+  generateUniqueId, joinObjects, cleanUIDs,
 };
