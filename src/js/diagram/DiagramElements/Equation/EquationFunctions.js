@@ -376,15 +376,17 @@ export class EquationFunctions {
       } = optionsOrContent);
     }
 
+    // $FlowFixMe
     subscriptBias = subscriptBias == null ? null : parsePoint(subscriptBias);
+    // $FlowFixMe
     superscriptBias = superscriptBias == null ? null : parsePoint(superscriptBias);
 
     return new SuperSub(                                    // $FlowFixMe
       this.contentToElement(content),                       // $FlowFixMe
       this.contentToElement(superscript),                   // $FlowFixMe
-      this.contentToElement(subscript),
-      scale,
-      superscriptBias,
+      this.contentToElement(subscript),                     // $FlowFixMe
+      scale,                                                // $FlowFixMe
+      superscriptBias,                                      // $FlowFixMe
       subscriptBias,
     );
   }
