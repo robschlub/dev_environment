@@ -121,11 +121,13 @@ export type TypeSupSubObject = {
   content: TypeEquationPhrase;
   subscript: TypeEquationPhrase;
   superscript: TypeEquationPhrase;
+  scale?: number;
 };
 export type TypeSupSubArray = [
   TypeEquationPhrase,
   TypeEquationPhrase,
   TypeEquationPhrase,
+  ?number,
 ];
 export type TypeBarObject = {
   content: TypeEquationPhrase;
@@ -321,25 +323,31 @@ export class EquationFunctions {
     optionsOrContent: TypeSupSubObject | TypeSupSubArray | TypeEquationPhrase,
     sup: TypeEquationPhrase | null = null,
     sub: TypeEquationPhrase | null = null,
+    scriptScale: number | null = null,
+    // supBias: Point | null = null,
+    // subBias: Point | null = null,
   ) {
     let content;
     let superscript = null;
     let subscript = null;
-    if (!(sup == null && sub == null)) {
+    let scale = 0;
+    if (!(sup == null && sub == null && scriptScale == null)) {
       content = optionsOrContent;
       superscript = sup;
       subscript = sub;
+      scale = scriptScale;
     } else if (Array.isArray(optionsOrContent)) {           // $FlowFixMe
-      [content, superscript, subscript] = optionsOrContent;
+      [content, superscript, subscript, scale] = optionsOrContent;
     } else {
       ({                                                    // $FlowFixMe
-        content, superscript, subscript,
+        content, superscript, subscript, scale,
       } = optionsOrContent);
     }
     return new SuperSub(                                    // $FlowFixMe
       this.contentToElement(content),                       // $FlowFixMe
       this.contentToElement(superscript),                   // $FlowFixMe
       this.contentToElement(subscript),
+      scale,
     );
   }
 

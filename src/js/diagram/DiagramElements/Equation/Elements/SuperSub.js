@@ -11,11 +11,13 @@ export default class SuperSub extends Elements {
   mainContent: Elements;
   subscriptXBias: number;
   xBias: number;
+  scriptScale: number;
 
   constructor(
     content: Elements,
     superscript: Elements | null,
     subscript: Elements | null,
+    scriptScale: number = 0.5,
     xBias: number = 0,
     subscriptXBias: number = 0,
   ) {
@@ -26,6 +28,7 @@ export default class SuperSub extends Elements {
     this.subscriptXBias = subscriptXBias;
     this.mainContent = content;
     this.xBias = xBias;
+    this.scriptScale = scriptScale;
   }
 
   _dup(namedCollection?: Object) {
@@ -56,7 +59,7 @@ export default class SuperSub extends Elements {
         this.location.x + this.mainContent.width + this.xBias,
         this.location.y + this.mainContent.ascent * 0.7,
       );
-      superscript.calcSize(superLoc, scale / 2);
+      superscript.calcSize(superLoc, this.scriptScale * scale);
       w = Math.max(
         w,
         superLoc.x - this.location.x + superscript.width,
@@ -79,7 +82,7 @@ export default class SuperSub extends Elements {
         this.location.x + this.mainContent.width - this.subscriptXBias + this.xBias,
         this.location.y - this.mainContent.height * 0.5,
       );
-      subscript.calcSize(subLoc, scale / 2);
+      subscript.calcSize(subLoc, this.scriptScale * scale);
       w = Math.max(
         w,
         subLoc.x - this.location.x + subscript.width,

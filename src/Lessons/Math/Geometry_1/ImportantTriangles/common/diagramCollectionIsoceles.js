@@ -139,12 +139,16 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //     },
       //   },
       // },
+      '1': { supSub: ['a', 'b', 'c'] },
       '0': {
         content: {
           supSub: {
             content: 'a',
-            superscript: 'b',
+            superscript: {
+              supSub: ['b', 'd', 'e'],
+            },
             subscript: 'c',
+            scale: 0.5,
           },
         },
       },
