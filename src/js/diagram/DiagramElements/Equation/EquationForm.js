@@ -44,12 +44,16 @@ export type TypeCollectionMethods = {
   hideAll: () => void,
   show: () => void,
   showOnly: (Array<DiagramElementPrimative | DiagramElementCollection>) => void,
-  stop: (?boolean, ?boolean) => void;
+  stop(cancelled?: boolean, forceSetToEndOfPlan?: boolean): void;
   getElementTransforms: () => { [string: string]: Transform },
   setElementTransforms: ({ [string: string]: Transform }) => void,
-  animateToTransforms: (
-    Object, ?number, ?number, ?number,
-    ?(?mixed) => void, ?(number => number)) => number,
+  animateToTransforms(
+    elementTransforms: Object,
+    time?: number,
+    delay?: number,
+    rotDirection?: number,
+    callback?: ?(?mixed) => void,
+    easeFunction?: (number) => number): number,
 };
 
 export type TypeElements = {

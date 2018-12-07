@@ -1604,7 +1604,7 @@ class DiagramElement {
     }
   }
 
-  stop(cancelled: boolean = true, forceSetToEndOfPlan: boolean = false) {
+  stop(cancelled?: boolean = true, forceSetToEndOfPlan?: boolean = false) {
     this.stopAnimating(cancelled, forceSetToEndOfPlan);
     this.stopAnimatingColor(cancelled, forceSetToEndOfPlan);
     this.stopAnimatingCustom(cancelled, forceSetToEndOfPlan);

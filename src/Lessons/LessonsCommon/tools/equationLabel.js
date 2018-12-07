@@ -53,8 +53,8 @@ export default function makeEquationLabel(
   function setText(text: string) {
     const form = eqn.getCurrentForm();
     if (form != null) {
-      const key = Object.keys(form.collection.elements)[0];
-      const textObject = form.collection.elements[key].drawingObject;
+      const key = Object.keys(form.elements.elements)[0]; // $FlowFixMe
+      const textObject = form.elements[key].drawingObject;
       if (textObject != null) {
         textObject.setText(text);
       }
@@ -71,9 +71,9 @@ export default function makeEquationLabel(
     let textToReturn = '';
     const form = eqn.getCurrentForm();
     if (form != null) {
-      const key = Object.keys(form.collection.elements)[0];
-      const textObject = form.collection.elements[key].drawingObject;
-      if (textObject != null) {
+      const key = Object.keys(form.elements.elements)[0]; // $FlowFixMe
+      const textObject = form.elements[key].drawingObject;
+      if (textObject != null) {                           // $FlowFixMe
         textToReturn = textObject.text[0].text;
       }
     }

@@ -339,15 +339,16 @@ function isTouchDevice() {
 }
 
 
-const cleanUIDs = (objectToClean: {}) => {
+const cleanUIDs = (objectToClean: Object) => {
   const genericUID = '0000000000';
   if (objectToClean == null) {
     return;
   }
-  if (objectToClean.uid != null) {
+  if ('uid' in objectToClean) {
     if (objectToClean.uid === genericUID) {
       return;
     }
+    // eslint-disable-next-line no-param-reassign
     objectToClean.uid = genericUID;
   }
   const keys = Object.keys(objectToClean);
@@ -362,11 +363,11 @@ const cleanUIDs = (objectToClean: {}) => {
       && typeof value !== 'number'
       && typeof value !== 'boolean'
       && typeof value !== 'string'
-      ) {
-        cleanUIDs(value);
+    ) {
+      cleanUIDs(value);
     }
-  };
-}
+  }
+};
 
 export {
   divide, mulToString, add, Console,

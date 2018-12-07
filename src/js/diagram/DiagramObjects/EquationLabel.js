@@ -113,8 +113,11 @@ export default class EquationLabel {
   setText(text: string) {
     const form = this.eqn.getCurrentForm();
     if (form != null) {
-      const key = Object.keys(form.collection.elements)[0];
-      const textObject = form.collection.elements[key].drawingObject;
+      const key = Object.keys(form.elements)[0];
+      // This is ok to fix for flow because all the elements of the
+      // simple equation created by Equationlabel will be Primatives
+      // $FlowFixMe
+      const textObject = form.elements[key].drawingObject;
       if (textObject != null) {
         textObject.setText(text);
       }
@@ -131,9 +134,16 @@ export default class EquationLabel {
     let textToReturn = '';
     const form = this.eqn.getCurrentForm();
     if (form != null) {
-      const key = Object.keys(form.collection.elements)[0];
-      const textObject = form.collection.elements[key].drawingObject;
+      const key = Object.keys(form.elements)[0];
+      // This is ok to fix for flow because all the elements of the
+      // simple equation created by Equationlabel will be Primatives
+      // $FlowFixMe
+      const textObject = form.elements[key].drawingObject;
+      // This is ok to fix for flow because all the elements of the
+      // simple equation created by Equationlabel will be Primatives
+      // that are text objects
       if (textObject != null) {
+        // $FlowFixMe
         textToReturn = textObject.text[0].text;
       }
     }

@@ -61,7 +61,10 @@ export type TypeEquationPhrase =
     ?number,
   ]
   | Array<TypeEquationPhrase>
-  | DiagramElementPrimative | DiagramElementCollection | Elements | Element;
+  | DiagramElementPrimative
+  | DiagramElementCollection
+  | Elements
+  | Element;
 
 /* eslint-enable no-use-before-define */
 export type TypeFracObject = {
@@ -285,24 +288,30 @@ export class EquationFunctions {
     let denominator;
     let symbol;
     let scale;
+
+    // This is imperfect type checking, as the assumption is if den, sym
+    // and fractionScale is null, then they weren't defined by the caller
+    // and therefore the caller is passing in a TypeFracObject or TypeFracArray
+    // All the flow errors go away if TypeEquationPhrase is removed from
+    // optionsOrNum (and then also remove the first if statement below)
     if (!(den == null && sym == null && fractionScale == null)) {
       numerator = optionsOrNum;
       denominator = den;
       symbol = sym;
       scale = fractionScale;
-    } else if (Array.isArray(optionsOrNum)) {
+    } else if (Array.isArray(optionsOrNum)) {       // $FlowFixMe
       [numerator, denominator, symbol, scale] = optionsOrNum;
     } else {
-      ({
+      ({                                            // $FlowFixMe
         numerator, denominator, symbol, scale,
       } = optionsOrNum);
     }
-    const f = new Fraction(
-      this.contentToElement(numerator),
-      this.contentToElement(denominator),
-      getDiagramElement(this.elements, symbol),
+    const f = new Fraction(                         // $FlowFixMe
+      this.contentToElement(numerator),             // $FlowFixMe
+      this.contentToElement(denominator),           // $FlowFixMe
+      getDiagramElement(this.elements, symbol),     // $FlowFixMe
     );
-    if (scale != null) {
+    if (scale != null) {                            // $FlowFixMe
       f.scaleModifier = scale;
     }
     return f;
