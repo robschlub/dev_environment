@@ -165,7 +165,7 @@ describe('Equation Functions', () => {
     };
   });
   test('Single Fraction', () => {
-    functions.nested();
+    functions.single();
     const elems = [eqn._a, eqn._b, eqn._c, eqn._v, eqn._v1];
     const formsToTest = ['1', '2', '3', '4', '5'];
 

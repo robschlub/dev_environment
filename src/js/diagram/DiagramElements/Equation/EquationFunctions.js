@@ -317,6 +317,32 @@ export class EquationFunctions {
     return f;
   }
 
+  supSub(
+    optionsOrContent: TypeSupSubObject | TypeSupSubArray | TypeEquationPhrase,
+    sup: TypeEquationPhrase | null = null,
+    sub: TypeEquationPhrase | null = null,
+  ) {
+    let content;
+    let superscript = null;
+    let subscript = null;
+    if (!(sup == null && sub == null)) {
+      content = optionsOrContent;
+      superscript = sup;
+      subscript = sub;
+    } else if (Array.isArray(optionsOrContent)) {           // $FlowFixMe
+      [content, superscript, subscript] = optionsOrContent;
+    } else {
+      ({                                                    // $FlowFixMe
+        content, superscript, subscript,
+      } = optionsOrContent);
+    }
+    return new SuperSub(                                    // $FlowFixMe
+      this.contentToElement(content),                       // $FlowFixMe
+      this.contentToElement(superscript),                   // $FlowFixMe
+      this.contentToElement(subscript),
+    );
+  }
+
   strike(options: TypeStrikeObject | TypeStrikeArray) {
     let content;
     let symbol;
@@ -401,23 +427,7 @@ export class EquationFunctions {
     );
   }
 
-  supSub(options: TypeSupSubObject | TypeSupSubArray) {
-    let content;
-    let superscript = null;
-    let subscript = null;
-    if (Array.isArray(options)) {
-      [content, superscript, subscript] = options;
-    } else {
-      ({
-        content, superscript, subscript,
-      } = options);
-    }
-    return new SuperSub(
-      this.contentToElement(content),
-      this.contentToElement(superscript),
-      this.contentToElement(subscript),
-    );
-  }
+  
 
   topBar(options: TypeBarObject | TypeBarArray) {
     let content;

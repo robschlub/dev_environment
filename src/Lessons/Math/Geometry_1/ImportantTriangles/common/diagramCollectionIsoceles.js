@@ -124,18 +124,27 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     // eslint-disable-next-line
     const s = 0.5;
     eqn.addForms({
+      // '0': {
+      //   content: ['b', 'a', 'c'],
+      // },
+      // '1': {
+      //   content: ['b', 'a', 'c'],
+      //   elementMods: {
+      //     b: {
+      //       color: [1, 0, 0, 1],
+      //       elementOptions: {
+      //         isTouchable: true,
+      //         animate: { transform: { translation: { options: { magnitude: 2 } } } },
+      //       },
+      //     },
+      //   },
+      // },
       '0': {
-        content: ['b', 'a', 'c'],
-      },
-      '1': {
-        content: ['b', 'a', 'c'],
-        elementMods: {
-          b: {
-            color: [1, 0, 0, 1],
-            elementOptions: {
-              isTouchable: true,
-              animate: { transform: { translation: { options: { magnitude: 2 } } } },
-            },
+        content: {
+          supSub: {
+            content: 'a',
+            superscript: 'b',
+            subscript: 'c',
           },
         },
       },
