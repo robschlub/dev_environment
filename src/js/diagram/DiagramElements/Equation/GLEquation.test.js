@@ -1,7 +1,7 @@
 import {
   createEquationElements, Equation,
 } from './GLEquation';
-import EquationForm from './EquationForm'
+import EquationForm from './EquationForm';
 import { Point } from '../../tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,

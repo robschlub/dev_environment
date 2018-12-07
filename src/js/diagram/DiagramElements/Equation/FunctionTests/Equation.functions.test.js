@@ -1,6 +1,6 @@
-import {
-  Point,
-} from '../../../tools/g2';
+// import {
+//   Point,
+// } from '../../../tools/g2';
 import {
   round,
 } from '../../../tools/mathtools';
@@ -114,7 +114,7 @@ describe('Equation Functions', () => {
                       symbol: 'v',
                       scale: s,
                     },
-                  }
+                  },
                 },
                 denominator: 'c',
                 symbol: 'v1',
@@ -134,24 +134,24 @@ describe('Equation Functions', () => {
               },
               denominator: 'c',
               symbol: 'v1',
-            }
+            },
           },
           // Method Array nested in Method Array
           '2': {
             frac: [
               {
-                frac: ['a', 'b', 'v', s]
+                frac: ['a', 'b', 'v', s],
               },
               'c',
               'v1',
-            ]
+            ],
           },
           // Method Array nested in Method Array, all in an Array
           '3': [{ frac: [{ frac: ['a', 'b', 'v', s] }, 'c', 'v1'] }],
           // Method Array in a Function
           '4': e.frac([
             {
-              frac: ['a', 'b', 'v', s]
+              frac: ['a', 'b', 'v', s],
             },
             'c',
             'v1',
@@ -170,12 +170,12 @@ describe('Equation Functions', () => {
     const formsToTest = ['1', '2', '3', '4', '5'];
 
     eqn.showForm('0');
-    const positions0 = elems.map(elem => round(elem.transform.mat).slice())
+    const positions0 = elems.map(elem => round(elem.transform.mat).slice());
     formsToTest.forEach((f) => {
       eqn.showForm(f);
       const positions = elems.map(elem => round(elem.transform.mat).slice());
       expect(positions0).toEqual(positions);
-    })
+    });
   });
   test('Scale Fraction', () => {
     functions.scaling();
@@ -185,7 +185,7 @@ describe('Equation Functions', () => {
 
     // Check all forms that were scaled are the same
     eqn.showForm('s0');
-    let positions0 = elems.map(elem => round(elem.transform.mat).slice())
+    let positions0 = elems.map(elem => round(elem.transform.mat).slice());
     scaleFormsToTest.forEach((f) => {
       eqn.showForm(f);
       const positions = elems.map(elem => round(elem.transform.mat).slice());
@@ -194,7 +194,7 @@ describe('Equation Functions', () => {
 
     // Check all forms that weren't scaled are the same
     eqn.showForm('n0');
-    positions0 = elems.map(elem => round(elem.transform.mat).slice())
+    positions0 = elems.map(elem => round(elem.transform.mat).slice());
     noScaleFormsToTest.forEach((f) => {
       eqn.showForm(f);
       const positions = elems.map(elem => round(elem.transform.mat).slice());
@@ -212,12 +212,12 @@ describe('Equation Functions', () => {
     const formsToTest = ['1', '2', '3', '4', '5', '6'];
 
     eqn.showForm('0');
-    const positions0 = elems.map(elem => round(elem.transform.mat).slice())
+    const positions0 = elems.map(elem => round(elem.transform.mat).slice());
     formsToTest.forEach((f) => {
       eqn.showForm(f);
       const positions = elems.map(elem => round(elem.transform.mat).slice());
       expect(positions0).toEqual(positions);
-    })
+    });
 
     tools.cleanUIDs(eqn);
     expect(round(eqn._a.transform.mat)).toMatchSnapshot();

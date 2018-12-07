@@ -3,7 +3,7 @@ import {
   Point, Rect, Transform,
 } from '../../tools/g2';
 // import { roundNum } from '../../tools/mathtools';
-import { RGBToArray, duplicateFromTo, joinObjects } from '../../../tools/tools';
+import { RGBToArray, duplicateFromTo } from '../../../tools/tools';
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../Element';

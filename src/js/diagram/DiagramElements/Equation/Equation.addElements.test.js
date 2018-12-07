@@ -11,9 +11,9 @@ import {
   DiagramFont,
 } from '../../DrawingObjects/TextObject/TextObject';
 import VertexHorizontalLine from '../../DrawingObjects/VertexObject/VertexHorizontalLine';
-import { 
-  DiagramElementCollection,
-} from '../../Element';
+// import {
+//   DiagramElementCollection,
+// } from '../../Element';
 
 tools.isTouchDevice = jest.fn();
 

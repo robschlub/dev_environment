@@ -63,7 +63,6 @@ export default class Fraction extends Elements {
   }
 
   calcSize(location: Point, incomingScale: number) {
-
     const scale = incomingScale * this.scaleModifier;
     this.location = location._dup();
     this.numerator.calcSize(location, scale);

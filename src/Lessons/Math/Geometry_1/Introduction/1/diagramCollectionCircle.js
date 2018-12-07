@@ -10,7 +10,7 @@ import {
 import {
   Point, Transform, Rect,
 } from '../../../../../js/diagram/tools/g2';
-import EquationForm from '../../../../../js/diagram/DiagramElements/Equation/EquationForm';
+// import EquationForm from '../../../../../js/diagram/DiagramElements/Equation/EquationForm';
 import textureMap from '../../../../LessonsCommon/images/textureMaps/circles.png';
 
 import lessonLayout from './layout';
@@ -239,15 +239,15 @@ function makeCircumferenceDimension(shapes: Object) {
   return circumferenceDimension;
 }
 
-function makeEquation(diagram: Diagram) {
-  const equationElements = diagram.equation.elements({
-    c: 'c',
-    d: 'd',
-    pi: String.fromCharCode(960),
-    equals: ' = ',
-  }, colors.dimensions);
-  return equationElements;
-}
+// function makeEquation(diagram: Diagram) {
+//   const equationElements = diagram.equation.elements({
+//     c: 'c',
+//     d: 'd',
+//     pi: String.fromCharCode(960),
+//     equals: ' = ',
+//   }, colors.dimensions);
+//   return equationElements;
+// }
 
 
 type DiameterDimensionType = {

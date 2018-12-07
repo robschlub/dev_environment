@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Rect, Point, 
+  Transform, Rect,
 } from '../../../../../js/diagram/tools/g2';
 import DiagramObjectAngle from '../../../../../js/diagram/DiagramObjects/Angle';
 import { DiagramObjectLine } from '../../../../../js/diagram/DiagramObjects/Line';
@@ -115,28 +115,30 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     };
     const strikeCol = this.layout.colors.diagram.disabled;
     this.diagram.equation.addEquation(this, 'testEqn', { color: this.layout.colors.diagram.text.base });
+    // $FlowFixMe
     const eqn = this._testEqn;
     const e = eqn.eqn.functions;
+    // eslint-disable-next-line
     const frac = e.frac.bind(e);
     eqn.addElements(elements);
-    console.log('asdfasdf');
-    const s = 0.5
+    // eslint-disable-next-line
+    const s = 0.5;
     eqn.addForms({
-    '0': {
-          content: ['b', 'a', 'c'],
-        },
-        '1': {
-          content: ['b', 'a', 'c'],
-          elementMods: {
-            b: {
-              color: [1, 0, 0, 1],
-              elementOptions: {
-                isTouchable: true,
-                animate: { transform: { translation: { options: { magnitude: 2 } } } },
-              },
+      '0': {
+        content: ['b', 'a', 'c'],
+      },
+      '1': {
+        content: ['b', 'a', 'c'],
+        elementMods: {
+          b: {
+            color: [1, 0, 0, 1],
+            elementOptions: {
+              isTouchable: true,
+              animate: { transform: { translation: { options: { magnitude: 2 } } } },
             },
           },
         },
+      },
     });
     eqn.showForm('0');
     // eqn.showForm('4');
@@ -282,7 +284,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     //     //     relativeToAnnotation: ['center', 'top'],
     //     //     size: 0.6,
     //     //   }),
-          
+
     //     //   {
     //     //     annotate: {
     //     //       content:              ['_2', 'a', 'plus', 'b_'],
@@ -637,6 +639,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     //       },
     //     },
     //     '17': {
+    // eslint-disable-next-line
     //       content: ['b', 'space1', '.frac', ['a', ['.sfrac', ['d', ['.sfrac', ['e', 'c', 'v__', 0.5]], 'v_', 0.5]], 'v']],
     //       alignment: {
     //         fixTo: new Point(1, 1),
@@ -677,6 +680,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.addLeftRightTris();
     this.addSplitLines();
     this.addEquations();
+    // eslint-disable-next-line
     console.log(this)
     // this.setTransformCallback = () => {
     //   const r = this.transform.r();

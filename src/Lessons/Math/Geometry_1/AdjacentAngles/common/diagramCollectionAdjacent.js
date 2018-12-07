@@ -181,7 +181,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     };
 
     const onclickEqn = (form: TypeEquationForm = 'add') => {
-      eqn.goToForm(`${this.angleType.slice(0, 3)}_${form}`, 1.5)
+      eqn.goToForm(`${this.angleType.slice(0, 3)}_${form}`, 1.5);
       if (form === 'a') {
         this._lines._angleA.pulseScaleNow(1, 1.5);
         this._lines._angleB.showForm('b');

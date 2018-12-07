@@ -312,6 +312,7 @@ class Content extends LessonContent {
       },
     });
 
+    // eslint-disable-next-line
     // common.setContent = 'If instead the line is drawn from a |different| triangle point, this same procedure can be used to show the |third angle| is the |same| as the other two.';
     // common.modifiers = {
     //   different: click(iso.toggleSplitLines, [iso, null], colors.diagram.action),
@@ -325,8 +326,10 @@ class Content extends LessonContent {
     // this.addSection(common);
 
     // common.title = 'adf';
+    // eslint-disable-next-line
     // common.setContent = 'All angles in a triangle are equal, and a triangle\'s angles sum to |_180|. Therefore each angle must be a third of 180º, or |60º|.';
     // common.modifiers = {
+    // eslint-disable-next-line
     //   _180: clickWord('180º', 'id_important_triangles_sum', qr._tri.show, [qr._tri], colors.diagram.action),
     // };
     // this.addSection(common);
@@ -344,6 +347,7 @@ class Content extends LessonContent {
     //   title: 'isoateral',
     //   setContent: [
     //     'An |Equilateral| triangle is a triangle whose sides are all the |same length|.',
+    // eslint-disable-next-line
     //     `${new Definition('Equilateral', 'Latin', ['aequi', 'equal', 'lateralis', 'lateral, of or pertaining to the side']).html('id_lesson__equilateral_definition')}`,
     //   ],
     //   showOnly: [equil, iso._tri, iso._tri._tri],

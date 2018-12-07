@@ -119,7 +119,7 @@ describe('Different ways to make an equation', () => {
       },
       nonTextFunctions: () => {
         eqn = new EquationNew(diagram.shapes, { color: color1 });
-        const e = eqn.eqn.functions;
+        // const e = eqn.eqn.functions;
         eqn.addElements({
           a: 'a',
           b: 'b',
@@ -132,17 +132,17 @@ describe('Different ways to make an equation', () => {
           '0': {
             frac: [
               {
-                frac: ['a', 'b', 'v']
+                frac: ['a', 'b', 'v'],
               },
               'c',
-              'v1'
-            ]
+              'v1',
+            ],
           },
           '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
         });
         eqn.setFormSeries(['0', '1', '2']);
         eqn.showForm('1');
-      }
+      },
     };
   });
   test('All Text in constructor', () => {

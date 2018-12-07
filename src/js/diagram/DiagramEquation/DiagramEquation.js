@@ -998,6 +998,7 @@ export default class DiagramEquation {
         const element = phrase[i];
         if (typeof element === 'string') {
           if (i < phrase.length - 1) {
+            // eslint-disable-next-line
             const methodName = element;
             if (element === '.frac') {
               const parameters = phrase[i + 1];

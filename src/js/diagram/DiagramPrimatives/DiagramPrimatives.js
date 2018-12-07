@@ -8,7 +8,7 @@ import {
 import WebGLInstance from '../webgl/webgl';
 import DrawContext2D from '../DrawContext2D';
 import * as tools from '../tools/mathtools';
-import { generateUniqueId } from '../../tools/tools';
+import { generateUniqueId, joinObjects } from '../../tools/tools';
 import VertexObject from '../DrawingObjects/VertexObject/VertexObject';
 import {
   PolyLine, PolyLineCorners,
@@ -33,7 +33,6 @@ import {
   DiagramText, DiagramFont, TextObject,
 } from '../DrawingObjects/TextObject/TextObject';
 import HTMLObject from '../DrawingObjects/HTMLObject/HTMLObject';
-import { joinObjects } from '../../tools/tools';
 
 export type TypePolygonOptions = {
   sides?: number,
