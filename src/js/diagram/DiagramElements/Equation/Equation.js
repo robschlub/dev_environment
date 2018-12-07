@@ -31,7 +31,7 @@ const parsePoint = (point: Point | Array<number> | { x: number, y: number }) => 
   if (Array.isArray(point)) {
     if (point.length === 2) {
       return new Point(point[0], point[1]);
-    } 
+    }
     return point;
   }
   if (typeof (point) === 'object') {
@@ -388,7 +388,7 @@ export class EquationNew extends DiagramElementCollection {
       }
       return false;
     };
-    const isFormElements = (form) => form instanceof Elements;
+    const isFormElements = form => form instanceof Elements;
     const isFormFullObject = (form) => {
       if (isFormString(form) || isFormArray(form)
         || isFormMethodDefinition(form) || isFormElements(form)
@@ -490,7 +490,19 @@ export class EquationNew extends DiagramElementCollection {
     } = optionsToUse;
     this.eqn.forms[name].name = name;
     const form = this.eqn.forms[name];
-    form[subForm] = new EquationForm(this);
+    form[subForm] = new EquationForm(
+      this.elements,
+      {
+        getAllElements: this.getAllElements.bind(this),
+        hideAll: this.hideAll.bind(this),
+        show: this.show.bind(this),
+        showOnly: this.showOnly.bind(this),
+        stop: this.stop.bind(this),
+        getElementTransforms: this.getElementTransforms.bind(this),
+        setElementTransforms: this.setElementTransforms.bind(this),
+        animateToTransforms: this.animateToTransforms.bind(this),
+      },
+    );
     // form[subForm].name = subForm;
     form[subForm].description = description;
     form[subForm].modifiers = modifiers;

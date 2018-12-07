@@ -220,7 +220,19 @@ export default class DiagramEquation {
 
   // eslint-disable-next-line class-methods-use-this
   make(equationCollection: DiagramElementCollection) {
-    return new EquationForm(equationCollection);
+    return new EquationForm(
+      equationCollection.elements,
+      {
+        getAllElements: equationCollection.getAllElements.bind(equationCollection),
+        hideAll: equationCollection.hideAll.bind(equationCollection),
+        show: equationCollection.show.bind(equationCollection),
+        showOnly: equationCollection.showOnly.bind(equationCollection),
+        stop: equationCollection.stop.bind(equationCollection),
+        getElementTransforms: equationCollection.getElementTransforms.bind(equationCollection),
+        setElementTransforms: equationCollection.setElementTransforms.bind(equationCollection),
+        animateToTransforms: equationCollection.animateToTransforms.bind(equationCollection),
+      },
+    );
   }
 
   // eslint-disable-next-line class-methods-use-this

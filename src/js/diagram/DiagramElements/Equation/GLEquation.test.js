@@ -39,7 +39,19 @@ describe('Equation Form', () => {
         b: 'b',
         c: 'c',
       }, new DrawContext2D());
-      eqn = new EquationForm(collection);
+      eqn = new EquationForm(
+        collection.elements,
+        {
+          getAllElements: collection.getAllElements.bind(collection),
+          hideAll: collection.hideAll.bind(collection),
+          show: collection.show.bind(collection),
+          showOnly: collection.showOnly.bind(collection),
+          stop: collection.stop.bind(collection),
+          getElementTransforms: collection.getElementTransforms.bind(collection),
+          setElementTransforms: collection.setElementTransforms.bind(collection),
+          animateToTransforms: collection.animateToTransforms.bind(collection),
+        },
+      );
     });
     test('Instantiation', () => {
       expect(eqn.collection).toBe(collection);
@@ -212,10 +224,10 @@ describe('Equation', () => {
       const dup = eqn._dup();
       eqn.addForm('f4', ['a', 'b', 'c']);
       dup.addForm('f4', ['a', 'b', 'c']);
-      expect(dup.collection).toBe(dup.form.f1.base.collection);
-      expect(dup.collection).toBe(dup.form.f4.base.collection);
+      expect(dup.collection.elements).toBe(dup.form.f1.base.elements);
+      expect(dup.collection.elements).toBe(dup.form.f4.base.elements);
       expect(dup.collection._a).toBe(dup.form.f1.base.content[0].content);
-      expect(dup.form.f1.base.collection).toBe(dup.form.f4.base.collection);
+      expect(dup.form.f1.base.elements).toBe(dup.form.f4.base.elements);
 
       expect(eqn.form.f1.base.content[0].content).toBe(eqn.form.f4.base.content[0].content);
 

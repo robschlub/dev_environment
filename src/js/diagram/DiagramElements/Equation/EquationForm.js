@@ -1,6 +1,6 @@
 // @flow
 import {
-  Point, getMoveTime,
+  Point, getMoveTime, Transform,
 } from '../../tools/g2';
 // import { roundNum } from '../../tools/mathtools';
 import { duplicateFromTo } from '../../../tools/tools';
@@ -39,9 +39,26 @@ export type TypeEquationForm = {
   time: number | null;
 } & Elements;
 
+export type TypeCollectionMethods = {
+  getAllElements: () => Array<DiagramElementPrimative | DiagramElementCollection>,
+  hideAll: () => void,
+  show: () => void,
+  showOnly: (Array<DiagramElementPrimative | DiagramElementCollection>) => void,
+  stop: (?boolean, ?boolean) => void;
+  getElementTransforms: () => { [string: string]: Transform },
+  setElementTransforms: ({ [string: string]: Transform }) => void,
+  animateToTransforms: (
+    Object, ?number, ?number, ?number,
+    ?(?mixed) => void, ?(number => number)) => number,
+};
+
+export type TypeElements = {
+  [string: string]: DiagramElementCollection | DiagramElementPrimative;
+};
 
 export default class EquationForm extends Elements {
-  collection: DiagramElementCollection;
+  elements: { [string: string]: DiagramElementCollection | DiagramElementPrimative };
+  collectionMethods: TypeCollectionMethods;
   name: string;
   type: string;   // deprecate
   description: string | null;
@@ -50,9 +67,13 @@ export default class EquationForm extends Elements {
   time: number | null | { fromPrev: number, fromNext: number, fromAny: number };
   subForm: string;
 
-  constructor(collection: DiagramElementCollection) {
+  constructor(
+    elements: TypeElements,
+    collectionMethods: TypeCollectionMethods,
+  ) {
     super([]);
-    this.collection = collection;
+    this.elements = elements;
+    this.collectionMethods = collectionMethods;
     this.description = null;
     this.modifiers = {};
     this.elementMods = {};
@@ -62,16 +83,19 @@ export default class EquationForm extends Elements {
 
   getNamedElements() {
     const namedElements = {};
-    this.collection.getAllElements().forEach((element) => {
+    this.collectionMethods.getAllElements().forEach((element) => {
       namedElements[element.name] = element;
     });
     return namedElements;
   }
 
-  _dup(collection: DiagramElementCollection = this.collection) {
-    const equationCopy = new EquationForm(collection);
+  _dup(
+    elements: TypeElements = this.elements,
+    collectionMethods: TypeCollectionMethods = this.collectionMethods,
+  ) {
+    const equationCopy = new EquationForm(elements, collectionMethods);
     const namedElements = {};
-    collection.getAllElements().forEach((element) => {
+    collectionMethods.getAllElements().forEach((element) => {
       namedElements[element.name] = element;
     });
     const newContent = [];
@@ -79,8 +103,7 @@ export default class EquationForm extends Elements {
       newContent.push(contentElement._dup(namedElements));
     });
     equationCopy.content = newContent;
-
-    duplicateFromTo(this, equationCopy, ['content', 'collection', 'form']);
+    duplicateFromTo(this, equationCopy, ['content', 'collectionMethods', 'form', 'elements']);
     return equationCopy;
   }
 
@@ -92,7 +115,7 @@ export default class EquationForm extends Elements {
           const spaceNum = parseFloat(c.replace(/space[_]*/, '')) || 0.03;
           elements.push(new Element(new BlankElement(spaceNum)));
         } else {
-          const diagramElement = getDiagramElement(this.collection, c);
+          const diagramElement = getDiagramElement(this.elements, c);
           if (diagramElement) {
             elements.push(new Element(diagramElement));
           }
@@ -162,10 +185,10 @@ export default class EquationForm extends Elements {
     alignV: TypeVAlign | null = 'baseline',
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
   ) {
-    const elementsInCollection = this.collection.getAllElements();
+    const elementsInCollection = this.collectionMethods.getAllElements();
     const elementsCurrentlyShowing = elementsInCollection.filter(e => e.isShown);
-    this.collection.hideAll();
-    this.collection.show();
+    this.collectionMethods.hideAll();
+    this.collectionMethods.show();
     super.calcSize(new Point(0, 0), scale);
 
     let fixPoint = new Point(0, 0);
@@ -218,7 +241,7 @@ export default class EquationForm extends Elements {
       this.setPositions();
     }
 
-    this.collection.showOnly(elementsCurrentlyShowing);
+    this.collectionMethods.showOnly(elementsCurrentlyShowing);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -251,11 +274,12 @@ export default class EquationForm extends Elements {
   }
 
   getElementsToShowAndHide() {
-    const allElements = this.collection.getAllElements();
+    const allElements = this.collectionMethods.getAllElements();
     const elementsShown = allElements.filter(e => e.isShown);
     const elementsShownTarget = this.getAllElements();
-    const elementsToHide =
-      elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
+    const elementsToHide: Array<DiagramElementPrimative
+                                | DiagramElementCollection> =
+       elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
     const elementsToShow: Array<DiagramElementCollection | DiagramElementPrimative> =
       elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
     return {
@@ -274,8 +298,8 @@ export default class EquationForm extends Elements {
     hideTime: number = 0,
     callback: ?(?mixed) => void = null,
   ) {
-    this.collection.stop();
-    this.collection.show();
+    this.collectionMethods.stop();
+    this.collectionMethods.show();
     const { show, hide } = this.getElementsToShowAndHide();
     if (showTime === 0) {
       show.forEach((e) => {
@@ -297,8 +321,8 @@ export default class EquationForm extends Elements {
     hideTime: number = 0,
     callback: ?(?mixed) => void = null,
   ) {
-    this.collection.stop();
-    this.collection.show();
+    this.collectionMethods.stop();
+    this.collectionMethods.show();
     const { show, hide } = this.getElementsToShowAndHide();
     if (hideTime === 0) {
       hide.forEach(e => e.hide());
@@ -324,8 +348,8 @@ export default class EquationForm extends Elements {
     showTime: number = 0.5,
     callback: ?(boolean) => void = null,
   ) {
-    this.collection.stop();
-    const allElements = this.collection.getAllElements();
+    this.collectionMethods.stop();
+    const allElements = this.collectionMethods.getAllElements();
     const elementsShown = allElements.filter(e => e.isShown);
     const elementsToShow = this.getAllElements();
     const elementsToDelayShowing = elementsToShow.filter(e => !e.isShown);
@@ -388,8 +412,8 @@ export default class EquationForm extends Elements {
     disolveInTime: number,
     callback: ?(?mixed) => void = null,
   ) {
-    const allElements = this.collection.getAllElements();
-    this.collection.stop();
+    const allElements = this.collectionMethods.getAllElements();
+    this.collectionMethods.stop();
     const elementsShown = allElements.filter(e => e.isShown);
     const elementsShownTarget = this.getAllElements();
     const elementsToHide =
@@ -397,9 +421,9 @@ export default class EquationForm extends Elements {
     const elementsToShow =
       elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
 
-    const currentTransforms = this.collection.getElementTransforms();
+    const currentTransforms = this.collectionMethods.getElementTransforms();
     this.setPositions();
-    const animateToTransforms = this.collection.getElementTransforms();
+    const animateToTransforms = this.collectionMethods.getElementTransforms();
 
     const elementsToMove = [];
     const toMoveStartTransforms = [];
@@ -426,7 +450,7 @@ export default class EquationForm extends Elements {
     } else {
       moveTimeToUse = moveTime;
     }
-    this.collection.setElementTransforms(currentTransforms);
+    this.collectionMethods.setElementTransforms(currentTransforms);
     let cumTime = delay;
 
     let moveCallback = null;
@@ -466,7 +490,7 @@ export default class EquationForm extends Elements {
         }
       }
     });
-    const t = this.collection.animateToTransforms(
+    const t = this.collectionMethods.animateToTransforms(
       animateToTransforms,
       moveTimeToUse,
       cumTime,

@@ -1228,7 +1228,19 @@ export class Equation {
       }
       Object.keys(this.form[name]).forEach((formType) => {
         if (formType !== 'name') {
-          newForm[name][formType] = this.form[name][formType]._dup(newCollection);
+          newForm[name][formType] = this.form[name][formType]._dup(
+            newCollection.elements,
+            {
+              getAllElements: newCollection.getAllElements.bind(newCollection),
+              hideAll: newCollection.hideAll.bind(newCollection),
+              show: newCollection.show.bind(newCollection),
+              showOnly: newCollection.showOnly.bind(newCollection),
+              stop: newCollection.stop.bind(newCollection),
+              getElementTransforms: newCollection.getElementTransforms.bind(newCollection),
+              setElementTransforms: newCollection.setElementTransforms.bind(newCollection),
+              animateToTransforms: newCollection.animateToTransforms.bind(newCollection),
+            },
+          );
         } else {
           newForm[name][formType] = this.form[name][formType];
         }
@@ -1351,7 +1363,19 @@ export class Equation {
       animationTime, elementMods, addToSeries,
     } = optionsToUse;
     const time = animationTime;
-    this.form[name][formType] = new EquationForm(this.collection);
+    this.form[name][formType] = new EquationForm(
+      this.collection.elements,
+      {
+        getAllElements: this.collection.getAllElements.bind(this.collection),
+        hideAll: this.collection.hideAll.bind(this.collection),
+        show: this.collection.show.bind(this.collection),
+        showOnly: this.collection.showOnly.bind(this.collection),
+        stop: this.collection.stop.bind(this.collection),
+        getElementTransforms: this.collection.getElementTransforms.bind(this.collection),
+        setElementTransforms: this.collection.setElementTransforms.bind(this.collection),
+        animateToTransforms: this.collection.animateToTransforms.bind(this.collection),
+      },
+    );
     this.form[name].name = name;
     this.form[name][formType].name = name;
     this.form[name][formType].description = description;
