@@ -128,34 +128,42 @@ export type TypeBracketArray = [
 export type TypeSubObject = {
   content: TypeEquationPhrase;
   subscript: TypeEquationPhrase;
+  scale?: number,
+  bias?: TypeParsablePoint,
 };
 export type TypeSubArray = [
   TypeEquationPhrase,
   TypeEquationPhrase,
+  ?number,
+  ?TypeParsablePoint,
 ];
 export type TypeSupObject = {
   content: TypeEquationPhrase;
   superscript: TypeEquationPhrase;
+  scale?: number,
+  bias?: TypeParsablePoint,
 };
 export type TypeSupArray = [
   TypeEquationPhrase,
   TypeEquationPhrase,
+  ?number,
+  ?TypeParsablePoint,
 ];
 export type TypeSupSubObject = {
   content: TypeEquationPhrase;
   subscript: TypeEquationPhrase;
   superscript: TypeEquationPhrase;
   scale?: number;
-  superscriptBias?: Point;
-  subscriptBias?: Point;
+  superscriptBias?: TypeParsablePoint;
+  subscriptBias?: TypeParsablePoint;
 };
 export type TypeSupSubArray = [
   TypeEquationPhrase,
   TypeEquationPhrase,
   TypeEquationPhrase,
   ?number,
-  ?Point,
-  ?Point,
+  ?TypeParsablePoint,
+  ?TypeParsablePoint,
 ];
 export type TypeBarObject = {
   content: TypeEquationPhrase;
@@ -391,6 +399,112 @@ export class EquationFunctions {
     );
   }
 
+  sup(
+    optionsOrContent: TypeSupObject | TypeSupArray | TypeEquationPhrase,
+    sup: TypeEquationPhrase | null = null,
+    scriptScale: number | null = null,
+    scriptBias: TypeParsablePoint | null = null,
+  ) {
+    let content;
+    let superscript = null;
+    let scale = null;
+    let superscriptBias = null;
+    if (!(sup == null && scriptScale == null && scriptBias == null)) {
+      content = optionsOrContent;
+      superscript = sup;
+      scale = scriptScale;
+      superscriptBias = scriptBias;
+    } else if (Array.isArray(optionsOrContent)) {           // $FlowFixMe
+      [content, superscript, scale, superscriptBias] = optionsOrContent;
+    } else {
+      ({                                                    // $FlowFixMe
+        content, superscript, scale, superscriptBias,
+      } = optionsOrContent);
+    }
+
+    // $FlowFixMe
+    superscriptBias = superscriptBias == null ? null : parsePoint(superscriptBias);
+
+    return new SuperSub(                                    // $FlowFixMe
+      this.contentToElement(content),                       // $FlowFixMe
+      this.contentToElement(superscript),                   // $FlowFixMe
+      null,                                                 // $FlowFixMe
+      scale,                                                // $FlowFixMe
+      superscriptBias,                                      // $FlowFixMe
+      null,
+    );
+  }
+
+  sub(
+    optionsOrContent: TypeSubObject | TypeSubArray | TypeEquationPhrase,
+    sub: TypeEquationPhrase | null = null,
+    scriptScale: number | null = null,
+    scriptBias: TypeParsablePoint | null = null,
+  ) {
+    let content;
+    let subscript = null;
+    let scale = null;
+    let subscriptBias = null;
+    if (!(sub == null && scriptScale == null && scriptBias == null)) {
+      content = optionsOrContent;
+      subscript = sub;
+      scale = scriptScale;
+      subscriptBias = scriptBias;
+    } else if (Array.isArray(optionsOrContent)) {           // $FlowFixMe
+      [content, subscript, scale, subscriptBias] = optionsOrContent;
+    } else {
+      ({                                                    // $FlowFixMe
+        content, subscript, scale, subscriptBias,
+      } = optionsOrContent);
+    }
+
+    // $FlowFixMe
+    subscriptBias = subscriptBias == null ? null : parsePoint(subscriptBias);
+
+    return new SuperSub(                                    // $FlowFixMe
+      this.contentToElement(content),                       // $FlowFixMe
+      null,                                                 // $FlowFixMe
+      this.contentToElement(subscript),                     // $FlowFixMe
+      scale,                                                // $FlowFixMe
+      null,                                                 // $FlowFixMe
+      subscriptBias,
+    );
+  }
+
+  // sub(options: TypeSubObject | TypeSubArray) {
+  //   let content;
+  //   let subscript;
+  //   if (Array.isArray(options)) {
+  //     [content, subscript] = options;
+  //   } else {
+  //     ({
+  //       content, subscript,
+  //     } = options);
+  //   }
+  //   return new SuperSub(
+  //     this.contentToElement(content),
+  //     null,
+  //     this.contentToElement(subscript),
+  //   );
+  // }
+
+  // sup(options: TypeSupObject | TypeSupArray) {
+  //   let content;
+  //   let superscript;
+  //   if (Array.isArray(options)) {
+  //     [content, superscript] = options;
+  //   } else {
+  //     ({
+  //       content, superscript,
+  //     } = options);
+  //   }
+  //   return new SuperSub(
+  //     this.contentToElement(content),
+  //     this.contentToElement(superscript),
+  //     null,
+  //   );
+  // }
+
   strike(options: TypeStrikeObject | TypeStrikeArray) {
     let content;
     let symbol;
@@ -441,39 +555,7 @@ export class EquationFunctions {
     );
   }
 
-  sub(options: TypeSubObject | TypeSubArray) {
-    let content;
-    let subscript;
-    if (Array.isArray(options)) {
-      [content, subscript] = options;
-    } else {
-      ({
-        content, subscript,
-      } = options);
-    }
-    return new SuperSub(
-      this.contentToElement(content),
-      null,
-      this.contentToElement(subscript),
-    );
-  }
-
-  sup(options: TypeSupObject | TypeSupArray) {
-    let content;
-    let superscript;
-    if (Array.isArray(options)) {
-      [content, superscript] = options;
-    } else {
-      ({
-        content, superscript,
-      } = options);
-    }
-    return new SuperSub(
-      this.contentToElement(content),
-      this.contentToElement(superscript),
-      null,
-    );
-  }
+  
 
   
 

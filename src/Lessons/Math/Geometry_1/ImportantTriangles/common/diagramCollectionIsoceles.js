@@ -150,7 +150,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
               subscript: 'c',
             },
           },
-      '0': e.supSub('a', e.supSub('b', e.supSub('c', 'd', 'e'), 'f'), 'g'),
+      '0': e.supSub('a', e.supSub('b', e.sub('c', 'd'), 'f'), 'g'),
       '1': {
         content: {
           supSub: {
