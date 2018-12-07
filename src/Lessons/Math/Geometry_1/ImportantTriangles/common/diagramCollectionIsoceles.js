@@ -122,19 +122,21 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     console.log('asdfasdf');
     const s = 0.5
     eqn.addForms({
-      // Method Array with scale defined
-          '0': { frac: ['a', 'b', 'v', s] },
-          // Function with Method Array with scale defined
-          '1': e.frac(['a', 'b', 'v', s]),
-          // Bound Function with parameters and scale defined
-          '2': frac('a', 'b', 'v', s),
-
-          // Method Array without scale defined
-          'n0': { frac: ['a', 'b', 'v'] },
-          // Function with Method Array without scale defined
-          'n1': e.frac(['a', 'b', 'v']),
-          // Bound Function with parameters without scale defined
-          'n2': frac('a', 'b', 'v'),
+    '0': {
+          content: ['b', 'a', 'c'],
+        },
+        '1': {
+          content: ['b', 'a', 'c'],
+          elementMods: {
+            b: {
+              color: [1, 0, 0, 1],
+              elementOptions: {
+                isTouchable: true,
+                animate: { transform: { translation: { options: { magnitude: 2 } } } },
+              },
+            },
+          },
+        },
     });
     eqn.showForm('0');
     // eqn.showForm('4');

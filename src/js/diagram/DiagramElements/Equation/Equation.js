@@ -31,18 +31,17 @@ const parsePoint = (point: Point | Array<number> | { x: number, y: number }) => 
   if (Array.isArray(point)) {
     if (point.length === 2) {
       return new Point(point[0], point[1]);
-    } else {
-      return point;
-    }
+    } 
+    return point;
   }
   if (typeof (point) === 'object') {
     const keys = Object.keys(point);
     if (keys.indexOf('x') > -1 && keys.indexOf('y') > -1) {
-      return new Point(point.x, point.y)
+      return new Point(point.x, point.y);
     }
   }
   return point;
-}
+};
 // Priority:
 //   1. symbol
 //   2. text
@@ -218,7 +217,7 @@ export class EquationNew extends DiagramElementCollection {
       formSeries: [],
       currentFormSeries: '',
       defaultFormAlignment: optionsToUse.defaultFormAlignment,
-      functions: new EquationFunctions(this),
+      functions: new EquationFunctions(this.elements),
       symbols: new EquationSymbols(this.shapes, this.color),
       fontMath: optionsToUse.fontMath,
       fontText: optionsToUse.fontText,
@@ -431,7 +430,8 @@ export class EquationNew extends DiagramElementCollection {
         Object.entries(form).forEach((subFormEntry) => {
           const [subFormName, subForm] = subFormEntry;
           const subFormOption = { subForm: subFormName };
-          if (isFormString(subForm) || isFormArray(subForm) || isFormMethodDefinition(subForm) || isFormElements(form)
+          if (isFormString(subForm) || isFormArray(subForm)
+            || isFormMethodDefinition(subForm) || isFormElements(form)
           ) {
             // $FlowFixMe
             const formContent = [this.eqn.functions.contentToElement(subForm)];

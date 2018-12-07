@@ -6,39 +6,37 @@
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../Element';
-// import {
-//   DiagramFont,
-// } from '../../DrawingObjects/TextObject/TextObject';
 import { BlankElement, Element, Elements } from './Elements/Element';
 import Fraction from './Elements/Fraction';
-// import EquationForm from './EquationForm';
-// import type {
-//   TypeHAlign, TypeVAlign,
-// } from './EquationForm';
-// import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
-// import * as html from '../../../tools/htmlGenerator';
 import Strike from './Elements/Strike';
 // import DiagramPrimatives from '../../DiagramPrimatives/DiagramPrimatives';
 import SuperSub from './Elements/SuperSub';
 import { Brackets, Bar } from './Elements/Brackets';
 import { Annotation, AnnotationInformation } from './Elements/Annotation';
-// import EquationSymbols from './EquationSymbols';
 
 export function getDiagramElement(
-  collection: DiagramElementCollection,
+  elementsObject: { [string: string]: DiagramElementPrimative |
+                    DiagramElementCollection }
+                  | DiagramElementCollection,
   name: string | DiagramElementPrimative | DiagramElementCollection,
 ): DiagramElementPrimative | DiagramElementCollection | null {
-  if (typeof name === 'string') {
-    if (collection && `_${name}` in collection) {
+  if (typeof name !== 'string') {
+    return name;
+  }
+  if (elementsObject instanceof DiagramElementCollection) {
+    if (elementsObject && `_${name}` in elementsObject) {
     // $FlowFixMe
-      return collection[`_${name}`];
+      return elementsObject[`_${name}`];
     }
     return null;
   }
-  return name;
-}
 
-// type TypeEquationInput = Array<Elements | Element | string> | Elements | Element | string;
+  if (elementsObject && name in elementsObject) {
+    return elementsObject[name];
+  }
+
+  return null;
+}
 
 /* eslint-disable no-use-before-define */
 export type TypeEquationPhrase =
@@ -187,15 +185,15 @@ export type TypeAnnotateArray = [
 
 export class EquationFunctions {
   // eslint-disable-next-line no-use-before-define
-  collection: DiagramElementCollection;
+  elements: DiagramElementCollection;
   shapes: {};
   contentToElement: (TypeEquationPhrase | Elements) => Elements;
 
   // [methodName: string]: (TypeEquationPhrase) => {};
 
   // eslint-disable-next-line no-use-before-define
-  constructor(collection: DiagramElementCollection) {
-    this.collection = collection;
+  constructor(elements: DiagramElementCollection) {
+    this.elements = elements;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -204,7 +202,7 @@ export class EquationFunctions {
       const spaceNum = parseFloat(content.replace(/space[_]*/, '')) || 0.03;
       return new Element(new BlankElement(spaceNum));
     }
-    const diagramElement = getDiagramElement(this.collection, content);
+    const diagramElement = getDiagramElement(this.elements, content);
     if (diagramElement) {
       return new Element(diagramElement);
     }
@@ -281,7 +279,7 @@ export class EquationFunctions {
     optionsOrNum: TypeFracObject | TypeFracArray | TypeEquationPhrase,
     den: TypeEquationPhrase | null = null,
     sym: string | null = null,
-    fractionScale?: number = null,
+    fractionScale?: number | null = null,
   ) {
     let numerator;
     let denominator;
@@ -304,7 +302,7 @@ export class EquationFunctions {
     const f = new Fraction(
       this.contentToElement(numerator),
       this.contentToElement(denominator),
-      getDiagramElement(this.collection, symbol),
+      getDiagramElement(this.elements, symbol),
     );
     if (scale != null) {
       f.scaleModifier = scale;
@@ -325,7 +323,7 @@ export class EquationFunctions {
     }
     return new Strike(
       this.contentToElement(content),
-      getDiagramElement(this.collection, symbol),
+      getDiagramElement(this.elements, symbol),
       strikeInSize,
     );
   }
@@ -344,11 +342,11 @@ export class EquationFunctions {
     }
     let leftBracket = null;
     if (left != null) {
-      leftBracket = getDiagramElement(this.collection, left);
+      leftBracket = getDiagramElement(this.elements, left);
     }
     let rightBracket = null;
     if (right != null) {
-      rightBracket = getDiagramElement(this.collection, right);
+      rightBracket = getDiagramElement(this.elements, right);
     }
     let spaceToUse = 0.03;
     if (space != null) {
@@ -431,7 +429,7 @@ export class EquationFunctions {
     }
     return new Bar(
       this.contentToElement(content),
-      getDiagramElement(this.collection, symbol),
+      getDiagramElement(this.elements, symbol),
       spaceToUse,
       0.03,
       'top',
@@ -455,7 +453,7 @@ export class EquationFunctions {
     }
     return new Bar(
       this.contentToElement(content),
-      getDiagramElement(this.collection, symbol),
+      getDiagramElement(this.elements, symbol),
       spaceToUse,
       0.03,
       'bottom',
@@ -492,7 +490,7 @@ export class EquationFunctions {
     if (symbol) {
       contentToUse = new Bar(
         this.contentToElement(content),
-        getDiagramElement(this.collection, symbol),
+        getDiagramElement(this.elements, symbol),
         contentSpaceToUse,
         commentSpaceToUse,
         'bottom',
@@ -544,7 +542,7 @@ export class EquationFunctions {
     if (symbol) {
       contentToUse = new Bar(
         this.contentToElement(content),
-        getDiagramElement(this.collection, symbol),
+        getDiagramElement(this.elements, symbol),
         contentSpaceToUse,
         commentSpaceToUse,
         'top',

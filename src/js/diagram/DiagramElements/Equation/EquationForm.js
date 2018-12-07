@@ -8,20 +8,7 @@ import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../Element';
 import { Element, Elements, BlankElement } from './Elements/Element';
-
-function getDiagramElement(
-  collection: DiagramElementCollection,
-  name: string | DiagramElementPrimative | DiagramElementCollection,
-): DiagramElementPrimative | DiagramElementCollection | null {
-  if (typeof name === 'string') {
-    if (collection && `_${name}` in collection) {
-    // $FlowFixMe
-      return collection[`_${name}`];
-    }
-    return null;
-  }
-  return name;
-}
+import { getDiagramElement } from './EquationFunctions';
 
 export type TypeHAlign = 'left' | 'right' | 'center';
 export type TypeVAlign = 'top' | 'bottom' | 'middle' | 'baseline';
