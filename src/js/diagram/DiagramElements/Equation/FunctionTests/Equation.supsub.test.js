@@ -99,7 +99,7 @@ describe('Equation Functions', () => {
                       },
                     },
                     subscript: 'f',
-                    },
+                  },
                 },
                 subscript: 'g',
               },
@@ -114,7 +114,7 @@ describe('Equation Functions', () => {
                   content: 'b',
                   superscript: { supSub: ['c', 'd', 'e'] },
                   subscript: 'f',
-                  },
+                },
               },
               subscript: 'g',
             },
@@ -167,7 +167,7 @@ describe('Equation Functions', () => {
               content: 'a',
               superscript: 'b',
               subscript: 'c',
-              scale: scale,
+              scale,
               superscriptBias: supBias,
               subscriptBias: subBias,
             },
@@ -175,7 +175,7 @@ describe('Equation Functions', () => {
           // Method Array
           '1': { supSub: ['a', 'b', 'c', scale, supBias, subBias] },
           // Function with parameters
-          '2': e.supSub('a', 'b', 'c', scale, supBias, subBias),
+          '2': supSub('a', 'b', 'c', scale, supBias, subBias),
         });
       },
     };
@@ -231,11 +231,11 @@ describe('Equation Functions', () => {
 
     // get without positions
     eqn.showForm('without');
-    let withoutPos = elems.map(elem => round(elem.transform.mat).slice());
+    const withoutPos = elems.map(elem => round(elem.transform.mat).slice());
 
     // with reference positions
     eqn.showForm('0');
-    let withPos = elems.map(elem => round(elem.transform.mat).slice());
+    const withPos = elems.map(elem => round(elem.transform.mat).slice());
 
     expect(withoutPos).not.toEqual(withPos);
 
@@ -251,17 +251,16 @@ describe('Equation Functions', () => {
     const withoutSup = eqn.eqn.forms.without.base.content[0].content[0].subscript;
 
     // Check scaling was done correctly
-    expect(round(withSub.height / withoutSub.height)).toBe(round(0.8 / 0.6));
-    expect(round(withSup.height / withoutSup.height)).toBe(round(0.8 / 0.6));
-    
+    expect(round(withSub.height / withoutSub.height)).toBe(round(0.8 / 0.5));
+    expect(round(withSup.height / withoutSup.height)).toBe(round(0.8 / 0.5));
+
     // Check xBias location was done correctly
     expect(round(withSub.location.x - withoutSub.location.x)).toBe(0.5);
     expect(round(withSup.location.x - withoutSup.location.x)).toBe(0.5);
 
     // Check yBias location was done correctly
     // subscript.height * 0.7 + this.subBias.y
-    console.log(withoutSub.location, withoutSub.height)
-    expect(round(withoutSub.location.y)).toBe(round(-withoutSub.height * 0.7 + 0));
-    expect(round(withSub.location.y)).toBe(round(-withSub.height * 0.7 - 0.5));
+    expect(round(withoutSub.location.y)).toBe(round(-withoutSub.ascent * 0.7 + 0));
+    expect(round(withSub.location.y)).toBe(round(-withSub.ascent * 0.7 - 0.5));
   });
 });

@@ -32,9 +32,9 @@ export default class SuperSub extends Elements {
     // this.subscriptXBias = subscriptXBias;
     this.mainContent = content;
     // this.xBias = xBias;
-    this.scriptScale = scriptScale == null? 0.6 : scriptScale;
+    this.scriptScale = scriptScale == null ? 0.5 : scriptScale;
     this.superBias = superBias == null ? new Point(0, 0) : superBias;
-    this.subBias = subBias == null ? new Point (0, 0) : subBias;
+    this.subBias = subBias == null ? new Point(0, 0) : subBias;
   }
 
   _dup(namedCollection?: Object) {
@@ -91,7 +91,7 @@ export default class SuperSub extends Elements {
       const subLoc = new Point(
         this.location.x + this.mainContent.width + this.subBias.x,
         // this.location.x + this.mainContent.width - this.subscriptXBias + this.xBias,
-        this.location.y - subscript.height * 0.7 + this.subBias.y,
+        this.location.y - subscript.ascent * 0.7 + this.subBias.y,
       );
       subscript.calcSize(subLoc, this.scriptScale * scale);
       w = Math.max(

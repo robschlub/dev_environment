@@ -16,11 +16,11 @@ Array [
 
 exports[`Equation Functions Nested SupSub 2`] = `
 Array [
-  0.42,
+  0.35,
   0,
   0.028,
   0,
-  0.42,
+  0.35,
   0.01862,
   0,
   0,
@@ -30,12 +30,12 @@ Array [
 
 exports[`Equation Functions Nested SupSub 3`] = `
 Array [
-  0.252,
+  0.175,
   0,
-  0.0448,
+  0.042,
   0,
-  0.252,
-  0.03508,
+  0.175,
+  0.03234,
   0,
   0,
   1,
@@ -44,12 +44,12 @@ Array [
 
 exports[`Equation Functions Nested SupSub 4`] = `
 Array [
-  0.1512,
+  0.0875,
   0,
-  0.05488,
+  0.049,
   0,
-  0.1512,
-  0.04179,
+  0.0875,
+  0.037,
   0,
   0,
   1,
@@ -58,12 +58,12 @@ Array [
 
 exports[`Equation Functions Nested SupSub 5`] = `
 Array [
-  0.1512,
+  0.0875,
   0,
-  0.05488,
+  0.049,
   0,
-  0.1512,
-  0.03072,
+  0.0875,
+  0.03001,
   0,
   0,
   1,
@@ -72,12 +72,12 @@ Array [
 
 exports[`Equation Functions Nested SupSub 6`] = `
 Array [
-  0.252,
+  0.175,
   0,
-  0.0448,
+  0.042,
   0,
-  0.252,
-  0.00818,
+  0.175,
+  0.01176,
   0,
   0,
   1,
@@ -86,12 +86,12 @@ Array [
 
 exports[`Equation Functions Nested SupSub 7`] = `
 Array [
-  0.42,
+  0.35,
   0,
   0.028,
   0,
-  0.42,
-  -0.01705,
+  0.35,
+  -0.00931,
   0,
   0,
   1,
@@ -114,11 +114,11 @@ Array [
 
 exports[`Equation Functions Single SupSub 2`] = `
 Array [
-  0.42,
+  0.35,
   0,
   0.028,
   0,
-  0.42,
+  0.35,
   0.01862,
   0,
   0,
@@ -128,12 +128,12 @@ Array [
 
 exports[`Equation Functions Single SupSub 3`] = `
 Array [
-  0.42,
+  0.35,
   0,
   0.028,
   0,
-  0.42,
-  -0.01211,
+  0.35,
+  -0.00931,
   0,
   0,
   1,
