@@ -14,7 +14,7 @@ jest.mock('../../../Gesture');
 jest.mock('../../../webgl/webgl');
 jest.mock('../../../DrawContext2D');
 
-describe('Equation Functions', () => {
+describe('Equation Functions - Superscript and Subscript', () => {
   let diagram;
   let eqn;
   let color1;
@@ -32,8 +32,6 @@ describe('Equation Functions', () => {
       e: 'e',
       f: 'f',
       g: 'g',
-      v: { symbol: 'vinculum' },
-      v1: { symbol: 'vinculum' },
     };
     functions = {
       single: () => {
@@ -180,14 +178,11 @@ describe('Equation Functions', () => {
       sub: () => {
         eqn = new EquationNew(diagram.shapes, { color: color1 });
         const e = eqn.eqn.functions;
-        // const supSub = e.supSub.bind(e);
+        const sub = e.sub.bind(e);
         eqn.addElements(elements);
-        // const scale = 0.8;    // default is 0.6
-        // const supBias = new Point(0.5, 0.5);
-        // const subBias = [0.5, -0.5];
         eqn.addForms({
           '0': { sub: ['a', { sub: ['b', { sub: ['g', 'd'] }] }] },
-          '1': e.sub('a', e.sub('b', e.sub('g', 'd'))),
+          '1': sub('a', sub('b', sub('g', 'd'))),
         });
       },
       sup: () => {
@@ -245,7 +240,7 @@ describe('Equation Functions', () => {
     expect(round(eqn._f.transform.mat)).toMatchSnapshot();
     expect(round(eqn._g.transform.mat)).toMatchSnapshot();
   });
-  test('Scale Fraction', () => {
+  test('Parameters', () => {
     functions.parameters();
     const elems = [eqn._a, eqn._b, eqn._c];
     const withFormsToTest = ['1', '2'];

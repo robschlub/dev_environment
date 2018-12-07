@@ -471,54 +471,29 @@ export class EquationFunctions {
     );
   }
 
-  // sub(options: TypeSubObject | TypeSubArray) {
-  //   let content;
-  //   let subscript;
-  //   if (Array.isArray(options)) {
-  //     [content, subscript] = options;
-  //   } else {
-  //     ({
-  //       content, subscript,
-  //     } = options);
-  //   }
-  //   return new SuperSub(
-  //     this.contentToElement(content),
-  //     null,
-  //     this.contentToElement(subscript),
-  //   );
-  // }
-
-  // sup(options: TypeSupObject | TypeSupArray) {
-  //   let content;
-  //   let superscript;
-  //   if (Array.isArray(options)) {
-  //     [content, superscript] = options;
-  //   } else {
-  //     ({
-  //       content, superscript,
-  //     } = options);
-  //   }
-  //   return new SuperSub(
-  //     this.contentToElement(content),
-  //     this.contentToElement(superscript),
-  //     null,
-  //   );
-  // }
-
-  strike(options: TypeStrikeObject | TypeStrikeArray) {
+  strike(
+    optionsOrContent: TypeStrikeObject | TypeStrikeArray | TypeEquationPhrase,
+    sym: string | null = null,
+    inSize: boolean | null = null,
+    // options: TypeStrikeObject | TypeStrikeArray) {
+  ) {
     let content;
     let symbol;
     let strikeInSize;
-    if (Array.isArray(options)) {
-      [content, symbol, strikeInSize] = options;
+    if (!(sym == null && inSize == null)) {
+      content = optionsOrContent;
+      symbol = sym;
+      strikeInSize = inSize;
+    } else if (Array.isArray(optionsOrContent)) {         // $FlowFixMe
+      [content, symbol, strikeInSize] = optionsOrContent;
     } else {
-      ({
+      ({                                                  // $FlowFixMe
         content, symbol, strikeInSize,
-      } = options);
+      } = optionsOrContent);
     }
-    return new Strike(
-      this.contentToElement(content),
-      getDiagramElement(this.elements, symbol),
+    return new Strike(                                    // $FlowFixMe
+      this.contentToElement(content),                     // $FlowFixMe
+      getDiagramElement(this.elements, symbol),           // $FlowFixMe
       strikeInSize,
     );
   }
@@ -554,10 +529,6 @@ export class EquationFunctions {
       spaceToUse,
     );
   }
-
-  
-
-  
 
   topBar(options: TypeBarObject | TypeBarArray) {
     let content;
