@@ -285,19 +285,17 @@ export class EquationFunctions {
     let denominator;
     let symbol;
     let scale;
-    if ( !(den == null && sym == null && fractionScale == null)) {
+    if (!(den == null && sym == null && fractionScale == null)) {
       numerator = optionsOrNum;
       denominator = den;
       symbol = sym;
       scale = fractionScale;
+    } else if (Array.isArray(optionsOrNum)) {
+      [numerator, denominator, symbol, scale] = optionsOrNum;
     } else {
-      if (Array.isArray(optionsOrNum)) {
-        [numerator, denominator, symbol, scale] = optionsOrNum;
-      } else {
-        ({
-          numerator, denominator, symbol, scale,
-        } = optionsOrNum);
-      }
+      ({
+        numerator, denominator, symbol, scale,
+      } = optionsOrNum);
     }
     const f = new Fraction(
       this.contentToElement(numerator),

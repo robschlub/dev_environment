@@ -54,7 +54,7 @@ describe('Equation Form', () => {
       );
     });
     test('Instantiation', () => {
-      expect(eqn.collection).toBe(collection);
+      expect(eqn.elements).toBe(collection.elements);
       expect(eqn.ascent).toBe(0);
       expect(eqn.descent).toBe(0);
       expect(eqn.width).toBe(0);
@@ -185,8 +185,8 @@ describe('Equation Form', () => {
         const eqnCopy = eqn._dup(eqn.collection);
         expect(eqnCopy).toEqual(eqn);
         expect(eqnCopy).not.toBe(eqn);
-        expect(eqnCopy.collection._a).toEqual(eqn.collection._a);
-        expect(eqnCopy.collection._a).toBe(eqn.collection._a);
+        expect(eqnCopy.elements.a).toEqual(eqn.elements.a);
+        expect(eqnCopy.elements.a).toBe(eqn.elements.a);
       });
     });
   });
@@ -215,7 +215,13 @@ describe('Equation', () => {
       expect(dup.collection).not.toBe(eqn.collection);
       expect(dup.collection._a).toEqual(eqn.collection._a);
       expect(dup.collection._a).not.toBe(eqn.collection._a);
-      expect(dup).toEqual(eqn);
+      dup.form.f1.base.collectionMethods = {};
+      eqn.form.f1.base.collectionMethods = {};
+      dup.form.f2.base.collectionMethods = {};
+      eqn.form.f2.base.collectionMethods = {};
+      dup.form.f3.base.collectionMethods = {};
+      eqn.form.f3.base.collectionMethods = {};
+      expect(dup.form).toEqual(eqn.form);
       expect(dup).not.toBe(eqn);
       expect(eqn.form.f1.base.content[0].content).toBe(eqn.form.f3.base.content[0].content);
       expect(dup.form.f1.base.content[0].content).toBe(dup.form.f3.base.content[0].content);
