@@ -63,6 +63,7 @@ export default class Fraction extends Elements {
   }
 
   calcSize(location: Point, incomingScale: number) {
+
     const scale = incomingScale * this.scaleModifier;
     this.location = location._dup();
     this.numerator.calcSize(location, scale);
@@ -99,6 +100,9 @@ export default class Fraction extends Elements {
     this.descent = this.vSpaceNum + this.lineWidth / 2
                    - this.lineVAboveBaseline
                    + this.denominator.ascent + this.denominator.descent;
+    if (this.descent < 0) {
+      this.descent = 0;
+    }
     this.ascent = this.vSpaceNum + this.lineWidth / 2
                   + this.lineVAboveBaseline + this.numerator.ascent
                   + this.numerator.descent;

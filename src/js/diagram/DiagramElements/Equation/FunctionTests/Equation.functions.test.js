@@ -1,19 +1,19 @@
 import {
   Point,
-} from '../../tools/g2';
+} from '../../../tools/g2';
 import {
   round,
-} from '../../tools/mathtools';
-import * as tools from '../../../tools/tools';
-import makeDiagram from '../../../__mocks__/makeDiagram';
-import { EquationNew } from './Equation';
+} from '../../../tools/mathtools';
+import * as tools from '../../../../tools/tools';
+import makeDiagram from '../../../../__mocks__/makeDiagram';
+import { EquationNew } from '../Equation';
 // import Fraction from './Elements/Fraction';
 
 tools.isTouchDevice = jest.fn();
 
-jest.mock('../../Gesture');
-jest.mock('../../webgl/webgl');
-jest.mock('../../DrawContext2D');
+jest.mock('../../../Gesture');
+jest.mock('../../../webgl/webgl');
+jest.mock('../../../DrawContext2D');
 
 describe('Equation Functions', () => {
   let diagram;
@@ -36,29 +36,70 @@ describe('Equation Functions', () => {
       v1: { symbol: 'vinculum' },
     };
     functions = {
-      fraction: () => {
+      single: () => {
         eqn = new EquationNew(diagram.shapes, { color: color1 });
         const e = eqn.eqn.functions;
         const frac = e.frac.bind(e);
         eqn.addElements(elements);
-        const s = 0.6;
+        const s = 0.5;
         eqn.addForms({
+          // Full Object
+          '0': {
+            content: {
+              frac: {
+                numerator: 'a',
+                denominator: 'b',
+                symbol: 'v',
+                scale: s,
+              },
+            },
+          },
+          // Method Object
+          '1': {
+            frac: {
+              numerator: 'a',
+              denominator: 'b',
+              symbol: 'v',
+              scale: s,
+            },
+          },
+          // Method Array
+          '2': { frac: ['a', 'b', 'v', s] },
+          // Function with Method Array
+          '3': e.frac(['a', 'b', 'v', s]),
+          // Function with parameters
+          '4': e.frac('a', 'b', 'v', s),
+          // Bound Function with parameters
+          '5': frac('a', 'b', 'v', s),
+        });
+      },
+      nested: () => {
+        eqn = new EquationNew(diagram.shapes, { color: color1 });
+        const e = eqn.eqn.functions;
+        const frac = e.frac.bind(e);
+        eqn.addElements(elements);
+        const s = 0.5;
+        eqn.addForms({
+          // Full Object
           '0': {
             content: {
               frac: {
                 numerator: {
-                  frac: {
-                    numerator: 'a',
-                    denominator: 'b',
-                    symbol: 'v',
-                    scale: s,
-                  },
+                  content: {
+                    frac: {
+                      numerator: 'a',
+                      denominator: 'b',
+                      symbol: 'v',
+                      scale: s,
+                    },
+                  }
                 },
                 denominator: 'c',
                 symbol: 'v1',
-              }
+              },
             },
           },
+          // Method Object nested in Method Object
           '1': {
             frac: {
               numerator: {
@@ -73,6 +114,7 @@ describe('Equation Functions', () => {
               symbol: 'v1',
             }
           },
+          // Method Array nested in Method Array
           '2': {
             frac: [
               {
@@ -82,7 +124,9 @@ describe('Equation Functions', () => {
               'v1',
             ]
           },
+          // Method Array nested in Method Array, all in an Array
           '3': [{ frac: [{ frac: ['a', 'b', 'v', s] }, 'c', 'v1'] }],
+          // Method Array in a Function
           '4': e.frac([
             {
               frac: ['a', 'b', 'v', s]
@@ -90,43 +134,41 @@ describe('Equation Functions', () => {
             'c',
             'v1',
           ]),
+          // Function in a Function
           '5': e.frac([e.frac(['a', 'b', 'v', s]), 'c', 'v1']),
+          // Bound function in a bound function
           '6': frac(frac('a', 'b', 'v', s), 'c', 'v1'),
         });
       },
     };
   });
-  test('Fraction', () => {
-    functions.fraction();
+  test('Single Fraction', () => {
+    functions.nested();
+    const elems = [eqn._a, eqn._b, eqn._c, eqn._v, eqn._v1];
+    const formsToTest = ['1', '2', '3', '4', '5'];
+
+    eqn.showForm('0');
+    const positions0 = elems.map(elem => round(elem.transform.mat).slice())
+    formsToTest.forEach((f) => {
+      eqn.showForm(f);
+      const positions = elems.map(elem => round(elem.transform.mat).slice());
+      expect(positions0).toEqual(positions);
+    })
+  });
+  test('Nested Fractions', () => {
+    functions.nested();
     const elems = [eqn._a, eqn._b, eqn._c, eqn._v, eqn._v1];
     const formsToTest = ['1', '2', '3', '4', '5', '6'];
 
     eqn.showForm('0');
     const positions0 = elems.map(elem => round(elem.transform.mat).slice())
-    console.log('0', positions0)
     formsToTest.forEach((f) => {
       eqn.showForm(f);
       const positions = elems.map(elem => round(elem.transform.mat).slice());
-      console.log(f, positions)
       expect(positions0).toEqual(positions);
     })
 
-    // eqn.showForm('4');
-    // // const positions7 = elems.map(elem => elem.transform.t())
-    // const positions7 = elems.map(elem => round(elem.transform.mat).slice())
-    // eqn.showForm('5');
-    // // const positions8 = elems.map(elem => elem.transform.t())
-    // const positions8 = elems.map(elem => round(elem.transform.mat).slice())
-    
-    // console.log(positions7)
-    // console.log(positions8)
-    // console.log(eqn.eqn.forms['4'].base.height)
-    // console.log(eqn.eqn.forms['5'].base.height)
-    // expect(positions7).toEqual(positions8);
-    // Record position of elements in a snapshot
     tools.cleanUIDs(eqn);
-    
-    // expect(eqn.eqn.forms['4'].base).toEqual(eqn.eqn.forms['5'])
     expect(round(eqn._a.transform.mat)).toMatchSnapshot();
     expect(round(eqn._b.transform.mat)).toMatchSnapshot();
     expect(round(eqn._c.transform.mat)).toMatchSnapshot();

@@ -308,7 +308,6 @@ export class EquationFunctions {
     );
     if (scale != null) {
       f.scaleModifier = scale;
-      console.log(f.scaleModifier)
     }
     return f;
   }
