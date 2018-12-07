@@ -114,7 +114,10 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       v1: { symbol: 'vinculum' },
     };
     const strikeCol = this.layout.colors.diagram.disabled;
-    this.diagram.equation.addEquation(this, 'testEqn', { color: this.layout.colors.diagram.text.base });
+    this.diagram.equation.addEquation(this, 'testEqn', {
+      color: this.layout.colors.diagram.text.base,
+      defaultFormAlignment: { scale: 2 },
+    });
     // $FlowFixMe
     const eqn = this._testEqn;
     const e = eqn.eqn.functions;
@@ -149,6 +152,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
             },
             subscript: 'c',
             scale: 0.5,
+            subscriptBias: [-0.05, -0.1],
+            superscriptBias: [-0.05, 0.1],
           },
         },
       },

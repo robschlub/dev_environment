@@ -17,31 +17,10 @@ import type {
 import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 import * as html from '../../../tools/htmlGenerator';
 import EquationSymbols from './EquationSymbols';
-import { getDiagramElement, EquationFunctions } from './EquationFunctions';
+import { getDiagramElement, EquationFunctions, parsePoint } from './EquationFunctions';
 import type { TypeEquationPhrase } from './EquationFunctions';
 
-// point can be defined as:
-//    - Point instance
-//    - [1, 1]
-//    - { x: 1, y: 1 }
-const parsePoint = (point: Point | Array<number> | { x: number, y: number }) => {
-  if (point instanceof Point) {
-    return point;
-  }
-  if (Array.isArray(point)) {
-    if (point.length === 2) {
-      return new Point(point[0], point[1]);
-    }
-    return point;
-  }
-  if (typeof (point) === 'object') {
-    const keys = Object.keys(point);
-    if (keys.indexOf('x') > -1 && keys.indexOf('y') > -1) {
-      return new Point(point.x, point.y);
-    }
-  }
-  return point;
-};
+
 // Priority:
 //   1. symbol
 //   2. text

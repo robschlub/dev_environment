@@ -9,26 +9,32 @@ export default class SuperSub extends Elements {
   superscript: Elements | null;
   subscript: Elements | null;
   mainContent: Elements;
-  subscriptXBias: number;
-  xBias: number;
+  // subscriptXBias: number;
+  // xBias: number;
   scriptScale: number;
+  superBias: Point;
+  subBias: Point;
 
   constructor(
     content: Elements,
     superscript: Elements | null,
     subscript: Elements | null,
-    scriptScale: number = 0.5,
-    xBias: number = 0,
-    subscriptXBias: number = 0,
+    scriptScale: number | null = null,
+    superBias: Point | null = null,
+    subBias: Point | null = null,
+    // xBias: number = 0,
+    // subscriptXBias: number = 0,
   ) {
     super([content, superscript, subscript]);
 
     this.superscript = superscript;
     this.subscript = subscript;
-    this.subscriptXBias = subscriptXBias;
+    // this.subscriptXBias = subscriptXBias;
     this.mainContent = content;
-    this.xBias = xBias;
-    this.scriptScale = scriptScale;
+    // this.xBias = xBias;
+    this.scriptScale = scriptScale == null? 0.6 : scriptScale;
+    this.superBias = superBias == null ? new Point(0, 0) : superBias;
+    this.subBias = subBias == null ? new Point (0, 0) : subBias;
   }
 
   _dup(namedCollection?: Object) {
@@ -38,8 +44,11 @@ export default class SuperSub extends Elements {
       this.mainContent._dup(namedCollection),
       superscript,
       subscript,
-      this.xBias,
-      this.subscriptXBias,
+      this.scriptScale,
+      this.superBias,
+      this.subBias,
+      // this.xBias,
+      // this.subscriptXBias,
     );
     duplicateFromTo(this, superSubCopy, ['mainContent', 'superscript', 'subscript', 'content']);
     return superSubCopy;
@@ -56,8 +65,8 @@ export default class SuperSub extends Elements {
     const { superscript } = this;
     if (superscript !== null) {
       const superLoc = new Point(
-        this.location.x + this.mainContent.width + this.xBias,
-        this.location.y + this.mainContent.ascent * 0.7,
+        this.location.x + this.mainContent.width + this.superBias.x,
+        this.location.y + this.mainContent.ascent * 0.7 + this.superBias.y,
       );
       superscript.calcSize(superLoc, this.scriptScale * scale);
       w = Math.max(
@@ -76,11 +85,13 @@ export default class SuperSub extends Elements {
 
     const { subscript } = this;
     if (subscript !== null) {
-      // TODO - y location should be minus the height of an "m" or "a" not
-      // the height of the main content.
+      // get the height of the subscript content
+      subscript.calcSize(new Point(0, 0), this.scriptScale * scale);
+
       const subLoc = new Point(
-        this.location.x + this.mainContent.width - this.subscriptXBias + this.xBias,
-        this.location.y - this.mainContent.height * 0.5,
+        this.location.x + this.mainContent.width + this.subBias.x,
+        // this.location.x + this.mainContent.width - this.subscriptXBias + this.xBias,
+        this.location.y - subscript.height * 0.7 + this.subBias.y,
       );
       subscript.calcSize(subLoc, this.scriptScale * scale);
       w = Math.max(

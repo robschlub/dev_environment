@@ -1,7 +1,7 @@
 // @flow
-// import {
-//   Point, Transform,
-// } from '../../tools/g2';
+import {
+  Point,
+} from '../../tools/g2';
 // import { joinObjects } from '../../../tools/tools';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -37,6 +37,30 @@ export function getDiagramElement(
 
   return null;
 }
+
+export type TypeParsablePoint = [number, number] | Point | { x: number, y: number};
+// point can be defined as:
+//    - Point instance
+//    - [1, 1]
+//    - { x: 1, y: 1 }
+export const parsePoint = (point: TypeParsablePoint) => {
+  if (point instanceof Point) {
+    return point;
+  }
+  if (Array.isArray(point)) {
+    if (point.length === 2) {
+      return new Point(point[0], point[1]);
+    }
+    return point;
+  }
+  if (typeof (point) === 'object') {
+    const keys = Object.keys(point);
+    if (keys.indexOf('x') > -1 && keys.indexOf('y') > -1) {
+      return new Point(point.x, point.y);
+    }
+  }
+  return point;
+};
 
 /* eslint-disable no-use-before-define */
 export type TypeEquationPhrase =
@@ -122,12 +146,16 @@ export type TypeSupSubObject = {
   subscript: TypeEquationPhrase;
   superscript: TypeEquationPhrase;
   scale?: number;
+  superscriptBias?: Point;
+  subscriptBias?: Point;
 };
 export type TypeSupSubArray = [
   TypeEquationPhrase,
   TypeEquationPhrase,
   TypeEquationPhrase,
   ?number,
+  ?Point,
+  ?Point,
 ];
 export type TypeBarObject = {
   content: TypeEquationPhrase;
@@ -324,30 +352,40 @@ export class EquationFunctions {
     sup: TypeEquationPhrase | null = null,
     sub: TypeEquationPhrase | null = null,
     scriptScale: number | null = null,
-    // supBias: Point | null = null,
-    // subBias: Point | null = null,
+    supBias: TypeParsablePoint | null = null,
+    subBias: TypeParsablePoint | null = null,
   ) {
     let content;
     let superscript = null;
     let subscript = null;
-    let scale = 0;
+    let scale = null;
+    let subscriptBias = null;
+    let superscriptBias = null;
     if (!(sup == null && sub == null && scriptScale == null)) {
       content = optionsOrContent;
       superscript = sup;
       subscript = sub;
       scale = scriptScale;
+      subscriptBias = subBias;
+      superscriptBias = supBias;
     } else if (Array.isArray(optionsOrContent)) {           // $FlowFixMe
-      [content, superscript, subscript, scale] = optionsOrContent;
+      [content, superscript, subscript, scale, superscriptBias, subscriptBias] = optionsOrContent;
     } else {
       ({                                                    // $FlowFixMe
-        content, superscript, subscript, scale,
+        content, superscript, subscript, scale, superscriptBias, subscriptBias,
       } = optionsOrContent);
     }
+
+    subscriptBias = subscriptBias == null ? null : parsePoint(subscriptBias);
+    superscriptBias = superscriptBias == null ? null : parsePoint(superscriptBias);
+
     return new SuperSub(                                    // $FlowFixMe
       this.contentToElement(content),                       // $FlowFixMe
       this.contentToElement(superscript),                   // $FlowFixMe
       this.contentToElement(subscript),
       scale,
+      superscriptBias,
+      subscriptBias,
     );
   }
 
