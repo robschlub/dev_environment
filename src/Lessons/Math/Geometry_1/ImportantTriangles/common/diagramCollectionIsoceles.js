@@ -110,6 +110,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       d: 'd',
       e: 'e',
       f: 'f',
+      g: 'g',
       v: { symbol: 'vinculum' },
       v1: { symbol: 'vinculum' },
     };
@@ -142,18 +143,26 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //     },
       //   },
       // },
-      '1': { supSub: ['a', 'b', 'c'] },
-      '0': {
+      '0': e.supSub('a', e.supSub('b', e.supSub('c', 'd', 'e'), 'f'), 'g'),
+      '1': {
         content: {
           supSub: {
             content: 'a',
             superscript: {
-              supSub: ['b', 'd', 'e'],
+              supSub: {
+                content: 'b',
+                superscript: {
+                  supSub: {
+                    content: 'c',
+                    superscript: 'd',
+                    subscript: 'e',
+                  },
+                },
+                subscript: 'f',
+                },
             },
-            subscript: 'c',
+            subscript: 'g',
             scale: 0.5,
-            subscriptBias: [-0.05, -0.1],
-            superscriptBias: [-0.05, 0.1],
           },
         },
       },

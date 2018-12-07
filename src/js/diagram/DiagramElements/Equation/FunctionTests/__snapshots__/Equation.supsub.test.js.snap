@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Equation Functions Nested SupSub 1`] = `
+Array [
+  0.7,
+  0,
+  0,
+  0,
+  0.7,
+  0,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Equation Functions Nested SupSub 2`] = `
+Array [
+  0.42,
+  0,
+  0.028,
+  0,
+  0.42,
+  0.01862,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Equation Functions Nested SupSub 3`] = `
+Array [
+  0.252,
+  0,
+  0.0448,
+  0,
+  0.252,
+  0.03508,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Equation Functions Nested SupSub 4`] = `
+Array [
+  0.1512,
+  0,
+  0.05488,
+  0,
+  0.1512,
+  0.04179,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Equation Functions Nested SupSub 5`] = `
+Array [
+  0.1512,
+  0,
+  0.05488,
+  0,
+  0.1512,
+  0.03072,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Equation Functions Nested SupSub 6`] = `
+Array [
+  0.252,
+  0,
+  0.0448,
+  0,
+  0.252,
+  0.00818,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Equation Functions Nested SupSub 7`] = `
+Array [
+  0.42,
+  0,
+  0.028,
+  0,
+  0.42,
+  -0.01705,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Equation Functions Single SupSub 1`] = `
+Array [
+  0.7,
+  0,
+  0,
+  0,
+  0.7,
+  0,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Equation Functions Single SupSub 2`] = `
+Array [
+  0.42,
+  0,
+  0.028,
+  0,
+  0.42,
+  0.01862,
+  0,
+  0,
+  1,
+]
+`;
+
+exports[`Equation Functions Single SupSub 3`] = `
+Array [
+  0.42,
+  0,
+  0.028,
+  0,
+  0.42,
+  -0.01211,
+  0,
+  0,
+  1,
+]
+`;
