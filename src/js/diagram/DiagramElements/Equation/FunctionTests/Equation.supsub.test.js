@@ -1,6 +1,6 @@
-// import {
-//   Point,
-// } from '../../../tools/g2';
+import {
+  Point,
+} from '../../../tools/g2';
 import {
   round,
 } from '../../../tools/mathtools';
@@ -141,45 +141,41 @@ describe('Equation Functions', () => {
             'g',
           ),
           '4': supSub('a', supSub('b', supSub('c', 'd', 'e'), 'f'), 'g'),
-          // // Method Object nested in Method Object
-          // '1': {
-          //   frac: {
-          //     numerator: {
-          //       frac: {
-          //         numerator: 'a',
-          //         denominator: 'b',
-          //         symbol: 'v',
-          //         scale: s,
-          //       },
-          //     },
-          //     denominator: 'c',
-          //     symbol: 'v1',
-          //   },
-          // },
-          // // Method Array nested in Method Array
-          // '2': {
-          //   frac: [
-          //     {
-          //       frac: ['a', 'b', 'v', s],
-          //     },
-          //     'c',
-          //     'v1',
-          //   ],
-          // },
-          // // Method Array nested in Method Array, all in an Array
-          // '3': [{ frac: [{ frac: ['a', 'b', 'v', s] }, 'c', 'v1'] }],
-          // // Method Array in a Function
-          // '4': e.frac([
-          //   {
-          //     frac: ['a', 'b', 'v', s],
-          //   },
-          //   'c',
-          //   'v1',
-          // ]),
-          // // Function in a Function
-          // '5': e.frac([e.frac(['a', 'b', 'v', s]), 'c', 'v1']),
-          // // Bound function in a bound function
-          // '6': frac(frac('a', 'b', 'v', s), 'c', 'v1'),
+        });
+      },
+      parameters: () => {
+        eqn = new EquationNew(diagram.shapes, { color: color1 });
+        const e = eqn.eqn.functions;
+        const supSub = e.supSub.bind(e);
+        eqn.addElements(elements);
+        const scale = 0.8;    // default is 0.6
+        const supBias = new Point(0.5, 0.5);
+        const subBias = [0.5, -0.5];
+        eqn.addForms({
+          // without
+          //   // Method Object
+          'without': {
+            supSub: {
+              content: 'a',
+              superscript: 'b',
+              subscript: 'c',
+            },
+          },
+          // With parameters
+          '0': {
+            supSub: {
+              content: 'a',
+              superscript: 'b',
+              subscript: 'c',
+              scale: scale,
+              superscriptBias: supBias,
+              subscriptBias: subBias,
+            },
+          },
+          // Method Array
+          '1': { supSub: ['a', 'b', 'c', scale, supBias, subBias] },
+          // Function with parameters
+          '2': e.supSub('a', 'b', 'c', scale, supBias, subBias),
         });
       },
     };
@@ -228,53 +224,44 @@ describe('Equation Functions', () => {
     expect(round(eqn._f.transform.mat)).toMatchSnapshot();
     expect(round(eqn._g.transform.mat)).toMatchSnapshot();
   });
-  // test('Scale Fraction', () => {
-  //   functions.scaling();
-  //   const elems = [eqn._a, eqn._b, eqn._c, eqn._v, eqn._v1];
-  //   const scaleFormsToTest = ['s1', 's2'];
-  //   const noScaleFormsToTest = ['n1', 'n2'];
+  test('Scale Fraction', () => {
+    functions.parameters();
+    const elems = [eqn._a, eqn._b, eqn._c];
+    const withFormsToTest = ['1', '2'];
 
-  //   // Check all forms that were scaled are the same
-  //   eqn.showForm('s0');
-  //   let positions0 = elems.map(elem => round(elem.transform.mat).slice());
-  //   scaleFormsToTest.forEach((f) => {
-  //     eqn.showForm(f);
-  //     const positions = elems.map(elem => round(elem.transform.mat).slice());
-  //     expect(positions0).toEqual(positions);
-  //   });
+    // get without positions
+    eqn.showForm('without');
+    let withoutPos = elems.map(elem => round(elem.transform.mat).slice());
 
-  //   // Check all forms that weren't scaled are the same
-  //   eqn.showForm('n0');
-  //   positions0 = elems.map(elem => round(elem.transform.mat).slice());
-  //   noScaleFormsToTest.forEach((f) => {
-  //     eqn.showForm(f);
-  //     const positions = elems.map(elem => round(elem.transform.mat).slice());
-  //     expect(positions0).toEqual(positions);
-  //   });
+    // with reference positions
+    eqn.showForm('0');
+    let withPos = elems.map(elem => round(elem.transform.mat).slice());
 
-  //   // Check height is double the scaled form
-  //   const sHeight = eqn.eqn.forms.s0.base.content[0].content[0].content[0].height;
-  //   const nHeight = eqn.eqn.forms.n0.base.content[0].content[0].content[0].height;
-  //   expect(round(nHeight / sHeight)).toBe(2);
-  // });
-  // test('Nested Fractions', () => {
-  //   functions.nested();
-  //   const elems = [eqn._a, eqn._b, eqn._c, eqn._v, eqn._v1];
-  //   const formsToTest = ['1', '2', '3', '4', '5', '6'];
+    expect(withoutPos).not.toEqual(withPos);
 
-  //   eqn.showForm('0');
-  //   const positions0 = elems.map(elem => round(elem.transform.mat).slice());
-  //   formsToTest.forEach((f) => {
-  //     eqn.showForm(f);
-  //     const positions = elems.map(elem => round(elem.transform.mat).slice());
-  //     expect(positions0).toEqual(positions);
-  //   });
+    withFormsToTest.forEach((f) => {
+      eqn.showForm(f);
+      const positions = elems.map(elem => round(elem.transform.mat).slice());
+      expect(withPos).toEqual(positions);
+    });
 
-  //   tools.cleanUIDs(eqn);
-  //   expect(round(eqn._a.transform.mat)).toMatchSnapshot();
-  //   expect(round(eqn._b.transform.mat)).toMatchSnapshot();
-  //   expect(round(eqn._c.transform.mat)).toMatchSnapshot();
-  //   expect(round(eqn._v.transform.mat)).toMatchSnapshot();
-  //   expect(round(eqn._v1.transform.mat)).toMatchSnapshot();
-  // });
+    const withSub = eqn.eqn.forms['0'].base.content[0].content[0].subscript;
+    const withoutSub = eqn.eqn.forms.without.base.content[0].content[0].subscript;
+    const withSup = eqn.eqn.forms['0'].base.content[0].content[0].subscript;
+    const withoutSup = eqn.eqn.forms.without.base.content[0].content[0].subscript;
+
+    // Check scaling was done correctly
+    expect(round(withSub.height / withoutSub.height)).toBe(round(0.8 / 0.6));
+    expect(round(withSup.height / withoutSup.height)).toBe(round(0.8 / 0.6));
+    
+    // Check xBias location was done correctly
+    expect(round(withSub.location.x - withoutSub.location.x)).toBe(0.5);
+    expect(round(withSup.location.x - withoutSup.location.x)).toBe(0.5);
+
+    // Check yBias location was done correctly
+    // subscript.height * 0.7 + this.subBias.y
+    console.log(withoutSub.location, withoutSub.height)
+    expect(round(withoutSub.location.y)).toBe(round(-withoutSub.height * 0.7 + 0));
+    expect(round(withSub.location.y)).toBe(round(-withSub.height * 0.7 - 0.5));
+  });
 });
