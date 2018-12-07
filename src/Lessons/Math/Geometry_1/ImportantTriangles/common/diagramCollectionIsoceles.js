@@ -120,66 +120,31 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     const frac = e.frac.bind(e);
     eqn.addElements(elements);
     console.log('asdfasdf');
+    const s = 0.5
     eqn.addForms({
-      // '0': {
-      //   content: {
-      //     frac: {
-      //       numerator: {
-      //         frac: {
-      //           numerator: 'a',
-      //           denominator: 'b',
-      //           symbol: 'v',
-      //           scale: 0.5,
-      //         },
-      //       },
-      //       denominator: 'c',
-      //       symbol: 'v1',
-      //     }
-      //   },
-      // },
-      // '1': {
-      //   frac: {
-      //     numerator: {
-      //       frac: {
-      //         numerator: 'a',
-      //         denominator: 'b',
-      //         symbol: 'v',
-      //         scale: 0.5,
-      //       },
-      //     },
-      //     denominator: 'c',
-      //     symbol: 'v1',
-      //   }
-      // },
-      // '2': {
-      //   frac: [
-      //     {
-      //       frac: ['a', 'b', 'v', 0.5]
-      //     },
-      //     'c',
-      //     'v1',
-      //   ]
-      // },
-      // '3': [{ frac: [{ frac: ['a', 'b', 'v', 0.5] }, 'c', 'v1'] }],
-      '4': e.frac([
-        {
-          frac: ['a', 'b', 'v', 0.3]
-        },
-        'c',
-        'v1',
-      ]),
-      '5': e.frac([e.frac(['a', 'b', 'v', 0.3]), 'c', 'v1']),
-      // '6': frac(frac('a', 'b', 'v', 0.5), 'c', 'v1'),
+      // Method Array with scale defined
+          '0': { frac: ['a', 'b', 'v', s] },
+          // Function with Method Array with scale defined
+          '1': e.frac(['a', 'b', 'v', s]),
+          // Bound Function with parameters and scale defined
+          '2': frac('a', 'b', 'v', s),
+
+          // Method Array without scale defined
+          'n0': { frac: ['a', 'b', 'v'] },
+          // Function with Method Array without scale defined
+          'n1': e.frac(['a', 'b', 'v']),
+          // Bound Function with parameters without scale defined
+          'n2': frac('a', 'b', 'v'),
     });
     eqn.showForm('0');
     // eqn.showForm('4');
-    console.log(eqn.eqn.forms['4'].base.height)
-    // eqn.showForm('5');
-    console.log(eqn.eqn.forms['5'].base.height)
-    console.log(eqn.eqn.forms['4'].base.content[0].content[0].height)
-    console.log(eqn.eqn.forms['5'].base.content[0].content[0].height)
-    console.log(eqn.eqn.forms['4'].base)
-    console.log(eqn.eqn.forms['5'].base)
+    // console.log(eqn.eqn.forms['4'].base.height)
+    // // eqn.showForm('5');
+    // console.log(eqn.eqn.forms['5'].base.height)
+    // console.log(eqn.eqn.forms['4'].base.content[0].content[0].height)
+    // console.log(eqn.eqn.forms['5'].base.content[0].content[0].height)
+    // console.log(eqn.eqn.forms['4'].base)
+    // console.log(eqn.eqn.forms['5'].base)
     // const e = this._testEqn.eqn.functions;
     // const frac = e.frac.bind(e);
     // const eqn = this._testEqn;
