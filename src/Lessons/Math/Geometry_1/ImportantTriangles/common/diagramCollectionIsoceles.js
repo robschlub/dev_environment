@@ -143,7 +143,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //     },
       //   },
       // },
-      '0': e.sub('a', e.sub('b', e.sub('c', 'd'))),
+      '0': { sup: ['a', { sup: ['b', { sup: ['c', 'g'] }] }] },
       '1': {
         content: {
           supSub: {
@@ -159,7 +159,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
                   },
                 },
                 subscript: 'f',
-                },
+              },
             },
             subscript: 'g',
             scale: 0.5,

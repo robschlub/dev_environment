@@ -81,7 +81,6 @@ describe('Equation Functions', () => {
         const e = eqn.eqn.functions;
         const supSub = e.supSub.bind(e);
         eqn.addElements(elements);
-        const s = 0.5;
         eqn.addForms({
           // Full Object around method objects
           '0': {
@@ -178,6 +177,28 @@ describe('Equation Functions', () => {
           '2': supSub('a', 'b', 'c', scale, supBias, subBias),
         });
       },
+      sub: () => {
+        eqn = new EquationNew(diagram.shapes, { color: color1 });
+        const e = eqn.eqn.functions;
+        // const supSub = e.supSub.bind(e);
+        eqn.addElements(elements);
+        // const scale = 0.8;    // default is 0.6
+        // const supBias = new Point(0.5, 0.5);
+        // const subBias = [0.5, -0.5];
+        eqn.addForms({
+          '0': { sub: ['a', { sub: ['b', { sub: ['g', 'd'] }] }] },
+          '1': e.sub('a', e.sub('b', e.sub('g', 'd'))),
+        });
+      },
+      sup: () => {
+        eqn = new EquationNew(diagram.shapes, { color: color1 });
+        const e = eqn.eqn.functions;
+        eqn.addElements(elements);
+        eqn.addForms({
+          '0': { sup: ['a', { sup: ['b', { sup: ['c', 'g'] }] }] },
+          '1': e.sup('a', e.sup('b', e.sup('c', 'd'))),
+        });
+      },
     };
   });
   test('Single SupSub', () => {
@@ -262,5 +283,31 @@ describe('Equation Functions', () => {
     // subscript.height * 0.7 + this.subBias.y
     expect(round(withoutSub.location.y)).toBe(round(-withoutSub.ascent * 0.7 + 0));
     expect(round(withSub.location.y)).toBe(round(-withSub.ascent * 0.7 - 0.5));
+  });
+  test('Nested Subscript', () => {
+    functions.sub();
+    const elems = [eqn._a, eqn._b, eqn._c, eqn._d];
+    const formsToTest = ['1'];
+
+    eqn.showForm('0');
+    const positions0 = elems.map(elem => round(elem.transform.mat).slice());
+    formsToTest.forEach((f) => {
+      eqn.showForm(f);
+      const positions = elems.map(elem => round(elem.transform.mat).slice());
+      expect(positions0).toEqual(positions);
+    });
+  });
+  test('Nested Superscript', () => {
+    functions.sup();
+    const elems = [eqn._a, eqn._b, eqn._c, eqn._d];
+    const formsToTest = ['1'];
+
+    eqn.showForm('0');
+    const positions0 = elems.map(elem => round(elem.transform.mat).slice());
+    formsToTest.forEach((f) => {
+      eqn.showForm(f);
+      const positions = elems.map(elem => round(elem.transform.mat).slice());
+      expect(positions0).toEqual(positions);
+    });
   });
 });
