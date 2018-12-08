@@ -118,7 +118,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     const strikeCol = this.layout.colors.diagram.disabled;
     this.diagram.equation.addEquation(this, 'testEqn', {
       color: this.layout.colors.diagram.text.base,
-      defaultFormAlignment: { scale: 2 },
+      scale: 1.5,
     });
     // $FlowFixMe
     const eqn = this._testEqn;
@@ -144,25 +144,43 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //     },
       //   },
       // },
-      '0': e.strike(['a', 'x']),
-      '1': {
-        content: {
-          supSub: {
-            content: 'a',
-            superscript: {
-              supSub: {
-                content: 'b',
-                superscript: {
-                  supSub: {
-                    content: 'c',
-                    superscript: 'd',
-                    subscript: 'e',
-                  },
-                },
-                subscript: 'f',
-              },
+      // '0': { content: e.strike(['a', 'x']) },
+      // '1': {
+      //   content: {
+      //     supSub: {
+      //       content: 'a',
+      //       superscript: {
+      //         supSub: {
+      //           content: 'b',
+      //           superscript: {
+      //             supSub: {
+      //               content: 'c',
+      //               superscript: 'd',
+      //               subscript: 'e',
+      //             },
+      //           },
+      //           subscript: 'f',
+      //         },
+      //       },
+      //       subscript: 'g',
+      //       scale: 0.5,
+      //     },
+      //   },
+      '0': {
+        deg: ['b', 'a', 'c'],
+        rad: {
+          content: ['b', 'a', 'c'],
+          elementMods: {
+            b: {
+              color: [1, 0, 0, 1],
             },
-            subscript: 'g',
+          },
+        },
+        method: {
+          frac: {
+            numerator: 'a',
+            denominator: 'b',
+            symbol: 'v',
             scale: 0.5,
           },
         },

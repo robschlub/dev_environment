@@ -40,7 +40,18 @@ type TypeEquationElement = string | {
 
 export type TypeEquationElements = {
   [elementName: string]: TypeEquationElement;
-}
+};
+
+// type TypeFormAlignment = {
+//   fixTo?: Point | string,
+//   alignH?: TypeHAlign | null,
+//   alignV?: TypeVAlign | null,
+// };
+type TypeFormAlignment = {
+  fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
+  alignH: TypeHAlign;
+  alignV: TypeVAlign;
+};
 
 type TypeEquationFormObject = {
   content: TypeEquationPhrase,
@@ -52,12 +63,8 @@ type TypeEquationFormObject = {
     }
   },
   subForm?: string,
-  alignment?: {
-    fixTo?: Point | string,
-    scale?: number,
-    alignH?: TypeHAlign | null,
-    alignV?: TypeVAlign | null,
-  },
+  scale?: number,
+  alignment?: TypeFormAlignment,
 };
 
 type TypeEquationForm = TypeEquationPhrase
@@ -76,13 +83,8 @@ export type TypeEquationOptions = {
   fontMath?: DiagramFont;
   fontText?: DiagramFont;
   position?: Point;
-  defaultFormAlignment?: {
-    fixTo?: Point;
-    alignH?: TypeHAlign;
-    alignV?: TypeVAlign;
-    scale?: number,
-  };
-  //
+  scale?: number,
+  defaultFormAlignment?: TypeFormAlignment;
   elements?: TypeEquationElements;
   forms?: TypeEquationForms;
   formSeries?: Array<string>;
@@ -108,6 +110,7 @@ export class EquationNew extends DiagramElementCollection {
     currentSubForm: string;
     fontMath: DiagramFont;
     fontText: DiagramFont;
+    scale: number;
 
     subFormPriority: Array<string>,
     //
@@ -120,7 +123,6 @@ export class EquationNew extends DiagramElementCollection {
       fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
       alignH: TypeHAlign;
       alignV: TypeVAlign;
-      scale: number,
     };
 
     isAnimating: boolean;
@@ -164,11 +166,11 @@ export class EquationNew extends DiagramElementCollection {
         0.2, '200', 'left', 'alphabetic', color,
       ),
       position: new Point(0, 0),
+      scale: 0.7,
       defaultFormAlignment: {
         fixTo: new Point(0, 0),
         alignH: 'left',
         alignV: 'baseline',
-        scale: 0.7,
       },
       elements: {},
       forms: {},
@@ -195,6 +197,7 @@ export class EquationNew extends DiagramElementCollection {
       subFormPriority: ['base'],
       formSeries: [],
       currentFormSeries: '',
+      scale: optionsToUse.scale,
       defaultFormAlignment: optionsToUse.defaultFormAlignment,
       functions: new EquationFunctions(this.elements),
       symbols: new EquationSymbols(this.shapes, this.color),
@@ -393,13 +396,17 @@ export class EquationNew extends DiagramElementCollection {
         const formContent = [this.eqn.functions.contentToElement(form.content)];
         const {
           // $FlowFixMe
-          subForm, addToSeries, elementMods, time, description, modifiers,
+          subForm, addToSeries, elementMods, time, alignment, scale,
+          // $FlowFixMe
+          description, modifiers,
         } = form;
         const options = {
           subForm,
           addToSeries,
           elementMods,
           time,
+          alignment,
+          scale,
           description,
           modifiers,
         };
@@ -407,26 +414,30 @@ export class EquationNew extends DiagramElementCollection {
         this.addForm(name, formContent, options);
       } else {
         Object.entries(form).forEach((subFormEntry) => {
-          const [subFormName, subForm] = subFormEntry;
+          const [subFormName, subFormValue] = subFormEntry;
           const subFormOption = { subForm: subFormName };
-          if (isFormString(subForm) || isFormArray(subForm)
-            || isFormMethodDefinition(subForm) || isFormElements(form)
+          if (isFormString(subFormValue) || isFormArray(subFormValue)
+            || isFormMethodDefinition(subFormValue) || isFormElements(subFormValue)
           ) {
             // $FlowFixMe
-            const formContent = [this.eqn.functions.contentToElement(subForm)];
+            const formContent = [this.eqn.functions.contentToElement(subFormValue)];
             this.addForm(name, formContent, subFormOption);
           } else {
             // $FlowFixMe
-            const formContent = [this.eqn.functions.contentToElement(subForm.content)];
+            const formContent = [this.eqn.functions.contentToElement(subFormValue.content)];
             const {
               // $FlowFixMe
-              addToSeries, elementMods, time, description, modifiers,
-            } = subForm;
+              subForm, addToSeries, elementMods, time, alignment, scale,
+              // $FlowFixMe
+              description, modifiers,
+            } = subFormValue;
             const options = joinObjects({
               subForm,
               addToSeries,
               elementMods,
               time,
+              alignment,
+              scale,
               description,
               modifiers,
             }, subFormOption);
@@ -444,6 +455,8 @@ export class EquationNew extends DiagramElementCollection {
       subForm?: string,
       elementMods?: Object,
       time?: number | null | { fromPrev?: number, fromNext?: number },
+      scale?: number,
+      alignment?: TypeFormAlignment,
       description?: string,
       modifiers?: Object,
     } = {},
@@ -458,6 +471,8 @@ export class EquationNew extends DiagramElementCollection {
       time: null,                // use velocities instead of time
       description: '',
       modifiers: {},
+      scale: this.eqn.scale,
+      alignment: this.eqn.defaultFormAlignment,
     };
     let optionsToUse = defaultOptions;
     if (options) {
@@ -520,10 +535,10 @@ export class EquationNew extends DiagramElementCollection {
 
     form[subForm].content = content;
     form[subForm].arrange(
-      this.eqn.defaultFormAlignment.scale,
-      this.eqn.defaultFormAlignment.alignH,
-      this.eqn.defaultFormAlignment.alignV,
-      this.eqn.defaultFormAlignment.fixTo,
+      optionsToUse.scale,
+      optionsToUse.alignment.alignH,
+      optionsToUse.alignment.alignV,
+      optionsToUse.alignment.fixTo,
     );
     // const { addToSeries } = optionsToUse;
     // console.log(addToSeries)

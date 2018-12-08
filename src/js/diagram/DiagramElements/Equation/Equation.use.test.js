@@ -85,8 +85,8 @@ describe('Different ways to make an equation', () => {
             fixTo: { x: 2, y: 2 },    // Points can also be defined as objects
             alignH: 'right',
             alignV: 'top',
-            scale: 0.45,
           },
+          scale: 0.45,
           forms: {
             '0': ['a', 'b', 'c'],
             '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
@@ -180,7 +180,7 @@ describe('Different ways to make an equation', () => {
     expect(eqn.eqn.defaultFormAlignment.fixTo).toEqual(new Point(2, 2));
     expect(eqn.eqn.defaultFormAlignment.alignH).toEqual('right');
     expect(eqn.eqn.defaultFormAlignment.alignV).toEqual('top');
-    expect(eqn.eqn.defaultFormAlignment.scale).toEqual(0.45);
+    expect(eqn.eqn.scale).toEqual(0.45);
 
     tools.cleanUIDs(eqn);
     expect(eqn._a).toMatchSnapshot();

@@ -137,49 +137,5 @@ describe('Equation Functions - Strike', () => {
       const positions = elems.map(elem => round(elem.transform.mat).slice());
       expect(withPos).toEqual(positions);
     });
-
-    // const withSub = eqn.eqn.forms['0'].base.content[0].content[0].subscript;
-    // const withoutSub = eqn.eqn.forms.without.base.content[0].content[0].subscript;
-    // const withSup = eqn.eqn.forms['0'].base.content[0].content[0].subscript;
-    // const withoutSup = eqn.eqn.forms.without.base.content[0].content[0].subscript;
-
-    // // Check scaling was done correctly
-    // expect(round(withSub.height / withoutSub.height)).toBe(round(0.8 / 0.5));
-    // expect(round(withSup.height / withoutSup.height)).toBe(round(0.8 / 0.5));
-
-    // // Check xBias location was done correctly
-    // expect(round(withSub.location.x - withoutSub.location.x)).toBe(0.5);
-    // expect(round(withSup.location.x - withoutSup.location.x)).toBe(0.5);
-
-    // // Check yBias location was done correctly
-    // // subscript.height * 0.7 + this.subBias.y
-    // expect(round(withoutSub.location.y)).toBe(round(-withoutSub.ascent * 0.7 + 0));
-    // expect(round(withSub.location.y)).toBe(round(-withSub.ascent * 0.7 - 0.5));
   });
-//   test('Nested Subscript', () => {
-//     functions.sub();
-//     const elems = [eqn._a, eqn._b, eqn._c, eqn._d];
-//     const formsToTest = ['1'];
-
-//     eqn.showForm('0');
-//     const positions0 = elems.map(elem => round(elem.transform.mat).slice());
-//     formsToTest.forEach((f) => {
-//       eqn.showForm(f);
-//       const positions = elems.map(elem => round(elem.transform.mat).slice());
-//       expect(positions0).toEqual(positions);
-//     });
-//   });
-//   test('Nested Superscript', () => {
-//     functions.sup();
-//     const elems = [eqn._a, eqn._b, eqn._c, eqn._d];
-//     const formsToTest = ['1'];
-
-//     eqn.showForm('0');
-//     const positions0 = elems.map(elem => round(elem.transform.mat).slice());
-//     formsToTest.forEach((f) => {
-//       eqn.showForm(f);
-//       const positions = elems.map(elem => round(elem.transform.mat).slice());
-//       expect(positions0).toEqual(positions);
-//     });
-//   });
 });
