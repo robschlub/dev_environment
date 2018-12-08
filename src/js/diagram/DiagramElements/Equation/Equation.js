@@ -98,9 +98,6 @@ export const foo = () => {};
 // Eqn manages different forms of the
 export class EquationNew extends DiagramElementCollection {
   eqn: {
-    phrases: {
-      [phraseName: string]: TypeEquationPhrase,
-    },
     forms: { [formName: string]: {
         base: EquationForm;                   // There is always a base form
         [subFormName: string]: EquationForm;  // Sub forms may differ in units
@@ -194,7 +191,6 @@ export class EquationNew extends DiagramElementCollection {
 
     // Set default values
     this.eqn = {
-      phrases: [],
       forms: {},
       currentForm: '',
       currentSubForm: '',
@@ -358,10 +354,10 @@ export class EquationNew extends DiagramElementCollection {
   //   });
   // }
 
-  addPhrases(phrases: Array<{[phraseName: string]: TypeEquationPhrase}>) {
-    phrases.forEach((phrase) => {
-      const content = this.eqn.functions.contentToElement(phrase);
-      this.eqn.phrases.push(content);
+  addPhrases(phrases: { [phraseName: string]: TypeEquationPhrase }) {
+    Object.keys(phrases).forEach((phraseName) => {
+      const phrase = phrases[phraseName];
+      this.eqn.functions.phrases[phraseName] = phrase;
     });
   }
 

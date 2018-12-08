@@ -128,6 +128,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     eqn.addElements(elements);
     // eslint-disable-next-line
     const s = 0.5;
+    eqn.addPhrases({
+      abc: ['a', 'b', 'c'],
+    });
     eqn.addForms({
       // '0': {
       //   content: ['b', 'a', 'c'],
@@ -166,14 +169,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //       scale: 0.5,
       //     },
       //   },
-      '0': {
-        content: ['a', 'space1', 'b'],
-        alignment: {
-          fixTo: 'b',
-          alignH: 'right',
-          alignV: 'bottom',
-        },
-      },
+      '0': ['abc', 'e', 'g'],
       // '0': {
       //   deg: ['b', 'a', 'c'],
       //   rad: {

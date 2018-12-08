@@ -226,15 +226,19 @@ export type TypeAnnotateArray = [
 
 export class EquationFunctions {
   // eslint-disable-next-line no-use-before-define
-  elements: DiagramElementCollection;
+  elements: { [name: string]: DiagramElementCollection | DiagramElementPrimative };
   shapes: {};
   contentToElement: (TypeEquationPhrase | Elements) => Elements;
+  phrases: {
+    [phraseName: string]: TypeEquationPhrase,
+  };
 
   // [methodName: string]: (TypeEquationPhrase) => {};
 
   // eslint-disable-next-line no-use-before-define
-  constructor(elements: DiagramElementCollection) {
+  constructor(elements: { [name: string]: DiagramElementCollection | DiagramElementPrimative }) {
     this.elements = elements;
+    this.phrases = {};
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -246,6 +250,9 @@ export class EquationFunctions {
     const diagramElement = getDiagramElement(this.elements, content);
     if (diagramElement) {
       return new Element(diagramElement);
+    }
+    if (content in this.phrases) {
+      return this.parseContent(this.phrases[content]);
     }
     return null;
   }
@@ -289,40 +296,40 @@ export class EquationFunctions {
       return content._dup();
     }
 
-    const isElements = c => c instanceof Elements;
-    // 'a'
-    const isString = c => typeof c === 'string';
-    // ['a', 'b']
-    const isArray = c => Array.isArray(c);
-    // { frac: ['a', 'b', 'c']}
-    const isMethodDefinition = (c) => {
-      if (isString(c) || isArray(c)) {
-        return false;
-      }
-      if (c != null && typeof c === 'object') {
-        // $FlowFixMe
-        const keys = Object.keys(c);
-        if (keys.length === 1 && keys[0] in this) {
-          return true;
-        }
-      }
-      return false;
-    };
-    // {
-    //   content: ['a', 'b'],
-    //   scale: 0.5,
-    // }
-    const isFullObject = (c) => {
-      if (isString(c) || isArray(c)
-        || isMethodDefinition(c) || isElements(c)
-      ) {
-        return false;
-      }
-      if (c != null && typeof c === 'object' && c.content != null) {
-        return true;
-      }
-      return false;
-    };
+    // const isElements = c => c instanceof Elements;
+    // // 'a'
+    // const isString = c => typeof c === 'string';
+    // // ['a', 'b']
+    // const isArray = c => Array.isArray(c);
+    // // { frac: ['a', 'b', 'c']}
+    // const isMethodDefinition = (c) => {
+    //   if (isString(c) || isArray(c)) {
+    //     return false;
+    //   }
+    //   if (c != null && typeof c === 'object') {
+    //     // $FlowFixMe
+    //     const keys = Object.keys(c);
+    //     if (keys.length === 1 && keys[0] in this) {
+    //       return true;
+    //     }
+    //   }
+    //   return false;
+    // };
+    // // {
+    // //   content: ['a', 'b'],
+    // //   scale: 0.5,
+    // // }
+    // const isFullObject = (c) => {
+    //   if (isString(c) || isArray(c)
+    //     || isMethodDefinition(c) || isElements(c)
+    //   ) {
+    //     return false;
+    //   }
+    //   if (c != null && typeof c === 'object' && c.content != null) {
+    //     return true;
+    //   }
+    //   return false;
+    // };
 
     let elementArray = this.parseContent(content);
     if (!Array.isArray(elementArray)) {
