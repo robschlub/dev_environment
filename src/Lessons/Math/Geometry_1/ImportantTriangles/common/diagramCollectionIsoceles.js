@@ -169,7 +169,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //       scale: 0.5,
       //     },
       //   },
-      '0': ['abc', 'e', 'g'],
+      '0': ['a', 'b', 'c'],
+      '1': 'abc',
       // '0': {
       //   deg: ['b', 'a', 'c'],
       //   rad: {

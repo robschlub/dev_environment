@@ -7,6 +7,8 @@ import {
 import * as tools from '../../../tools/tools';
 import makeDiagram from '../../../__mocks__/makeDiagram';
 import { EquationNew } from './Equation';
+import EquationForm from './EquationForm';
+import { Elements } from './Elements/Element';
 // import Fraction from './Elements/Fraction';
 
 tools.isTouchDevice = jest.fn();
@@ -44,12 +46,49 @@ jest.mock('../../DrawContext2D');
 //   };
 // }
 
+// eslint-disable no-param-reassign
+const cleanElements = (elements) => {
+  const r = 8;
+  elements.ascent = round(elements.ascent, r);
+  elements.descent = round(elements.descent, r);
+  elements.width = round(elements.width, r);
+  elements.height = round(elements.height, r);
+  if (elements.location) {
+    elements.location = elements.location.round(r);
+  }
+  if (Array.isArray(elements.content)) {
+    elements.content.forEach((c) => {
+      cleanElements(c);
+    });
+    // elements.content = elements.content.map(c => cleanElements(c));
+  } else if (
+    elements.content instanceof Elements
+    || elements.content instanceof Element
+  ) {
+    cleanElements(elements.content);
+  } else {
+    elements.content = [];
+  }
+};
+
+function cleanForm(form) {
+  form.collectionMethods = {};
+  form.elements = {};
+  form.name = 'name';
+  cleanElements(form);
+}
+// eslint-enable no-param-reassign
+
 describe('Different ways to make an equation', () => {
   let diagram;
   let eqn;
   let color1;
   let ways;
+  let clean;
   beforeEach(() => {
+    clean = (formName) => {
+      cleanForm(eqn.eqn.forms[formName].base);
+    };
     diagram = makeDiagram();
     color1 = [0.95, 0, 0, 1];
     ways = {
@@ -126,12 +165,12 @@ describe('Different ways to make an equation', () => {
           _2: '2',
           v: { symbol: 'vinculum' },
         });
-        eqn.addPhrases([
+        eqn.addPhrases(
           { abc: ['a', 'b', 'c'] },
-        ]);
+        );
         eqn.addForms({
-          '0': ['a', 'b', 'c'],
-          '1': 'abc',
+          '0a': ['a', 'b', 'c'],
+          '0b': 'abc',
         });
       },
       // nonTextFunctions: () => {
@@ -308,5 +347,11 @@ describe('Different ways to make an equation', () => {
     expect(aCenterTop.y < aRightMiddle.y).toBe(true);
     expect(aRightMiddle.y < originBasline.y).toBe(true);
     expect(originBasline.y < bRightBottom.y).toBe(true);
+  });
+  test('Phrases', () => {
+    ways.phrases();
+    expect(clean('0a')).toEqual(clean('0b'));
+    // console.log(Object.entries(eqn.eqn.forms['0a'].base))
+    // console.log(Object.entries(eqn.eqn.forms['0b'].base))
   });
 });
