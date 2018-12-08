@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Rect,
+  Transform, Rect, Point,
 } from '../../../../../js/diagram/tools/g2';
 import DiagramObjectAngle from '../../../../../js/diagram/DiagramObjects/Angle';
 import { DiagramObjectLine } from '../../../../../js/diagram/DiagramObjects/Line';
@@ -169,9 +169,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       '0': {
         content: ['a', 'space1', 'b'],
         alignment: {
-          fixTo: 'a',
+          fixTo: 'b',
           alignH: 'right',
-          alignV: 'top',
+          alignV: 'bottom',
         },
       },
       // '0': {

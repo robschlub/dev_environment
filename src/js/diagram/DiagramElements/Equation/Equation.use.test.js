@@ -117,32 +117,49 @@ describe('Different ways to make an equation', () => {
         eqn.setFormSeries(['0', '1', '2']);
         eqn.showForm('1');
       },
-      nonTextFunctions: () => {
+      phrases: () => {
         eqn = new EquationNew(diagram.shapes, { color: color1 });
-        // const e = eqn.eqn.functions;
         eqn.addElements({
           a: 'a',
           b: 'b',
           c: 'c',
           _2: '2',
           v: { symbol: 'vinculum' },
-          v1: { symbol: 'vinculum' },
         });
+        eqn.addPhrases([
+          { abc: ['a', 'b', 'c'] },
+        ]);
         eqn.addForms({
-          '0': {
-            frac: [
-              {
-                frac: ['a', 'b', 'v'],
-              },
-              'c',
-              'v1',
-            ],
-          },
-          '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+          '0': ['a', 'b', 'c'],
+          '1': 'abc',
         });
-        eqn.setFormSeries(['0', '1', '2']);
-        eqn.showForm('1');
       },
+      // nonTextFunctions: () => {
+      //   eqn = new EquationNew(diagram.shapes, { color: color1 });
+      //   const e = eqn.eqn.functions;
+      //   eqn.addElements({
+      //     a: 'a',
+      //     b: 'b',
+      //     c: 'c',
+      //     _2: '2',
+      //     v: { symbol: 'vinculum' },
+      //     v1: { symbol: 'vinculum' },
+      //   });
+      //   eqn.addForms({
+      //     '0': {
+      //       frac: [
+      //         {
+      //           frac: ['a', 'b', 'v'],
+      //         },
+      //         'c',
+      //         'v1',
+      //       ],
+      //     },
+      //     '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+      //   });
+      //   eqn.setFormSeries(['0', '1', '2']);
+      //   eqn.showForm('1');
+      // },
       equationScale: () => {
         eqn = new EquationNew(diagram.shapes, {
           color: color1,
@@ -165,7 +182,7 @@ describe('Different ways to make an equation', () => {
         eqn = new EquationNew(diagram.shapes, {
           color: color1,
           defaultFormAlignment: {
-            fixTo: 'b',
+            fixTo: 'a',
             alignV: 'top',
             alignH: 'center',
           },
@@ -176,11 +193,27 @@ describe('Different ways to make an equation', () => {
           c: 'c',
         });
         eqn.addForms({
-          '0': ['a', 'space1', 'b'],
-          '1': {
+          'aCenterTop': ['a', 'space1', 'b'],
+          'originBasline': {
             content: ['a', 'space1', 'b'],
             alignment: {
-              fixTo: 'c',
+              fixTo: new Point(0, 0),
+              alignH: 'left',
+              alignV: 'baseline',
+            },
+          },
+          'aRightMiddle': {
+            content: ['a', 'space1', 'b'],
+            alignment: {
+              fixTo: 'a',
+              alignH: 'right',
+              alignV: 'middle',
+            },
+          },
+          'bRightBottom': {
+            content: ['a', 'space1', 'b'],
+            alignment: {
+              fixTo: 'b',
               alignH: 'right',
               alignV: 'bottom',
             },
@@ -257,13 +290,23 @@ describe('Different ways to make an equation', () => {
   });
   test('Equation Form Alignment', () => {
     ways.equationFormAlignment();
-    eqn.showForm('0');
-    const pos0 = eqn._a.getDiagramPosition();
-    eqn.showForm('1');
-    const pos1 = eqn._a.getDiagramPosition();
-    expect(eqn.eqn.scale).toBe(0.95);
-    const h1 = eqn.eqn.forms['0'].base.content[0].height;
-    const h2 = eqn.eqn.forms['1'].base.content[0].height;
-    expect(round(h1 / h2)).toBe(round(0.95 / 0.85));
+    eqn.showForm('originBasline');
+    const originBasline = eqn._a.getDiagramPosition();
+    eqn.showForm('aCenterTop');
+    const aCenterTop = eqn._a.getDiagramPosition();
+    eqn.showForm('aRightMiddle');
+    const aRightMiddle = eqn._a.getDiagramPosition();
+    eqn.showForm('bRightBottom');
+    const bRightBottom = eqn._a.getDiagramPosition();
+
+    // Test x positions
+    expect(originBasline.x > aCenterTop.x).toBe(true);
+    expect(aCenterTop.x > aRightMiddle.x).toBe(true);
+    expect(aRightMiddle.x > bRightBottom.x).toBe(true);
+
+    // Test y positions
+    expect(aCenterTop.y < aRightMiddle.y).toBe(true);
+    expect(aRightMiddle.y < originBasline.y).toBe(true);
+    expect(originBasline.y < bRightBottom.y).toBe(true);
   });
 });

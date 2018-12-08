@@ -447,8 +447,21 @@ export class EquationNew extends DiagramElementCollection {
     });
   }
 
-  checkFixTo(fixTo: DiagramElementCollection | DiagramElementPrimative | string| Point) {
-
+  checkFixTo(fixTo: DiagramElementCollection | DiagramElementPrimative | string | Point | null): DiagramElementPrimative | DiagramElementCollection | Point {
+    if (typeof fixTo === 'string') {
+      const element = getDiagramElement(this, fixTo);
+      if (element != null) {
+        return element;
+      }
+      return new Point(0, 0);
+    }
+    if (fixTo instanceof DiagramElementPrimative
+      || fixTo instanceof DiagramElementCollection
+      || fixTo instanceof Point
+    ) {
+      return fixTo;
+    }
+    return new Point(0, 0);
   }
 
   addForm(
@@ -535,7 +548,8 @@ export class EquationNew extends DiagramElementCollection {
         };
       }
     });
-    console.log(optionsToUse)
+
+    optionsToUse.alignment.fixTo = this.checkFixTo(optionsToUse.alignment.fixTo);
     form[subForm].content = content;
     form[subForm].arrange(
       optionsToUse.scale,
