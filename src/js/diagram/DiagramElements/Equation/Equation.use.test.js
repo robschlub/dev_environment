@@ -143,6 +143,50 @@ describe('Different ways to make an equation', () => {
         eqn.setFormSeries(['0', '1', '2']);
         eqn.showForm('1');
       },
+      equationScale: () => {
+        eqn = new EquationNew(diagram.shapes, {
+          color: color1,
+          scale: 0.95,
+        });
+        eqn.addElements({
+          a: 'a',
+          b: 'b',
+          c: 'c',
+        });
+        eqn.addForms({
+          '0': ['a', 'b'],
+          '1': {
+            content: ['a', 'b'],
+            scale: 0.85,
+          },
+        });
+      },
+      equationFormAlignment: () => {
+        eqn = new EquationNew(diagram.shapes, {
+          color: color1,
+          defaultFormAlignment: {
+            fixTo: 'b',
+            alignV: 'top',
+            alignH: 'center',
+          },
+        });
+        eqn.addElements({
+          a: 'a',
+          b: 'b',
+          c: 'c',
+        });
+        eqn.addForms({
+          '0': ['a', 'space1', 'b'],
+          '1': {
+            content: ['a', 'space1', 'b'],
+            alignment: {
+              fixTo: 'c',
+              alignH: 'right',
+              alignV: 'bottom',
+            },
+          },
+        });
+      },
     };
   });
   test('All Text in constructor', () => {
@@ -203,5 +247,23 @@ describe('Different ways to make an equation', () => {
     expect(round(eqn.__2.transform.mat)).toMatchSnapshot();
     expect(round(eqn._v.transform.mat)).toMatchSnapshot();
     expect(round(eqn._c.transform.mat)).toMatchSnapshot();
+  });
+  test('Equation Scale', () => {
+    ways.equationScale();
+    expect(eqn.eqn.scale).toBe(0.95);
+    const h1 = eqn.eqn.forms['0'].base.content[0].height;
+    const h2 = eqn.eqn.forms['1'].base.content[0].height;
+    expect(round(h1 / h2)).toBe(round(0.95 / 0.85));
+  });
+  test('Equation Form Alignment', () => {
+    ways.equationFormAlignment();
+    eqn.showForm('0');
+    const pos0 = eqn._a.getDiagramPosition();
+    eqn.showForm('1');
+    const pos1 = eqn._a.getDiagramPosition();
+    expect(eqn.eqn.scale).toBe(0.95);
+    const h1 = eqn.eqn.forms['0'].base.content[0].height;
+    const h2 = eqn.eqn.forms['1'].base.content[0].height;
+    expect(round(h1 / h2)).toBe(round(0.95 / 0.85));
   });
 });

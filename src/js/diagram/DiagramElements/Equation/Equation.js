@@ -353,7 +353,6 @@ export class EquationNew extends DiagramElementCollection {
   //     });
   //   });
   // }
-
   addForms(forms: TypeEquationForms) {
     const isFormString = form => typeof form === 'string';
     const isFormArray = form => Array.isArray(form);
@@ -448,6 +447,10 @@ export class EquationNew extends DiagramElementCollection {
     });
   }
 
+  checkFixTo(fixTo: DiagramElementCollection | DiagramElementPrimative | string| Point) {
+
+  }
+
   addForm(
     name: string,
     content: Array<Elements | Element>,
@@ -532,7 +535,7 @@ export class EquationNew extends DiagramElementCollection {
         };
       }
     });
-
+    console.log(optionsToUse)
     form[subForm].content = content;
     form[subForm].arrange(
       optionsToUse.scale,

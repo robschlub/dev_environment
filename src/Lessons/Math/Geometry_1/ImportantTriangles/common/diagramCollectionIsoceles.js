@@ -167,24 +167,32 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //     },
       //   },
       '0': {
-        deg: ['b', 'a', 'c'],
-        rad: {
-          content: ['b', 'a', 'c'],
-          elementMods: {
-            b: {
-              color: [1, 0, 0, 1],
-            },
-          },
-        },
-        method: {
-          frac: {
-            numerator: 'a',
-            denominator: 'b',
-            symbol: 'v',
-            scale: 0.5,
-          },
+        content: ['a', 'space1', 'b'],
+        alignment: {
+          fixTo: 'a',
+          alignH: 'right',
+          alignV: 'top',
         },
       },
+      // '0': {
+      //   deg: ['b', 'a', 'c'],
+      //   rad: {
+      //     content: ['b', 'a', 'c'],
+      //     elementMods: {
+      //       b: {
+      //         color: [1, 0, 0, 1],
+      //       },
+      //     },
+      //   },
+      //   method: {
+      //     frac: {
+      //       numerator: 'a',
+      //       denominator: 'b',
+      //       symbol: 'v',
+      //       scale: 0.5,
+      //     },
+      //   },
+      // },
     });
     eqn.showForm('0');
     // eqn.showForm('4');
