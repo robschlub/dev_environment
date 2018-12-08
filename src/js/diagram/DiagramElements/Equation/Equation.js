@@ -98,6 +98,9 @@ export const foo = () => {};
 // Eqn manages different forms of the
 export class EquationNew extends DiagramElementCollection {
   eqn: {
+    phrases: {
+      [phraseName: string]: TypeEquationPhrase,
+    },
     forms: { [formName: string]: {
         base: EquationForm;                   // There is always a base form
         [subFormName: string]: EquationForm;  // Sub forms may differ in units
@@ -191,6 +194,7 @@ export class EquationNew extends DiagramElementCollection {
 
     // Set default values
     this.eqn = {
+      phrases: [],
       forms: {},
       currentForm: '',
       currentSubForm: '',
@@ -353,6 +357,14 @@ export class EquationNew extends DiagramElementCollection {
   //     });
   //   });
   // }
+
+  addPhrases(phrases: Array<{[phraseName: string]: TypeEquationPhrase}>) {
+    phrases.forEach((phrase) => {
+      const content = this.eqn.functions.contentToElement(phrase);
+      this.eqn.phrases.push(content);
+    });
+  }
+
   addForms(forms: TypeEquationForms) {
     const isFormString = form => typeof form === 'string';
     const isFormArray = form => Array.isArray(form);
@@ -382,72 +394,65 @@ export class EquationNew extends DiagramElementCollection {
       return false;
     };
 
+    const addFormNormal = (name: string, form: TypeEquationForm) => {
+      // $FlowFixMe
+      const formContent = [this.eqn.functions.contentToElement(form)];
+      this.addForm(name, formContent);
+    };
+    const addFormFullObject = (name: string, form: TypeEquationForm) => {
+      // $FlowFixMe
+      const formContent = [this.eqn.functions.contentToElement(form.content)];
+      const {
+        // $FlowFixMe
+        subForm, addToSeries, elementMods, time, alignment, scale,
+        // $FlowFixMe
+        description, modifiers,             // $FlowFixMe
+      } = form;
+      const options = {
+        subForm,
+        addToSeries,
+        elementMods,
+        time,
+        alignment,
+        scale,
+        description,
+        modifiers,
+      };
+      // $FlowFixMe
+      this.addForm(name, formContent, options);
+    };
+
     Object.keys(forms).forEach((name) => {
       const form: TypeEquationForm = forms[name];
       if (isFormString(form) || isFormArray(form)
         || isFormMethodDefinition(form) || isFormElements(form)
       ) {
-        // $FlowFixMe
-        const formContent = [this.eqn.functions.contentToElement(form)];
-        this.addForm(name, formContent);
+        addFormNormal(name, form);
       } else if (isFormFullObject(form)) {
-        // $FlowFixMe
-        const formContent = [this.eqn.functions.contentToElement(form.content)];
-        const {
-          // $FlowFixMe
-          subForm, addToSeries, elementMods, time, alignment, scale,
-          // $FlowFixMe
-          description, modifiers,
-        } = form;
-        const options = {
-          subForm,
-          addToSeries,
-          elementMods,
-          time,
-          alignment,
-          scale,
-          description,
-          modifiers,
-        };
-        // $FlowFixMe
-        this.addForm(name, formContent, options);
+        addFormFullObject(name, form);
       } else {
         Object.entries(form).forEach((subFormEntry) => {
-          const [subFormName, subFormValue] = subFormEntry;
-          const subFormOption = { subForm: subFormName };
+          const [subFormName: string, subFormValue] = subFormEntry;
+          // const subFormOption = { subForm: subFormName };
           if (isFormString(subFormValue) || isFormArray(subFormValue)
             || isFormMethodDefinition(subFormValue) || isFormElements(subFormValue)
           ) {
             // $FlowFixMe
-            const formContent = [this.eqn.functions.contentToElement(subFormValue)];
-            this.addForm(name, formContent, subFormOption);
+            addFormFullObject(name, { content: subFormValue, subForm: subFormName });
           } else {
             // $FlowFixMe
-            const formContent = [this.eqn.functions.contentToElement(subFormValue.content)];
-            const {
-              // $FlowFixMe
-              subForm, addToSeries, elementMods, time, alignment, scale,
-              // $FlowFixMe
-              description, modifiers,
-            } = subFormValue;
-            const options = joinObjects({
-              subForm,
-              addToSeries,
-              elementMods,
-              time,
-              alignment,
-              scale,
-              description,
-              modifiers,
-            }, subFormOption);
-            this.addForm(name, formContent, options);
+            addFormFullObject(name, joinObjects(subFormValue, { subForm: subFormName }));
           }
         });
       }
     });
   }
 
-  checkFixTo(fixTo: DiagramElementCollection | DiagramElementPrimative | string | Point | null): DiagramElementPrimative | DiagramElementCollection | Point {
+  checkFixTo(
+    fixTo: DiagramElementCollection
+          | DiagramElementPrimative
+          | string | Point | null,
+  ): DiagramElementPrimative | DiagramElementCollection | Point {
     if (typeof fixTo === 'string') {
       const element = getDiagramElement(this, fixTo);
       if (element != null) {

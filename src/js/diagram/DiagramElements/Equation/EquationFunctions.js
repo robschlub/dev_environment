@@ -288,6 +288,42 @@ export class EquationFunctions {
     if (content instanceof Elements) {
       return content._dup();
     }
+
+    const isElements = c => c instanceof Elements;
+    // 'a'
+    const isString = c => typeof c === 'string';
+    // ['a', 'b']
+    const isArray = c => Array.isArray(c);
+    // { frac: ['a', 'b', 'c']}
+    const isMethodDefinition = (c) => {
+      if (isString(c) || isArray(c)) {
+        return false;
+      }
+      if (c != null && typeof c === 'object') {
+        // $FlowFixMe
+        const keys = Object.keys(c);
+        if (keys.length === 1 && keys[0] in this) {
+          return true;
+        }
+      }
+      return false;
+    };
+    // {
+    //   content: ['a', 'b'],
+    //   scale: 0.5,
+    // }
+    const isFullObject = (c) => {
+      if (isString(c) || isArray(c)
+        || isMethodDefinition(c) || isElements(c)
+      ) {
+        return false;
+      }
+      if (c != null && typeof c === 'object' && c.content != null) {
+        return true;
+      }
+      return false;
+    };
+
     let elementArray = this.parseContent(content);
     if (!Array.isArray(elementArray)) {
       elementArray = [elementArray];
