@@ -46,7 +46,7 @@ jest.mock('../../DrawContext2D');
 //   };
 // }
 
-// eslint-disable no-param-reassign
+/* eslint-disable no-param-reassign */
 const cleanElements = (elements) => {
   const r = 8;
   elements.ascent = round(elements.ascent, r);
@@ -77,7 +77,7 @@ function cleanForm(form) {
   form.name = 'name';
   cleanElements(form);
 }
-// eslint-enable no-param-reassign
+/* eslint-enable no-param-reassign */
 
 describe('Different ways to make an equation', () => {
   let diagram;
@@ -88,6 +88,7 @@ describe('Different ways to make an equation', () => {
   beforeEach(() => {
     clean = (formName) => {
       cleanForm(eqn.eqn.forms[formName].base);
+      return eqn.eqn.forms[formName].base;
     };
     diagram = makeDiagram();
     color1 = [0.95, 0, 0, 1];
@@ -158,6 +159,7 @@ describe('Different ways to make an equation', () => {
       },
       phrases: () => {
         eqn = new EquationNew(diagram.shapes, { color: color1 });
+        const frac = eqn.eqn.functions.frac.bind(eqn.eqn.functions);
         eqn.addElements({
           a: 'a',
           b: 'b',
@@ -165,12 +167,40 @@ describe('Different ways to make an equation', () => {
           _2: '2',
           v: { symbol: 'vinculum' },
         });
-        eqn.addPhrases(
-          { abc: ['a', 'b', 'c'] },
-        );
+        eqn.addPhrases({
+          // Simple
+          abc: ['a', 'b', 'c'],
+          // All different ways to write a fraction
+          f0: { frac: ['a', 'b', 'v'] },
+          f1: {
+            frac: {
+              numerator: 'a',
+              denominator: 'b',
+              symbol: 'v',
+            },
+          },
+          f2: frac({
+            numerator: 'a',
+            denominator: 'b',
+            symbol: 'v',
+          }),
+          f3: frac('a', 'b', 'v'),
+          // Phrases dependent on other phrases
+          ba: ['b', 'a'],
+          bac: ['ba', 'c'],
+        });
         eqn.addForms({
           '0a': ['a', 'b', 'c'],
           '0b': 'abc',
+          //
+          'f': { frac: ['a', 'b', 'v'] },
+          'f0': 'f0',
+          'f1': 'f1',
+          'f2': 'f2',
+          'f3': 'f3',
+          //
+          'd': ['b', 'a', 'c'],
+          'd0': 'bac',
         });
       },
       // nonTextFunctions: () => {
@@ -351,7 +381,14 @@ describe('Different ways to make an equation', () => {
   test('Phrases', () => {
     ways.phrases();
     expect(clean('0a')).toEqual(clean('0b'));
-    // console.log(Object.entries(eqn.eqn.forms['0a'].base))
-    // console.log(Object.entries(eqn.eqn.forms['0b'].base))
+    //
+    expect(clean('f')).toEqual(clean('f0'));
+    expect(clean('f')).toEqual(clean('f1'));
+    expect(clean('f')).toEqual(clean('f2'));
+    expect(clean('f')).toEqual(clean('f3'));
+    //
+    expect(clean('d')).toEqual(clean('d0'));
+    // console.log(Object.entries(eqn.eqn.forms['1a'].base))
+    // console.log(Object.entries(eqn.eqn.forms['1b'].base))
   });
 });
