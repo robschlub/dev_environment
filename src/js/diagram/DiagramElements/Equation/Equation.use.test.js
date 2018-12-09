@@ -188,6 +188,9 @@ describe('Different ways to make an equation', () => {
           // Phrases dependent on other phrases
           ba: ['b', 'a'],
           bac: ['ba', 'c'],
+          //
+          // Phrase for integration into fraction
+          ab: ['a', 'b'],
         });
         eqn.addForms({
           '0a': ['a', 'b', 'c'],
@@ -201,6 +204,9 @@ describe('Different ways to make an equation', () => {
           //
           'd': ['b', 'a', 'c'],
           'd0': 'bac',
+          //
+          e: { frac: [['a', 'b'], 'c', 'v'] },
+          e0: { frac: ['ab', 'c', 'v'] },
         });
       },
       // nonTextFunctions: () => {
@@ -388,6 +394,7 @@ describe('Different ways to make an equation', () => {
     expect(clean('f')).toEqual(clean('f3'));
     //
     expect(clean('d')).toEqual(clean('d0'));
+    expect(clean('e')).toEqual(clean('e0'));
     // console.log(Object.entries(eqn.eqn.forms['1a'].base))
     // console.log(Object.entries(eqn.eqn.forms['1b'].base))
   });
