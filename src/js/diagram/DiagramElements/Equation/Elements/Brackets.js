@@ -16,13 +16,15 @@ export class Brackets extends Elements {
   glyphLocation: Point;
   rightGlyphLocation: Point;
   glyphScale: number;
-  space: number;
+  insideSpace: number;
+  outsideSpace: number;
 
   constructor(
     content: Elements | null,
     glyph: DiagramElementPrimative | null | DiagramElementCollection,
     rightGlyph: DiagramElementPrimative | null | DiagramElementCollection,
-    space: number = 0.03,
+    insideSpace: number = 0.03,
+    outsideSpace: number = 0.05,
   ) {
     const left = glyph !== null ? new Element(glyph) : null;
     const right = rightGlyph !== null ? new Element(rightGlyph) : null;
@@ -33,7 +35,8 @@ export class Brackets extends Elements {
     this.glyphLocation = new Point(0, 0);
     this.rightGlyphLocation = new Point(0, 0);
     this.glyphScale = 1;
-    this.space = space;
+    this.insideSpace = insideSpace;
+    this.outsideSpace = outsideSpace;
   }
 
   _dup(namedCollection?: Object) {
@@ -50,7 +53,8 @@ export class Brackets extends Elements {
       content,
       lglyph,
       rglyph,
-      this.space,
+      this.insideSpace,
+      this.outsideSpace,
     );
     duplicateFromTo(
       this, bracketCopy,
@@ -134,7 +138,7 @@ export class Brackets extends Elements {
     const glyphDescent = contentBounds.descent
         + contentBounds.height * (heightScale - 1) / 1.8;
     const leftSymbolLocation = new Point(
-      loc.x + this.space * scale,
+      loc.x + this.outsideSpace * scale,
       loc.y - glyphDescent,
     );
     const { glyph } = this;
@@ -160,7 +164,7 @@ export class Brackets extends Elements {
 
     const rightSymbolLocation = new Point(
       loc.x + contentBounds.width + glyphBounds.width
-        + this.space * 3 * scale,
+        + (this.insideSpace * 2 + this.outsideSpace) * scale,
       leftSymbolLocation.y,
     );
     const { rightGlyph } = this;
@@ -183,7 +187,7 @@ export class Brackets extends Elements {
       rightGlyphBounds.descent = (-bounds.bottom) * bracketScale;
     }
     const contentLocation = new Point(
-      this.location.x + glyphBounds.width + this.space * scale * 2,
+      this.location.x + glyphBounds.width + (this.insideSpace + this.outsideSpace) * scale,
       this.location.y,
     );
 
@@ -192,7 +196,8 @@ export class Brackets extends Elements {
     }
 
     this.width = glyphBounds.width + contentBounds.width
-      + rightGlyphBounds.width + this.space * scale * 4;
+      + rightGlyphBounds.width + this.insideSpace * scale * 2
+      + this.outsideSpace * scale * 2;
     this.ascent = glyphBounds.height - glyphDescent;
     this.descent = glyphDescent;
     this.height = this.descent + this.ascent;

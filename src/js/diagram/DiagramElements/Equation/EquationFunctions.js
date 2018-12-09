@@ -117,12 +117,14 @@ export type TypeBracketObject = {
   content: TypeEquationPhrase;
   left?: string;
   right?: string;
-  space?: number;
+  insideSpace?: number;
+  outsideSpace?: number;
 };
 export type TypeBracketArray = [
   TypeEquationPhrase,
   ?string,
   ?string,
+  ?number,
   ?number,
 ];
 export type TypeSubObject = {
@@ -510,23 +512,29 @@ export class EquationFunctions {
     optionsOrContent: TypeBracketObject | TypeBracketArray | TypeEquationPhrase,
     leftBracketString: string | null = null,
     rightBracketString: string | null = null,
-    spaceBetweenBrackets: number | null = null,
+    insideSpaceToContent: number | null = null,
+    outsideSpaceToContent: number | null = null,
   ) {
     let content;
     let left;
     let right;
-    let space;
+    let insideSpace;
+    let outsideSpace;
     if (!(leftBracketString == null
-          && rightBracketString == null && spaceBetweenBrackets == null)) {
+          && rightBracketString == null
+          && insideSpaceToContent == null
+          && outsideSpaceToContent == null)
+    ) {
       content = optionsOrContent;
       left = leftBracketString;
       right = rightBracketString;
-      space = spaceBetweenBrackets;
+      insideSpace = insideSpaceToContent;
+      outsideSpace = outsideSpaceToContent;
     } else if (Array.isArray(optionsOrContent)) {         // $FlowFixMe
-      [content, left, right, space] = optionsOrContent;
+      [content, left, right, insideSpace, outsideSpace] = optionsOrContent;
     } else {
       ({                                                  // $FlowFixMe
-        content, left, right, space,
+        content, left, right, insideSpace, outsideSpace,
       } = optionsOrContent);
     }
     let leftBracket = null;
@@ -537,15 +545,20 @@ export class EquationFunctions {
     if (right != null) {                                   // $FlowFixMe
       rightBracket = getDiagramElement(this.elements, right);
     }
-    let spaceToUse = 0.03;
-    if (space != null) {
-      spaceToUse = space;
+    let insideSpaceToUse;
+    if (insideSpace != null) {
+      insideSpaceToUse = insideSpace;
+    }
+    let outsideSpaceToUse;
+    if (outsideSpace != null) {
+      outsideSpaceToUse = outsideSpace;
     }
     return new Brackets(                                   // $FlowFixMe
       this.contentToElement(content),                      // $FlowFixMe
       leftBracket,                                         // $FlowFixMe
       rightBracket,                                        // $FlowFixMe
-      spaceToUse,
+      insideSpaceToUse,                                    // $FlowFixMe
+      outsideSpaceToUse,
     );
   }
 

@@ -171,7 +171,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //       scale: 0.5,
       //     },
       //   },
-      '0': e.brac(['a', 'lb', 'rb', 0]),
+      '0': ['b', e.brac(['a', 'lb', 'rb', 0.1, 0.1]), 'c'],
       '1': 'abc',
       // '0': {
       //   deg: ['b', 'a', 'c'],
