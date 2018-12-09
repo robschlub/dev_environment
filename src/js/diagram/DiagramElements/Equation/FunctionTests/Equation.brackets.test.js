@@ -79,24 +79,26 @@ describe('Equation Functions - Strike', () => {
       parameters: () => {
         eqn = new EquationNew(diagram.shapes, { color: color1 });
         const e = eqn.eqn.functions;
-        const brac = e.strike.bind(e);
+        const brac = e.brac.bind(e);
         eqn.addElements(elements);
         eqn.addForms({
           // without
           //   // Method Object
-          'without': strike('a', 'x'),
+          'without': ['a', brac('b', 'lb', 'rb'), 'c'],
           // With parameters
-          '0': {
-            strike: {
-              content: 'a',
-              symbol: 'x',
-              strikeInSize: true,
+          '0': ['a', {
+            brac: {
+              content: 'b',
+              left: 'lb',
+              right: 'rb',
+              insideSpace: 0.1,
+              outsideSpace: 0.2,
             },
-          },
+          }, 'c'],
           // Method Array
-          '1': { strike: ['a', 'x', true] },
+          '1': ['a', { brac: ['b', 'lb', 'rb', 0.1, 0.2] }, 'c'],
           // Function with parameters
-          '2': e.strike('a', 'x', true),
+          '2': ['a', brac('b', 'lb', 'rb', 0.1, 0.2), 'c'],
         });
       },
     };
@@ -121,25 +123,25 @@ describe('Equation Functions - Strike', () => {
     expect(round(eqn._lb.transform.mat)).toMatchSnapshot();
     expect(round(eqn._rb.transform.mat)).toMatchSnapshot();
   });
-  // test('Strike Parameters', () => {
-  //   functions.parameters();
-  //   const elems = [eqn._a, eqn._b, eqn._c];
-  //   const withFormsToTest = ['1', '2'];
+  test('Bracket Parameters', () => {
+    functions.parameters();
+    const elems = [eqn._a, eqn._b, eqn._c, eqn._lb, eqn._rb];
+    const withFormsToTest = ['1', '2'];
 
-  //   // get without positions
-  //   eqn.showForm('without');
-  //   const withoutPos = elems.map(elem => round(elem.transform.mat).slice());
+    // get without positions
+    eqn.showForm('without');
+    const withoutPos = elems.map(elem => round(elem.transform.mat).slice());
 
-  //   // with reference positions
-  //   eqn.showForm('0');
-  //   const withPos = elems.map(elem => round(elem.transform.mat).slice());
+    // with reference positions
+    eqn.showForm('0');
+    const withPos = elems.map(elem => round(elem.transform.mat).slice());
 
-  //   expect(withoutPos).not.toEqual(withPos);
+    expect(withoutPos).not.toEqual(withPos);
 
-  //   withFormsToTest.forEach((f) => {
-  //     eqn.showForm(f);
-  //     const positions = elems.map(elem => round(elem.transform.mat).slice());
-  //     expect(withPos).toEqual(positions);
-  //   });
-  // });
+    withFormsToTest.forEach((f) => {
+      eqn.showForm(f);
+      const positions = elems.map(elem => round(elem.transform.mat).slice());
+      expect(withPos).toEqual(positions);
+    });
+  });
 });

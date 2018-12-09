@@ -530,15 +530,15 @@ export class EquationFunctions {
       right = rightBracketString;
       insideSpace = insideSpaceToContent;
       outsideSpace = outsideSpaceToContent;
-    } else if (Array.isArray(optionsOrContent)) {         // $FlowFixMe
+    } else if (Array.isArray(optionsOrContent)) {          // $FlowFixMe
       [content, left, right, insideSpace, outsideSpace] = optionsOrContent;
     } else {
-      ({                                                  // $FlowFixMe
+      ({                                                   // $FlowFixMe
         content, left, right, insideSpace, outsideSpace,
       } = optionsOrContent);
     }
     let leftBracket = null;
-    if (left != null) {                                   // $FlowFixMe
+    if (left != null) {                                    // $FlowFixMe
       leftBracket = getDiagramElement(this.elements, left);
     }
     let rightBracket = null;
