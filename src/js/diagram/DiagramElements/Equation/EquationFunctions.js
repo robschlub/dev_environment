@@ -296,41 +296,6 @@ export class EquationFunctions {
       return content._dup();
     }
 
-    // const isElements = c => c instanceof Elements;
-    // // 'a'
-    // const isString = c => typeof c === 'string';
-    // // ['a', 'b']
-    // const isArray = c => Array.isArray(c);
-    // // { frac: ['a', 'b', 'c']}
-    // const isMethodDefinition = (c) => {
-    //   if (isString(c) || isArray(c)) {
-    //     return false;
-    //   }
-    //   if (c != null && typeof c === 'object') {
-    //     // $FlowFixMe
-    //     const keys = Object.keys(c);
-    //     if (keys.length === 1 && keys[0] in this) {
-    //       return true;
-    //     }
-    //   }
-    //   return false;
-    // };
-    // // {
-    // //   content: ['a', 'b'],
-    // //   scale: 0.5,
-    // // }
-    // const isFullObject = (c) => {
-    //   if (isString(c) || isArray(c)
-    //     || isMethodDefinition(c) || isElements(c)
-    //   ) {
-    //     return false;
-    //   }
-    //   if (c != null && typeof c === 'object' && c.content != null) {
-    //     return true;
-    //   }
-    //   return false;
-    // };
-
     let elementArray = this.parseContent(content);
     if (!Array.isArray(elementArray)) {
       elementArray = [elementArray];
@@ -541,34 +506,45 @@ export class EquationFunctions {
     );
   }
 
-  brac(options: TypeBracketObject | TypeBracketArray) {
+  brac(
+    optionsOrContent: TypeBracketObject | TypeBracketArray | TypeEquationPhrase,
+    leftBracketString: string | null = null,
+    rightBracketString: string | null = null,
+    spaceBetweenBrackets: number | null = null,
+  ) {
     let content;
     let left;
     let right;
     let space;
-    if (Array.isArray(options)) {
-      [content, left, right, space] = options;
+    if (!(leftBracketString == null
+          && rightBracketString == null && spaceBetweenBrackets == null)) {
+      content = optionsOrContent;
+      left = leftBracketString;
+      right = rightBracketString;
+      space = spaceBetweenBrackets;
+    } else if (Array.isArray(optionsOrContent)) {         // $FlowFixMe
+      [content, left, right, space] = optionsOrContent;
     } else {
-      ({
+      ({                                                  // $FlowFixMe
         content, left, right, space,
-      } = options);
+      } = optionsOrContent);
     }
     let leftBracket = null;
-    if (left != null) {
+    if (left != null) {                                   // $FlowFixMe
       leftBracket = getDiagramElement(this.elements, left);
     }
     let rightBracket = null;
-    if (right != null) {
+    if (right != null) {                                   // $FlowFixMe
       rightBracket = getDiagramElement(this.elements, right);
     }
     let spaceToUse = 0.03;
     if (space != null) {
       spaceToUse = space;
     }
-    return new Brackets(
-      this.contentToElement(content),
-      leftBracket,
-      rightBracket,
+    return new Brackets(                                   // $FlowFixMe
+      this.contentToElement(content),                      // $FlowFixMe
+      leftBracket,                                         // $FlowFixMe
+      rightBracket,                                        // $FlowFixMe
       spaceToUse,
     );
   }

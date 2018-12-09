@@ -114,6 +114,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       v: { symbol: 'vinculum' },
       v1: { symbol: 'vinculum' },
       x: { symbol: 'xStrike' },
+      lb: { symbol: 'bracket', side: 'left' },
+      rb: { symbol: 'bracket', side: 'right' },
     };
     const strikeCol = this.layout.colors.diagram.disabled;
     this.diagram.equation.addEquation(this, 'testEqn', {
@@ -169,7 +171,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //       scale: 0.5,
       //     },
       //   },
-      '0': ['a', 'b', 'c'],
+      '0': e.brac(['a', 'lb', 'rb', 0]),
       '1': 'abc',
       // '0': {
       //   deg: ['b', 'a', 'c'],
