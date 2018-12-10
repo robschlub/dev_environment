@@ -187,10 +187,23 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       // Method Array
       '2': ['a', { brac: ['b', 'lb', 'rb', 0.1, 0.2] }, 'c'],
       // Function with parameters
-      '0': [
-        e.brac('a', 'lb1', 'rb1', 0.1, 0.2, false, 3),
-        e.brac(['b', 'g'], 'lb', 'rb', 0.1, 0.2, true, 1.5),
-        e.brac(e.frac('c', 'd', 'v'), 'lb2', 'rb2', 0.1, 0.2, true)],
+      '0': ['a', {
+            brac: {
+              content: 'b',
+              left: 'lb',
+              right: 'rb',
+              insideSpace: 0.1,
+              outsideSpace: 0.2,
+              useMinLineHeight: false,
+              heightScale: 2,
+            },
+          },
+          { brac: ['f', 'lb1', 'rb1', 0.1, 0.2, false, 2] },
+        ],
+      // '0': [
+      //   e.brac('a', 'lb1', 'rb1', 0.1, 0.2, false, 3),
+      //   e.brac(['b', 'g'], 'lb', 'rb', 0.1, 0.2, true, 1.5),
+      //   e.brac(e.frac('c', 'd', 'v'), 'lb2', 'rb2', 0.1, 0.2, true)],
       '3': 'abc',
       // '0': {
       //   deg: ['b', 'a', 'c'],

@@ -95,14 +95,14 @@ describe('Equation Functions - Strike', () => {
               right: 'rb',
               insideSpace: 0.1,
               outsideSpace: 0.2,
-              minLineHeight: true,
+              useMinLineHeight: false,
               heightScale: 2,
             },
           }, 'c'],
           // Method Array
-          '1': ['a', { brac: ['b', 'lb', 'rb', 0.1, 0.2, true, 2] }, 'c'],
+          '1': ['a', { brac: ['b', 'lb', 'rb', 0.1, 0.2, false, 2] }, 'c'],
           // Function with parameters
-          '2': ['a', brac('b', 'lb', 'rb', 0.1, 0.2, true, 2), 'c'],
+          '2': ['a', brac('b', 'lb', 'rb', 0.1, 0.2, false, 2), 'c'],
         });
       },
     };
