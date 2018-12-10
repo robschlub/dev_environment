@@ -552,25 +552,41 @@ export class EquationFunctions {
       // }
     }
     let annotations;
+    // Case of single annotation in array form or array of annotations
     if (Array.isArray(withAnnotations)) {
       annotations = withAnnotations.map(
         (annotation) => {
+          // annotation is an already instantiated AnnotationInformation
           if (annotation instanceof AnnotationInformation) {
             return annotation;
           }
           const parsedContent = this.parseContent(annotation);
+          // case that annotation is a method object
           if (parsedContent instanceof AnnotationInformation) {
             return parsedContent;
-          }
-          return this.annotation(annotation);
+          }                                                     // $FlowFixMe
+          // Case of single annotation in array form
+          return null;
         },
       );
-    } else if (withAnnotations != null) {
-      const parsedContent = this.parseContent(withAnnotations);
-      if (parsedContent instanceof AnnotationInformation) {
-        annotations = [parsedContent];
-      } else {
+      // Case of single annotation in array form
+      if (annotations[0] === null) {                           // $FlowFixMe
         annotations = [this.annotation(withAnnotations)];
+      }
+    // Case of annotation as a Method Object, Method Array or
+    // AnnotationInformation instantiation
+    } else if (withAnnotations != null) {
+      if (withAnnotations instanceof AnnotationInformation) {
+        annotations = [withAnnotations];
+      } else {
+        const parsedContent = this.parseContent(withAnnotations);
+        // Method Object
+        if (parsedContent instanceof AnnotationInformation) {
+          annotations = [parsedContent];
+        // Array form only
+        } else {                                                 // $FlowFixMe
+          annotations = [this.annotation(withAnnotations)];
+        }
       }
     }
     let includeAnnotationInSizeToUse = true;

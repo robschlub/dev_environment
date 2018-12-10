@@ -210,7 +210,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //     ],
       //   },
       // }],
-      '0': [{
+      '0a': [{
         annotate: {
           content: 'a',
           withAnnotations:
@@ -221,6 +221,12 @@ export default class IsocelesCollection extends CommonDiagramCollection {
                 relativeToAnnotation: ['left', 'top'],
               },
             },
+        },
+      }],
+      '0': [{
+        annotate: {
+          content: 'a',
+          withAnnotations: ['b', 'right', 'bottom', 'left', 'top'],
         },
       }],
       // '0a': [{

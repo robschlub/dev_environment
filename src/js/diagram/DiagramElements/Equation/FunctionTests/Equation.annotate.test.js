@@ -14,7 +14,7 @@ jest.mock('../../../Gesture');
 jest.mock('../../../webgl/webgl');
 jest.mock('../../../DrawContext2D');
 
-describe('Equation Functions - Strike', () => {
+describe('Equation Functions - Annotations', () => {
   let diagram;
   let eqn;
   let color1;
@@ -39,7 +39,7 @@ describe('Equation Functions - Strike', () => {
         const e = eqn.eqn.functions;
         const annotate = e.annotate.bind(e);
         eqn.addElements(elements);
-        const annotation = ['b', 'right', 'bottom', 'left', 'top', 0.5]
+        const annotation = ['b', 'right', 'bottom', 'left', 'top', 0.5];
         const annotations = [annotation];
 
         eqn.addForms({
@@ -74,6 +74,25 @@ describe('Equation Functions - Strike', () => {
             content: 'a',
             withAnnotations: annotations,
           }),
+          '7': {
+            annotate: {
+              content: 'a',
+              withAnnotations: {
+                annotation: {
+                  annotation: 'b',
+                  relativeToContent: ['right', 'bottom'],
+                  relativeToAnnotation: ['left', 'top'],
+                  scale: 0.5,
+                },
+              },
+            },
+          },
+          '8': {
+            annotate: {
+              content: 'a',
+              withAnnotations: ['b', 'right', 'bottom', 'left', 'top', 0.5],
+            },
+          },
           // '7': {
           //   annotate: ['a', annotation],
           // },
@@ -162,7 +181,7 @@ describe('Equation Functions - Strike', () => {
   test('Single', () => {
     functions.single();
     const elems = [eqn._a, eqn._b, eqn._c];
-    const formsToTest = ['1', '2', '3', '4', '5', '6'];
+    const formsToTest = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
     eqn.showForm('0');
     const positions0 = elems.map(elem => round(elem.transform.mat).slice());
@@ -179,7 +198,7 @@ describe('Equation Functions - Strike', () => {
     // expect(round(eqn._lb.transform.mat)).toMatchSnapshot();
     // expect(round(eqn._rb.transform.mat)).toMatchSnapshot();
   });
-  test('Annotations', () => {
+  test.only('Annotations', () => {
     functions.annotations();
     const elems = [eqn._a, eqn._b, eqn._c];
     const formsToTest = ['1', '2', '3', '4', '5', '6'];
@@ -188,6 +207,7 @@ describe('Equation Functions - Strike', () => {
     const positions0 = elems.map(elem => round(elem.transform.mat).slice());
     formsToTest.forEach((f) => {
       eqn.showForm(f);
+      console.log(f)
       const positions = elems.map(elem => round(elem.transform.mat).slice());
       expect(positions0).toEqual(positions);
     });
