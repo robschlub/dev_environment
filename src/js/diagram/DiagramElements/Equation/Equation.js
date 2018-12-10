@@ -305,6 +305,17 @@ export class EquationNew extends DiagramElementCollection {
       }
     });
 
+    const fullLineHeightPrimative = makeTextElem({ text: 'gh' });
+    const form = this.createForm({ elem: fullLineHeightPrimative });
+    form.content = [this.eqn.functions.contentToElement(fullLineHeightPrimative)];
+    form.arrange(
+      this.eqn.scale,
+      'left',
+      'baseline',
+      new Point(0, 0),
+    );
+    this.eqn.functions.fullLineHeight = form;
+
     this.setFirstTransform(this.transform);
   }
 
@@ -465,6 +476,26 @@ export class EquationNew extends DiagramElementCollection {
     return new Point(0, 0);
   }
 
+  createForm(
+    elements: { [elementName: string]: DiagramElementPrimative |
+                                       DiagramElementCollection }
+    = this.elements,
+  ) {
+    return new EquationForm(
+      elements,
+      {
+        getAllElements: this.getAllElements.bind(this),
+        hideAll: this.hideAll.bind(this),
+        show: this.show.bind(this),
+        showOnly: this.showOnly.bind(this),
+        stop: this.stop.bind(this),
+        getElementTransforms: this.getElementTransforms.bind(this),
+        setElementTransforms: this.setElementTransforms.bind(this),
+        animateToTransforms: this.animateToTransforms.bind(this),
+      },
+    );
+  }
+
   addForm(
     name: string,
     content: Array<Elements | Element>,
@@ -501,19 +532,7 @@ export class EquationNew extends DiagramElementCollection {
     } = optionsToUse;
     this.eqn.forms[name].name = name;
     const form = this.eqn.forms[name];
-    form[subForm] = new EquationForm(
-      this.elements,
-      {
-        getAllElements: this.getAllElements.bind(this),
-        hideAll: this.hideAll.bind(this),
-        show: this.show.bind(this),
-        showOnly: this.showOnly.bind(this),
-        stop: this.stop.bind(this),
-        getElementTransforms: this.getElementTransforms.bind(this),
-        setElementTransforms: this.setElementTransforms.bind(this),
-        animateToTransforms: this.animateToTransforms.bind(this),
-      },
-    );
+    form[subForm] = this.createForm();
     // form[subForm].name = subForm;
     form[subForm].description = description;
     form[subForm].modifiers = modifiers;

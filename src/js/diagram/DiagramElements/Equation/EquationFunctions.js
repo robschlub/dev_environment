@@ -12,6 +12,7 @@ import Strike from './Elements/Strike';
 // import DiagramPrimatives from '../../DiagramPrimatives/DiagramPrimatives';
 import SuperSub from './Elements/SuperSub';
 import { Brackets, Bar } from './Elements/Brackets';
+import EquationForm from './EquationForm';
 import { Annotation, AnnotationInformation } from './Elements/Annotation';
 
 export function getDiagramElement(
@@ -235,12 +236,15 @@ export class EquationFunctions {
     [phraseName: string]: TypeEquationPhrase,
   };
 
+  fullLineHeight: EquationForm | null;
+
   // [methodName: string]: (TypeEquationPhrase) => {};
 
   // eslint-disable-next-line no-use-before-define
   constructor(elements: { [name: string]: DiagramElementCollection | DiagramElementPrimative }) {
     this.elements = elements;
     this.phrases = {};
+    this.fullLineHeight = null;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -291,11 +295,16 @@ export class EquationFunctions {
   }
 
   contentToElement(
-    content: TypeEquationPhrase | Elements,
+    content: TypeEquationPhrase | Elements | DiagramElementPrimative | DiagramElementCollection,
   ): Elements {
     // If input is alread an Elements object, then return it
     if (content instanceof Elements) {
       return content._dup();
+    }
+    if (content instanceof DiagramElementCollection
+      || content instanceof DiagramElementPrimative
+    ) {
+      return new Elements([new Element(content)]);
     }
 
     let elementArray = this.parseContent(content);

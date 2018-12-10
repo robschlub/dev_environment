@@ -93,6 +93,7 @@ describe('Equation Functions - Strike', () => {
               right: 'rb',
               insideSpace: 0.1,
               outsideSpace: 0.2,
+              minLineHeight: false,
             },
           }, 'c'],
           // Method Array
