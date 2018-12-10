@@ -222,7 +222,8 @@ export type TypeAnnotationArray = [
 export type TypeAnnotateObject = {
   content: TypeEquationPhrase,
   // withAnnotations: Array<TypeAnnotationObject | TypeAnnotationArray>,
-  withAnnotations: Array<TypeEquationPhrase>,
+  withAnnotations: Array<TypeEquationPhrase | AnnotationInformation>
+                  | AnnotationInformation | TypeEquationPhrase,
   includeAnnotationInSize?: boolean,
 };
 export type TypeAnnotateArray = [
@@ -269,6 +270,9 @@ export class EquationFunctions {
 
   parseContent(content: ?TypeEquationPhrase) {
     if (content == null) {
+      return null;
+    }
+    if (typeof content === 'number') {
       return null;
     }
     if (content instanceof Elements) {
@@ -524,11 +528,13 @@ export class EquationFunctions {
 
   annotate(
     optionsOrContent: TypeAnnotateObject | TypeAnnotateArray | TypeEquationPhrase,
-    withAnnotationsArray: Array<TypeEquationPhrase | AnnotationInformation> | null = null,
+    withAnnotationsArray: Array<TypeEquationPhrase | AnnotationInformation>
+                        | AnnotationInformation | TypeEquationPhrase | null = null,
     includeAnnotationInSizeCalc: boolean | null = null,
   ) {
     let content;
     let withAnnotations;
+    // let withAnnotation;
     let includeAnnotationInSize;
     if (!(withAnnotationsArray == null && includeAnnotationInSizeCalc == null)) {
       content = optionsOrContent;
@@ -540,6 +546,10 @@ export class EquationFunctions {
       ({                                                    // $FlowFixMe
         content, withAnnotations, includeAnnotationInSize,
       } = optionsOrContent);
+      // console.log(withAnnotation)
+      // if (withAnnotation != null) {
+      //   withAnnotations = withAnnotation;
+      // }
     }
     let annotations;
     if (Array.isArray(withAnnotations)) {
@@ -548,9 +558,20 @@ export class EquationFunctions {
           if (annotation instanceof AnnotationInformation) {
             return annotation;
           }
-          return this.parseContent(annotation);
+          const parsedContent = this.parseContent(annotation);
+          if (parsedContent instanceof AnnotationInformation) {
+            return parsedContent;
+          }
+          return this.annotation(annotation);
         },
       );
+    } else if (withAnnotations != null) {
+      const parsedContent = this.parseContent(withAnnotations);
+      if (parsedContent instanceof AnnotationInformation) {
+        annotations = [parsedContent];
+      } else {
+        annotations = [this.annotation(withAnnotations)];
+      }
     }
     let includeAnnotationInSizeToUse = true;
     if (includeAnnotationInSize != null) {
@@ -565,14 +586,10 @@ export class EquationFunctions {
 
   annotation(
     optionsOrAnnotation: TypeAnnotationObject | TypeAnnotationArray | TypeEquationPhrase,
-    positionRelativeToContent: [
-      'left' | 'right' | 'center' | number,
-      'bottom' | 'top' | 'middle' | 'baseline' | number,
-    ] | null = null,
-    positionRelativeToAnnotation: [
-      'left' | 'right' | 'center' | number,
-      'bottom' | 'top' | 'middle' | 'baseline' | number,
-    ] | null = null,
+    positionRelativeToContentH: 'left' | 'right' | 'center' | number | null = null,
+    positionRelativeToContentV: 'bottom' | 'top' | 'middle' | 'baseline' | number | null = null,
+    positionRelativeToAnnotationH: 'left' | 'right' | 'center' | number | null = null,
+    positionRelativeToAnnotationV: 'bottom' | 'top' | 'middle' | 'baseline' | number | null = null,
     annotationScale: number | null = null,
   ) {
     let annotation;
@@ -581,17 +598,17 @@ export class EquationFunctions {
     let relativeToAnnotationH;
     let relativeToAnnotationV;
     let scale;
-    if (!(positionRelativeToContent == null
-          && positionRelativeToAnnotation == null
+    if (!(positionRelativeToContentH == null
+          && positionRelativeToContentV == null
+          && positionRelativeToAnnotationH == null
+          && positionRelativeToAnnotationV == null
           && annotationScale == null)
     ) {
       annotation = optionsOrAnnotation;
-      if (positionRelativeToContent != null) {
-        [relativeToContentH, relativeToContentV] = positionRelativeToContent;
-      }
-      if (positionRelativeToAnnotation != null) {
-        [relativeToAnnotationH, relativeToAnnotationV] = positionRelativeToAnnotation;
-      }
+      relativeToContentH = positionRelativeToContentH;
+      relativeToContentV = positionRelativeToContentV;
+      relativeToAnnotationH = positionRelativeToAnnotationH;
+      relativeToAnnotationV = positionRelativeToAnnotationV;
       scale = annotationScale;
     } else if (Array.isArray(optionsOrAnnotation)) {
       [

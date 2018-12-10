@@ -187,28 +187,52 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       // Method Array
       '2': ['a', { brac: ['b', 'lb', 'rb', 0.1, 0.2] }, 'c'],
       // Function with parameters
-      '0a': [{
-        annotate: {
-          content: 'a',
-          withAnnotations: [
-            {
-              annotation: {
-                annotation: 'b',
-                relativeToContent: ['left', 'bottom'],
-                relativeToAnnotation: ['right', 'top'],
-              },
-            },
-          ],
-        },
-      }],
+      // '0b': [{
+      //   annotate: {
+      //     content: 'a',
+      //     withAnnotations: [
+      //       {
+      //         annotation: {
+      //           annotation: 'b',
+      //           relativeToContent: ['right', 'bottom'],
+      //           relativeToAnnotation: ['left', 'top'],
+      //         },
+      //       },
+      //       {
+      //         annotation: {
+      //           annotation: 'c',
+      //           relativeToContent: [0.6, 1.2],
+      //           relativeToAnnotation: ['center', 'bottom'],
+      //           scale: 0.4,
+      //         },
+      //       },
+      //       ['e', 'left', 'bottom', 'right', 'top', 0.3],
+      //     ],
+      //   },
+      // }],
       '0': [{
         annotate: {
           content: 'a',
-          withAnnotations: [{annotation:['b', 'right', 'bottom', 'left', 'top'],
+          withAnnotations:
+            {
+              annotation: {
+                annotation: 'b',
+                relativeToContent: ['right', 'bottom'],
+                relativeToAnnotation: ['left', 'top'],
               },
-          ],
+            },
         },
       }],
+      // '0a': [{
+      //   annotate: {
+      //     content: 'a',
+      //     withAnnotations: [
+      //       {
+      //         annotation: ['b', 'right', 'bottom', 'left', 'top'],
+      //       },
+      //     ],
+      //   },
+      // }],
       // '1': [{
       //   annotate: {
       //     content: 'a',
