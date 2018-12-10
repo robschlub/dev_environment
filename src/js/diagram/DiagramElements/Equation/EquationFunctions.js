@@ -120,12 +120,16 @@ export type TypeBracketObject = {
   right?: string;
   insideSpace?: number;
   outsideSpace?: number;
+  useMinLineHeight?: boolean;
+  heightScale?: number;
 };
 export type TypeBracketArray = [
   TypeEquationPhrase,
   ?string,
   ?string,
   ?number,
+  ?number,
+  ?boolean,
   ?number,
 ];
 export type TypeSubObject = {
@@ -523,27 +527,37 @@ export class EquationFunctions {
     rightBracketString: string | null = null,
     insideSpaceToContent: number | null = null,
     outsideSpaceToContent: number | null = null,
+    useMinLineHeightForLine: boolean | null = null,
+    bracketHeightScale: number | null = null,
   ) {
     let content;
     let left;
     let right;
     let insideSpace;
     let outsideSpace;
+    let useMinLineHeight;
+    let heightScale;
     if (!(leftBracketString == null
           && rightBracketString == null
           && insideSpaceToContent == null
-          && outsideSpaceToContent == null)
+          && outsideSpaceToContent == null
+          && useMinLineHeightForLine == null)
     ) {
       content = optionsOrContent;
       left = leftBracketString;
       right = rightBracketString;
       insideSpace = insideSpaceToContent;
       outsideSpace = outsideSpaceToContent;
-    } else if (Array.isArray(optionsOrContent)) {          // $FlowFixMe
-      [content, left, right, insideSpace, outsideSpace] = optionsOrContent;
+      useMinLineHeight = useMinLineHeightForLine;
+      heightScale = bracketHeightScale;
+    } else if (Array.isArray(optionsOrContent)) {
+      [                                                    // $FlowFixMe
+        content, left, right, insideSpace, outsideSpace,   // $FlowFixMe
+        useMinLineHeight, heightScale,
+      ] = optionsOrContent;
     } else {
       ({                                                   // $FlowFixMe
-        content, left, right, insideSpace, outsideSpace,
+        content, left, right, insideSpace, outsideSpace, useMinLineHeight, heightScale,
       } = optionsOrContent);
     }
     let leftBracket = null;
@@ -562,12 +576,22 @@ export class EquationFunctions {
     if (outsideSpace != null) {
       outsideSpaceToUse = outsideSpace;
     }
+    let minLineHeight = this.fullLineHeight;
+    if (useMinLineHeight != null && useMinLineHeight === false) {
+      minLineHeight = null;
+    }
+    let heightScaleToUse;
+    if (heightScale != null) {
+      heightScaleToUse = heightScale;
+    }
     return new Brackets(                                   // $FlowFixMe
       this.contentToElement(content),                      // $FlowFixMe
       leftBracket,                                         // $FlowFixMe
       rightBracket,                                        // $FlowFixMe
       insideSpaceToUse,                                    // $FlowFixMe
       outsideSpaceToUse,
+      minLineHeight,                                       // $FlowFixMe
+      heightScaleToUse,
     );
   }
 

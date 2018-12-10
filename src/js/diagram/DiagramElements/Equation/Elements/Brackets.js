@@ -18,6 +18,8 @@ export class Brackets extends Elements {
   glyphScale: number;
   insideSpace: number;
   outsideSpace: number;
+  minLineHeight: Elements | null;
+  heightScale: number;
 
   constructor(
     content: Elements | null,
@@ -25,6 +27,8 @@ export class Brackets extends Elements {
     rightGlyph: DiagramElementPrimative | null | DiagramElementCollection,
     insideSpace: number = 0.03,
     outsideSpace: number = 0.05,
+    minLineHeight: Elements | null = null,
+    heightScale: number = 1.2,
   ) {
     const left = glyph !== null ? new Element(glyph) : null;
     const right = rightGlyph !== null ? new Element(rightGlyph) : null;
@@ -37,6 +41,8 @@ export class Brackets extends Elements {
     this.glyphScale = 1;
     this.insideSpace = insideSpace;
     this.outsideSpace = outsideSpace;
+    this.minLineHeight = minLineHeight;
+    this.heightScale = heightScale;
   }
 
   _dup(namedCollection?: Object) {
@@ -131,12 +137,19 @@ export class Brackets extends Elements {
       contentBounds.descent = mainContent.descent;
     }
 
-    const heightScale = 1.4;
+    const lineHeight = this.minLineHeight;
+    if (lineHeight != null) {
+      lineHeight.calcSize(loc._dup(), scale);
+      contentBounds.height = Math.max(lineHeight.height, contentBounds.height);
+      contentBounds.descent = Math.max(lineHeight.descent, contentBounds.descent);
+    }
+
+    const { heightScale } = this;
     const height = contentBounds.height * heightScale;
     const bracketScale = height;
 
     const glyphDescent = contentBounds.descent
-        + contentBounds.height * (heightScale - 1) / 1.8;
+        + contentBounds.height * (heightScale - 1) / 2;
     const leftSymbolLocation = new Point(
       loc.x + this.outsideSpace * scale,
       loc.y - glyphDescent,

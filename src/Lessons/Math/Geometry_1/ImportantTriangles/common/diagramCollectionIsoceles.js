@@ -116,6 +116,10 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       x: { symbol: 'xStrike' },
       lb: { symbol: 'bracket', side: 'left' },
       rb: { symbol: 'bracket', side: 'right' },
+      lb1: { symbol: 'bracket', side: 'left' },
+      rb1: { symbol: 'bracket', side: 'right' },
+      lb2: { symbol: 'bracket', side: 'left' },
+      rb2: { symbol: 'bracket', side: 'right', numLines: 2 },
     };
     const strikeCol = this.layout.colors.diagram.disabled;
     this.diagram.equation.addEquation(this, 'testEqn', {
@@ -172,18 +176,21 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       //     },
       //   },
       '1': ['a', {
-            brac: {
-              content: 'b',
-              left: 'lb',
-              right: 'rb',
-              insideSpace: 0.1,
-              outsideSpace: 0.2,
-            },
-          }, 'c'],
-          // Method Array
-          '2': ['a', { brac: ['b', 'lb', 'rb', 0.1, 0.2] }, 'c'],
-          // Function with parameters
-          '0': ['a', e.brac('b', 'lb', 'rb', 0.1, 0.2), 'c'],
+        brac: {
+          content: 'b',
+          left: 'lb',
+          right: 'rb',
+          insideSpace: 0.1,
+          outsideSpace: 0.2,
+        },
+      }, 'c'],
+      // Method Array
+      '2': ['a', { brac: ['b', 'lb', 'rb', 0.1, 0.2] }, 'c'],
+      // Function with parameters
+      '0': [
+        e.brac('a', 'lb1', 'rb1', 0.1, 0.2, false, 3),
+        e.brac(['b', 'g'], 'lb', 'rb', 0.1, 0.2, true, 1.5),
+        e.brac(e.frac('c', 'd', 'v'), 'lb2', 'rb2', 0.1, 0.2, true)],
       '3': 'abc',
       // '0': {
       //   deg: ['b', 'a', 'c'],
