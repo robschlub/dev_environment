@@ -521,6 +521,108 @@ export class EquationFunctions {
     );
   }
 
+
+  annotate(
+    optionsOrContent: TypeAnnotateObject | TypeAnnotateArray | TypeEquationPhrase,
+    withAnnotationsArray: Array<TypeEquationPhrase | AnnotationInformation> | null = null,
+    includeAnnotationInSizeCalc: boolean | null = null,
+  ) {
+    let content;
+    let withAnnotations;
+    let includeAnnotationInSize;
+    if (!(withAnnotationsArray == null && includeAnnotationInSizeCalc == null)) {
+      content = optionsOrContent;
+      withAnnotations = withAnnotationsArray;
+      includeAnnotationInSize = includeAnnotationInSizeCalc;
+    } else if (Array.isArray(optionsOrContent)) {
+      [content, withAnnotations, includeAnnotationInSize] = optionsOrContent;
+    } else {
+      ({                                                    // $FlowFixMe
+        content, withAnnotations, includeAnnotationInSize,
+      } = optionsOrContent);
+    }
+    let annotations;
+    if (Array.isArray(withAnnotations)) {
+      annotations = withAnnotations.map(
+        (annotation) => {
+          if (annotation instanceof AnnotationInformation) {
+            return annotation;
+          }
+          return this.parseContent(annotation);
+        },
+      );
+    }
+    let includeAnnotationInSizeToUse = true;
+    if (includeAnnotationInSize != null) {
+      includeAnnotationInSizeToUse = includeAnnotationInSize;
+    }
+    return new Annotation(               // $FlowFixMe
+      this.contentToElement(content),    // $FlowFixMe
+      annotations,                       // $FlowFixMe
+      includeAnnotationInSizeToUse,
+    );
+  }
+
+  annotation(
+    optionsOrAnnotation: TypeAnnotationObject | TypeAnnotationArray | TypeEquationPhrase,
+    positionRelativeToContent: [
+      'left' | 'right' | 'center' | number,
+      'bottom' | 'top' | 'middle' | 'baseline' | number,
+    ] | null = null,
+    positionRelativeToAnnotation: [
+      'left' | 'right' | 'center' | number,
+      'bottom' | 'top' | 'middle' | 'baseline' | number,
+    ] | null = null,
+    annotationScale: number | null = null,
+  ) {
+    let annotation;
+    let relativeToContentH;
+    let relativeToContentV;
+    let relativeToAnnotationH;
+    let relativeToAnnotationV;
+    let scale;
+    if (!(positionRelativeToContent == null
+          && positionRelativeToAnnotation == null
+          && annotationScale == null)
+    ) {
+      annotation = optionsOrAnnotation;
+      if (positionRelativeToContent != null) {
+        [relativeToContentH, relativeToContentV] = positionRelativeToContent;
+      }
+      if (positionRelativeToAnnotation != null) {
+        [relativeToAnnotationH, relativeToAnnotationV] = positionRelativeToAnnotation;
+      }
+      scale = annotationScale;
+    } else if (Array.isArray(optionsOrAnnotation)) {
+      [
+        annotation, relativeToContentH, relativeToContentV,   // $FlowFixMe
+        relativeToAnnotationH, relativeToAnnotationV, scale,  // $FlowFixMe
+      ] = optionsOrAnnotation;
+    } else {
+      let relativeToContent;
+      let relativeToAnnotation;
+      ({                                                      // $FlowFixMe
+        annotation, relativeToContent, relativeToAnnotation, scale,
+      } = optionsOrAnnotation);
+      [relativeToContentH, relativeToContentV] = relativeToContent;
+      [relativeToAnnotationH, relativeToAnnotationV] = relativeToAnnotation;
+    }
+
+    let scaleToUse = 0.6;
+    if (scale != null) {
+      scaleToUse = scale;
+    }
+
+    return new AnnotationInformation(           // $FlowFixMe
+      this.contentToElement(annotation),        // $FlowFixMe
+      relativeToContentH,                       // $FlowFixMe
+      relativeToContentV,                       // $FlowFixMe
+      relativeToAnnotationH,                    // $FlowFixMe
+      relativeToAnnotationV,                    // $FlowFixMe
+      scaleToUse,
+    );
+  }
+
   brac(
     optionsOrContent: TypeBracketObject | TypeBracketArray | TypeEquationPhrase,
     leftBracketString: string | null = null,
@@ -746,70 +848,4 @@ export class EquationFunctions {
     });
   }
 
-  annotate(options: TypeAnnotateObject | TypeAnnotateArray) {
-    let content;
-    let withAnnotations;
-    let includeAnnotationInSize;
-    if (Array.isArray(options)) {
-      [content, withAnnotations, includeAnnotationInSize] = options;
-    } else {
-      ({
-        content, withAnnotations, includeAnnotationInSize,
-      } = options);
-    }
-    const annotations = withAnnotations.map(
-      (annotation) => {
-        if (annotation instanceof AnnotationInformation) {
-          return annotation;
-        }
-        return this.parseContent(annotation);
-      },
-    );
-    let includeAnnotationInSizeToUse = true;
-    if (includeAnnotationInSize != null) {
-      includeAnnotationInSizeToUse = includeAnnotationInSize;
-    }
-    return new Annotation(
-      this.contentToElement(content),    // $FlowFixMe
-      annotations,
-      includeAnnotationInSizeToUse,
-    );
-  }
-
-  annotation(options: TypeAnnotationObject | TypeAnnotationArray) {
-    let annotation;
-    let relativeToContentH;
-    let relativeToContentV;
-    let relativeToAnnotationH;
-    let relativeToAnnotationV;
-    let scale;
-    if (Array.isArray(options)) {
-      [
-        annotation, relativeToContentH, relativeToContentV,
-        relativeToAnnotationH, relativeToAnnotationV, scale,
-      ] = options;
-    } else {
-      let relativeToContent;
-      let relativeToAnnotation;
-      ({
-        annotation, relativeToContent, relativeToAnnotation, scale,
-      } = options);
-      [relativeToContentH, relativeToContentV] = relativeToContent;
-      [relativeToAnnotationH, relativeToAnnotationV] = relativeToAnnotation;
-    }
-
-    let scaleToUse = 0.6;
-    if (scale != null) {
-      scaleToUse = scale;
-    }
-
-    return new AnnotationInformation(
-      this.contentToElement(annotation),
-      relativeToContentH,
-      relativeToContentV,
-      relativeToAnnotationH,
-      relativeToAnnotationV,
-      scaleToUse,
-    );
-  }
 }

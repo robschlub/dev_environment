@@ -15,18 +15,18 @@ export class AnnotationInformation {
 
   constructor(
     content: Elements,
-    xPosition: 'left' | 'right' | 'center' | number = 'right',
-    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'top',
-    xAlign: 'left' | 'right' | 'center' | number = 'left',
-    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'bottom',
-    annotationScale: number = 0.5,
+    xPosition: 'left' | 'right' | 'center' | number | null = 'right',
+    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number | null = 'top',
+    xAlign: 'left' | 'right' | 'center' | number | null = 'left',
+    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number | null = 'bottom',
+    annotationScale: number | null = 0.5,
   ) {
     this.content = content;
-    this.xPosition = xPosition;
-    this.yPosition = yPosition;
-    this.xAlign = xAlign;
-    this.yAlign = yAlign;
-    this.annotationScale = annotationScale;
+    this.xPosition = xPosition == null ? 'right' : xPosition;
+    this.yPosition = yPosition == null ? 'top' : yPosition;
+    this.xAlign = xAlign == null ? 'left' : xAlign;
+    this.yAlign = yAlign == null ? 'bottom' : yAlign;
+    this.annotationScale = annotationScale == null ? 0.5 : annotationScale;
   }
 }
 

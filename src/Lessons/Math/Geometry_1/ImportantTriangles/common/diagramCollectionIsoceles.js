@@ -187,19 +187,34 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       // Method Array
       '2': ['a', { brac: ['b', 'lb', 'rb', 0.1, 0.2] }, 'c'],
       // Function with parameters
-      '0': ['a', {
-            brac: {
-              content: 'b',
-              left: 'lb',
-              right: 'rb',
-              insideSpace: 0.1,
-              outsideSpace: 0.2,
-              useMinLineHeight: false,
-              heightScale: 2,
+      '0a': [{
+        annotate: {
+          content: 'a',
+          withAnnotations: [
+            {
+              annotation: {
+                annotation: 'b',
+                relativeToContent: ['left', 'bottom'],
+                relativeToAnnotation: ['right', 'top'],
+              },
             },
-          },
-          { brac: ['f', 'lb1', 'rb1', 0.1, 0.2, false, 2] },
-        ],
+          ],
+        },
+      }],
+      '0': [{
+        annotate: {
+          content: 'a',
+          withAnnotations: [{annotation:['b', 'right', 'bottom', 'left', 'top'],
+              },
+          ],
+        },
+      }],
+      // '1': [{
+      //   annotate: {
+      //     content: 'a',
+      //     withAnnotations: ['b', ['left', 'bottom'], ['right', 'top']],
+      //   },
+      // }],
       // '0': [
       //   e.brac('a', 'lb1', 'rb1', 0.1, 0.2, false, 3),
       //   e.brac(['b', 'g'], 'lb', 'rb', 0.1, 0.2, true, 1.5),
