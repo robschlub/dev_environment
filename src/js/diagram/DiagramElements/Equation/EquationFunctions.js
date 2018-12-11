@@ -771,6 +771,7 @@ export class EquationFunctions {
     return [content, symbol, spaceToUse];
   }
 
+  // $FlowFixMe
   topBar(...args) {
     const [content, symbol, spaceToUse] = this.processBar(...args);
     return new Bar(                                         // $FlowFixMe
@@ -782,6 +783,7 @@ export class EquationFunctions {
     );
   }
 
+  // $FlowFixMe
   bottomBar(...args) {
     const [content, symbol, spaceToUse] = this.processBar(...args);
     return new Bar(                                         // $FlowFixMe
@@ -900,6 +902,7 @@ export class EquationFunctions {
     ];
   }
 
+  // $FlowFixMe
   bottomComment(...args) {
     const [
       content, optionsOrContent, comment, symbol,
@@ -930,6 +933,7 @@ export class EquationFunctions {
     });
   }
 
+  // $FlowFixMe
   topComment(...args) {
     const [
       content, optionsOrContent, comment, symbol,
@@ -1004,6 +1008,7 @@ export class EquationFunctions {
     ];
   }
 
+  // $FlowFixMe
   topStrike(...args) {
     const [
       content, optionsOrContent, comment, symbol,
