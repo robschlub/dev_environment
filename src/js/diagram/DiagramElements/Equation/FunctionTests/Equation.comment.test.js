@@ -35,131 +35,163 @@ describe('Equation Functions - Bar', () => {
       bar: { symbol: 'bar', side: 'top' },
     };
     functions = {
-      topBar: () => {
+      topComment: () => {
         eqn = new EquationNew(diagram.shapes, { color: color1 });
         const e = eqn.eqn.functions;
-        const topBar = e.topBar.bind(e);
+        const topComment = e.topComment.bind(e);
         eqn.addElements(elements);
         eqn.addForms({
           // Full Object
           '0': {
             content: {
-              topBar: {
+              topComment: {
                 content: 'a',
+                comment: 'b',
                 symbol: 'bar',
               },
             },
           },
           //   // Method Object
           '1': {
-            topBar: {
+            topComment: {
               content: 'a',
+              comment: 'b',
               symbol: 'bar',
             },
           },
           // Method Array
-          '2': { topBar: ['a', 'bar'] },
+          '2': { topComment: ['a', 'b', 'bar'] },
           // Function with Method Array
-          '3': e.topBar(['a', 'bar']),
+          '3': e.topComment(['a', 'b', 'bar']),
           // Function with parameters
-          '4': e.topBar('a', 'bar'),
+          '4': e.topComment('a', 'b', 'bar'),
           // Bound Function with parameters
-          '5': topBar('a', 'bar'),
+          '5': topComment('a', 'b', 'bar'),
           // Bound Function with Object
-          '6': topBar({
+          '6': topComment({
             content: 'a',
+            comment: 'b',
             symbol: 'bar',
           }),
         });
       },
-      bottomBar: () => {
+      bottomComment: () => {
         eqn = new EquationNew(diagram.shapes, { color: color1 });
         const e = eqn.eqn.functions;
-        const bottomBar = e.bottomBar.bind(e);
+        const bottomComment = e.bottomComment.bind(e);
         eqn.addElements(elements);
         eqn.addForms({
           // Full Object
           '0': {
             content: {
-              bottomBar: {
+              bottomComment: {
                 content: 'a',
+                comment: 'b',
                 symbol: 'bar',
               },
             },
           },
           //   // Method Object
           '1': {
-            bottomBar: {
+            bottomComment: {
               content: 'a',
+              comment: 'b',
               symbol: 'bar',
             },
           },
           // Method Array
-          '2': { bottomBar: ['a', 'bar'] },
+          '2': { bottomComment: ['a', 'b', 'bar'] },
           // Function with Method Array
-          '3': e.bottomBar(['a', 'bar']),
+          '3': e.bottomComment(['a', 'b', 'bar']),
           // Function with parameters
-          '4': e.bottomBar('a', 'bar'),
+          '4': e.bottomComment('a', 'b', 'bar'),
           // Bound Function with parameters
-          '5': bottomBar('a', 'bar'),
+          '5': bottomComment('a', 'b', 'bar'),
           // Bound Function with Object
-          '6': bottomBar({
+          '6': bottomComment({
             content: 'a',
+            comment: 'b',
             symbol: 'bar',
           }),
         });
       },
-      topBarParameters: () => {
+      topCommentParameters: () => {
         eqn = new EquationNew(diagram.shapes, { color: color1 });
         const e = eqn.eqn.functions;
-        const topBar = e.topBar.bind(e);
+        const topComment = e.topComment.bind(e);
         eqn.addElements(elements);
         eqn.addForms({
           // without
           //   // Method Object
-          'without': topBar('a', 'bar'),
+          'without': topComment('a', 'b', 'bar'),
           // With parameters
           '0': {
-            topBar: {
+            topComment: {
               content: 'a',
+              comment: 'b',
               symbol: 'bar',
-              space: 0.1,
+              contentSpace: 0.1,
+              commentSpace: 0.2,
+              scale: 2,
             },
           },
           // Method Array
-          '1': { topBar: ['a', 'bar', 0.1] },
+          '1': { topComment: ['a', 'b', 'bar', 0.1, 0.2, 2] },
           // Function with parameters
-          '2': e.topBar('a', 'bar', 0.1),
+          '2': e.topComment('a', 'b', 'bar', 0.1, 0.2, 2),
         });
       },
-      bottomBarParameters: () => {
+      bottomCommentParameters: () => {
         eqn = new EquationNew(diagram.shapes, { color: color1 });
         const e = eqn.eqn.functions;
-        const bottomBar = e.bottomBar.bind(e);
+        const bottomComment = e.bottomComment.bind(e);
         eqn.addElements(elements);
         eqn.addForms({
           // without
           //   // Method Object
-          'without': bottomBar('a', 'bar'),
+          'without': bottomComment('a', 'b', 'bar'),
           // With parameters
           '0': {
-            bottomBar: {
+            bottomComment: {
               content: 'a',
+              comment: 'b',
               symbol: 'bar',
-              space: 0.1,
+              contentSpace: 0.1,
+              commentSpace: 0.2,
+              scale: 2,
             },
           },
           // Method Array
-          '1': { bottomBar: ['a', 'bar', 0.1] },
+          '1': { bottomComment: ['a', 'b', 'bar', 0.1, 0.2, 2] },
           // Function with parameters
-          '2': e.bottomBar('a', 'bar', 0.1),
+          '2': e.bottomComment('a', 'b', 'bar', 0.1, 0.2, 2),
         });
       },
     };
   });
-  test('Top Bar', () => {
-    functions.topBar();
-    const elems = [eqn._a, eqn._bar];
+  test('Top Comment', () => {
+    functions.topComment();
+    const elems = [eqn._a, eqn._b, eqn._bar];
+    const formsToTest = ['1', '2', '3', '4', '5', '6'];
+
+    eqn.showForm('0');
+    const positions0 = elems.map(elem => round(elem.transform.mat).slice());
+    formsToTest.forEach((f) => {
+      eqn.showForm(f);
+      const positions = elems.map(elem => round(elem.transform.mat).slice());
+      expect(positions0).toEqual(positions);
+    });
+
+    // Snapshot test on most simple layout
+    eqn.showForm('0');
+    tools.cleanUIDs(eqn);
+    expect(round(eqn._a.transform.mat)).toMatchSnapshot();
+    expect(round(eqn._b.transform.mat)).toMatchSnapshot();
+    expect(round(eqn._bar.transform.mat)).toMatchSnapshot();
+  });
+  test('Bottom Comment', () => {
+    functions.bottomComment();
+    const elems = [eqn._a, eqn._b, eqn._bar];
     const formsToTest = ['1', '2', '3', '4', '5', '6'];
 
     eqn.showForm('0');
@@ -176,28 +208,9 @@ describe('Equation Functions - Bar', () => {
     expect(round(eqn._a.transform.mat)).toMatchSnapshot();
     expect(round(eqn._bar.transform.mat)).toMatchSnapshot();
   });
-  test('Bottom Bar', () => {
-    functions.bottomBar();
-    const elems = [eqn._a, eqn._bar];
-    const formsToTest = ['1', '2', '3', '4', '5', '6'];
-
-    eqn.showForm('0');
-    const positions0 = elems.map(elem => round(elem.transform.mat).slice());
-    formsToTest.forEach((f) => {
-      eqn.showForm(f);
-      const positions = elems.map(elem => round(elem.transform.mat).slice());
-      expect(positions0).toEqual(positions);
-    });
-
-    // Snapshot test on most simple layout
-    eqn.showForm('0');
-    tools.cleanUIDs(eqn);
-    expect(round(eqn._a.transform.mat)).toMatchSnapshot();
-    expect(round(eqn._bar.transform.mat)).toMatchSnapshot();
-  });
-  test('topBar Parameters', () => {
-    functions.topBarParameters();
-    const elems = [eqn._a, eqn._bar];
+  test('Top Comment Parameters', () => {
+    functions.topCommentParameters();
+    const elems = [eqn._a, eqn._b, eqn._bar];
     const withFormsToTest = ['1', '2'];
 
     // get without positions
@@ -216,9 +229,9 @@ describe('Equation Functions - Bar', () => {
       expect(withPos).toEqual(positions);
     });
   });
-  test('bottomBar Parameters', () => {
-    functions.bottomBarParameters();
-    const elems = [eqn._a, eqn._bar];
+  test('Bottom Comment Parameters', () => {
+    functions.bottomComment();
+    const elems = [eqn._a, eqn._b, eqn._bar];
     const withFormsToTest = ['1', '2'];
 
     // get without positions

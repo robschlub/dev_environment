@@ -897,7 +897,7 @@ export class EquationFunctions {
       scaleToUse = scale;
     }
     return [
-      content, optionsOrContent, comment, symbol,
+      content, comment, symbol,
       contentSpaceToUse, commentSpaceToUse, scaleToUse,
     ];
   }
@@ -905,13 +905,13 @@ export class EquationFunctions {
   // $FlowFixMe
   bottomComment(...args) {
     const [
-      content, optionsOrContent, comment, symbol,
+      content, comment, symbol,
       contentSpaceToUse, commentSpaceToUse, scaleToUse,
     ] = this.processComment(...args);
     let contentToUse;
     if (symbol) {
       contentToUse = new Bar(                                // $FlowFixMe
-        this.contentToElement(optionsOrContent),             // $FlowFixMe
+        this.contentToElement(content),             // $FlowFixMe
         getDiagramElement(this.elements, symbol),            // $FlowFixMe
         contentSpaceToUse,                                   // $FlowFixMe
         commentSpaceToUse,
@@ -936,13 +936,13 @@ export class EquationFunctions {
   // $FlowFixMe
   topComment(...args) {
     const [
-      content, optionsOrContent, comment, symbol,
+      content, comment, symbol,
       contentSpaceToUse, commentSpaceToUse, scaleToUse,
     ] = this.processComment(...args);
     let contentToUse;
     if (symbol) {
       contentToUse = new Bar(                                // $FlowFixMe
-        this.contentToElement(optionsOrContent),             // $FlowFixMe
+        this.contentToElement(content),             // $FlowFixMe
         getDiagramElement(this.elements, symbol),            // $FlowFixMe
         contentSpaceToUse,                                   // $FlowFixMe
         commentSpaceToUse,
