@@ -1,6 +1,6 @@
 // @flow
 import {
-  Point, parsePoint,
+  parsePoint,
 } from '../../tools/g2';
 import type {
   TypeParsablePoint,

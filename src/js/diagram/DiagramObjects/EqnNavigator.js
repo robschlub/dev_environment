@@ -1,18 +1,18 @@
 // @flow
 import {
-  Transform, Point,
+  Transform, Point, parsePoint,
 } from '../tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../Element';
-import { Equation } from '../DiagramElements/Equation/GLEquation';
+// import { Equation } from '../DiagramElements/Equation/GLEquation';
 import EquationForm from '../DiagramElements/Equation/EquationForm';
 import * as html from '../../tools/htmlGenerator';
 import { generateUniqueId, joinObjects } from '../../tools/tools';
 import { EquationNew } from '../DiagramElements/Equation/Equation';
 
 // eslint-disable-next-line no-use-before-define
-export type TypeEquationNavigator = EquationNavigator;
+// export type TypeEquationNavigator = EquationNavigator;
 
 function updateDescription(
   eqn: EquationNew,
@@ -479,7 +479,7 @@ export default class EqnNavigator extends DiagramElementCollection {
         navigatorHTMLElement.table,
         `${optionsToUse.id}_table`,
         '',
-        optionsToUse.offset, optionsToUse.alignV, optionsToUse.alignH,
+        parsePoint(optionsToUse.offset), optionsToUse.alignV, optionsToUse.alignH,
       );
       this.add('table', table);
     }

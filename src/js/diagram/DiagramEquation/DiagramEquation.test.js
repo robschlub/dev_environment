@@ -106,7 +106,7 @@ describe('Diagram Equations From Object', () => {
       navigatorWithoutEquationSplit: () => {
         diagram.equation.addNavigator(collection, 'test', {
           equation: collection._eqn,
-          offset: new Point(0.2, -0.5),
+          offset: [0.2, -0.5],
           navType: '2Line',
           alignH: 'center',
           alignV: 'middle',
