@@ -960,6 +960,79 @@ export class EquationFunctions {
     });
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  processStrike(
+    optionsOrContent: TypeBracketObject | TypeBracketArray | TypeEquationPhrase,
+    commentString: TypeEquationPhrase | null = null,
+    sym: string | null = null,
+    comSpace: number | null = null,
+    comScale: number | null = null,
+  ) {
+    let content;
+    let comment;
+    let symbol;
+    let space;
+    let scale;
+    if (!(commentString == null
+      && sym == null
+      && comSpace == null
+      && comScale == null)
+    ) {
+      content = optionsOrContent;
+      comment = commentString;
+      symbol = sym;
+      space = comSpace;
+      scale = comScale;
+    } else if (Array.isArray(optionsOrContent)) {             // $FlowFixMe
+      [content, comment, symbol, space, scale] = optionsOrContent;
+    } else {
+      ({                                                      // $FlowFixMe
+        content, comment, symbol, space, scale,
+      } = optionsOrContent);
+    }
+    let spaceToUse = 0.1;
+    if (space != null) {
+      spaceToUse = space;
+    }
+    let scaleToUse = 0.5;
+    if (scale != null) {
+      scaleToUse = scale;
+    }
+    return [
+      content, optionsOrContent, comment, symbol,
+      spaceToUse, scaleToUse,
+    ];
+  }
+
+  topStrike(...args) {
+    const [
+      content, optionsOrContent, comment, symbol,
+      spaceToUse, scaleToUse,
+    ] = this.processStrike(...args);
+    let contentToUse;
+    if (symbol) {
+      contentToUse = new Strike(                             // $FlowFixMe
+        this.contentToElement(optionsOrContent),             // $FlowFixMe
+        getDiagramElement(this.elements, symbol),            // $FlowFixMe
+        false,                                               // $FlowFixMe
+        spaceToUse,
+      );
+    } else {
+      contentToUse = content;
+    }
+    return this.annotate({                                   // $FlowFixMe
+      content: contentToUse,
+      withAnnotations: [                                     // $FlowFixMe
+        this.annotation({
+          annotation: comment,
+          relativeToContent: ['center', 'top'],
+          relativeToAnnotation: ['center', 'bottom'],
+          scale: scaleToUse,
+        }),
+      ],
+    });
+  }
+
   // topComment(options: TypeCommentObject | TypeCommentArray) {
   //   let content;
   //   let comment;

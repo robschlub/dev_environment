@@ -20,11 +20,13 @@ export default class Strike extends Elements {
   strikeRotation: number;
   strikePosition: Point;
   strikeInSize: boolean;
+  space: number;
 
   constructor(
     mainContent: Elements,
     strike: DiagramElementPrimative | null | DiagramElementCollection,
     strikeInSize: ?boolean = false,
+    space: ?number = 0,
   ) {
     if (strike) {
       super([mainContent, new Element(strike)]);
@@ -40,6 +42,7 @@ export default class Strike extends Elements {
     } else {
       this.strikeInSize = strikeInSize;
     }
+    this.space = space == null ? 0 : space;
   }
 
   _dup(namedCollection?: Object) {
@@ -84,15 +87,21 @@ export default class Strike extends Elements {
         strikeLine.angle(),
       ).getPoint(2);
       this.width = strikeTopRight.x - strikeBottomLeft.x;
-      this.ascent = Math.max(this.mainContent.ascent, strikeTopRight.y - location.y);
-      this.descent = Math.max(this.mainContent.descent, location.y - strikeBottomLeft.y);
+      this.ascent = Math.max(
+        this.mainContent.ascent,
+        strikeTopRight.y - location.y,
+      ) + this.space;
+      this.descent = Math.max(
+        this.mainContent.descent,
+        location.y - strikeBottomLeft.y,
+      ) + this.space;
       const xOffset = this.mainContent.location.x - strikeBottomLeft.x;
       this.mainContent.offsetLocation(new Point(xOffset, 0));
       strikeBottomLeft.x += xOffset;
     } else {
       this.width = this.mainContent.width;
-      this.ascent = this.mainContent.ascent;
-      this.descent = this.mainContent.descent;
+      this.ascent = this.mainContent.ascent + this.space;
+      this.descent = this.mainContent.descent + this.space;
     }
     this.height = this.descent + this.ascent;
 

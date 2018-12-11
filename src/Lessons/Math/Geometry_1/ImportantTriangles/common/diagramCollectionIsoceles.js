@@ -125,7 +125,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     const strikeCol = this.layout.colors.diagram.disabled;
     this.diagram.equation.addEquation(this, 'testEqn', {
       color: this.layout.colors.diagram.text.base,
-      scale: 1.5,
+      scale: 2,
     });
     // $FlowFixMe
     const eqn = this._testEqn;
@@ -139,7 +139,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       abc: ['a', 'b', 'c'],
     });
     eqn.addForms({
-      '0': e.topComment(['a', 'b'], 'c', 'bar'),
+      '0': e.topStrike(['a', 'b'], ['c', 'd'], 'x'),
     });
     eqn.showForm('0');
     // eqn.showForm('4');
