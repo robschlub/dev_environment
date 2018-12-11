@@ -1808,15 +1808,20 @@ export type TypeParsablePoint = [number, number] | Point | { x: number, y: numbe
 //    - Point instance
 //    - [1, 1]
 //    - { x: 1, y: 1 }
-function parsePoint(p: TypeParsablePoint): Point {
+function parsePoint<T>(p: TypeParsablePoint, onFail: T): Point | T | null {
   if (p instanceof Point) {
     return p;
   }
+  let onFailToUse = onFail;
+  if (onFailToUse == null) {
+    onFailToUse = null;
+  }
+
   if (Array.isArray(p)) {
     if (p.length === 2) {
       return new Point(p[0], p[1]);
     }
-    return p;
+    return onFailToUse;
   }
   if (typeof (p) === 'object') {
     const keys = Object.keys(p);
@@ -1824,7 +1829,7 @@ function parsePoint(p: TypeParsablePoint): Point {
       return new Point(p.x, p.y);
     }
   }
-  return p;
+  return onFailToUse;
 }
 
 export {

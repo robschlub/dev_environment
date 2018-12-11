@@ -65,7 +65,8 @@ function disableTouch(element: ?HTMLElement) {
 }
 
 function updateButtons(
-  nav: TypeEquationNavigator,
+  // eslint-disable-next-line no-use-before-define
+  nav: EqnNavigator,
   includeNextPrevPrefix: boolean = false,
 ) {
   let nextPrefix = '';
@@ -123,7 +124,7 @@ function updateButtons(
   }
 }
 
-function updateButtonsDescriptionOnly(nav: TypeEquationNavigator) {
+function updateButtonsDescriptionOnly(nav: EqnNavigator) {
   const currentForm = nav.eqn.getCurrentForm();
   if (currentForm != null) {
     const index = nav.eqn.getFormIndex(currentForm);
@@ -180,7 +181,7 @@ function makeType3Line(
     forceTwoLines: false,
     arrows: false,
   };
-  let optionsToUse = joinObjects({}, defaultOptions, options);
+  const optionsToUse = joinObjects({}, defaultOptions, options);
   // if (!Array.isArray(options)) {
   //   optionsToUse = [options];
   // }
@@ -474,12 +475,13 @@ export default class EqnNavigator extends DiagramElementCollection {
 
     // const eqnCollectionPosition = this.eqn.getPosition();
     if (navigatorHTMLElement != null) {
+      const offsetToUse = parsePoint(optionsToUse.offset, new Point(0, 0));
       Object.assign(this, navigatorHTMLElement);
       const table = this.shapes.htmlElement(
         navigatorHTMLElement.table,
         `${optionsToUse.id}_table`,
         '',
-        parsePoint(optionsToUse.offset), optionsToUse.alignV, optionsToUse.alignH,
+        offsetToUse, optionsToUse.alignV, optionsToUse.alignH,
       );
       this.add('table', table);
     }

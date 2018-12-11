@@ -881,7 +881,7 @@ export default class DiagramEquation {
         alignV?: TypeVAlign | null,
       },
       //
-      forms?: {                       // Forms to add to Equation
+      forms?: {                       // $FlowFixMe
         [formName: string]: TypeEquationArray | {
           content: TypeEquationArray,
           elementMods?: {

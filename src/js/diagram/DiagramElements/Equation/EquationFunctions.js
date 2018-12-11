@@ -1,6 +1,6 @@
 // @flow
 import {
-  parsePoint,
+  Point, parsePoint,
 } from '../../tools/g2';
 import type {
   TypeParsablePoint,
@@ -424,10 +424,15 @@ export class EquationFunctions {
       } = optionsOrContent);
     }
 
+    subscriptBias = subscriptBias == null ? null : parsePoint(
     // $FlowFixMe
-    subscriptBias = subscriptBias == null ? null : parsePoint(subscriptBias);
-    // $FlowFixMe
-    superscriptBias = superscriptBias == null ? null : parsePoint(superscriptBias);
+      subscriptBias, new Point(0, 0),
+    );
+
+    superscriptBias = superscriptBias == null ? null : parsePoint(
+      // $FlowFixMe
+      superscriptBias, new Point(0, 0),
+    );
 
     return new SuperSub(                                    // $FlowFixMe
       this.contentToElement(content),                       // $FlowFixMe
@@ -462,8 +467,10 @@ export class EquationFunctions {
       } = optionsOrContent);
     }
 
-    // $FlowFixMe
-    superscriptBias = superscriptBias == null ? null : parsePoint(superscriptBias);
+    superscriptBias = superscriptBias == null ? null : parsePoint(
+      // $FlowFixMe
+      superscriptBias, new Point(0, 0),
+    );
 
     return new SuperSub(                                    // $FlowFixMe
       this.contentToElement(content),                       // $FlowFixMe
@@ -498,8 +505,9 @@ export class EquationFunctions {
       } = optionsOrContent);
     }
 
-    // $FlowFixMe
-    subscriptBias = subscriptBias == null ? null : parsePoint(subscriptBias);
+    subscriptBias = subscriptBias == null ? null : parsePoint(  // $FlowFixMe
+      subscriptBias, new Point(0, 0),
+    );
 
     return new SuperSub(                                    // $FlowFixMe
       this.contentToElement(content),                       // $FlowFixMe
@@ -1074,57 +1082,4 @@ export class EquationFunctions {
       ],
     });
   }
-
-  // topComment(options: TypeCommentObject | TypeCommentArray) {
-  //   let content;
-  //   let comment;
-  //   let symbol;
-  //   let contentSpace;
-  //   let commentSpace;
-  //   let scale;
-  //   if (Array.isArray(options)) {
-  //     [content, comment, symbol, contentSpace, commentSpace, scale] = options;
-  //   } else {
-  //     ({
-  //       content, comment, symbol, contentSpace, commentSpace, scale,
-  //     } = options);
-  //   }
-  //   let contentSpaceToUse = 0.03;
-  //   if (contentSpace != null) {
-  //     contentSpaceToUse = contentSpace;
-  //   }
-  //   let commentSpaceToUse = 0.03;
-  //   if (commentSpace != null) {
-  //     commentSpaceToUse = commentSpace;
-  //   }
-  //   let scaleToUse = 0.6;
-  //   if (scale != null) {
-  //     scaleToUse = scale;
-  //   }
-
-  //   let contentToUse;
-  //   if (symbol) {
-  //     contentToUse = new Bar(
-  //       this.contentToElement(content),
-  //       getDiagramElement(this.elements, symbol),
-  //       contentSpaceToUse,
-  //       commentSpaceToUse,
-  //       'top',
-  //     );
-  //   } else {
-  //     contentToUse = content;
-  //   }
-  //   return this.annotate({
-  //     content: contentToUse,
-  //     withAnnotations: [
-  //       this.annotation({
-  //         annotation: comment,
-  //         relativeToContent: ['center', 'top'],
-  //         relativeToAnnotation: ['center', 'bottom'],
-  //         scale: scaleToUse,
-  //       }),
-  //     ],
-  //   });
-  // }
-
 }

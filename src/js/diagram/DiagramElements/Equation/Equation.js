@@ -177,8 +177,13 @@ export class EquationNew extends DiagramElementCollection {
       formSeries: [],
     };
     const optionsToUse = joinObjects({}, defaultOptions, options);
-    optionsToUse.position = parsePoint(optionsToUse.position);
-    optionsToUse.defaultFormAlignment.fixTo = parsePoint(optionsToUse.defaultFormAlignment.fixTo);
+    optionsToUse.position = parsePoint(
+      optionsToUse.position, new Point(0, 0),
+    );
+    optionsToUse.defaultFormAlignment.fixTo = parsePoint(
+      optionsToUse.defaultFormAlignment.fixTo,
+      optionsToUse.defaultFormAlignment.fixTo,
+    );
 
     super(new Transform('Equation')
       .scale(1, 1)
