@@ -1,4 +1,7 @@
 // @flow
+
+// Deprecate
+
 import {
   Point, Rect, Transform,
 } from '../../tools/g2';

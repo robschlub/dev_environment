@@ -55,20 +55,13 @@ class Content extends LessonContent {
       ]),
       setSteadyState: () => {
         iso.show();
-        iso._isoEqn.showAll();
-        iso.eqns.isoEqn.showForm('3');
+        // iso._isoEqn.showAll();
+        // iso.eqns.isoEqn.showForm('3');
         iso._testEqn.setPosition(-1, 1);
-        iso._testNav.setPosition(-1, 1);
-        // iso._testNav.showAll();
-        // iso._testEqn.showAll();
-        iso._testNav.showForm('0');
-        // console.log(iso._testEqn._bar.color)
-        // iso._testEqn.animateToForm('2', 2);
-        // console.log(iso._testEqn)
-        // iso._testEqn.goToForm('90', 3, 0);
-        // iso._testEqn.nextForm(2);
-        // iso._grid.showAll();
-        // iso.eqns.test.nextForm();
+        iso._testEqn.showForm('1');
+        // iso._testNav.setPosition(-1, 1);
+        // iso._testNav.showForm('0');
+        
       },
     });
 

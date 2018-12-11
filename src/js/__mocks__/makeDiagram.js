@@ -17,6 +17,7 @@ tools.isTouchDevice = jest.fn();
 jest.mock('../diagram/Gesture');
 jest.mock('../diagram/webgl/webgl');
 jest.mock('../diagram/DrawContext2D');
+jest.mock('../diagram/DrawingObjects/HTMLObject/HTMLObject');
 
 export default function makeDiagram() {
   document.body.innerHTML =
@@ -67,6 +68,7 @@ export default function makeDiagram() {
       fontsize: 1,
     },
     offsetWidth: 100,
+    appendChild: () => {},
   };
   const { limits } = definition;
   const diagram = new Diagram('c', limits);

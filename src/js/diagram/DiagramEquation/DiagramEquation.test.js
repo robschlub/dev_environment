@@ -26,175 +26,212 @@ jest.mock('../DrawContext2D');
 describe('Diagram Equations From Object', () => {
   let diagram;
   let collection;
-  let color;
+  let color1;
+  let ways;
 
   beforeEach(() => {
     diagram = makeDiagram();
     collection = diagram.shapes.collection();
-    color = [1, 0, 0, 1];
+    color1 = [0.95, 0, 0, 1];
+    ways = {
+      simple: () => {
+        diagram.equation.addEquation(collection, 'eqn', {
+          color: color1,
+          elements: {
+            a: 'a',
+            b: 'b',
+            c: 'c',
+            _2: '2',
+            v: { symbol: 'vinculum' },
+          },
+          forms: {
+            '0': ['a', 'b', 'c'],
+            '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+          },
+          formSeries: ['0', '1'],
+        });
+        collection._eqn.showForm('1');
+      },
+      allOptions: () => {
+        diagram.equation.addEquation(collection, 'eqn', {
+          color: color1,
+          position: [1, 1],           // Points can be defined as arrays
+          scale: 0.85,
+          elements: {
+            a: 'a',
+            b: 'b',
+            c: 'c',
+            _2: '2',
+            v: { symbol: 'vinculum' },
+          },
+          defaultFormAlignment: {
+            fixTo: { x: 2, y: 2 },    // Points can also be defined as objects
+            alignH: 'right',
+            alignV: 'top',
+          },
+          forms: {
+            '0': ['a', 'b', 'c'],
+            '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+          },
+          formSeries: ['0', '1'],
+        });
+        collection._eqn.showForm('1');
+      },
+      navigator: () => {
+        diagram.equation.addEquation(collection, 'eqn', {
+          color: color1,
+          elements: {
+            a: 'a',
+            b: 'b',
+            c: 'c',
+            _2: '2',
+            v: { symbol: 'vinculum' },
+          },
+          forms: {
+            '0': ['a', 'b', 'c'],
+            '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+          },
+          formSeries: ['0', '1'],
+        });
+        diagram.equation.addNavigator(collection, 'nav', {
+          equation: collection._eqn,
+          offset: new Point(0.2, -0.5),
+          navType: '2Line',
+          alignH: 'center',
+          alignV: 'middle',
+          navTypeOptions: { arrows: true },
+        });
+        collection._nav.showForm('1');
+      },
+      navigatorWithoutEquationSplit: () => {
+        diagram.equation.addNavigator(collection, 'test', {
+          equation: collection._eqn,
+          offset: new Point(0.2, -0.5),
+          navType: '2Line',
+          alignH: 'center',
+          alignV: 'middle',
+          navTypeOptions: { arrows: true },
+        });
+        collection._testEqn.addElements({
+          a: 'a',
+          b: 'b',
+          c: 'c',
+          _2: '2',
+          v: { symbol: 'vinculum' },
+        });
+        collection._testEqn.addForms({
+          '0': ['a', 'b', 'c'],
+          '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+        });
+        collection._testEqn.setFormSeries(['0', '1']);
+        collection._testNav.showForm('1');
+      },
+      navigatorWithoutEquationAllInOne: () => {
+        diagram.equation.addNavigator(collection, 'test', {
+          color: color1,
+          elements: {
+            a: 'a',
+            b: 'b',
+            c: 'c',
+            _2: '2',
+            v: { symbol: 'vinculum' },
+          },
+          forms: {
+            '0': ['a', 'b', 'c'],
+            '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+          },
+          formSeries: ['0', '1'],
+          offset: new Point(0.2, -0.5),
+          navType: '2Line',
+          alignH: 'center',
+          alignV: 'middle',
+          navTypeOptions: { arrows: true },
+        });
+        collection._testNav.showForm('1');
+      },
+    };
   });
   test('Diagram instantiation', () => {
     expect(diagram.limits).toEqual(new Rect(-1, -1, 2, 2));
   });
   describe('Equation Creation', () => {
     test('Simple', () => {
-      const eqn = diagram.equation.makeEqnFromOptions({
-        name: 'testEqn',
-        color,
-        addToCollection: collection,
-        elements: {
-          a: 'a',
-          b: 'b',
-        },
-        forms: {
-          '0': ['a', 'b'],
-        },
-        currentForm: '0',
-        formSeries: ['0'],
-      });
-      expect(collection._testEqn).not.toBe(null);
-      expect(collection._testEqn._a).not.toBe(null);
-      expect(collection._testEqn._b).not.toBe(null);
-      expect(eqn.collection).toBe(collection._testEqn);
-      expect(collection._testEqn._a.color).toEqual(color);
-    });
-  });
-  describe('Element Creation', () => {
-    test('String', () => {
-      const eqn = diagram.equation.makeEqnFromOptions({
-        name: 'testEqn',
-        color,
-        addToCollection: collection,
-        elements: {
-          a: 'a',
-          b: 'b',
-        },
-      });
-      expect(eqn.collection).toBe(collection._testEqn);
-      expect(collection._testEqn._a.color).toEqual(color);
-      expect(collection._testEqn._b.color).toEqual(color);
-    });
-    test('Objects', () => {
-      const colorA = color;
-      const colorB = [0, 1, 0, 1];
-      const isTouchableA = false;
-      const isTouchableB = true;
-      const onClickA = null;
-      const onClickB = () => {};
-      const directionA = '';
-      const directionB = 'up';
-      const magA = 0;
-      const magB = 1;
-      // const fontOrStyleA = null;
-      const fontOrStyleB = null;
-      const drawPriorityA = 1;
-      const drawPriorityB = 2;
+      ways.simple();
+      expect(collection).toHaveProperty('_eqn');
+      expect(collection._eqn).toHaveProperty('_a');
+      expect(collection._eqn).toHaveProperty('_b');
+      expect(collection._eqn).toHaveProperty('_c');
+      expect(collection._eqn).toHaveProperty('__2');
+      expect(collection._eqn).toHaveProperty('_v');
 
-      const eqn = diagram.equation.makeEqnFromOptions({
-        name: 'testEqn',
-        color,
-        addToCollection: collection,
-        elements: {
-          a: { text: 'a' },
-          b: {
-            text: 'b',
-            color: colorB,
-            isTouchable: isTouchableB,
-            onClick: onClickB,
-            direction: directionB,
-            mag: magB,
-            fontOrStyle: fontOrStyleB,
-            drawPriority: drawPriorityB,
-          },
-        },
-      });
-      expect(eqn.collection).toBe(collection._testEqn);
-      const a = collection._testEqn._a;
-      const b = collection._testEqn._b;
-      expect(a.color).toEqual(colorA);
-      expect(b.color).toEqual(colorB);
-      expect(a.isTouchable).toBe(isTouchableA);
-      expect(b.isTouchable).toBe(isTouchableB);
-      expect(a.onClick).toBe(onClickA);
-      expect(b.onClick).toBe(onClickB);
-      expect(a.animate.transform.translation.options.direction).toBe(directionA);
-      expect(b.animate.transform.translation.options.direction).toBe(directionB);
-      expect(a.animate.transform.translation.options.magnitude).toBe(magA);
-      expect(b.animate.transform.translation.options.magnitude).toBe(magB);
-      expect(a.drawPriority).toBe(drawPriorityA);
-      expect(b.drawPriority).toBe(drawPriorityB);
+      tools.cleanUIDs(collection._eqn);
+      expect(round(collection._eqn._a.transform.mat)).toMatchSnapshot();
+      expect(round(collection._eqn.__2.transform.mat)).toMatchSnapshot();
+      expect(round(collection._eqn._c.transform.mat)).toMatchSnapshot();
+      expect(round(collection._eqn._v.transform.mat)).toMatchSnapshot();
     });
-  });
-  describe('Forms', () => {
-    let eqnObj;
-    beforeEach(() => {
-      eqnObj = {
-        name: 'testEqn',
-        color,
-        addToCollection: collection,
-        elements: { a: 'a', b: 'b', c: 'c' },
-      };
-    });
-    test('Array definition', () => {
-      eqnObj.forms = {
-        '0': ['a', 'b', 'c'],
-        '1': ['b', 'a', 'c'],
-      };
-      const eqn = diagram.equation.makeEqnFromOptions(eqnObj);
-      const formContent = eqn.form['0'].base.content;
-      expect(formContent[0].content).toBe(collection._testEqn._a);
-      expect(formContent[1].content).toBe(collection._testEqn._b);
-      expect(formContent[2].content).toBe(collection._testEqn._c);
+    test('Equation with all options', () => {
+      ways.allOptions();
+      expect(collection).toHaveProperty('_eqn');
+      expect(collection._eqn).toHaveProperty('_a');
+      expect(collection._eqn).toHaveProperty('_b');
+      expect(collection._eqn).toHaveProperty('_c');
+      expect(collection._eqn).toHaveProperty('__2');
+      expect(collection._eqn).toHaveProperty('_v');
 
-      const formContent1 = eqn.form['1'].base.content;
-      expect(formContent1[0].content).toBe(collection._testEqn._b);
-      expect(formContent1[1].content).toBe(collection._testEqn._a);
-      expect(formContent1[2].content).toBe(collection._testEqn._c);
+      tools.cleanUIDs(collection._eqn);
+      expect(round(collection._eqn._a.transform.mat)).toMatchSnapshot();
+      expect(round(collection._eqn.__2.transform.mat)).toMatchSnapshot();
+      expect(round(collection._eqn._c.transform.mat)).toMatchSnapshot();
+      expect(round(collection._eqn._v.transform.mat)).toMatchSnapshot();
     });
-    test('Object definition', () => {
-      const fixTo0 = new Point(0, 0);
-      const fixTo1 = 'b';
-      // const scale0 = 0.7;
-      const scale1 = 0.25;
-      // const vAlign0 = 'baseline';
-      const vAlign1 = 'bottom';
-      // const hAlign0 = 'left';
-      const hAlign1 = 'right';
-      // const animationTime0 = null;
-      const animationTime1 = 10;
-      eqnObj.forms = {
-        '0': ['a', 'b', 'c'],
-        '1': {
-          content: ['a', 'b', 'c'],
-          alignment: {
-            fixTo: fixTo1,
-            scale: scale1,
-            vAlign: vAlign1,
-            hAlign: hAlign1,
-          },
-          animationTime: animationTime1,
-        },
-      };
-      const eqn = diagram.equation.makeEqnFromOptions(eqnObj);
-      const form0 = eqn.form['0'].base;
-      const formContent = eqn.form['0'].base.content;
-      expect(formContent[0].content).toBe(collection._testEqn._a);
-      expect(formContent[1].content).toBe(collection._testEqn._b);
-      expect(formContent[2].content).toBe(collection._testEqn._c);
-      expect(form0.location).toEqual(fixTo0);
+    test('Navigator with all options', () => {
+      ways.navigator();
+      expect(collection).toHaveProperty('_eqn');
+      expect(collection).toHaveProperty('_nav');
+      expect(collection._eqn).toHaveProperty('_a');
+      expect(collection._eqn).toHaveProperty('_b');
+      expect(collection._eqn).toHaveProperty('_c');
+      expect(collection._eqn).toHaveProperty('__2');
+      expect(collection._eqn).toHaveProperty('_v');
 
-      const form1 = eqn.form['1'].base;
-      const aWidth = form1.content[0].width;
-      const bDescent = form1.content[1].descent;
-      const bWidth = form1.content[1].width;
-      const formContent1 = eqn.form['1'].base.content;
-      expect(formContent1[0].content).toBe(collection._testEqn._a);
-      expect(formContent1[1].content).toBe(collection._testEqn._b);
-      expect(formContent1[2].content).toBe(collection._testEqn._c);
-      expect(round(form1.location.x, 8)).toEqual(round(-aWidth - bWidth, 8));
-      expect(round(form1.location.y, 8)).toEqual(round(bDescent, 8));
-      expect(form1.time).toEqual({ fromPrev: 10, fromNext: 10, fromAny: 10 });
-      expect(form1.name).toBe('1');
+      tools.cleanUIDs(collection._eqn);
+      expect(round(collection._eqn._a.transform.mat)).toMatchSnapshot();
+      expect(round(collection._eqn.__2.transform.mat)).toMatchSnapshot();
+      expect(round(collection._eqn._c.transform.mat)).toMatchSnapshot();
+      expect(round(collection._eqn._v.transform.mat)).toMatchSnapshot();
+    });
+    test('Navigator without equation Split', () => {
+      ways.navigatorWithoutEquationSplit();
+      expect(collection).toHaveProperty('_testEqn');
+      expect(collection).toHaveProperty('_testNav');
+      expect(collection._testEqn).toHaveProperty('_a');
+      expect(collection._testEqn).toHaveProperty('_b');
+      expect(collection._testEqn).toHaveProperty('_c');
+      expect(collection._testEqn).toHaveProperty('__2');
+      expect(collection._testEqn).toHaveProperty('_v');
+
+      tools.cleanUIDs(collection._testEqn);
+      expect(round(collection._testEqn._a.transform.mat)).toMatchSnapshot();
+      expect(round(collection._testEqn.__2.transform.mat)).toMatchSnapshot();
+      expect(round(collection._testEqn._c.transform.mat)).toMatchSnapshot();
+      expect(round(collection._testEqn._v.transform.mat)).toMatchSnapshot();
+    });
+    test('Navigator without equation all in one object', () => {
+      ways.navigatorWithoutEquationAllInOne();
+      expect(collection).toHaveProperty('_testEqn');
+      expect(collection).toHaveProperty('_testNav');
+      expect(collection._testEqn).toHaveProperty('_a');
+      expect(collection._testEqn).toHaveProperty('_b');
+      expect(collection._testEqn).toHaveProperty('_c');
+      expect(collection._testEqn).toHaveProperty('__2');
+      expect(collection._testEqn).toHaveProperty('_v');
+
+      tools.cleanUIDs(collection._testEqn);
+      expect(round(collection._testEqn._a.transform.mat)).toMatchSnapshot();
+      expect(round(collection._testEqn.__2.transform.mat)).toMatchSnapshot();
+      expect(round(collection._testEqn._c.transform.mat)).toMatchSnapshot();
+      expect(round(collection._testEqn._v.transform.mat)).toMatchSnapshot();
     });
   });
 });

@@ -375,7 +375,7 @@ function makeType2Line(
 }
 
 export type TypeNavigatorOptions = {
-  equation: EquationNew,
+  equation?: EquationNew,
   offset?: Point,
   navType?: 'equationOnly' | 'description' | '1Line' | '2Line' | '3Line',
   navTypeOptions?: TypeNavTypeOptions,
@@ -408,12 +408,6 @@ export default class EqnNavigator extends DiagramElementCollection {
     // eqn: EquationNew,
     animateNextFrame: () => void,
     options: TypeNavigatorOptions = {},
-    // offset: Point,
-    // navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' | 'twoLine' = 'threeLine',
-    // options: string | Array<string> = '',
-    // xAlign: 'left' | 'right' | 'center' = 'left',
-    // vAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'middle',
-    // id: string = generateUniqueId('id_lesson__equation_navigator_'),
   ) {
     super(new Transform('Eqn Nav')
       .scale(1, 1)
@@ -446,6 +440,7 @@ export default class EqnNavigator extends DiagramElementCollection {
     };
     const optionsToUse = joinObjects({}, defaultOptions, options);
     this.eqn = optionsToUse.equation;
+    // console.log(optionsToUse)
 
     this.navType = optionsToUse.navType;
 
@@ -489,8 +484,6 @@ export default class EqnNavigator extends DiagramElementCollection {
       );
       this.add('table', table);
     }
-
-    // this.eqn.setTransformCallback = 
 
     this.eqn.onClick = this.clickNext.bind(this);
     this.eqn.hasTouchableElements = true;

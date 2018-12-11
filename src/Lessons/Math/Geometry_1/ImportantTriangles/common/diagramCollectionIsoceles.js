@@ -103,60 +103,80 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   }
 
   addEquations() {
-    const elements = {
-      a: 'a',
-      b: 'b',
-      c: 'c',
-      d: 'd',
-      e: 'e',
-      f: 'f',
-      g: 'g',
-      v: { symbol: 'vinculum' },
-      v1: { symbol: 'vinculum' },
-      x: { symbol: 'xStrike' },
-      lb: { symbol: 'bracket', side: 'left' },
-      rb: { symbol: 'bracket', side: 'right' },
-      lb1: { symbol: 'bracket', side: 'left' },
-      rb1: { symbol: 'bracket', side: 'right' },
-      lb2: { symbol: 'bracket', side: 'left' },
-      rb2: { symbol: 'bracket', side: 'right', numLines: 2 },
-      bar: { symbol: 'bar' },
-    };
-    const strikeCol = this.layout.colors.diagram.disabled;
-    this.diagram.equation.addEquation(this, 'testEqn', {
-      color: this.layout.colors.diagram.text.base,
-      scale: 2,
+    const color1 = [1, 0, 0, 1];
+    this.diagram.equation.addNavigator(this, 'test', {
+      color: color1,
+      elements: {
+        a: 'a',
+        b: 'b',
+        c: 'c',
+        _2: '2',
+        v: { symbol: 'vinculum' },
+      },
+      forms: {
+        '0': ['a', 'b', 'c'],
+        '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+      },
+      formSeries: ['0', '1'],
     });
-    this.diagram.equation.addNavigator(this, 'testNav', {
-      equation: this._testEqn,
-      offset: new Point(0.2, -0.5),
-      navType: '2Line',
-      alignH: 'center',
-      alignV: 'middle',
-      navTypeOptions: { arrows: true },
-    });
-    // $FlowFixMe
-    const eqn = this._testEqn;
-    const e = eqn.eqn.functions;
-    // eslint-disable-next-line
-    const frac = e.frac.bind(e);
-    eqn.addElements(elements);
-    // eslint-disable-next-line
-    const s = 0.5;
-    eqn.addPhrases({
-      abc: ['a', 'b', 'c'],
-    });
-    eqn.addForms({
-      '0': ['a', 'b'],
-      '1': e.topStrike(['a', 'b'], 'c', 'x', 0.07, 0.5),
-      '2': 'c',
-      // '0': e.topStrike('a', 'b', 'x'),
-    });
-    eqn.setFormSeries(['0', '1', '2']);
-    eqn.changeDescription('0', 'Hello');
-    eqn.changeDescription('1', 'There');
-    eqn.changeDescription('2', 'How are you');
-    eqn.showForm('1');
+    // const elements = {
+    //   a: 'a',
+    //   b: 'b',
+    //   c: 'c',
+    //   d: 'd',
+    //   e: 'e',
+    //   f: 'f',
+    //   g: 'g',
+    //   v: { symbol: 'vinculum' },
+    //   v1: { symbol: 'vinculum' },
+    //   x: { symbol: 'xStrike' },
+    //   lb: { symbol: 'bracket', side: 'left' },
+    //   rb: { symbol: 'bracket', side: 'right' },
+    //   lb1: { symbol: 'bracket', side: 'left' },
+    //   rb1: { symbol: 'bracket', side: 'right' },
+    //   lb2: { symbol: 'bracket', side: 'left' },
+    //   rb2: { symbol: 'bracket', side: 'right', numLines: 2 },
+    //   bar: { symbol: 'bar' },
+    // };
+    // const strikeCol = this.layout.colors.diagram.disabled;
+    // this.diagram.equation.addEquation(this, 'testEqn', {
+    //   color: this.layout.colors.diagram.text.base,
+    //   scale: 2,
+    // });
+    // this.diagram.equation.addNavigator(this, 'testNav', {
+    //   equation: this._testEqn,
+    //   offset: new Point(0.2, -0.5),
+    //   navType: '2Line',
+    //   alignH: 'center',
+    //   alignV: 'middle',
+    //   navTypeOptions: { arrows: true },
+    // });
+    // // $FlowFixMe
+    // const eqn = this._testEqn;
+    // const e = eqn.eqn.functions;
+    // // eslint-disable-next-line
+    // const frac = e.frac.bind(e);
+    // eqn.addElements(elements);
+    // // eslint-disable-next-line
+    // const s = 0.5;
+    // eqn.addPhrases({
+    //   abc: ['a', 'b', 'c'],
+    // });
+    // eqn.addForms({
+    //   '0': ['a', 'b'],
+    //   '1': e.topStrike(['a', 'b'], 'c', 'x', 0.07, 0.5),
+    //   '2': 'c',
+    //   // '0': e.topStrike('a', 'b', 'x'),
+    // });
+    // eqn.setFormSeries(['0', '1', '2']);
+    // eqn.changeDescription('0', 'Hello');
+    // eqn.changeDescription('1', 'There');
+    // eqn.changeDescription('2', 'How are you');
+    // eqn.showForm('1');
+
+
+
+
     // eqn.showForm('4');
     // console.log(eqn.eqn.forms['4'].base.height)
     // // eqn.showForm('5');
@@ -443,149 +463,149 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     //   //   }, 'c',
     //   // ],
     // });
-    this.diagram.equation.makeEqnFromOptions({
-      name: 'isoEqn',
-      addToCollection: this,
-      color: this.layout.colors.diagram.text.base,
-      elements: {
-        a: { text: 'a', color: this.layout.colors.angles },
-        // a_: 'a',
-        b: { text: 'b', color: this.layout.colors.angles },
-        b_: { text: 'b', color: this.layout.colors.angles },
-        b__: { text: 'b', color: this.layout.colors.angles },
-        _2: '2',
-        _2_: '2',
-        _2__: '2',
-        _180: '180º',
-        plus: ' + ',
-        minus: ' - ',
-        minus_: ' - ',
-        equals: ' = ',
-        v: { diagramObj: 'vinculum' },
-        v_: { diagramObj: 'vinculum' },
-        x: { diagramObj: 'xStrike', color: strikeCol },
-        x_: { diagramObj: 'xStrike', color: strikeCol },
-        x__: { diagramObj: 'xStrike', color: strikeCol },
+    // this.diagram.equation.makeEqnFromOptions({
+    //   name: 'isoEqn',
+    //   addToCollection: this,
+    //   color: this.layout.colors.diagram.text.base,
+    //   elements: {
+    //     a: { text: 'a', color: this.layout.colors.angles },
+    //     // a_: 'a',
+    //     b: { text: 'b', color: this.layout.colors.angles },
+    //     b_: { text: 'b', color: this.layout.colors.angles },
+    //     b__: { text: 'b', color: this.layout.colors.angles },
+    //     _2: '2',
+    //     _2_: '2',
+    //     _2__: '2',
+    //     _180: '180º',
+    //     plus: ' + ',
+    //     minus: ' - ',
+    //     minus_: ' - ',
+    //     equals: ' = ',
+    //     v: { diagramObj: 'vinculum' },
+    //     v_: { diagramObj: 'vinculum' },
+    //     x: { diagramObj: 'xStrike', color: strikeCol },
+    //     x_: { diagramObj: 'xStrike', color: strikeCol },
+    //     x__: { diagramObj: 'xStrike', color: strikeCol },
 
-        // plus: '+',
-        // b: { text: 'b', color: [1, 0, 1, 1], drawPriority: 2 },
-        // c: { text: 'c1', color: [1, 0, 1, 1], drawPriority: 0 },
-        // d: 'd',
-        // e: 'e',
-        // v_: { diagramObj: 'vinculum' },
-        // v__: { diagramObj: 'vinculum' },
-        // lb: { diagramObj: 'bracket', side: 'left' },
-        // rb: { diagramObj: 'bracket', side: 'right' },
-        // tb: { diagramObj: 'brace', side: 'top' },
-        // bb: { diagramObj: 'squareBracket', side: 'bottom' },
-        // bar: { diagramObj: 'bar', side: 'top' },
-      },
-      alignment: {
-        fixTo: 'equals',
-        // scale: 1.5,
-        // vAlign: 'top',
-        // hAlign: 'right',
-      },
-      forms: {
-        '0': ['_2', 'a', 'plus', 'b_', 'equals', '_180'],
-        '1': [
-          '.annotation', [
-            ['_2', 'a', 'plus', 'b_'],
-            ['.ann', [
-              ['minus_', 'b__'],
-              'center', -0.4, 'center', 'top', 0.6],
-            ],
-          ],
-          'equals',
-          '.annotation', [
-            '_180',
-            ['.ann', [
-              ['minus', 'b'],
-              'center', -0.4, 'center', 'top', 0.6],
-            ],
-          ],
-        ],
-        '1a': [
-          {
-            annotation: [
-              ['_2', 'a', 'plus', 'b_'],
-              {
-                ann: [
-                  ['minus_', 'b__'],
-                  'center', -0.4, 'center', 'top', 0.6,
-                ],
-              },
-            ],
-          },
-          'equals',
-          '.annotation', [
-            '_180',
-            ['.ann', [
-              ['minus', 'b'],
-              'center', -0.4, 'center', 'top', 0.6],
-            ],
-          ],
-        ],
-        '2': [
-          '.annotation', [
-            ['_2', 'a', 'plus', '.strike', ['b_', 'x']],
-            ['.ann', [
-              ['minus_', '.strike', ['b__', 'x_']],
-              'center', -0.4, 'center', 'top', 0.6],
-            ],
-          ],
-          'equals',
-          '.annotation', [
-            '_180',
-            ['.ann', [
-              ['minus', 'b'],
-              'center', -0.4, 'center', 'top', 0.6],
-            ],
-          ],
-        ],
-        '2a': [
-          '_2', 'a',
-          '.strike', [['plus', 'b_'], 'x'],
-          '.strike', [['minus_', 'b__'], 'x_'],
-          'equals',
-          '_180', 'minus', 'b',
-        ],
-        '3': [
-          '_2', 'a',
-          'equals',
-          '_180', 'minus', 'b',
-        ],
-        '4': [
-          '.frac', [['_2', 'a'], '_2_', 'v_'],
-          'equals',
-          '.frac', [['_180', 'minus', 'b'], '_2', 'v'],
-        ],
-        '5': [
-          '.frac', [
-            ['.strike', ['_2', 'x'], 'a'],
-            ['.strike', ['_2_', 'x_']],
-            'v_',
-          ],
-          'equals',
-          '.frac', [['_180', 'minus', 'b'], '_2', 'v'],
-        ],
-        '6': [
-          'a',
-          'equals',
-          '.frac', [['_180', 'minus', 'b'], '_2', 'v'],
-        ],
-        '16': {
-          'deg': {
-            content: ['a', 'space', 'plus', 'b'],
-          },
-          'rad': {
-            content: ['b', 'space', 'plus', 'a'],
-          },
-        },
-      },
-      currentForm: '0',
-      formSeries: ['0', '1', '2', '3', '4', '5', '6'],
-    });
+    //     // plus: '+',
+    //     // b: { text: 'b', color: [1, 0, 1, 1], drawPriority: 2 },
+    //     // c: { text: 'c1', color: [1, 0, 1, 1], drawPriority: 0 },
+    //     // d: 'd',
+    //     // e: 'e',
+    //     // v_: { diagramObj: 'vinculum' },
+    //     // v__: { diagramObj: 'vinculum' },
+    //     // lb: { diagramObj: 'bracket', side: 'left' },
+    //     // rb: { diagramObj: 'bracket', side: 'right' },
+    //     // tb: { diagramObj: 'brace', side: 'top' },
+    //     // bb: { diagramObj: 'squareBracket', side: 'bottom' },
+    //     // bar: { diagramObj: 'bar', side: 'top' },
+    //   },
+    //   alignment: {
+    //     fixTo: 'equals',
+    //     // scale: 1.5,
+    //     // vAlign: 'top',
+    //     // hAlign: 'right',
+    //   },
+    //   forms: {
+    //     '0': ['_2', 'a', 'plus', 'b_', 'equals', '_180'],
+    //     '1': [
+    //       '.annotation', [
+    //         ['_2', 'a', 'plus', 'b_'],
+    //         ['.ann', [
+    //           ['minus_', 'b__'],
+    //           'center', -0.4, 'center', 'top', 0.6],
+    //         ],
+    //       ],
+    //       'equals',
+    //       '.annotation', [
+    //         '_180',
+    //         ['.ann', [
+    //           ['minus', 'b'],
+    //           'center', -0.4, 'center', 'top', 0.6],
+    //         ],
+    //       ],
+    //     ],
+    //     '1a': [
+    //       {
+    //         annotation: [
+    //           ['_2', 'a', 'plus', 'b_'],
+    //           {
+    //             ann: [
+    //               ['minus_', 'b__'],
+    //               'center', -0.4, 'center', 'top', 0.6,
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //       'equals',
+    //       '.annotation', [
+    //         '_180',
+    //         ['.ann', [
+    //           ['minus', 'b'],
+    //           'center', -0.4, 'center', 'top', 0.6],
+    //         ],
+    //       ],
+    //     ],
+    //     '2': [
+    //       '.annotation', [
+    //         ['_2', 'a', 'plus', '.strike', ['b_', 'x']],
+    //         ['.ann', [
+    //           ['minus_', '.strike', ['b__', 'x_']],
+    //           'center', -0.4, 'center', 'top', 0.6],
+    //         ],
+    //       ],
+    //       'equals',
+    //       '.annotation', [
+    //         '_180',
+    //         ['.ann', [
+    //           ['minus', 'b'],
+    //           'center', -0.4, 'center', 'top', 0.6],
+    //         ],
+    //       ],
+    //     ],
+    //     '2a': [
+    //       '_2', 'a',
+    //       '.strike', [['plus', 'b_'], 'x'],
+    //       '.strike', [['minus_', 'b__'], 'x_'],
+    //       'equals',
+    //       '_180', 'minus', 'b',
+    //     ],
+    //     '3': [
+    //       '_2', 'a',
+    //       'equals',
+    //       '_180', 'minus', 'b',
+    //     ],
+    //     '4': [
+    //       '.frac', [['_2', 'a'], '_2_', 'v_'],
+    //       'equals',
+    //       '.frac', [['_180', 'minus', 'b'], '_2', 'v'],
+    //     ],
+    //     '5': [
+    //       '.frac', [
+    //         ['.strike', ['_2', 'x'], 'a'],
+    //         ['.strike', ['_2_', 'x_']],
+    //         'v_',
+    //       ],
+    //       'equals',
+    //       '.frac', [['_180', 'minus', 'b'], '_2', 'v'],
+    //     ],
+    //     '6': [
+    //       'a',
+    //       'equals',
+    //       '.frac', [['_180', 'minus', 'b'], '_2', 'v'],
+    //     ],
+    //     '16': {
+    //       'deg': {
+    //         content: ['a', 'space', 'plus', 'b'],
+    //       },
+    //       'rad': {
+    //         content: ['b', 'space', 'plus', 'a'],
+    //       },
+    //     },
+    //   },
+    //   currentForm: '0',
+    //   formSeries: ['0', '1', '2', '3', '4', '5', '6'],
+    // });
     // this.diagram.equation.makeEqnFromOptions({
     //   name: 'test',
     //   addToCollection: this,
