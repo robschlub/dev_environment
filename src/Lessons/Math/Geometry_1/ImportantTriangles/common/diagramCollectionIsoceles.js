@@ -139,7 +139,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       abc: ['a', 'b', 'c'],
     });
     eqn.addForms({
-      '0': e.bottomComment(['a', 'b'], 'c', 'bar'),
+      '0': e.topComment(['a', 'b'], 'c', 'bar'),
     });
     eqn.showForm('0');
     // eqn.showForm('4');

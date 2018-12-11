@@ -848,7 +848,8 @@ export class EquationFunctions {
   //   );
   // }
 
-  bottomComment(
+  // eslint-disable-next-line class-methods-use-this
+  processComment(
     optionsOrContent: TypeBracketObject | TypeBracketArray | TypeEquationPhrase,
     commentString: TypeEquationPhrase | null = null,
     sym: string | null = null,
@@ -893,6 +894,17 @@ export class EquationFunctions {
     if (scale != null) {
       scaleToUse = scale;
     }
+    return [
+      content, optionsOrContent, comment, symbol,
+      contentSpaceToUse, commentSpaceToUse, scaleToUse,
+    ];
+  }
+
+  bottomComment(...args) {
+    const [
+      content, optionsOrContent, comment, symbol,
+      contentSpaceToUse, commentSpaceToUse, scaleToUse,
+    ] = this.processComment(...args);
     let contentToUse;
     if (symbol) {
       contentToUse = new Bar(                                // $FlowFixMe
@@ -918,48 +930,26 @@ export class EquationFunctions {
     });
   }
 
-  topComment(options: TypeCommentObject | TypeCommentArray) {
-    let content;
-    let comment;
-    let symbol;
-    let contentSpace;
-    let commentSpace;
-    let scale;
-    if (Array.isArray(options)) {
-      [content, comment, symbol, contentSpace, commentSpace, scale] = options;
-    } else {
-      ({
-        content, comment, symbol, contentSpace, commentSpace, scale,
-      } = options);
-    }
-    let contentSpaceToUse = 0.03;
-    if (contentSpace != null) {
-      contentSpaceToUse = contentSpace;
-    }
-    let commentSpaceToUse = 0.03;
-    if (commentSpace != null) {
-      commentSpaceToUse = commentSpace;
-    }
-    let scaleToUse = 0.6;
-    if (scale != null) {
-      scaleToUse = scale;
-    }
-
+  topComment(...args) {
+    const [
+      content, optionsOrContent, comment, symbol,
+      contentSpaceToUse, commentSpaceToUse, scaleToUse,
+    ] = this.processComment(...args);
     let contentToUse;
     if (symbol) {
-      contentToUse = new Bar(
-        this.contentToElement(content),
-        getDiagramElement(this.elements, symbol),
-        contentSpaceToUse,
+      contentToUse = new Bar(                                // $FlowFixMe
+        this.contentToElement(optionsOrContent),             // $FlowFixMe
+        getDiagramElement(this.elements, symbol),            // $FlowFixMe
+        contentSpaceToUse,                                   // $FlowFixMe
         commentSpaceToUse,
         'top',
       );
     } else {
       contentToUse = content;
     }
-    return this.annotate({
+    return this.annotate({                                   // $FlowFixMe
       content: contentToUse,
-      withAnnotations: [
+      withAnnotations: [                                     // $FlowFixMe
         this.annotation({
           annotation: comment,
           relativeToContent: ['center', 'top'],
@@ -969,5 +959,57 @@ export class EquationFunctions {
       ],
     });
   }
+
+  // topComment(options: TypeCommentObject | TypeCommentArray) {
+  //   let content;
+  //   let comment;
+  //   let symbol;
+  //   let contentSpace;
+  //   let commentSpace;
+  //   let scale;
+  //   if (Array.isArray(options)) {
+  //     [content, comment, symbol, contentSpace, commentSpace, scale] = options;
+  //   } else {
+  //     ({
+  //       content, comment, symbol, contentSpace, commentSpace, scale,
+  //     } = options);
+  //   }
+  //   let contentSpaceToUse = 0.03;
+  //   if (contentSpace != null) {
+  //     contentSpaceToUse = contentSpace;
+  //   }
+  //   let commentSpaceToUse = 0.03;
+  //   if (commentSpace != null) {
+  //     commentSpaceToUse = commentSpace;
+  //   }
+  //   let scaleToUse = 0.6;
+  //   if (scale != null) {
+  //     scaleToUse = scale;
+  //   }
+
+  //   let contentToUse;
+  //   if (symbol) {
+  //     contentToUse = new Bar(
+  //       this.contentToElement(content),
+  //       getDiagramElement(this.elements, symbol),
+  //       contentSpaceToUse,
+  //       commentSpaceToUse,
+  //       'top',
+  //     );
+  //   } else {
+  //     contentToUse = content;
+  //   }
+  //   return this.annotate({
+  //     content: contentToUse,
+  //     withAnnotations: [
+  //       this.annotation({
+  //         annotation: comment,
+  //         relativeToContent: ['center', 'top'],
+  //         relativeToAnnotation: ['center', 'bottom'],
+  //         scale: scaleToUse,
+  //       }),
+  //     ],
+  //   });
+  // }
 
 }
