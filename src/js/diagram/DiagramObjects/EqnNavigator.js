@@ -379,8 +379,8 @@ export type TypeNavigatorOptions = {
   offset?: Point,
   navType?: 'equationOnly' | 'description' | '1Line' | '2Line' | '3Line',
   navTypeOptions?: TypeNavTypeOptions,
-  xAlign?: 'left' | 'right' | 'center',
-  vAlign?: 'top' | 'bottom' | 'middle' | 'baseline',
+  alignH?: 'left' | 'right' | 'center',
+  alignV?: 'top' | 'bottom' | 'middle' | 'baseline',
   id?: string,
 };
 
@@ -440,8 +440,8 @@ export default class EqnNavigator extends DiagramElementCollection {
         forceTwoLines: false,
         arrows: false,
       },
-      xAlign: 'left',
-      yAlign: 'middle',
+      alignH: 'left',
+      alignV: 'middle',
       id: generateUniqueId('id_lesson__equation_navigator_'),
     };
     const optionsToUse = joinObjects({}, defaultOptions, options);
@@ -485,7 +485,7 @@ export default class EqnNavigator extends DiagramElementCollection {
         navigatorHTMLElement.table,
         `${optionsToUse.id}_table`,
         '',
-        optionsToUse.offset, optionsToUse.vAlign, optionsToUse.xAlign,
+        optionsToUse.offset, optionsToUse.alignV, optionsToUse.alignH,
       );
       this.add('table', table);
     }

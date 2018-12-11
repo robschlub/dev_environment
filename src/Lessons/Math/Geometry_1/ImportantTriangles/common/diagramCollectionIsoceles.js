@@ -129,10 +129,11 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     });
     this.diagram.equation.addNavigator(this, 'testNav', this.diagram.animateNextFrame.bind(this.diagram), {
       equation: this._testEqn,
-      offset: new Point(0, -0.5),
-      navType: '3Line',
-      xAlign: 'left',
-      yAlign: 'middle',
+      offset: new Point(0.2, -0.5),
+      navType: '2Line',
+      alignH: 'center',
+      alignV: 'middle',
+      navTypeOptions: { arrows: true },
     });
     // $FlowFixMe
     const eqn = this._testEqn;
