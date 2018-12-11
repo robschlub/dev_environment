@@ -769,7 +769,7 @@ export class EquationNew extends DiagramElementCollection {
         }
         this.setCurrentForm(nextSubForm);
       }
-      this.updateDescription();
+      // this.updateDescription();
     }
   }
 
@@ -874,39 +874,39 @@ export class EquationNew extends DiagramElementCollection {
     return '';
   }
 
-  updateDescription(
-    formOrName: EquationForm | string | null = null,
-    subForm: string = 'base',
-  ) {
-    const element = this.eqn.descriptionElement;
-    if (element == null) {
-      return;
-    }
-    if (element.isShown === false) {
-      return;
-    }
-    let form = null;
-    if (formOrName == null) {
-      form = this.getCurrentForm();
-    } else if (typeof formOrName === 'string') {
-      form = this.getForm(formOrName, subForm);
-    } else {
-      form = formOrName;
-    }
-    if (form == null) {
-      return;
-    }
-    if (form.description == null) {
-      return;
-    }
+  // updateDescription(
+  //   formOrName: EquationForm | string | null = null,
+  //   subForm: string = 'base',
+  // ) {
+  //   const element = this.eqn.descriptionElement;
+  //   if (element == null) {
+  //     return;
+  //   }
+  //   if (element.isShown === false) {
+  //     return;
+  //   }
+  //   let form = null;
+  //   if (formOrName == null) {
+  //     form = this.getCurrentForm();
+  //   } else if (typeof formOrName === 'string') {
+  //     form = this.getForm(formOrName, subForm);
+  //   } else {
+  //     form = formOrName;
+  //   }
+  //   if (form == null) {
+  //     return;
+  //   }
+  //   if (form.description == null) {
+  //     return;
+  //   }
 
-    const { drawingObject } = element;
-    if (drawingObject instanceof HTMLObject) {
-      drawingObject.change(
-        html.applyModifiers(form.description, form.modifiers),
-        element.lastDrawTransform.m(),
-      );
-      html.setOnClicks(form.modifiers);
-    }
-  }
+  //   const { drawingObject } = element;
+  //   if (drawingObject instanceof HTMLObject) {
+  //     drawingObject.change(
+  //       html.applyModifiers(form.description, form.modifiers),
+  //       element.lastDrawTransform.m(),
+  //     );
+  //     html.setOnClicks(form.modifiers);
+  //   }
+  // }
 }

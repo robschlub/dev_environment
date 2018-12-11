@@ -416,7 +416,6 @@ export default class EquationForm extends Elements {
     disolveInTime: number,
     callback: ?(?mixed) => void = null,
   ) {
-    console.log(this)
     const allElements = this.collectionMethods.getAllElements();
     this.collectionMethods.stop();
     const elementsShown = allElements.filter(e => e.isShown);
