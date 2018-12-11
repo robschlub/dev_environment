@@ -58,7 +58,7 @@ class Content extends LessonContent {
         iso._isoEqn.showAll();
         iso.eqns.isoEqn.showForm('3');
         iso._testEqn.setPosition(-1, 1);
-        iso._testNav.setPosition(0, 1.05);
+        iso._testNav.setPosition(-1, 1);
         // iso._testNav.showAll();
         // iso._testEqn.showAll();
         iso._testNav.showForm('0');

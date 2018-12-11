@@ -127,7 +127,13 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       color: this.layout.colors.diagram.text.base,
       scale: 2,
     });
-    this.diagram.equation.addNavigator(this, 'testNav', this._testEqn, this.diagram.animateNextFrame.bind(this.diagram));
+    this.diagram.equation.addNavigator(this, 'testNav', this.diagram.animateNextFrame.bind(this.diagram), {
+      equation: this._testEqn,
+      offset: new Point(0, -0.5),
+      navType: '3Line',
+      xAlign: 'left',
+      yAlign: 'middle',
+    });
     // $FlowFixMe
     const eqn = this._testEqn;
     const e = eqn.eqn.functions;

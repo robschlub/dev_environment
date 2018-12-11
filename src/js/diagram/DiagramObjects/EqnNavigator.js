@@ -8,7 +8,7 @@ import {
 import { Equation } from '../DiagramElements/Equation/GLEquation';
 import EquationForm from '../DiagramElements/Equation/EquationForm';
 import * as html from '../../tools/htmlGenerator';
-import { generateUniqueId } from '../../tools/tools';
+import { generateUniqueId, joinObjects } from '../../tools/tools';
 import { EquationNew } from '../DiagramElements/Equation/Equation';
 
 // eslint-disable-next-line no-use-before-define
@@ -132,11 +132,17 @@ function updateButtonsDescriptionOnly(nav: TypeEquationNavigator) {
   }
 }
 
+export type TypeNavTypeOptions = {
+  forceTwoLines: boolean;
+  arrows: boolean;
+};
+
+// Nav3Line
 function makeType3Line(
   prevMethod: () => void,
   refreshMethod: () => void,
   nextMethod: () => void,
-  options: string | Array<string> = [],  // can be: 'twoLines'
+  options: TypeNavTypeOptions,
 ) {
   const table = document.createElement('table');
   const prevGroup = document.createElement('tr');
@@ -170,13 +176,17 @@ function makeType3Line(
   description.classList.add('lesson__eqn_nav__description');
   nextDescription.classList.add('lesson__eqn_nav__3line__nextRow__description');
 
-  let optionsToUse = options;
-  if (!Array.isArray(options)) {
-    optionsToUse = [options];
-  }
+  const defaultOptions = {
+    forceTwoLines: false,
+    arrows: false,
+  };
+  let optionsToUse = joinObjects({}, defaultOptions, options);
+  // if (!Array.isArray(options)) {
+  //   optionsToUse = [options];
+  // }
   // Use two lines to stop jittering when transitioning from one line to two
   // lines
-  if (optionsToUse.indexOf('twoLines') > -1) {
+  if (optionsToUse.forceTwoLines) {
     prevGroup.classList.add('lesson__eqn_nav__3line__prev_twoLines');
     currentGroup.classList.add('lesson__eqn_nav__3line__current_twoLines');
     nextGroup.classList.add('lesson__eqn_nav__3line__next_twoLines');
@@ -203,6 +213,7 @@ function makeType3Line(
   };
 }
 
+// NavDescriptionOnly
 function makeTypeDescriptionOnly(
   nextMethod: () => void,
 ) {
@@ -223,11 +234,12 @@ function makeTypeDescriptionOnly(
   };
 }
 
+// Nav1Line
 function makeType1Line(
   prevMethod: () => void,
   refreshMethod: () => void,
   nextMethod: () => void,
-  options: Array<string> | string = [],  // can be: 'twoLines'
+  options: TypeNavTypeOptions,  // can be: 'twoLines'
 ) {
   const table = document.createElement('table');
   const currentGroup = document.createElement('tr');
@@ -246,14 +258,15 @@ function makeType1Line(
   description.classList.add('lesson__eqn_nav__1line__currentRow__description');
   description.classList.add('lesson__eqn_nav__description');
 
-  let optionsToUse = options;
-  if (!Array.isArray(options)) {
-    optionsToUse = [options];
-  }
+  const defaultOptions = {
+    forceTwoLines: false,
+    arrows: false,
+  };
+  const optionsToUse = joinObjects({}, defaultOptions, options);
 
   // Use two lines to stop jittering when transitioning from one line to two
   // lines
-  if (optionsToUse.indexOf('twoLines') > -1) {
+  if (optionsToUse.forceTwoLines) {
     currentGroup.classList.add('lesson__eqn_nav__1line__current_twoLines');
   }
 
@@ -261,7 +274,7 @@ function makeType1Line(
   description.onclick = refreshMethod;
   next.onclick = nextMethod;
 
-  if (optionsToUse.indexOf('arrows') > -1) {
+  if (optionsToUse.arrows) {
     const nextArrow = document.createElement('div');
     nextArrow.classList.add('lesson__eqn_nav__arrow_right');
     next.appendChild(nextArrow);
@@ -283,11 +296,12 @@ function makeType1Line(
   };
 }
 
+// Nav2Line
 function makeType2Line(
   prevMethod: () => void,
   refreshMethod: () => void,
   nextMethod: () => void,
-  options: Array<string> | string = [],  // can be: 'twoLines'
+  options: TypeNavTypeOptions,
 ) {
   const table = document.createElement('table');
   const row = document.createElement('tr');
@@ -320,13 +334,14 @@ function makeType2Line(
   description.classList.add('lesson__eqn_nav__description');
   nextDescription.classList.add('lesson__eqn_nav__2lines__nextRow__description');
 
-  let optionsToUse = options;
-  if (!Array.isArray(options)) {
-    optionsToUse = [options];
-  }
+  const defaultOptions = {
+    forceTwoLines: false,
+    arrows: false,
+  };
+  const optionsToUse = joinObjects({}, defaultOptions, options);
   // Use two lines to stop jittering when transitioning from one line to two
   // lines
-  if (optionsToUse.indexOf('twoLines') > -1) {
+  if (optionsToUse.forceTwoLines > -1) {
     currentGroup.classList.add('lesson__eqn_nav__2lines__current_twoLines');
   }
 
@@ -335,7 +350,7 @@ function makeType2Line(
   next.onclick = nextMethod;
   nextDescription.onclick = nextMethod;
 
-  if (optionsToUse.indexOf('arrows') > -1) {
+  if (optionsToUse.arrows) {
     const nextArrow = document.createElement('div');
     nextArrow.classList.add('lesson__eqn_nav__arrow_right');
     next.appendChild(nextArrow);
@@ -359,9 +374,19 @@ function makeType2Line(
   };
 }
 
+export type TypeNavigatorOptions = {
+  equation: EquationNew,
+  offset?: Point,
+  navType?: 'equationOnly' | 'description' | '1Line' | '2Line' | '3Line',
+  navTypeOptions?: TypeNavTypeOptions,
+  xAlign?: 'left' | 'right' | 'center',
+  vAlign?: 'top' | 'bottom' | 'middle' | 'baseline',
+  id?: string,
+};
+
 export default class EqnNavigator extends DiagramElementCollection {
   shapes: Object;
-  setEquation: (Equation) => void;
+  // setEquation: (Equation) => void;
   next: ?HTMLElement;
   prev: ?HTMLElement;
   refresh: ?HTMLElement;
@@ -374,29 +399,27 @@ export default class EqnNavigator extends DiagramElementCollection {
   _table: DiagramElementPrimative;
   currentGroup: ?HTMLElement;
   updateButtons: () => void;
-  // eqn: Equation;
-  // _eqn: DiagramElementCollection;
   eqn: EquationNew;
   animateNextFrame: void => void;
-  navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' | 'twoLine';
+  navType: 'equationOnly' | 'description' | '1Line' | '2Line' | '3Line';
 
   constructor(
     shapes: Object,
-    eqn: EquationNew,
+    // eqn: EquationNew,
     animateNextFrame: () => void,
-    offset: Point,
-    navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' | 'twoLine' = 'threeLine',
-    options: string | Array<string> = '',
-    xAlign: 'left' | 'right' | 'center' = 'left',
-    vAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'middle',
-    id: string = generateUniqueId('id_lesson__equation_navigator_'),
+    options: TypeNavigatorOptions = {},
+    // offset: Point,
+    // navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' | 'twoLine' = 'threeLine',
+    // options: string | Array<string> = '',
+    // xAlign: 'left' | 'right' | 'center' = 'left',
+    // vAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'middle',
+    // id: string = generateUniqueId('id_lesson__equation_navigator_'),
   ) {
     super(new Transform('Eqn Nav')
       .scale(1, 1)
       .translate(0, 0), shapes.limits);
     // super(shapes, eqnOptions);
     this.shapes = shapes;
-    this.eqn = eqn;
     // this.setEquation(equation);
     this.prev = null;
     this.next = null;
@@ -409,45 +432,60 @@ export default class EqnNavigator extends DiagramElementCollection {
     this.currentGroup = null;
     this.nextGroup = null;
     this.animateNextFrame = animateNextFrame;
-    this.navType = navType;
+
+    const defaultOptions = {
+      offset: new Point(0, 0),
+      navType: 'twoLine',
+      navTypeOptions: {
+        forceTwoLines: false,
+        arrows: false,
+      },
+      xAlign: 'left',
+      yAlign: 'middle',
+      id: generateUniqueId('id_lesson__equation_navigator_'),
+    };
+    const optionsToUse = joinObjects({}, defaultOptions, options);
+    this.eqn = optionsToUse.equation;
+
+    this.navType = optionsToUse.navType;
 
     let navigatorHTMLElement = null;
-    if (this.navType === 'threeLine') {
+    if (this.navType === '3Line') {
       navigatorHTMLElement = makeType3Line(
         this.clickPrev.bind(this),
         this.clickRefresh.bind(this),
         this.clickNext.bind(this),
-        options,
+        optionsToUse.navTypeOptions,
       );
     }
-    if (this.navType === 'descriptionOnly') {
+    if (this.navType === 'description') {
       navigatorHTMLElement = makeTypeDescriptionOnly(this.clickNext.bind(this));
     }
-    if (this.navType === 'oneLine') {
+    if (this.navType === '1Line') {
       navigatorHTMLElement = makeType1Line(
         this.clickPrev.bind(this),
         this.clickRefresh.bind(this),
         this.clickNext.bind(this),
-        options,
+        optionsToUse.navTypeOptions,
       );
     }
-    if (this.navType === 'twoLine') {
+    if (this.navType === '2Line') {
       navigatorHTMLElement = makeType2Line(
         this.clickPrev.bind(this),
         this.clickRefresh.bind(this),
         this.clickNext.bind(this),
-        options,
+        optionsToUse.navTypeOptions,
       );
     }
 
-    const eqnCollectionPosition = this.eqn.getPosition();
+    // const eqnCollectionPosition = this.eqn.getPosition();
     if (navigatorHTMLElement != null) {
       Object.assign(this, navigatorHTMLElement);
       const table = this.shapes.htmlElement(
         navigatorHTMLElement.table,
-        `${id}_table`,
+        `${optionsToUse.id}_table`,
         '',
-        new Point(0, 0), vAlign, xAlign,
+        optionsToUse.offset, optionsToUse.vAlign, optionsToUse.xAlign,
       );
       this.add('table', table);
     }
@@ -495,9 +533,9 @@ export default class EqnNavigator extends DiagramElementCollection {
     if (this.navType === 'equationOnly') {
       return;
     }
-    if (this.navType === 'descriptionOnly') {
+    if (this.navType === 'description') {
       updateButtonsDescriptionOnly(this);
-    } else if (this.navType === 'twoLine') {
+    } else if (this.navType === '2Line') {
       updateButtons(this, true);
     } else {
       updateButtons(this);

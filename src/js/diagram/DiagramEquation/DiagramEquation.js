@@ -27,6 +27,7 @@ import type {
 } from '../DiagramElements/Equation/EquationForm';
 import HTMLEquation from '../DiagramElements/Equation/HTMLEquation';
 import type { TypeEquationOptions } from '../DiagramElements/Equation/Equation';
+import type { TypeNavigatorOptions } from '../DiagramObjects/EqnNavigator';
 import EqnNavigator from '../DiagramObjects/EqnNavigator';
 
 export type TypeEquationPhrase =
@@ -809,18 +810,19 @@ export default class DiagramEquation {
   addNavigator(
     parent: DiagramElementCollection,
     name: string,
-    eqn: EquationNew,
+    // eqn: EquationNew,
     animateNextFrame: () => void,
+    options: TypeNavigatorOptions,
     // animateNextFrame: () => void,
     // options: TypeEquationOptions = {},
   ) {
     // $FlowFixMe
     const equation = new EqnNavigator(
       this.shapes,
-      eqn,
       animateNextFrame,
-      new Point(1, 0),
-      'threeLine',
+      options,
+      // new Point(1, 0),
+      // 'threeLine',
     );
     parent.add(name, equation);
   }
