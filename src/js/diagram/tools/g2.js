@@ -1803,6 +1803,30 @@ function getMoveTime(
   return maxTime;
 }
 
+export type TypeParsablePoint = [number, number] | Point | { x: number, y: number};
+// point can be defined as:
+//    - Point instance
+//    - [1, 1]
+//    - { x: 1, y: 1 }
+function parsePoint(p: TypeParsablePoint): Point {
+  if (p instanceof Point) {
+    return p;
+  }
+  if (Array.isArray(p)) {
+    if (p.length === 2) {
+      return new Point(p[0], p[1]);
+    }
+    return p;
+  }
+  if (typeof (p) === 'object') {
+    const keys = Object.keys(p);
+    if (keys.indexOf('x') > -1 && keys.indexOf('y') > -1) {
+      return new Point(p.x, p.y);
+    }
+  }
+  return p;
+}
+
 export {
   point,
   Point,
@@ -1832,4 +1856,5 @@ export {
   randomPoint,
   getMaxTimeFromVelocity,
   getMoveTime,
+  parsePoint,
 };

@@ -825,15 +825,11 @@ export default class DiagramEquation {
   addNavigator(
     parent: DiagramElementCollection,
     name: string,
-    // eqn: EquationNew,
-    // animateNextFrame: () => void,
     options: TypeNavigatorOptions,
-    // animateNextFrame: () => void,
-    // options: TypeEquationOptions = {},
   ) {
     let navNameToUse = name;
     const optionsToUse = joinObjects({}, options);
-    if (optionsToUse.equation == null) {
+    if (optionsToUse.equation == null) {                // $FlowFixMe
       const equation = this.addEquation(parent, `${name}Eqn`, options);
       optionsToUse.equation = equation;
       navNameToUse = `${name}Nav`;

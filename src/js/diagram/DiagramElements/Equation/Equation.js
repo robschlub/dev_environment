@@ -1,6 +1,6 @@
 // @flow
 import {
-  Point, Transform,
+  Point, Transform, parsePoint,
 } from '../../tools/g2';
 import { joinObjects, RGBToArray } from '../../../tools/tools';
 import {
@@ -17,7 +17,7 @@ import type {
 import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 import * as html from '../../../tools/htmlGenerator';
 import EquationSymbols from './EquationSymbols';
-import { getDiagramElement, EquationFunctions, parsePoint } from './EquationFunctions';
+import { getDiagramElement, EquationFunctions } from './EquationFunctions';
 import type { TypeEquationPhrase } from './EquationFunctions';
 
 

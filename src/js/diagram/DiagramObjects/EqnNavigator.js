@@ -440,7 +440,6 @@ export default class EqnNavigator extends DiagramElementCollection {
     };
     const optionsToUse = joinObjects({}, defaultOptions, options);
     this.eqn = optionsToUse.equation;
-    // console.log(optionsToUse)
 
     this.navType = optionsToUse.navType;
 

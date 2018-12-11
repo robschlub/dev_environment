@@ -1,6 +1,9 @@
 // @flow
 import {
-  Point,
+  Point, parsePoint,
+} from '../../tools/g2';
+import type {
+  TypeParsablePoint,
 } from '../../tools/g2';
 // import { joinObjects } from '../../../tools/tools';
 import {
@@ -39,29 +42,29 @@ export function getDiagramElement(
   return null;
 }
 
-export type TypeParsablePoint = [number, number] | Point | { x: number, y: number};
-// point can be defined as:
-//    - Point instance
-//    - [1, 1]
-//    - { x: 1, y: 1 }
-export const parsePoint = (point: TypeParsablePoint) => {
-  if (point instanceof Point) {
-    return point;
-  }
-  if (Array.isArray(point)) {
-    if (point.length === 2) {
-      return new Point(point[0], point[1]);
-    }
-    return point;
-  }
-  if (typeof (point) === 'object') {
-    const keys = Object.keys(point);
-    if (keys.indexOf('x') > -1 && keys.indexOf('y') > -1) {
-      return new Point(point.x, point.y);
-    }
-  }
-  return point;
-};
+// export type TypeParsablePoint = [number, number] | Point | { x: number, y: number};
+// // point can be defined as:
+// //    - Point instance
+// //    - [1, 1]
+// //    - { x: 1, y: 1 }
+// export const parsePoint = (point: TypeParsablePoint) => {
+//   if (point instanceof Point) {
+//     return point;
+//   }
+//   if (Array.isArray(point)) {
+//     if (point.length === 2) {
+//       return new Point(point[0], point[1]);
+//     }
+//     return point;
+//   }
+//   if (typeof (point) === 'object') {
+//     const keys = Object.keys(point);
+//     if (keys.indexOf('x') > -1 && keys.indexOf('y') > -1) {
+//       return new Point(point.x, point.y);
+//     }
+//   }
+//   return point;
+// };
 
 /* eslint-disable no-use-before-define */
 export type TypeEquationPhrase =
