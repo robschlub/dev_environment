@@ -848,18 +848,18 @@ export class EquationNew extends DiagramElementCollection {
   }
 
 
-  changeDescription(
-    formOrName: EquationForm | string,
-    description: string = '',
-    modifiers: Object = {},
-    subForm: string = 'base',
-  ) {
-    const form = this.getForm(formOrName, subForm);
-    if (form != null) {
-      form.description = `${description}`;
-      form.modifiers = modifiers;
-    }
-  }
+  // changeDescription(
+  //   formOrName: EquationForm | string,
+  //   description: string = '',
+  //   modifiers: Object = {},
+  //   subForm: string = 'base',
+  // ) {
+  //   const form = this.getForm(formOrName, subForm);
+  //   if (form != null) {
+  //     form.description = `${description}`;
+  //     form.modifiers = modifiers;
+  //   }
+  // }
 
   getDescription(
     formOrName: EquationForm | string,

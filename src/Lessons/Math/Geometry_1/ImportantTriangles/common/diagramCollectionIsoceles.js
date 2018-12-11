@@ -123,7 +123,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       bar: { symbol: 'bar' },
     };
     const strikeCol = this.layout.colors.diagram.disabled;
-    this.diagram.equation.addEquation(this, 'testEqn', {
+    this.diagram.equation.addEquationNavigator(this, 'testEqn', this.diagram.animateNextFrame.bind(this.diagram), {
       color: this.layout.colors.diagram.text.base,
       scale: 2,
     });
@@ -139,9 +139,12 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       abc: ['a', 'b', 'c'],
     });
     eqn.addForms({
-      '0': e.topStrike('a', 'b', 'x', 0.1, 2),
+      '0': ['a', 'b'],
+      '1': e.topStrike(['a', 'b'], 'c', 'x', 0.07, 0.5),
+      '2': 'c',
       // '0': e.topStrike('a', 'b', 'x'),
     });
+    eqn.setFormSeries(['0', '1', '2']);
     eqn.showForm('0');
     // eqn.showForm('4');
     // console.log(eqn.eqn.forms['4'].base.height)
