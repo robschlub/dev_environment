@@ -218,7 +218,7 @@ class Diagram {
     if (high) {
       shapes = this.shapesHigh;
     }
-    return new DiagramEquation(shapes);
+    return new DiagramEquation(shapes, this.animateNextFrame.bind(this));
   }
 
   getObjects(high: boolean = false) {

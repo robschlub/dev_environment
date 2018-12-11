@@ -90,11 +90,13 @@ export default class DiagramEquation {
 
   constructor(
     shapes: Object,
+    animateNextFrame: () => void,
   ) {
     this.webgl = shapes.webgl;
     this.draw2D = shapes.draw2D;
     this.limits = shapes.limits;
     this.shapes = shapes;
+    this.animateNextFrame = animateNextFrame;
   }
 
   elements(
@@ -811,7 +813,7 @@ export default class DiagramEquation {
     parent: DiagramElementCollection,
     name: string,
     // eqn: EquationNew,
-    animateNextFrame: () => void,
+    // animateNextFrame: () => void,
     options: TypeNavigatorOptions,
     // animateNextFrame: () => void,
     // options: TypeEquationOptions = {},
@@ -819,10 +821,8 @@ export default class DiagramEquation {
     // $FlowFixMe
     const equation = new EqnNavigator(
       this.shapes,
-      animateNextFrame,
+      this.animateNextFrame,
       options,
-      // new Point(1, 0),
-      // 'threeLine',
     );
     parent.add(name, equation);
   }

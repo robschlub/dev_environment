@@ -127,7 +127,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       color: this.layout.colors.diagram.text.base,
       scale: 2,
     });
-    this.diagram.equation.addNavigator(this, 'testNav', this.diagram.animateNextFrame.bind(this.diagram), {
+    this.diagram.equation.addNavigator(this, 'testNav', {
       equation: this._testEqn,
       offset: new Point(0.2, -0.5),
       navType: '2Line',
