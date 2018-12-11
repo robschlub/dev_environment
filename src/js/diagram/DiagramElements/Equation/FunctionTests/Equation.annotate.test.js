@@ -126,20 +126,24 @@ describe('Equation Functions - Annotations', () => {
           '2': annotate('a', [
             'b', 'right', 'bottom', 'left', 'top', 0.5,
           ]),
+          // Array of array annotations
+          '3': annotate('a', [[
+            'b', 'right', 'bottom', 'left', 'top', 0.5,
+          ]]),
           // Function with method Array
-          '3': annotate('a', [
+          '4': annotate('a', [
             e.annotation(['b', 'right', 'bottom', 'left', 'top', 0.5]),
           ]),
           // Function with parameters
-          '4': annotate('a', [
+          '5': annotate('a', [
             e.annotation('b', 'right', 'bottom', 'left', 'top', 0.5),
           ]),
           // Bound function with parameters
-          '5': annotate('a', [
+          '6': annotate('a', [
             annotation('b', 'right', 'bottom', 'left', 'top', 0.5),
           ]),
           // Bound Function with Object
-          '6': annotate('a', [
+          '7': annotate('a', [
             annotation({
               annotation: 'b',
               relativeToContent: ['right', 'bottom'],
@@ -201,7 +205,7 @@ describe('Equation Functions - Annotations', () => {
   test('Annotations', () => {
     functions.annotations();
     const elems = [eqn._a, eqn._b, eqn._c];
-    const formsToTest = ['1', '2', '3', '4', '5', '6'];
+    const formsToTest = ['1', '2', '3', '4', '5', '6', '7'];
 
     eqn.showForm('0');
     const positions0 = elems.map(elem => round(elem.transform.mat).slice());
