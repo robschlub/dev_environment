@@ -484,7 +484,7 @@ export default class EqnNavigator extends DiagramElementCollection {
     if (currentForm != null) {
       const index = this.eqn.getFormIndex(currentForm);
       if (index > 0) {
-        this.replayCurrentForm(1.5);
+        this.eqn.replayCurrentForm(1.5);
         this.animateNextFrame();
       }
     }
@@ -505,8 +505,8 @@ export default class EqnNavigator extends DiagramElementCollection {
   }
 
   showForm(formOrName: EquationForm | string, formType: ?string = null) {
-    super.showForm(formOrName, formType);
-    // this.show();
+    this.show();
+    this.eqn.showForm(formOrName, formType);
     // this.showForm(formOrName, formType);
     if (this._table) {
       this._table.show();
