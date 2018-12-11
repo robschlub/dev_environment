@@ -15,8 +15,9 @@ import { EquationNew } from '../DiagramElements/Equation/Equation';
 export type TypeEquationNavigator = EquationNavigator;
 
 function updateDescription(
-  eqn: Equation,
-  formType: string,
+  form: EquationForm,
+  // eqn: EquationNew,
+  // subForm: string,
   descriptionElement: ?HTMLElement,
   index: number,
   setClicks: boolean = false,
@@ -28,7 +29,9 @@ function updateDescription(
   }
   let form = null;
   // $FlowFixMe
-  form = eqn.eqn.formSeries[index][formType];
+  // form = eqn.eqn.formSeries[index][formType];
+  form = eqn.getForm(eqn.eqn.formSeries[index].name, subForm);
+  console.log(form, index, subForm)
   if (form == null) {
     return;
   }
@@ -103,16 +106,16 @@ function updateButtons(
       }
     } else {
       updateDescription(
-        nav, currentForm.type, nav.nextDescription,
+        nav, currentForm.subForm, nav.nextDescription,
         nextIndex, false, nextPrefix,
       );
     }
-    updateDescription(nav, currentForm.type, nav.description, index, true);
+    updateDescription(nav, currentForm.subForm, nav.description, index, true);
     // nav.eqn.updateDescription(currentForm);
     const prevIndex = index - 1;
     if (prevIndex >= 0) {
       updateDescription(
-        nav, currentForm.type, nav.prevDescription,
+        nav, currentForm.subForm, nav.prevDescription,
         prevIndex, false, prevPrefix,
       );
     } else if (nav.prevDescription) {
@@ -127,7 +130,7 @@ function updateButtonsDescriptionOnly(nav: TypeEquationNavigator) {
   if (currentForm != null) {
     const index = nav.getFormIndex(currentForm);
     enableTouch(nav.description);
-    updateDescription(nav, currentForm.type, nav.description, index, true);
+    updateDescription(nav, currentForm.subForm, nav.description, index, true);
   }
 }
 
