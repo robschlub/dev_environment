@@ -806,16 +806,18 @@ export default class DiagramEquation {
     parent.add(name, equation);
   }
 
-  addEquationNavigator(
+  addNavigator(
     parent: DiagramElementCollection,
     name: string,
+    eqn: EquationNew,
     animateNextFrame: () => void,
-    options: TypeEquationOptions = {},
+    // animateNextFrame: () => void,
+    // options: TypeEquationOptions = {},
   ) {
     // $FlowFixMe
     const equation = new EqnNavigator(
       this.shapes,
-      options,
+      eqn,
       animateNextFrame,
       new Point(1, 0),
       'threeLine',

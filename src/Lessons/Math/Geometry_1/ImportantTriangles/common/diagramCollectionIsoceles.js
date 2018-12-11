@@ -123,10 +123,11 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       bar: { symbol: 'bar' },
     };
     const strikeCol = this.layout.colors.diagram.disabled;
-    this.diagram.equation.addEquationNavigator(this, 'testEqn', this.diagram.animateNextFrame.bind(this.diagram), {
+    this.diagram.equation.addEquation(this, 'testEqn', {
       color: this.layout.colors.diagram.text.base,
       scale: 2,
     });
+    this.diagram.equation.addNavigator(this, 'testNav', this._testEqn, this.diagram.animateNextFrame.bind(this.diagram));
     // $FlowFixMe
     const eqn = this._testEqn;
     const e = eqn.eqn.functions;

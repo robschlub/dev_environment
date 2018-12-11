@@ -74,9 +74,9 @@ function updateButtons(
     nextPrefix = 'NEXT: ';
     prevPrefix = 'PREV: ';
   }
-  const currentForm = nav.getCurrentForm();
+  const currentForm = nav.eqn.getCurrentForm();
   if (currentForm != null) {
-    const index = nav.getFormIndex(currentForm);
+    const index = nav.eqn.getFormIndex(currentForm);
     if (index === 0) {
       disableTouch(nav.refresh);
       disableTouch(nav.prev);
@@ -89,7 +89,7 @@ function updateButtons(
       enableTouch(nav.prevDescription);
       enableTouch(nav.description);
     }
-    if (nav.eqn.formSeries.length > 1) {
+    if (nav.eqn.eqn.formSeries.length > 1) {
       enableTouch(nav.next);
       enableTouch(nav.nextDescription);
     } else {
@@ -97,23 +97,23 @@ function updateButtons(
       disableTouch(nav.nextDescription);
     }
     const nextIndex = index + 1;
-    if (nextIndex > nav.eqn.formSeries.length - 1) {
+    if (nextIndex > nav.eqn.eqn.formSeries.length - 1) {
       if (nav.nextDescription) {
         // eslint-disable-next-line no-param-reassign
         nav.nextDescription.innerHTML = 'RESTART from begining';
       }
     } else {
       updateDescription(
-        nav, currentForm.subForm, nav.nextDescription,
+        nav.eqn, currentForm.subForm, nav.nextDescription,
         nextIndex, false, nextPrefix,
       );
     }
-    updateDescription(nav, currentForm.subForm, nav.description, index, true);
+    updateDescription(nav.eqn, currentForm.subForm, nav.description, index, true);
     // nav.eqn.updateDescription(currentForm);
     const prevIndex = index - 1;
     if (prevIndex >= 0) {
       updateDescription(
-        nav, currentForm.subForm, nav.prevDescription,
+        nav.eqn, currentForm.subForm, nav.prevDescription,
         prevIndex, false, prevPrefix,
       );
     } else if (nav.prevDescription) {
@@ -124,11 +124,11 @@ function updateButtons(
 }
 
 function updateButtonsDescriptionOnly(nav: TypeEquationNavigator) {
-  const currentForm = nav.getCurrentForm();
+  const currentForm = nav.eqn.getCurrentForm();
   if (currentForm != null) {
-    const index = nav.getFormIndex(currentForm);
+    const index = nav.eqn.getFormIndex(currentForm);
     enableTouch(nav.description);
-    updateDescription(nav, currentForm.subForm, nav.description, index, true);
+    updateDescription(nav.eqn, currentForm.subForm, nav.description, index, true);
   }
 }
 
@@ -359,7 +359,7 @@ function makeType2Line(
   };
 }
 
-export default class EqnNavigator extends EquationNew {
+export default class EqnNavigator extends DiagramElementCollection {
   shapes: Object;
   setEquation: (Equation) => void;
   next: ?HTMLElement;
@@ -375,13 +375,14 @@ export default class EqnNavigator extends EquationNew {
   currentGroup: ?HTMLElement;
   updateButtons: () => void;
   // eqn: Equation;
-  _eqn: DiagramElementCollection;
+  // _eqn: DiagramElementCollection;
+  eqn: EquationNew;
   animateNextFrame: void => void;
   navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' | 'twoLine';
 
   constructor(
     shapes: Object,
-    eqnOptions: {},
+    eqn: EquationNew,
     animateNextFrame: () => void,
     offset: Point,
     navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' | 'twoLine' = 'threeLine',
@@ -390,11 +391,12 @@ export default class EqnNavigator extends EquationNew {
     vAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'middle',
     id: string = generateUniqueId('id_lesson__equation_navigator_'),
   ) {
-    // super(new Transform('Eqn Nav')
-    //   .scale(1, 1)
-    //   .translate(0, 0), shapes.limits);
-    super(shapes, eqnOptions);
+    super(new Transform('Eqn Nav')
+      .scale(1, 1)
+      .translate(0, 0), shapes.limits);
+    // super(shapes, eqnOptions);
     this.shapes = shapes;
+    this.eqn = eqn;
     // this.setEquation(equation);
     this.prev = null;
     this.next = null;
@@ -438,22 +440,24 @@ export default class EqnNavigator extends EquationNew {
       );
     }
 
-    const eqnCollectionPosition = this.getPosition();
+    const eqnCollectionPosition = this.eqn.getPosition();
     if (navigatorHTMLElement != null) {
       Object.assign(this, navigatorHTMLElement);
       const table = this.shapes.htmlElement(
         navigatorHTMLElement.table,
         `${id}_table`,
         '',
-        eqnCollectionPosition.add(offset), vAlign, xAlign,
+        new Point(0, 0), vAlign, xAlign,
       );
       this.add('table', table);
     }
 
-    this.onClick = this.clickNext.bind(this);
-    this.hasTouchableElements = true;
-    this.isTouchable = true;
-    this.touchInBoundingRect = true;
+    // this.eqn.setTransformCallback = 
+
+    this.eqn.onClick = this.clickNext.bind(this);
+    this.eqn.hasTouchableElements = true;
+    this.eqn.isTouchable = true;
+    this.eqn.touchInBoundingRect = true;
   }
 
   // const navigator = shapes.collection(;
@@ -464,21 +468,21 @@ export default class EqnNavigator extends EquationNew {
   // }
 
   clickNext() {
-    this.nextForm(1.5);
+    this.eqn.nextForm(1.5);
     this.updateButtons();
     this.animateNextFrame();
   }
 
   clickPrev() {
-    this.prevForm(1.5);
+    this.eqn.prevForm(1.5);
     this.updateButtons();
     this.animateNextFrame();
   }
 
   clickRefresh() {
-    const currentForm = this.getCurrentForm();
+    const currentForm = this.eqn.getCurrentForm();
     if (currentForm != null) {
-      const index = this.getFormIndex(currentForm);
+      const index = this.eqn.getFormIndex(currentForm);
       if (index > 0) {
         this.replayCurrentForm(1.5);
         this.animateNextFrame();
