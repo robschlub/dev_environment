@@ -153,33 +153,150 @@ describe('Equation Functions - Annotations', () => {
           ]),
         });
       },
-      // parameters: () => {
-      //   eqn = new EquationNew(diagram.shapes, { color: color1 });
-      //   const e = eqn.eqn.functions;
-      //   const brac = e.brac.bind(e);
-      //   eqn.addElements(elements);
-      //   eqn.addForms({
-      //     // without
-      //     //   // Method Object
-      //     'without': ['a', brac('b', 'lb', 'rb'), 'c'],
-      //     // With parameters
-      //     '0': ['a', {
-      //       brac: {
-      //         content: 'b',
-      //         left: 'lb',
-      //         right: 'rb',
-      //         insideSpace: 0.1,
-      //         outsideSpace: 0.2,
-      //         useMinLineHeight: false,
-      //         heightScale: 2,
-      //       },
-      //     }, 'c'],
-      //     // Method Array
-      //     '1': ['a', { brac: ['b', 'lb', 'rb', 0.1, 0.2, false, 2] }, 'c'],
-      //     // Function with parameters
-      //     '2': ['a', brac('b', 'lb', 'rb', 0.1, 0.2, false, 2), 'c'],
-      //   });
-      // },
+      multiple: () => {
+        eqn = new EquationNew(diagram.shapes, { color: color1 });
+        const e = eqn.eqn.functions;
+        const annotation = e.annotation.bind(e);
+        const annotate = e.annotate.bind(e);
+        eqn.addElements(elements);
+        eqn.addForms({
+          // Method Object
+          '0': annotate('a', [
+            {
+              annotation: {
+                annotation: 'b',
+                relativeToContent: ['right', 'bottom'],
+                relativeToAnnotation: ['left', 'top'],
+                scale: 0.5,
+              },
+            },
+            {
+              annotation: {
+                annotation: 'c',
+                relativeToContent: ['left', 'top'],
+                relativeToAnnotation: ['right', 'bottom'],
+                scale: 0.5,
+              },
+            },
+          ]),
+          // Functions
+          '1': annotate('a', [
+            annotation('b', 'right', 'bottom', 'left', 'top', 0.5),
+            annotation('c', 'left', 'top', 'right', 'bottom', 0.5),
+          ]),
+          // Arrays only
+          '2': annotate('a', [
+            ['b', 'right', 'bottom', 'left', 'top', 0.5],
+            ['c', 'left', 'top', 'right', 'bottom', 0.5],
+          ]),
+        });
+      },
+      nested: () => {
+        eqn = new EquationNew(diagram.shapes, { color: color1 });
+        const e = eqn.eqn.functions;
+        const annotation = e.annotation.bind(e);
+        const annotate = e.annotate.bind(e);
+        eqn.addElements(elements);
+        eqn.addForms({
+          // Method Object
+          '0': annotate('a', [
+            {
+              annotation: {
+                annotation: annotate(
+                  'b', ['c', 'center', 'bottom', 'center', 'top'],
+                ),
+                relativeToContent: ['right', 'bottom'],
+                relativeToAnnotation: ['left', 'top'],
+                scale: 0.5,
+              },
+            },
+            {
+              annotation: {
+                annotation: 'd',
+                relativeToContent: ['left', 'top'],
+                relativeToAnnotation: ['right', 'bottom'],
+                scale: 0.5,
+              },
+            },
+          ]),
+          // Functions
+          '1': annotate('a', [
+            annotation(annotate(
+              'b', ['c', 'center', 'bottom', 'center', 'top'],
+            ), 'right', 'bottom', 'left', 'top', 0.5),
+            annotation('d', 'left', 'top', 'right', 'bottom', 0.5),
+          ]),
+          // Arrays only
+          '2': annotate('a', [
+            [
+              annotate(
+                'b', ['c', 'center', 'bottom', 'center', 'top'],
+              ), 'right', 'bottom', 'left', 'top', 0.5,
+            ],
+            ['d', 'left', 'top', 'right', 'bottom', 0.5],
+          ]),
+        });
+      },
+      parameters: () => {
+        eqn = new EquationNew(diagram.shapes, { color: color1 });
+        const e = eqn.eqn.functions;
+        const annotate = e.annotate.bind(e);
+        eqn.addElements(elements);
+        eqn.addForms({
+          // without
+          //   // Method Object
+          'without': [
+            annotate(
+              {
+                content: 'a',
+                withAnnotations: [
+                  {
+                    annotation: {
+                      annotation: 'b',
+                      relativeToContent: ['right', 'bottom'],
+                      relativeToAnnotation: ['left', 'top'],
+                      scale: 0.5,
+                    },
+                  },
+                ],
+              },
+            ),
+            'c',
+          ],
+          // With parameters
+          '0': [
+            annotate(
+              {
+                content: 'a',
+                withAnnotations: [
+                  {
+                    annotation: {
+                      annotation: 'b',
+                      relativeToContent: ['right', 'bottom'],
+                      relativeToAnnotation: ['left', 'top'],
+                      scale: 0.5,
+                    },
+                  },
+                ],
+                includeAnnotationInSize: false,
+              },
+            ),
+            'c',
+          ],
+          // Method Array
+          '1': [
+            annotate(
+              'a',
+              ['b', 'right', 'bottom', 'left', 'top', 0.5],
+              false,
+            ),
+            'c',
+          ],
+          // '1': ['a', { brac: ['b', 'lb', 'rb', 0.1, 0.2, false, 2] }, 'c'],
+          // // Function with parameters
+          // '2': ['a', brac('b', 'lb', 'rb', 0.1, 0.2, false, 2), 'c'],
+        });
+      },
     };
   });
   test('Single', () => {
@@ -194,13 +311,6 @@ describe('Equation Functions - Annotations', () => {
       const positions = elems.map(elem => round(elem.transform.mat).slice());
       expect(positions0).toEqual(positions);
     });
-
-    // Snapshot test on most simple layout
-    // eqn.showForm('0');
-    // tools.cleanUIDs(eqn);
-    // expect(round(eqn._a.transform.mat)).toMatchSnapshot();
-    // expect(round(eqn._lb.transform.mat)).toMatchSnapshot();
-    // expect(round(eqn._rb.transform.mat)).toMatchSnapshot();
   });
   test('Annotations', () => {
     functions.annotations();
@@ -214,33 +324,60 @@ describe('Equation Functions - Annotations', () => {
       const positions = elems.map(elem => round(elem.transform.mat).slice());
       expect(positions0).toEqual(positions);
     });
-
-    // Snapshot test on most simple layout
-    // eqn.showForm('0');
-    // tools.cleanUIDs(eqn);
-    // expect(round(eqn._a.transform.mat)).toMatchSnapshot();
-    // expect(round(eqn._lb.transform.mat)).toMatchSnapshot();
-    // expect(round(eqn._rb.transform.mat)).toMatchSnapshot();
   });
-  // test('Bracket Parameters', () => {
-  //   functions.parameters();
-  //   const elems = [eqn._a, eqn._b, eqn._c, eqn._lb, eqn._rb];
-  //   const withFormsToTest = ['1', '2'];
+  test('Multiple Annotations', () => {
+    functions.multiple();
+    const elems = [eqn._a, eqn._b, eqn._c];
+    const formsToTest = ['1', '2'];
 
-  //   // get without positions
-  //   eqn.showForm('without');
-  //   const withoutPos = elems.map(elem => round(elem.transform.mat).slice());
+    eqn.showForm('0');
+    const positions0 = elems.map(elem => round(elem.transform.mat).slice());
+    formsToTest.forEach((f) => {
+      eqn.showForm(f);
+      const positions = elems.map(elem => round(elem.transform.mat).slice());
+      expect(positions0).toEqual(positions);
+    });
+  });
+  test('Nested Annotations', () => {
+    functions.nested();
+    const elems = [eqn._a, eqn._b, eqn._c];
+    const formsToTest = ['1', '2'];
 
-  //   // with reference positions
-  //   eqn.showForm('0');
-  //   const withPos = elems.map(elem => round(elem.transform.mat).slice());
+    eqn.showForm('0');
+    const positions0 = elems.map(elem => round(elem.transform.mat).slice());
+    formsToTest.forEach((f) => {
+      eqn.showForm(f);
+      const positions = elems.map(elem => round(elem.transform.mat).slice());
+      expect(positions0).toEqual(positions);
+    });
 
-  //   expect(withoutPos).not.toEqual(withPos);
+    // Snapshot test on most complex layout
+    eqn.showForm('0');
+    tools.cleanUIDs(eqn);
+    expect(round(eqn._a.transform.mat)).toMatchSnapshot();
+    expect(round(eqn._b.transform.mat)).toMatchSnapshot();
+    expect(round(eqn._c.transform.mat)).toMatchSnapshot();
+    expect(round(eqn._d.transform.mat)).toMatchSnapshot();
+  });
+  test('Annotation Parameters', () => {
+    functions.parameters();
+    const elems = [eqn._a, eqn._b, eqn._c];
+    const withFormsToTest = ['1'];
 
-  //   withFormsToTest.forEach((f) => {
-  //     eqn.showForm(f);
-  //     const positions = elems.map(elem => round(elem.transform.mat).slice());
-  //     expect(withPos).toEqual(positions);
-  //   });
-  // });
+    // get without positions
+    eqn.showForm('without');
+    const withoutPos = elems.map(elem => round(elem.transform.mat).slice());
+
+    // with reference positions
+    eqn.showForm('0');
+    const withPos = elems.map(elem => round(elem.transform.mat).slice());
+
+    expect(withoutPos).not.toEqual(withPos);
+
+    withFormsToTest.forEach((f) => {
+      eqn.showForm(f);
+      const positions = elems.map(elem => round(elem.transform.mat).slice());
+      expect(withPos).toEqual(positions);
+    });
+  });
 });
