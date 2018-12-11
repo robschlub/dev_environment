@@ -848,19 +848,38 @@ export class EquationFunctions {
   //   );
   // }
 
-  bottomComment(options: TypeCommentObject | TypeCommentArray) {
+  bottomComment(
+    optionsOrContent: TypeBracketObject | TypeBracketArray | TypeEquationPhrase,
+    commentString: TypeEquationPhrase | null = null,
+    sym: string | null = null,
+    contSpace: number | null = null,
+    comSpace: number | null = null,
+    comScale: number | null = null,
+  ) {
     let content;
     let comment;
     let symbol;
     let contentSpace;
     let commentSpace;
     let scale;
-    if (Array.isArray(options)) {
-      [content, comment, symbol, contentSpace, commentSpace, scale] = options;
+    if (!(commentString == null
+      && sym == null
+      && contSpace == null
+      && comSpace == null
+      && comScale == null)
+    ) {
+      content = optionsOrContent;
+      comment = commentString;
+      symbol = sym;
+      contentSpace = contSpace;
+      commentSpace = comSpace;
+      scale = comScale;
+    } else if (Array.isArray(optionsOrContent)) {             // $FlowFixMe
+      [content, comment, symbol, contentSpace, commentSpace, scale] = optionsOrContent;
     } else {
-      ({
+      ({                                                      // $FlowFixMe
         content, comment, symbol, contentSpace, commentSpace, scale,
-      } = options);
+      } = optionsOrContent);
     }
     let contentSpaceToUse = 0.03;
     if (contentSpace != null) {
@@ -876,19 +895,19 @@ export class EquationFunctions {
     }
     let contentToUse;
     if (symbol) {
-      contentToUse = new Bar(
-        this.contentToElement(content),
-        getDiagramElement(this.elements, symbol),
-        contentSpaceToUse,
+      contentToUse = new Bar(                                // $FlowFixMe
+        this.contentToElement(optionsOrContent),             // $FlowFixMe
+        getDiagramElement(this.elements, symbol),            // $FlowFixMe
+        contentSpaceToUse,                                   // $FlowFixMe
         commentSpaceToUse,
         'bottom',
       );
     } else {
       contentToUse = content;
     }
-    return this.annotate({
+    return this.annotate({                                   // $FlowFixMe
       content: contentToUse,
-      withAnnotations: [
+      withAnnotations: [                                     // $FlowFixMe
         this.annotation({
           annotation: comment,
           relativeToContent: ['center', 'bottom'],
