@@ -2,7 +2,7 @@
 import {
   Point, Transform,
 } from '../../tools/g2';
-import { joinObjects } from '../../../tools/tools';
+import { joinObjects, RGBToArray } from '../../../tools/tools';
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../Element';
@@ -254,6 +254,8 @@ export class EquationNew extends DiagramElementCollection {
       );
       if (options.color != null) {
         p.setColor(options.color);
+      } else {
+        p.setColor(RGBToArray(p.drawingObject.text[0].font.color));
       }
       return p;
     };

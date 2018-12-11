@@ -28,7 +28,6 @@ function updateDescription(
   }
   let form = null;
   // $FlowFixMe
-  console.log(eqn)
   form = eqn.eqn.formSeries[index][formType];
   if (form == null) {
     return;
@@ -374,7 +373,7 @@ export default class EqnNavigator extends EquationNew {
   _table: DiagramElementPrimative;
   currentGroup: ?HTMLElement;
   updateButtons: () => void;
-  eqn: Equation;
+  // eqn: Equation;
   _eqn: DiagramElementCollection;
   animateNextFrame: void => void;
   navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' | 'twoLine';
