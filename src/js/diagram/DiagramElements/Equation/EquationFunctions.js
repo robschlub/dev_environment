@@ -220,8 +220,7 @@ export type TypeAnnotationArray = [
   ?number,
 ];
 export type TypeAnnotateObject = {
-  content: TypeEquationPhrase,
-  // withAnnotations: Array<TypeAnnotationObject | TypeAnnotationArray>,
+  content: TypeEquationPhrase,                              // $FlowFixMe
   withAnnotations: Array<TypeEquationPhrase | AnnotationInformation>
                   | AnnotationInformation | TypeEquationPhrase,
   includeAnnotationInSize?: boolean,
@@ -232,6 +231,13 @@ export type TypeAnnotateArray = [
   ?boolean,
 ];
 
+// There are lots of FlowFixMes in this file. This is not perfect, but
+// haven't been able to come up with a quick work around. The problem statement
+// is each function can accept as arguements either a full object definition
+// or the definition split over parameters.
+// The problem is then the first arguement can be so many types, some of which
+// are subsets of the other, then when its parameters are extracted, their type
+// is all confused.
 export class EquationFunctions {
   // eslint-disable-next-line no-use-before-define
   elements: { [name: string]: DiagramElementCollection | DiagramElementPrimative };
@@ -527,7 +533,9 @@ export class EquationFunctions {
 
 
   annotate(
-    optionsOrContent: TypeAnnotateObject | TypeAnnotateArray | TypeEquationPhrase,
+    optionsOrContent: TypeAnnotateObject
+                      | TypeAnnotateArray
+                      | TypeEquationPhrase,               // $FlowFixMe
     withAnnotationsArray: Array<TypeEquationPhrase | AnnotationInformation>
                         | AnnotationInformation | TypeEquationPhrase | null = null,
     includeAnnotationInSizeCalc: boolean | null = null,
