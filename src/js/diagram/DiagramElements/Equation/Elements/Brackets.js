@@ -222,7 +222,7 @@ export class Brackets extends Elements {
 
 export class Bar extends Brackets {
   barPosition: 'top' | 'bottom';
-  outsideSpace: number;
+  // outsideSpace: number;
 
   constructor(
     content: Elements | null,
@@ -231,9 +231,9 @@ export class Bar extends Brackets {
     outsideSpace: number = 0.03,
     barPosition: 'top' | 'bottom' = 'top',
   ) {
-    super(content, barGlyph, null, space);
+    super(content, barGlyph, null, space, outsideSpace);
     this.barPosition = barPosition;
-    this.outsideSpace = outsideSpace;
+    // this.outsideSpace = outsideSpace;
   }
 
   calcSize(location: Point, scale: number) {
@@ -257,10 +257,10 @@ export class Bar extends Brackets {
 
     const leftSymbolLocation = new Point(
       loc.x - (widthScale - 1) * width / 2,
-      loc.y + contentBounds.ascent + this.space * scale,
+      loc.y + contentBounds.ascent + this.insideSpace * scale,
     );
     if (this.barPosition === 'bottom') {
-      leftSymbolLocation.y = loc.y - contentBounds.descent - this.space * scale;
+      leftSymbolLocation.y = loc.y - contentBounds.descent - this.insideSpace * scale;
     }
     const { glyph } = this;
     if (glyph instanceof DiagramElementPrimative) {
@@ -285,12 +285,12 @@ export class Bar extends Brackets {
     this.width = contentBounds.width;
     if (this.barPosition === 'top') {
       this.ascent = contentBounds.ascent + glyphBounds.height
-        + this.space * scale + this.outsideSpace * scale;
+        + this.insideSpace * scale + this.outsideSpace * scale;
       this.descent = contentBounds.descent;
     } else {
       this.ascent = contentBounds.ascent;
       this.descent = contentBounds.descent + glyphBounds.height
-        + this.space * scale + this.outsideSpace * scale;
+        + this.insideSpace * scale + this.outsideSpace * scale;
     }
     this.height = this.descent + this.ascent;
   }
@@ -306,7 +306,7 @@ export class Bar extends Brackets {
     const barCopy = new Bar(
       content,
       glyph,
-      this.space,
+      this.insideSpace,
       this.outsideSpace,
       this.barPosition,
     );

@@ -744,53 +744,109 @@ export class EquationFunctions {
     );
   }
 
-  topBar(options: TypeBarObject | TypeBarArray) {
+  // eslint-disable-next-line class-methods-use-this
+  processBar(
+    optionsOrContent: TypeBracketObject | TypeBracketArray | TypeEquationPhrase,
+    sym: string | null = null,
+    insideSpace: number | null = null,
+  ) {
     let content;
     let symbol;
     let space;
-    if (Array.isArray(options)) {
-      [content, symbol, space] = options;
+    if (!(sym == null && insideSpace == null)) {
+      content = optionsOrContent;
+      symbol = sym;
+      space = insideSpace;
+    } else if (Array.isArray(optionsOrContent)) {
+      [content, symbol, space] = optionsOrContent;
     } else {
-      ({
+      ({                                                    // $FlowFixMe
         content, symbol, space,
-      } = options);
+      } = optionsOrContent);
     }
     let spaceToUse = 0.03;
     if (space != null) {
       spaceToUse = space;
     }
-    return new Bar(
-      this.contentToElement(content),
-      getDiagramElement(this.elements, symbol),
+    return [content, symbol, spaceToUse];
+  }
+
+  topBar(...args) {
+    const [content, symbol, spaceToUse] = this.processBar(...args);
+    return new Bar(                                         // $FlowFixMe
+      this.contentToElement(content),                       // $FlowFixMe
+      getDiagramElement(this.elements, symbol),             // $FlowFixMe
       spaceToUse,
       0.03,
       'top',
     );
   }
 
-  bottomBar(options: TypeBarObject | TypeBarArray) {
-    let content;
-    let symbol;
-    let space;
-    if (Array.isArray(options)) {
-      [content, symbol, space] = options;
-    } else {
-      ({
-        content, symbol, space,
-      } = options);
-    }
-    let spaceToUse = 0.03;
-    if (space != null) {
-      spaceToUse = space;
-    }
-    return new Bar(
-      this.contentToElement(content),
-      getDiagramElement(this.elements, symbol),
+  bottomBar(...args) {
+    const [content, symbol, spaceToUse] = this.processBar(...args);
+    return new Bar(                                         // $FlowFixMe
+      this.contentToElement(content),                       // $FlowFixMe
+      getDiagramElement(this.elements, symbol),             // $FlowFixMe
       spaceToUse,
       0.03,
       'bottom',
     );
   }
+
+  // bottomBar(options: TypeBarObject | TypeBarArray) {
+  //   let content;
+  //   let symbol;
+  //   let space;
+  //   if (Array.isArray(options)) {
+  //     [content, symbol, space] = options;
+  //   } else {
+  //     ({
+  //       content, symbol, space,
+  //     } = options);
+  //   }
+  //   let spaceToUse = 0.03;
+  //   if (space != null) {
+  //     spaceToUse = space;
+  //   }
+  //   return new Bar(
+  //     this.contentToElement(content),
+  //     getDiagramElement(this.elements, symbol),
+  //     spaceToUse,
+  //     0.03,
+  //     'bottom',
+  //   );
+  // }
+  // bottomBar(
+  //   optionsOrContent: TypeBracketObject | TypeBracketArray | TypeEquationPhrase,
+  //   sym: string | null = null,
+  //   insideSpace: number | null = null,
+  // ) {
+  //   let content;
+  //   let symbol;
+  //   let space;
+  //   if (!(sym == null && insideSpace == null)) {
+  //     content = optionsOrContent;
+  //     symbol = sym;
+  //     space = insideSpace;
+  //   } else if (Array.isArray(optionsOrContent)) {
+  //     [content, symbol, space] = optionsOrContent;
+  //   } else {
+  //     ({                                                    // $FlowFixMe
+  //       content, symbol, space,
+  //     } = optionsOrContent);
+  //   }
+  //   let spaceToUse = 0.03;
+  //   if (space != null) {
+  //     spaceToUse = space;
+  //   }
+  //   return new Bar(                                         // $FlowFixMe
+  //     this.contentToElement(content),                       // $FlowFixMe
+  //     getDiagramElement(this.elements, symbol),             // $FlowFixMe
+  //     spaceToUse,
+  //     0.03,
+  //     'bottom',
+  //   );
+  // }
 
   bottomComment(options: TypeCommentObject | TypeCommentArray) {
     let content;

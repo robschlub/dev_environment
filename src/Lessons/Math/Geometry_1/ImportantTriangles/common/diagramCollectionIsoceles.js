@@ -120,6 +120,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       rb1: { symbol: 'bracket', side: 'right' },
       lb2: { symbol: 'bracket', side: 'left' },
       rb2: { symbol: 'bracket', side: 'right', numLines: 2 },
+      bar: { symbol: 'bar' },
     };
     const strikeCol = this.layout.colors.diagram.disabled;
     this.diagram.equation.addEquation(this, 'testEqn', {
@@ -138,136 +139,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       abc: ['a', 'b', 'c'],
     });
     eqn.addForms({
-      // '0': {
-      //   content: ['b', 'a', 'c'],
-      // },
-      // '1': {
-      //   content: ['b', 'a', 'c'],
-      //   elementMods: {
-      //     b: {
-      //       color: [1, 0, 0, 1],
-      //       elementOptions: {
-      //         isTouchable: true,
-      //         animate: { transform: { translation: { options: { magnitude: 2 } } } },
-      //       },
-      //     },
-      //   },
-      // },
-      // '0': { content: e.strike(['a', 'x']) },
-      // '1': {
-      //   content: {
-      //     supSub: {
-      //       content: 'a',
-      //       superscript: {
-      //         supSub: {
-      //           content: 'b',
-      //           superscript: {
-      //             supSub: {
-      //               content: 'c',
-      //               superscript: 'd',
-      //               subscript: 'e',
-      //             },
-      //           },
-      //           subscript: 'f',
-      //         },
-      //       },
-      //       subscript: 'g',
-      //       scale: 0.5,
-      //     },
-      //   },
-      '1': ['a', {
-        brac: {
-          content: 'b',
-          left: 'lb',
-          right: 'rb',
-          insideSpace: 0.1,
-          outsideSpace: 0.2,
-        },
-      }, 'c'],
-      // Method Array
-      '2': ['a', { brac: ['b', 'lb', 'rb', 0.1, 0.2] }, 'c'],
-      // Function with parameters
-      // '0b': [{
-      //   annotate: {
-      //     content: 'a',
-      //     withAnnotations: [
-      //       {
-      //         annotation: {
-      //           annotation: 'b',
-      //           relativeToContent: ['right', 'bottom'],
-      //           relativeToAnnotation: ['left', 'top'],
-      //         },
-      //       },
-      //       {
-      //         annotation: {
-      //           annotation: 'c',
-      //           relativeToContent: [0.6, 1.2],
-      //           relativeToAnnotation: ['center', 'bottom'],
-      //           scale: 0.4,
-      //         },
-      //       },
-      //       ['e', 'left', 'bottom', 'right', 'top', 0.3],
-      //     ],
-      //   },
-      // }],
-      '0a': [{
-        annotate: {
-          content: 'a',
-          withAnnotations:
-            {
-              annotation: {
-                annotation: 'b',
-                relativeToContent: ['right', 'bottom'],
-                relativeToAnnotation: ['left', 'top'],
-              },
-            },
-        },
-      }],
-      '0': [e.annotate(
-            'a',
-            ['b', 'right', 'bottom', 'left', 'top', 0.5],
-            false,
-          ), 'c'],
-      // '0a': [{
-      //   annotate: {
-      //     content: 'a',
-      //     withAnnotations: [
-      //       {
-      //         annotation: ['b', 'right', 'bottom', 'left', 'top'],
-      //       },
-      //     ],
-      //   },
-      // }],
-      // '1': [{
-      //   annotate: {
-      //     content: 'a',
-      //     withAnnotations: ['b', ['left', 'bottom'], ['right', 'top']],
-      //   },
-      // }],
-      // '0': [
-      //   e.brac('a', 'lb1', 'rb1', 0.1, 0.2, false, 3),
-      //   e.brac(['b', 'g'], 'lb', 'rb', 0.1, 0.2, true, 1.5),
-      //   e.brac(e.frac('c', 'd', 'v'), 'lb2', 'rb2', 0.1, 0.2, true)],
-      '3': 'abc',
-      // '0': {
-      //   deg: ['b', 'a', 'c'],
-      //   rad: {
-      //     content: ['b', 'a', 'c'],
-      //     elementMods: {
-      //       b: {
-      //         color: [1, 0, 0, 1],
-      //       },
-      //     },
-      //   },
-      //   method: {
-      //     frac: {
-      //       numerator: 'a',
-      //       denominator: 'b',
-      //       symbol: 'v',
-      //       scale: 0.5,
-      //     },
-      //   },
-      // },
+      '0': e.bottomBar(['a', 'b'], 'bar'),
     });
     eqn.showForm('0');
     // eqn.showForm('4');
