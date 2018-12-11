@@ -15,9 +15,8 @@ import { EquationNew } from '../DiagramElements/Equation/Equation';
 export type TypeEquationNavigator = EquationNavigator;
 
 function updateDescription(
-  form: EquationForm,
-  // eqn: EquationNew,
-  // subForm: string,
+  eqn: EquationNew,
+  subForm: string,
   descriptionElement: ?HTMLElement,
   index: number,
   setClicks: boolean = false,
@@ -30,8 +29,7 @@ function updateDescription(
   let form = null;
   // $FlowFixMe
   // form = eqn.eqn.formSeries[index][formType];
-  form = eqn.getForm(eqn.eqn.formSeries[index].name, subForm);
-  console.log(form, index, subForm)
+  form = eqn.getForm(eqn.eqn.formSeries[index], subForm);
   if (form == null) {
     return;
   }
