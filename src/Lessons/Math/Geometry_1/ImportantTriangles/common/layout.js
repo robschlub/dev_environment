@@ -247,6 +247,28 @@ export default function commonLessonLayout() {
     },
   };
 
+  layout.add = [
+    {
+      path: '',
+      name: 'testEqn',
+      method: 'diagram/equation',
+      options: {
+        color: [1, 0, 0, 1],
+        elements: {
+          a: 'a',
+          b: 'b',
+          c: 'c',
+          _2: '2',
+          v: { symbol: 'vinculum' },
+        },
+        forms: {
+          '0': ['a', 'b', 'c'],
+          '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+        },
+        formSeries: ['0', '1'],
+      },
+    },
+  ];
   // layout.equation = {
   //   elements: {
   //     a: 'a',
