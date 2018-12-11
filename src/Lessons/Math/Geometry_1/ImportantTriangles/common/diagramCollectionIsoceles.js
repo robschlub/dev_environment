@@ -223,12 +223,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
             },
         },
       }],
-      '0': [{
-        annotate: {
-          content: 'a',
-          withAnnotations: ['b', 'right', 'bottom', 'left', 'top'],
-        },
-      }],
+      '0': e.annotate('a', [
+            'b', 'right', 'bottom', 'left', 'top', 0.5,
+          ]),
       // '0a': [{
       //   annotate: {
       //     content: 'a',

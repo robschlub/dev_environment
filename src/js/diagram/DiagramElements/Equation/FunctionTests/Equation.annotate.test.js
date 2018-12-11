@@ -124,7 +124,7 @@ describe('Equation Functions - Annotations', () => {
           ]),
           // Array only
           '2': annotate('a', [
-            ['b', 'right', 'bottom', 'left', 'top', 0.5],
+            'b', 'right', 'bottom', 'left', 'top', 0.5,
           ]),
           // Function with method Array
           '3': annotate('a', [
@@ -198,7 +198,7 @@ describe('Equation Functions - Annotations', () => {
     // expect(round(eqn._lb.transform.mat)).toMatchSnapshot();
     // expect(round(eqn._rb.transform.mat)).toMatchSnapshot();
   });
-  test.only('Annotations', () => {
+  test('Annotations', () => {
     functions.annotations();
     const elems = [eqn._a, eqn._b, eqn._c];
     const formsToTest = ['1', '2', '3', '4', '5', '6'];
@@ -207,7 +207,6 @@ describe('Equation Functions - Annotations', () => {
     const positions0 = elems.map(elem => round(elem.transform.mat).slice());
     formsToTest.forEach((f) => {
       eqn.showForm(f);
-      console.log(f)
       const positions = elems.map(elem => round(elem.transform.mat).slice());
       expect(positions0).toEqual(positions);
     });

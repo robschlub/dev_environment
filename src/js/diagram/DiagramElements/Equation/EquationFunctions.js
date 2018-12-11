@@ -566,6 +566,12 @@ export class EquationFunctions {
             return parsedContent;
           }                                                     // $FlowFixMe
           // Case of single annotation in array form
+          if (Array.isArray(annotation)) {
+            const annotationFromArray = this.annotation(annotation);
+            if (annotationFromArray instanceof AnnotationInformation) {
+              return annotationFromArray;
+            }
+          }
           return null;
         },
       );
