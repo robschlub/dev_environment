@@ -30,7 +30,7 @@ DiagramElementPrimative {
   },
   "cannotTouchHole": false,
   "color": Array [
-    1,
+    0.9490196078431372,
     0,
     0,
     1,
@@ -89,7 +89,7 @@ DiagramElementPrimative {
           "x": null,
           "y": null,
         },
-        "font": "normal 200 100px Times New Roman",
+        "font": "italic 200 100px Times New Roman",
         "measureText": [Function],
         "restore": [Function],
         "save": [Function],

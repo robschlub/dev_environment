@@ -1,9 +1,9 @@
 import {
   Point, // Rect,
 } from '../../tools/g2';
-// import {
-//   round,
-// } from '../../tools/mathtools';
+import {
+  round,
+} from '../../tools/mathtools';
 import * as tools from '../../../tools/tools';
 import makeDiagram from '../../../__mocks__/makeDiagram';
 import { EquationNew } from './Equation';
@@ -195,7 +195,7 @@ describe('Diagram Equations From Object', () => {
     expect(eqn._b.isTouchable).toBe(true);
     expect(eqn._v.isTouchable).toBe(true);
 
-    expect(eqn._a.color).toEqual([1, 0, 0, 1]);
+    expect(round(eqn._a.color)).toEqual(round([127 / 255, 127 / 255, 127 / 255, 1]));
     expect(eqn._b.color).toEqual(color1);
     expect(eqn._v.color).toEqual(color1);
   });
