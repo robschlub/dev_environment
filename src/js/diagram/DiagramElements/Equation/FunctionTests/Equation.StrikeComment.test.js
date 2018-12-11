@@ -32,7 +32,7 @@ describe('Equation Functions - Bar', () => {
       e: 'e',
       f: 'f',
       g: 'g',
-      x: { symbol: 'strike'},
+      x: { symbol: 'strike' },
     };
     functions = {
       topStrike: () => {

@@ -61,7 +61,6 @@ class Content extends LessonContent {
         iso._testEqn.showForm('1');
         // iso._testNav.setPosition(-1, 1);
         // iso._testNav.showForm('0');
-        
       },
     });
 

@@ -174,9 +174,6 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     // eqn.changeDescription('2', 'How are you');
     // eqn.showForm('1');
 
-
-
-
     // eqn.showForm('4');
     // console.log(eqn.eqn.forms['4'].base.height)
     // // eqn.showForm('5');

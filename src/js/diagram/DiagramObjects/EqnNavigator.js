@@ -124,6 +124,7 @@ function updateButtons(
   }
 }
 
+// eslint-disable-next-line no-use-before-define
 function updateButtonsDescriptionOnly(nav: EqnNavigator) {
   const currentForm = nav.eqn.getCurrentForm();
   if (currentForm != null) {

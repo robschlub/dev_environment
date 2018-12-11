@@ -7,7 +7,7 @@ import {
 import * as tools from '../../../tools/tools';
 import makeDiagram from '../../../__mocks__/makeDiagram';
 import { EquationNew } from './Equation';
-import EquationForm from './EquationForm';
+// import EquationForm from './EquationForm';
 import { Elements } from './Elements/Element';
 // import Fraction from './Elements/Fraction';
 
