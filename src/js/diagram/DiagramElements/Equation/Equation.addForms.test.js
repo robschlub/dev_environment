@@ -6,6 +6,7 @@ import * as tools from '../../../tools/tools';
 import makeDiagram from '../../../__mocks__/makeDiagram';
 import { EquationNew } from './Equation';
 import Fraction from './Elements/Fraction';
+import * as html from '../../../tools/htmlGenerator';
 
 tools.isTouchDevice = jest.fn();
 
@@ -214,6 +215,20 @@ describe('Diagram Equations From Object', () => {
           },
         ],
       },
+      // With descriptions
+      descriptions: {
+        '0': {
+          content: ['a', 'b'],
+          description: 'Form 0 description',
+        },
+        '1': {
+          content: ['a', 'b'],
+          description: '|Form| 1 |description|',
+          modifiers: {
+            Form: html.highlight([1, 0, 0, 0]),
+          },
+        },
+      },
     };
     ({ forms } = eqn.eqn);
   });
@@ -364,5 +379,22 @@ describe('Diagram Equations From Object', () => {
         },
       },
     });
+  });
+  test('Descriptions', () => {
+    eqn.addForms(addForms.descriptions);
+    // console.log(forms['0'].base.description)
+    // console.log(forms['1'].base.description)
+    // console.log(eqn.getDescription('1'))
+    expect(forms['0'].base.description).toBe('Form 0 description');
+    expect(forms['1'].base.description).toBe('|Form| 1 |description|');
+    expect(eqn.getDescription('1')).toBe('<span class="highlight_word"" style="color:rgba(255,0,0,0);">Form</span> 1 <span class="highlight_word">description</span>');
+    // const time0 = forms['0'].base.time;
+    // const time1 = forms['1'].base.time;
+    // const time2 = forms['2'].base.time;
+    // const time3 = forms['3'].base.time;
+    // expect(time0).toBe(null);
+    // expect(time1).toEqual({ fromPrev: 10, fromNext: 10, fromAny: 10 });
+    // expect(time2).toEqual({ fromPrev: 20, fromNext: 30, fromAny: 40 });
+    // expect(time3).toEqual({ fromPrev: 20, fromNext: null, fromAny: null });
   });
 });

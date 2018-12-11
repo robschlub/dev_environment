@@ -861,6 +861,17 @@ export class EquationNew extends DiagramElementCollection {
     }
   }
 
+  getDescription(
+    formOrName: EquationForm | string,
+    subForm: string = 'base',
+  ) {
+    const form = this.getForm(formOrName, subForm);
+    if (form != null && form.description != null) {
+      return html.applyModifiers(form.description, form.modifiers);
+    }
+    return '';
+  }
+
   updateDescription(
     formOrName: EquationForm | string | null = null,
     subForm: string = 'base',
