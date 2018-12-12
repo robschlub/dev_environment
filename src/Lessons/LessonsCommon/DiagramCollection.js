@@ -17,6 +17,14 @@ export type TypeUnits = 'deg' | 'rad';
 export type TypeScenario = string | null
   | { position?: Point, rotation?: number, scale?: Point | number };
 
+export type TypeAddElementObject = {
+  path?: string,
+  name?: string,
+  method?: string,
+  options?: {},
+  addElements?: Array<TypeAddElementObject>
+};
+
 function getTarget(
   element: DiagramElement,
   scenario: TypeScenario,
@@ -235,11 +243,14 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     });
   }
 
-  addLayout() {
-    if (this.layout.addElements != null
-      && Array.isArray(this.layout.addElements)
+  addLayout(
+    rootCollection: DiagramElementCollection = this,
+    layout: { addElements?: TypeAddElementObject } = this.layout,
+  ) {
+    if (layout.addElements != null
+      && Array.isArray(layout.addElements)
     ) {
-      this.layout.addElements.forEach((elementDefinition, index) => {
+      layout.addElements.forEach((elementDefinition, index) => {
         if (elementDefinition.name == null
           || elementDefinition.method == null
         ) {
@@ -251,18 +262,18 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
           if (!(remainingPath[0] in e)) {
             throw new Error(`Layout addElement at index ${index}: collection or method ${remainingPath} does not exist`);
           }
-          if (remainingPath.length === 1) {
+          if (remainingPath.length === 1) {          // $FlowFixMe
             return e[remainingPath[0]];
-          }
+          }                                          // $FlowFixMe
           return getMethod(e[remainingPath[0]], remainingPath.slice(1));
         };
 
         let collectionPath;
         if (elementDefinition.path == null || elementDefinition.path === '') {
-          collectionPath = this;
+          collectionPath = rootCollection;
         } else {
           const path = elementDefinition.path.split('/');
-          collectionPath = getMethod(this, path);
+          collectionPath = getMethod(rootCollection, path);
         }
         const methodPath = elementDefinition.method.split('/');
 
@@ -285,6 +296,10 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
           if (collectionPath instanceof DiagramElementCollection) {
             collectionPath.add(elementDefinition.name, element);
           }
+        }
+
+        if (`_${elementDefinition.name}` in rootCollection) {     // $FlowFixMe
+          this.addLayout(rootCollection[`_${elementDefinition.name}`], elementDefinition);
         }
       });
     }
