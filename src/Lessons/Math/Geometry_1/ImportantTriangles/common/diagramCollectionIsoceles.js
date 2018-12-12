@@ -26,56 +26,6 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   _splitLine1: DiagramObjectLine;
   _splitLine2: DiagramObjectLine;
 
-  addLayout() {
-    if (this.layout.addElements != null
-      && Array.isArray(this.layout.addElements)
-    ) {
-      this.layout.addElements.forEach((elementDefinition, index) => {
-        if (elementDefinition.name == null
-          || elementDefinition.method == null
-        ) {
-          throw new Error(`Layout addElement at index ${index}: missing name property`);
-          // return;
-        }
-
-        const getMethod = (e, remainingPath) => {
-          if (!(remainingPath[0] in e)) {
-            throw new Error(`Layout addElement at index ${index}: collection or method ${remainingPath} does not exist`);
-          }
-          if (remainingPath.length === 1) {
-            return e[remainingPath[0]];
-          }
-          return getMethod(e[remainingPath[0]], remainingPath.slice(1));
-        };
-
-        let collectionPath;
-        if (elementDefinition.path == null || elementDefinition.path === '') {
-          collectionPath = this;
-        } else {
-          const path = elementDefinition.path.split('/');
-          collectionPath = getMethod(this, path);
-        }
-        const methodPath = elementDefinition.method.split('/');
-
-        const method = getMethod(this, methodPath).bind(getMethod(this, methodPath.slice(0, -1)));
-        if (typeof method !== 'function') {
-          return;
-        }
-        if (methodPath.slice(-1)[0].startsWith('add')) {
-          method(collectionPath, elementDefinition.name, elementDefinition.options);
-        } else {
-          const element = method(elementDefinition.options);
-          if (element == null) {
-            return;
-          }
-          if (collectionPath instanceof DiagramElementCollection) {
-            collectionPath.add(elementDefinition.name, element);
-          }
-        }
-      });
-    }
-  }
-
   addGrid() {
     const lay = this.layout.grid;
     const grid = this.diagram.shapes.grid(
@@ -90,12 +40,13 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   }
 
   addTri() {
-    const iso = this.diagram.shapes.collection(new Transform('iso')
-      .translate(0, 0));
-
+    this.addLayout();
+    // const iso = this.diagram.shapes.collection(new Transform('iso')
+    //   .translate(0, 0));
+    const iso = this._tri;
     // tri
-    const line = this.diagram.shapes.polyLine(this.layout.iso.tri);
-    iso.add('line', line);
+    // const line = this.diagram.shapes.polyLine(this.layout.iso.tri);
+    // iso.add('line', line);
 
     // Angles
     let lay = this.layout.iso;
@@ -105,9 +56,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
 
     // Sides
     lay = this.layout.iso;
-    iso.add('side12', this.diagram.objects.line(lay.sideLength, lay.side12));
-    iso.add('side23', this.diagram.objects.line(lay.sideLength, lay.side23));
-    iso.add('side31', this.diagram.objects.line(lay.sideLength, lay.side31));
+    // iso.add('side12', this.diagram.objects.line(lay.sideLength, lay.side12));
+    // iso.add('side23', this.diagram.objects.line(lay.sideLength, lay.side23));
+    // iso.add('side31', this.diagram.objects.line(lay.sideLength, lay.side31));
     this.add('tri', iso);
   }
 
@@ -170,7 +121,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     //   formSeries: ['0', '1'],
     // });
 
-    this.addLayout();
+    // this.addLayout();
 
     // const elements = {
     //   a: 'a',

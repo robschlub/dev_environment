@@ -1,6 +1,8 @@
 // @flow
 
-import { Point, Line } from '../../../../../js/diagram/tools/g2';
+import {
+  Point, Line, Transform,
+} from '../../../../../js/diagram/tools/g2';
 import getCssColors from '../../../../../js/tools/getCssColors';
 import baseLayout from '../../../../LessonsCommon/layout';
 
@@ -251,7 +253,7 @@ export default function commonLessonLayout() {
     {
       // path: '',
       name: 'testEqn',
-      method: 'diagram/equation/addEquation1',
+      method: 'diagram/equation/addEquation',
       options: {
         color: [1, 0, 1, 1],
         elements: {
@@ -267,6 +269,37 @@ export default function commonLessonLayout() {
         },
         formSeries: ['0', '1'],
       },
+    },
+    {
+      name: 'tri',
+      method: 'diagram/shapes/collection',
+      options: {
+        transform: new Transform('iso').translate(0, 0),
+      },
+    },
+    {
+      path: '_tri',
+      name: 'line',
+      method: 'diagram/shapes/polyLine',
+      options: layout.iso.tri,
+    },
+    {
+      path: '_tri',
+      name: 'side12',
+      method: 'diagram/objects/line',
+      options: [layout.iso.sideLength, layout.iso.side12],
+    },
+    {
+      path: '_tri',
+      name: 'side23',
+      method: 'diagram/objects/line',
+      options: [layout.iso.sideLength, layout.iso.side23],
+    },
+    {
+      path: '_tri',
+      name: 'side31',
+      method: 'diagram/objects/line',
+      options: [layout.iso.sideLength, layout.iso.side31],
     },
   ];
   // layout.equation = {

@@ -492,12 +492,25 @@ export default class DiagramPrimatives {
     );
   }
 
-  collection(transformOrPoint: Transform | Point = new Transform()) {
+  collection(transformOrPointOrOptions: Transform | Point | {
+      transform?: Transform,
+      position?: Point,
+    } = { transform: new Transform() }) {
     let transform = new Transform();
-    if (transformOrPoint instanceof Point) {
-      transform = transform.translate(transformOrPoint.x, transformOrPoint.y);
+    if (transformOrPointOrOptions instanceof Point) {
+      transform = transform.translate(transformOrPointOrOptions.x, transformOrPointOrOptions.y);
+    } else if (transformOrPointOrOptions instanceof Transform) {
+      transform = transformOrPointOrOptions._dup();
     } else {
-      transform = transformOrPoint._dup();
+      if (transformOrPointOrOptions.position != null) {
+        transform = transform.translate(
+          transformOrPointOrOptions.position.x,
+          transformOrPointOrOptions.position.y,
+        );
+      }
+      if (transformOrPointOrOptions.transform != null) {
+        ({ transform } = transformOrPointOrOptions);
+      }
     }
     return new DiagramElementCollection(transform, this.limits);
   }

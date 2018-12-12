@@ -234,4 +234,59 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
       }
     });
   }
+
+  addLayout() {
+    if (this.layout.addElements != null
+      && Array.isArray(this.layout.addElements)
+    ) {
+      this.layout.addElements.forEach((elementDefinition, index) => {
+        if (elementDefinition.name == null
+          || elementDefinition.method == null
+        ) {
+          throw new Error(`Layout addElement at index ${index}: missing name property`);
+          // return;
+        }
+
+        const getMethod = (e, remainingPath) => {
+          if (!(remainingPath[0] in e)) {
+            throw new Error(`Layout addElement at index ${index}: collection or method ${remainingPath} does not exist`);
+          }
+          if (remainingPath.length === 1) {
+            return e[remainingPath[0]];
+          }
+          return getMethod(e[remainingPath[0]], remainingPath.slice(1));
+        };
+
+        let collectionPath;
+        if (elementDefinition.path == null || elementDefinition.path === '') {
+          collectionPath = this;
+        } else {
+          const path = elementDefinition.path.split('/');
+          collectionPath = getMethod(this, path);
+        }
+        const methodPath = elementDefinition.method.split('/');
+
+        const method = getMethod(this, methodPath).bind(getMethod(this, methodPath.slice(0, -1)));
+        if (typeof method !== 'function') {
+          return;
+        }
+        if (methodPath.slice(-1)[0].startsWith('add')) {
+          method(collectionPath, elementDefinition.name, elementDefinition.options);
+        } else {
+          let element;
+          if (Array.isArray(elementDefinition.options)) {
+            element = method(...elementDefinition.options);
+          } else {
+            element = method(elementDefinition.options);
+          }
+          if (element == null) {
+            return;
+          }
+          if (collectionPath instanceof DiagramElementCollection) {
+            collectionPath.add(elementDefinition.name, element);
+          }
+        }
+      });
+    }
+  }
 }
