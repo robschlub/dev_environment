@@ -17,6 +17,7 @@ import DrawContext2D from './DrawContext2D';
 import DiagramPrimatives from './DiagramPrimatives/DiagramPrimatives';
 import DiagramEquation from './DiagramEquation/DiagramEquation';
 import DiagramObjects from './DiagramObjects/DiagramObjects';
+import DiagramAddElements from './DiagramAddElements/DiagramAddElements';
 
 // There are several coordinate spaces that need to be considered for a
 // diagram.
@@ -68,6 +69,9 @@ class Diagram {
   objects: DiagramObjects;
   objectsLow: DiagramObjects;
   objectsHigh: DiagramObjects;
+  addElements: DiagramAddElements;
+  addElementsLow: DiagramAddElements;
+  addElementsHigh: DiagramAddElements;
 
   backgroundColor: Array<number>;
   fontScale: number;
@@ -188,6 +192,9 @@ class Diagram {
     this.objectsLow = this.getObjects(false);
     this.objectsHigh = this.getObjects(true);
     this.objects = this.objectsLow;
+    this.addElementsLow = this.getAddElements(false);
+    this.addElementsHigh = this.getAddElements(true);
+    this.addElements = this.getAddElements();
     this.createDiagramElements();
     if (this.elements.name === '') {
       this.elements.name = 'diagramRoot';
@@ -233,6 +240,22 @@ class Diagram {
       equation,
       this.isTouchDevice,
       this.animateNextFrame.bind(this),
+    );
+  }
+
+  getAddElements(high: boolean = false) {
+    let shapes = this.shapesLow;
+    let objects = this.objectsLow;
+    let equation = this.equationLow;
+    if (high) {
+      shapes = this.shapesHigh;
+      objects = this.objectsHigh;
+      equation = this.equationHigh;
+    }
+    return new DiagramAddElements(
+      shapes,
+      objects,
+      equation,
     );
   }
 
