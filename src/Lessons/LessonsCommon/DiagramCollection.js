@@ -243,6 +243,18 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     });
   }
 
+  getMethod(method: string) {
+    const methods = {
+      polyLine: this.diagram.shapes.polyLine.bind(this.diagram.shapes),
+      line: this.diagram.objects.line.bind(this.diagram.objects),
+      collection: this.diagram.shapes.collection.bind(this.diagram.shapes),
+    };
+    if (method in methods) {
+      return methods[method];
+    }
+    return method;
+  }
+
   addLayout(
     rootCollection: DiagramElementCollection = this,
     layout: { addElements?: TypeAddElementObject } = this.layout,
@@ -308,7 +320,10 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
 
         const methodPath = methodPathToUse.split('/');
 
-        const method = getMethod(this, methodPath).bind(getMethod(this, methodPath.slice(0, -1)));
+        let method = this.getMethod(methodPathToUse);
+        if (typeof method === 'string') {
+          method = getMethod(this, methodPath).bind(getMethod(this, methodPath.slice(0, -1)));
+        }
         if (typeof method !== 'function') {
           return;
         }
