@@ -251,11 +251,24 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
       && Array.isArray(layout.addElements)
     ) {
       layout.addElements.forEach((elementDefinition, index) => {
-        if (elementDefinition.name == null
-          || elementDefinition.method == null
+        let methodPathToUse;
+        let nameToUse;
+        if (elementDefinition.nameMethod != null
+          && Array.isArray(elementDefinition.nameMethod)
         ) {
-          throw new Error(`Layout addElement at index ${index}: missing name property`);
-          // return;
+          [nameToUse, methodPathToUse] = elementDefinition.nameMethod;
+        }
+        if (elementDefinition.name != null) {
+          nameToUse = elementDefinition.name;
+        }
+        if (elementDefinition.method != null) {
+          methodPathToUse = elementDefinition.method;
+        }
+        if (nameToUse == null || nameToUse === '') {
+          throw new Error(`Layout addElement at index ${index} in collection ${rootCollection.name}: missing name or methodName property`);
+        }
+        if (methodPathToUse == null || methodPathToUse === '') {
+          throw new Error(`Layout addElement at index ${index} in collection ${rootCollection.name}: missing method or methodName property`);
         }
 
         const getMethod = (e, remainingPath) => {
@@ -275,14 +288,15 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
           const path = elementDefinition.path.split('/');
           collectionPath = getMethod(rootCollection, path);
         }
-        const methodPath = elementDefinition.method.split('/');
+
+        const methodPath = methodPathToUse.split('/');
 
         const method = getMethod(this, methodPath).bind(getMethod(this, methodPath.slice(0, -1)));
         if (typeof method !== 'function') {
           return;
         }
         if (methodPath.slice(-1)[0].startsWith('add')) {
-          method(collectionPath, elementDefinition.name, elementDefinition.options);
+          method(collectionPath, nameToUse, elementDefinition.options);
         } else {
           let element;
           if (Array.isArray(elementDefinition.options)) {
@@ -294,12 +308,12 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
             return;
           }
           if (collectionPath instanceof DiagramElementCollection) {
-            collectionPath.add(elementDefinition.name, element);
+            collectionPath.add(nameToUse, element);
           }
         }
 
-        if (`_${elementDefinition.name}` in rootCollection) {     // $FlowFixMe
-          this.addLayout(rootCollection[`_${elementDefinition.name}`], elementDefinition);
+        if (`_${nameToUse}` in rootCollection) {     // $FlowFixMe
+          this.addLayout(rootCollection[`_${nameToUse}`], elementDefinition);
         }
       });
     }

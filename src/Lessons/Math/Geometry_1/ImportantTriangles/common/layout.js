@@ -278,8 +278,7 @@ export default function commonLessonLayout() {
       },
       addElements: [
         {
-          name: 'line',
-          method: 'diagram/shapes/polyLine',
+          nameMethod: ['line', 'diagram/shapes/polyLine'],
           options: layout.iso.tri,
         },
         {
