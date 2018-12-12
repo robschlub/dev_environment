@@ -253,22 +253,28 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
       layout.addElements.forEach((elementDefinition, index) => {
         let methodPathToUse;
         let nameToUse;
-        if (elementDefinition.nameMethod != null
-          && Array.isArray(elementDefinition.nameMethod)
-        ) {
-          [nameToUse, methodPathToUse] = elementDefinition.nameMethod;
-        }
-        if (elementDefinition.name != null) {
+        let pathToUse;
+        let optionsToUse;
+        let addElementsToUse;
+
+        // Extract the parameters from the layout object
+        if (Array.isArray(elementDefinition)) {
+          if (elementDefinition.length <= 4) {
+            [
+              nameToUse, methodPathToUse, optionsToUse, addElementsToUse,
+            ] = elementDefinition;
+          } else {
+            [
+              pathToUse, nameToUse, methodPathToUse, optionsToUse,
+              addElementsToUse,
+            ] = elementDefinition;
+          }
+        } else {
           nameToUse = elementDefinition.name;
-        }
-        if (elementDefinition.method != null) {
+          pathToUse = elementDefinition.path;
+          optionsToUse = elementDefinition.options;
+          addElementsToUse = elementDefinition.addElements;
           methodPathToUse = elementDefinition.method;
-        }
-        if (nameToUse == null || nameToUse === '') {
-          throw new Error(`Layout addElement at index ${index} in collection ${rootCollection.name}: missing name or methodName property`);
-        }
-        if (methodPathToUse == null || methodPathToUse === '') {
-          throw new Error(`Layout addElement at index ${index} in collection ${rootCollection.name}: missing method or methodName property`);
         }
 
         const getMethod = (e, remainingPath) => {
@@ -282,11 +288,22 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
         };
 
         let collectionPath;
-        if (elementDefinition.path == null || elementDefinition.path === '') {
+        if (pathToUse == null || pathToUse === '') {
           collectionPath = rootCollection;
         } else {
           const path = elementDefinition.path.split('/');
           collectionPath = getMethod(rootCollection, path);
+        }
+
+        // Check for critical errors
+        if (nameToUse == null || nameToUse === '') {
+          throw new Error(`Layout addElement at index ${index} in collection ${rootCollection.name}: missing name property`);
+        }
+        if (methodPathToUse == null || methodPathToUse === '') {
+          throw new Error(`Layout addElement at index ${index} in collection ${rootCollection.name}: missing method property`);
+        }
+        if (!(collectionPath instanceof DiagramElementCollection)) {
+          throw new Error(`Layout addElement at index ${index} in collection ${rootCollection.name}: missing or incorrect path property`);
         }
 
         const methodPath = methodPathToUse.split('/');
@@ -295,14 +312,19 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
         if (typeof method !== 'function') {
           return;
         }
+
+        if (typeof method !== 'function') {
+          throw new Error(`Layout addElement at index ${index} in collection ${rootCollection.name}: incorrect method property`);
+        }
+
         if (methodPath.slice(-1)[0].startsWith('add')) {
-          method(collectionPath, nameToUse, elementDefinition.options);
+          method(collectionPath, nameToUse, optionsToUse);
         } else {
           let element;
-          if (Array.isArray(elementDefinition.options)) {
-            element = method(...elementDefinition.options);
+          if (Array.isArray(optionsToUse)) {
+            element = method(...optionsToUse);
           } else {
-            element = method(elementDefinition.options);
+            element = method(optionsToUse);
           }
           if (element == null) {
             return;
@@ -312,8 +334,10 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
           }
         }
 
-        if (`_${nameToUse}` in rootCollection) {     // $FlowFixMe
-          this.addLayout(rootCollection[`_${nameToUse}`], elementDefinition);
+        if (`_${nameToUse}` in rootCollection
+            && 'addElements' in elementDefinition
+        ) {                                                     // $FlowFixMe
+          this.addLayout(rootCollection[`_${nameToUse}`], { addElements: addElementsToUse});
         }
       });
     }
