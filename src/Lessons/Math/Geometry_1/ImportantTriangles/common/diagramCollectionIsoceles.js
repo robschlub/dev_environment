@@ -30,25 +30,23 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     if (this.layout.addElements != null
       && Array.isArray(this.layout.addElements)
     ) {
-      this.layout.addElements.forEach((elementDefinition) => {
+      this.layout.addElements.forEach((elementDefinition, index) => {
         if (elementDefinition.name == null
           || elementDefinition.method == null
         ) {
-          return;
+          throw new Error(`Layout addElement at index ${index}: missing name property`);
+          // return;
         }
 
-        const getMethod = (e: { [string]: DiagramElementCollection | () => {}}, remainingPath) => {
+        const getMethod = (e, remainingPath) => {
+          if (!(remainingPath[0] in e)) {
+            throw new Error(`Layout addElement at index ${index}: collection or method ${remainingPath} does not exist`);
+          }
           if (remainingPath.length === 1) {
-            return e[remainingPath];
+            return e[remainingPath[0]];
           }
           return getMethod(e[remainingPath[0]], remainingPath.slice(1));
         };
-        // const getCollection = (e: { [string]: DiagramElementCollection | () => {}}, remainingPath) => {
-        //   if (remainingPath.length === 1) {
-        //     return e[remainingPath];
-        //   }
-        //   return getMethod(e[remainingPath[0]], remainingPath.slice(1));
-        // };
 
         let collectionPath;
         if (elementDefinition.path == null || elementDefinition.path === '') {

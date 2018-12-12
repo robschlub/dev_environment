@@ -251,7 +251,7 @@ export default function commonLessonLayout() {
     {
       // path: '',
       name: 'testEqn',
-      method: 'diagram/equation/addEquation',
+      method: 'diagram/equation/addEquation1',
       options: {
         color: [1, 0, 1, 1],
         elements: {
