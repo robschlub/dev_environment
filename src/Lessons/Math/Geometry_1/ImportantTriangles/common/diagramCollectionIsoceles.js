@@ -6,9 +6,9 @@ import {
 import DiagramObjectAngle from '../../../../../js/diagram/DiagramObjects/Angle';
 import { DiagramObjectLine } from '../../../../../js/diagram/DiagramObjects/Line';
 // import { joinObjects } from '../../../../../js/tools/tools';
-// import {
-//   DiagramElementCollection,
-// } from '../../../../../js/diagram/Element';
+import {
+  DiagramElementCollection,
+} from '../../../../../js/diagram/Element';
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
@@ -25,6 +25,58 @@ export default class IsocelesCollection extends CommonDiagramCollection {
 
   _splitLine1: DiagramObjectLine;
   _splitLine2: DiagramObjectLine;
+
+  addLayout() {
+    if (this.layout.addElements != null
+      && Array.isArray(this.layout.addElements)
+    ) {
+      this.layout.addElements.forEach((elementDefinition) => {
+        if (elementDefinition.name == null
+          || elementDefinition.method == null
+        ) {
+          return;
+        }
+
+        const getMethod = (e: { [string]: DiagramElementCollection | () => {}}, remainingPath) => {
+          if (remainingPath.length === 1) {
+            return e[remainingPath];
+          }
+          return getMethod(e[remainingPath[0]], remainingPath.slice(1));
+        };
+        // const getCollection = (e: { [string]: DiagramElementCollection | () => {}}, remainingPath) => {
+        //   if (remainingPath.length === 1) {
+        //     return e[remainingPath];
+        //   }
+        //   return getMethod(e[remainingPath[0]], remainingPath.slice(1));
+        // };
+
+        let collectionPath;
+        if (elementDefinition.path == null || elementDefinition.path === '') {
+          collectionPath = this;
+        } else {
+          const path = elementDefinition.path.split('/');
+          collectionPath = getMethod(this, path);
+        }
+        const methodPath = elementDefinition.method.split('/');
+
+        const method = getMethod(this, methodPath).bind(getMethod(this, methodPath.slice(0, -1)));
+        if (typeof method !== 'function') {
+          return;
+        }
+        if (methodPath.slice(-1)[0].startsWith('add')) {
+          method(collectionPath, elementDefinition.name, elementDefinition.options);
+        } else {
+          const element = method(elementDefinition.options);
+          if (element == null) {
+            return;
+          }
+          if (collectionPath instanceof DiagramElementCollection) {
+            collectionPath.add(elementDefinition.name, element);
+          }
+        }
+      });
+    }
+  }
 
   addGrid() {
     const lay = this.layout.grid;
@@ -103,22 +155,25 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   }
 
   addEquations() {
-    const color1 = [1, 0, 0, 1];
-    this.diagram.equation.addNavigator(this, 'test', {
-      color: color1,
-      elements: {
-        a: 'a',
-        b: 'b',
-        c: 'c',
-        _2: '2',
-        v: { symbol: 'vinculum' },
-      },
-      forms: {
-        '0': ['a', 'b', 'c'],
-        '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
-      },
-      formSeries: ['0', '1'],
-    });
+    // const color1 = [1, 0, 0, 1];
+    // this.diagram.equation.addNavigator(this, 'test', {
+    //   color: color1,
+    //   elements: {
+    //     a: 'a',
+    //     b: 'b',
+    //     c: 'c',
+    //     _2: '2',
+    //     v: { symbol: 'vinculum' },
+    //   },
+    //   forms: {
+    //     '0': ['a', 'b', 'c'],
+    //     '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+    //   },
+    //   formSeries: ['0', '1'],
+    // });
+
+    this.addLayout();
+
     // const elements = {
     //   a: 'a',
     //   b: 'b',

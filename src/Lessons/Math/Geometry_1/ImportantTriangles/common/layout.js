@@ -247,13 +247,13 @@ export default function commonLessonLayout() {
     },
   };
 
-  layout.add = [
+  layout.addElements = [
     {
-      path: '',
+      // path: '',
       name: 'testEqn',
-      method: 'diagram/equation',
+      method: 'diagram/equation/addEquation',
       options: {
-        color: [1, 0, 0, 1],
+        color: [1, 0, 1, 1],
         elements: {
           a: 'a',
           b: 'b',
