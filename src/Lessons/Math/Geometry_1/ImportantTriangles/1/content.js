@@ -143,9 +143,9 @@ class Content extends LessonContent {
       setContent: 'This line will have some length, which we can label |C|.',
       showOnly: [
         iso, iTri, iTri._line, left,
-        left, left._line, right, right._line,
+        // left, left._line, right, right._line,
       ],
-      show: [iTri._side12, iTri._side23, iTri._side31],
+      show: [iTri._side12, iTri._side23, iTri._side31, iso._split],
       setSteadyState: () => {
         iso.setScenario(left, layout.iso.left.scenario.center);
         iso.setScenario(right, layout.iso.right.scenario.center);
@@ -154,40 +154,9 @@ class Content extends LessonContent {
     };
     this.addSection(common);
     this.addSection(common, {
-      show: [iTri._side12, iTri._side23, iTri._side31, left._side31],
+      show: [iTri._side12, iTri._side23, iTri._side31, iso._split, left._side23],
     });
-    // this.addSection(common, {
-    //   showOnly: [
-    //     iso, iTri, iTri._line,
-    //     left, left._line, right, right._line,
-    //   ],
-    //   show: [
-    //     iTri._side12,
-    //     left._side12, left._side31, left._side23,
-    //     right._side12, right._side23,
-    //   ],
-    // });
 
-
-    // common = {
-    //   setContent: 'This line splits the triangle into two.',
-    //   showOnly: [
-    //     iso, qr,
-    //     iTri, iTri._line,
-    //     left, left._line,
-    //     right, right._line,
-    //   ],
-    //   show: [
-    //     iTri._side12,
-    //     left._side12, left._side31, left._side23,
-    //     right._side12, right._side23,
-    //   ],
-    //   setSteadyState: () => {
-    //     iso.setScenario(left, layout.iso.left.scenario.center);
-    //     iso.setScenario(right, layout.iso.right.scenario.center);
-    //   },
-    // };
-    // this.addSection(common);
     this.addSection(common, {
       setContent: 'This line splits the triangle into two.',
       showOnly: [
@@ -196,7 +165,7 @@ class Content extends LessonContent {
         right, right._line,
       ],
       show: [
-        left._side31, right._side23,
+        left._side31, right._side23, left._side23,
         // left._side12, left._side31, left._side23,
         // right._side12, right._side23,
       ],
@@ -209,6 +178,7 @@ class Content extends LessonContent {
         iso.setScenario(right, layout.iso.right.scenario.right);
         right._side12.showAll();
         left._side12.showAll();
+        right._side31.showAll();
       },
     });
 
@@ -224,8 +194,8 @@ class Content extends LessonContent {
         right, right._line,
       ],
       show: [
-        left._side12, left._side31, // left._side23,
-        right._side12, right._side23, // right._side31,
+        left._side12, left._side31, left._side23,
+        right._side12, right._side23, right._side31,
       ],
       setSteadyState: () => {
         iso.setScenario(left, layout.iso.left.scenario.left);
@@ -238,7 +208,22 @@ class Content extends LessonContent {
     common.show = [
       left, right,
     ];
-    this.addSection(common, { show: [iso._left, iso._right] });
+    this.addSection(common, {
+      show: [iso._left, iso._right],
+      transitionFromPrev: (done) => {
+        left._angle1.pulseScaleNow(1, 1.5);
+        left._angle2.pulseScaleNow(1, 1.5);
+        left._angle3.pulseScaleNow(1, 1.5);
+        right._angle1.pulseScaleNow(1, 1.5);
+        right._angle2.pulseScaleNow(1, 1.5);
+        right._angle3.pulseScaleNow(1, 1.5);
+        done();
+      },
+      setSteadState: () => {
+        iso.setScenario(left, layout.iso.left.scenario.left);
+        iso.setScenario(right, layout.iso.right.scenario.right);
+      },
+    });
 
     common = {
       setContent: 'Now, |join| the two triangles back.',
@@ -261,14 +246,19 @@ class Content extends LessonContent {
       right._angle2, right._side23, right._side12,
     ];
     this.addSection(common);
-    common.setSteadyState = () => {
-      iso.setScenario(iso._left, layout.iso.left.scenario.center);
-      iso.setScenario(iso._right, layout.iso.right.scenario.center);
-    };
     this.addSection(common, {
       transitionFromPrev: (done) => {
         iso.moveToScenario(left, layout.iso.left.scenario.center, 1, done);
         iso.moveToScenario(right, layout.iso.right.scenario.center, 1);
+      },
+      setSteadyState: () => {
+        iso.setScenario(iso._left, layout.iso.left.scenario.center);
+        iso.setScenario(iso._right, layout.iso.right.scenario.center);
+        iTri.show();
+        iTri._line.show();
+        iso._left._line.hide();
+        iso._right._line.hide();
+        iso._split.showAll();
       },
     });
     common.showOnly = [iso, iTri, iTri._line, qr];
@@ -302,7 +292,7 @@ class Content extends LessonContent {
 
 
     common = {
-      setContent: 'We start by labelling the third angle and recalling all the angles in a triangle add to |_180|. If we know |b| we can find |a|.',
+      setContent: 'We start by labelling the |third angle| as |b| and recalling all the angles in a triangle add to |_180|. If we know |b| we can find |a|.',
       modifiers: {
         _180: clickWord(
           '180º', 'id_important_triangles_sum1',

@@ -133,6 +133,7 @@ export default function commonLessonLayout() {
       side23: {
         p1: isoPoints[2],
         p2: mid,
+        offset: 0.1,
         label: { text: 'C', linePosition: 0.6 },
       },
       side31: {
@@ -200,6 +201,7 @@ export default function commonLessonLayout() {
       side31: {
         p1: mid,
         p2: isoPoints[2],
+        offset: 0.1,
         label: { text: 'C', linePosition: 0.4 },
       },
     },
