@@ -253,7 +253,7 @@ export default function commonLessonLayout() {
     {
       // path: '',
       name: 'testEqn',
-      method: 'diagram/equation/addEquation',
+      method: 'equation/addEquation',
       options: {
         color: [1, 0, 1, 1],
         elements: {
@@ -272,7 +272,7 @@ export default function commonLessonLayout() {
     },
     {
       name: 'tri',
-      method: 'diagram/shapes/collection',
+      method: 'shapes/collection',
       options: {
         transform: new Transform('iso').translate(0, 0),
       },
@@ -303,7 +303,7 @@ export default function commonLessonLayout() {
     {
       path: '_tri',
       name: 'side31',
-      method: 'diagram/objects/line',
+      method: 'objects/line',
       options: [layout.iso.sideLength, layout.iso.side31],
     },
   ];

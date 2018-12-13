@@ -18,7 +18,7 @@ import DiagramPrimatives from './DiagramPrimatives/DiagramPrimatives';
 import DiagramEquation from './DiagramEquation/DiagramEquation';
 import DiagramObjects from './DiagramObjects/DiagramObjects';
 import DiagramAddElements from './DiagramAddElements/DiagramAddElements';
-
+import type { TypeAddElementObject } from './DiagramAddElements/DiagramAddElements';
 // There are several coordinate spaces that need to be considered for a
 // diagram.
 //
@@ -194,7 +194,7 @@ class Diagram {
     this.objects = this.objectsLow;
     this.addElementsLow = this.getAddElements(false);
     this.addElementsHigh = this.getAddElements(true);
-    this.addElements = this.getAddElements();
+    // this.addElements = this.getAddElements();
     this.createDiagramElements();
     if (this.elements.name === '') {
       this.elements.name = 'diagramRoot';
@@ -205,6 +205,13 @@ class Diagram {
     this.initialize();
     this.isTouchDevice = isTouchDevice();
     this.animateNextFrame();
+  }
+
+  addElements(
+    rootCollection: DiagramElementCollection,
+    layout: { addElements?: TypeAddElementObject },
+  ) {
+    this.addElementsLow.addElements(rootCollection, layout);
   }
 
   getShapes(high: boolean = false) {

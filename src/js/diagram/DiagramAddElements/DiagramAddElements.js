@@ -54,11 +54,11 @@ export default class DiagramAddElements {
   addElements(
     rootCollection: DiagramElementCollection,
     layout: { addElements?: TypeAddElementObject },
+    addElementsKey: string = 'addElements',
   ) {
-    if (layout.addElements != null
-      && Array.isArray(layout.addElements)
+    if (Array.isArray(layout)
     ) {
-      layout.addElements.forEach((elementDefinition, index) => {
+      layout.forEach((elementDefinition, index) => {
         let methodPathToUse;
         let nameToUse;
         let pathToUse;
@@ -81,7 +81,7 @@ export default class DiagramAddElements {
           nameToUse = elementDefinition.name;
           pathToUse = elementDefinition.path;
           optionsToUse = elementDefinition.options;
-          addElementsToUse = elementDefinition.addElements;
+          addElementsToUse = elementDefinition[addElementsKey];
           methodPathToUse = elementDefinition.method;
         }
 
@@ -146,9 +146,9 @@ export default class DiagramAddElements {
         }
 
         if (`_${nameToUse}` in rootCollection
-            && 'addElements' in elementDefinition
+            && addElementsKey in elementDefinition
         ) {                                                     // $FlowFixMe
-          this.addLayout(rootCollection[`_${nameToUse}`], { addElements: addElementsToUse});
+          this.addElements(rootCollection[`_${nameToUse}`], addElementsToUse);
         }
       });
     }

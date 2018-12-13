@@ -40,7 +40,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   }
 
   addTri() {
-    this.addLayout();
+    // this.addLayout();
+    this.diagram.addElements(this, this.layout.addElements);
     // const iso = this.diagram.shapes.collection(new Transform('iso')
     //   .translate(0, 0));
     const iso = this._tri;
