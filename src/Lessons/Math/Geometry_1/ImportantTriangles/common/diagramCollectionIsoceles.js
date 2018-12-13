@@ -132,6 +132,11 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
+  growSplit() {
+    this._split.grow(0, 1);
+    this.diagram.animateNextFrame();
+  }
+
   // toggleSplitLines(index: number | null) {
   //   const line1 = this._splitLine1;
   //   const line2 = this._splitLine2;

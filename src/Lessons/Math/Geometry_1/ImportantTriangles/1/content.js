@@ -91,36 +91,44 @@ class Content extends LessonContent {
     });
 
 
-    common = {
-      showOnly: [iso, iTri, iTri._line, qr],
-      show: [
-        iTri._side12, iTri._side23, iTri._side31,
-        iTri._angle1, iTri._angle2,
-      ],
+    // common = {
+    //   showOnly: [iso, iTri, iTri._line, qr],
+    //   show: [
+    //     iTri._side12, iTri._side23, iTri._side31,
+    //     iTri._angle1, iTri._angle2,
+    //   ],
+    //   setSteadyState: () => {
+    //     iso.setScenario(iTri, layout.iso.scenario.center);
+    //   },
+    // };
+    this.addSection(common, {
+      setContent: 'When |two sides| of a triangle are |equal|, the triangle\'s |angles| have a special relationship.',
+      showOnly: [iso, iTri, iTri._line],
+      show: [iTri._side12, iTri._side23, iTri._side31],
       setSteadyState: () => {
         iso.setScenario(iTri, layout.iso.scenario.center);
       },
-    };
-    this.addSection(common, {
-      setContent: [
-        'An |Isoceles| triangle also has |two_equal_angles|.',
-      ],
-      modifiers: {
-        two_equal_angles: click(iso.pulseEqualAngles, [iso], colors.angles),
-      },
     });
-    this.addSection(common, {
-      setContent: [
-        'This can be shown using |Side_Side_Side| triangle congruency.',
-      ],
-      modifiers: { Side_Side_Side: click(qr._sss.show, [qr._sss], colors.diagram.action) },
-    });
+    // this.addSection(common, {
+    //   setContent: [
+    //     'An |Isoceles| triangle also has |two_equal_angles|.',
+    //   ],
+    //   modifiers: {
+    //     two_equal_angles: click(iso.pulseEqualAngles, [iso], colors.angles),
+    //   },
+    // });
+    // this.addSection(common, {
+    //   setContent: [
+    //     'This can be shown using |Side_Side_Side| triangle congruency.',
+    //   ],
+    //   modifiers: { Side_Side_Side: click(qr._sss.show, [qr._sss], colors.diagram.action) },
+    // });
 
 
     common = {
-      setContent: 'Start by |drawing_a_line| from the |point| between the equal sides to the |middle| of the opposite side.',
+      setContent: 'We can show this by |drawing_a_line| from the |point| between the equal sides to the |middle| of the opposite side.',
       modifiers: {
-        drawing_a_line: click(iso._split.grow, [iso._split, 0, 1], colors.lines),
+        drawing_a_line: highlight(colors.diagram.lines),
         point: click(iso.pulseTopPoint, [iso], colors.points),
         middle: click(iso.pulseMidPoint, [iso], colors.points),
       },
@@ -131,11 +139,16 @@ class Content extends LessonContent {
       },
     };
     this.addSection(common);
+    common.modifiers = {
+      drawing_a_line: click(iso.growSplit, [iso], colors.diagram.lines),
+      point: click(iso.pulseTopPoint, [iso], colors.points),
+      middle: click(iso.pulseMidPoint, [iso], colors.points),
+    };
     this.addSection(common, {
       show: [iTri._side12, iTri._side23, iTri._side31, iso._split],
       setSteadyState: () => {
         iso.setScenario(iTri, layout.iso.scenario.center);
-        iso._split.grow(0, 1);
+        iso.growSplit();
       },
     });
 
@@ -203,7 +216,7 @@ class Content extends LessonContent {
       },
     };
     this.addSection(common);
-    common.setContent = 'These two triangles |share the same side lengths|, and therefore their |angles are also the same|.';
+    common.setContent = 'These two triangles do |share the same side lengths|, and therefore their |angles are also the same|.';
     this.addSection(common);
     common.show = [
       left, right,
@@ -226,8 +239,12 @@ class Content extends LessonContent {
     });
 
     common = {
-      setContent: 'Now, |join| the two triangles back.',
-      modifiers: { a: highlight(colors.angles) },
+      setContent: 'Angles |b| and |c|, and side |C_| were not part of the original isoceles triangles, so we can remove them.',
+      modifiers: {
+        b: highlight(colors.angles),
+        c: highlight(colors.angles),
+        C_: highlight(colors.lines),
+      },
       showOnly: [iso, qr],
       show: [left, right],
       setSteadyState: () => {
@@ -246,6 +263,7 @@ class Content extends LessonContent {
       right._angle2, right._side23, right._side12,
     ];
     this.addSection(common);
+    common.setContent = 'Now we can |join| the two triangles to re-form the |isoceles triangle|.';
     this.addSection(common, {
       transitionFromPrev: (done) => {
         iso.moveToScenario(left, layout.iso.left.scenario.center, 1, done);
@@ -273,7 +291,11 @@ class Content extends LessonContent {
     };
     this.addSection(common);
     this.addSection(common, {
-      setContent: 'And so we have shown that two angles in an |isoceles| triangle are the same.',
+      setContent: 'And so we can see, when a triangle has two equal |sides|, it also has two equal |angles|.',
+      modifiers: {
+        sides: click(iso.pulseEqualSides, [iso], colors.equalLength),
+        angles: click(iso.pulseEqualAngles, [iso], colors.angles),
+      },
       transitionFromNext: (done) => {
         iso.moveToScenario(iTri, layout.iso.scenario.center, 1, done);
       },
@@ -284,7 +306,7 @@ class Content extends LessonContent {
     };
     this.addSection(common, {
       title: 'Third Angle',
-      setContent: 'With the understanting |two angles are the same|, we can find the |relationship| between the |equal angles| and the |third angle|.',
+      setContent: 'Now, if two angles are the same, it makes it easier to calculate all the angles when only one is known.'
       transitionFromPrev: (done) => {
         iso.moveToScenario(iTri, layout.iso.scenario.bottom, 1, done);
       },
