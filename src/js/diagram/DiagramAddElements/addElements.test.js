@@ -57,13 +57,52 @@ describe('Diagram Equations From Object', () => {
             },
           },
           // Can use array form definition for simplicity
-          ['group3', 'collection', { transform: new Transform('group') }],
+          ['', 'group3', 'collection', { transform: new Transform('group') }],
           // Multiple option objects are allowed where later objects overwrite
           // earlier objects
-          ['group4', 'collection', [
+          ['', 'group4', 'collection', [
             { transform: new Transform('group1') },
             { transform: new Transform('group') },
           ]],
+        ]);
+      },
+      nesting: () => {
+        diagram.addElements(diagram.elements, [
+          // Start with a group
+          {
+            name: 'group',
+            method: 'shapes/collection',
+            options: {
+              transform: new Transform('group'),
+            },
+            // The group can be added to by nesting
+            addElements: [
+              ['', 'group1', 'collection'],
+            ],
+          },
+          // The group can be added to by providing full path
+          {
+            path: '_group',
+            name: 'group2',
+            method: 'shapes/collection',
+          },
+          // The group can be added to by using array form with path first
+          ['_group', 'group3', 'collection'],
+        ]);
+        // The group can be added to in secondary addElements
+        diagram.addElements(diagram.elements, [
+          {
+            path: '_group',
+            name: 'group4',
+            method: 'shapes/collection',
+          },
+        ]);
+        // The group can be added with relative path to the root collection
+        diagram.addElements(diagram.elements._group, [
+          {
+            name: 'group5',
+            method: 'shapes/collection',
+          },
         ]);
       },
     };
@@ -79,6 +118,17 @@ describe('Diagram Equations From Object', () => {
     expect(elements).toHaveProperty('_group3');
     expect(elements).toHaveProperty('_group4');
     expect(elements._group4.transform.name).toBe('group');
+  });
+  test('Nesting', () => {
+    ways.nesting();
+    const { elements } = diagram;
+    expect(elements).toHaveProperty('_group');
+    const group = elements._group;
+    expect(group).toHaveProperty('_group1');
+    expect(group).toHaveProperty('_group2');
+    expect(group).toHaveProperty('_group3');
+    expect(group).toHaveProperty('_group4');
+    expect(group).toHaveProperty('_group5');
   });
   // describe('Equation Creation', () => {
   //   test('Simple', () => {

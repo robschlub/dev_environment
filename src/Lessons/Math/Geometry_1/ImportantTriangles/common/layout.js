@@ -277,9 +277,9 @@ export default function commonLessonLayout() {
         transform: new Transform('iso').translate(0, 0),
       },
       addElements: [
-        ['line', 'polyLine', layout.iso.tri],
-        ['side12', 'line', [layout.iso.sideLength, layout.iso.side12]],
-        ['side23', 'line', [layout.iso.sideLength, layout.iso.side23]],
+        ['', 'line', 'polyLine', layout.iso.tri],
+        ['', 'side12', 'line', [layout.iso.sideLength, layout.iso.side12]],
+        ['', 'side23', 'line', [layout.iso.sideLength, layout.iso.side23]],
       ],
     },
     // {
