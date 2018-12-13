@@ -314,5 +314,60 @@ export default function commonLessonLayout() {
       ],
     },
   ];
+  layout.addEquation = [
+    {
+      // path: '',
+      name: 'eqn',
+      method: 'equation/addNavigator',
+      options: {
+        color: layout.colors.diagram.text.base,
+        scale: 0.8,
+        defaultFormAlignment: {
+          fixTo: 'equals',
+        },
+        elements: {
+          a: { text: 'a', color: layout.colors.angles },
+          a_: { text: 'a', color: layout.colors.angles },
+          a__: { text: 'a', color: layout.colors.angles },
+          b: { text: 'b', color: layout.colors.angles },
+          b_: { text: 'b', color: layout.colors.angles },
+          _2: '2',
+          _2_: '2',
+          _2__: '2',
+          _180: '180º',
+          plus: ' + ',
+          plus_: ' + ',
+          minus: ' \u2212 ',
+          minus_: ' \u2212 ',
+          'equals': '  =  ',
+          v: { symbol: 'vinculum' },
+          v_: { symbol: 'vinculum' },
+          x: { symbol: 'xStrike', color: layout.colors.diagram.disabled },
+          x_: { symbol: 'xStrike', color: layout.colors.diagram.disabled },
+        },
+        forms: {
+          '0': ['a', 'plus', 'a_', 'plus_', 'b', 'equals', '_180'],
+          '1': [
+            { strike: ['a', 'x'] }, 'plus', '_2', 'a_', 'plus_', 'b', 'equals', '_180'],
+          '2': ['_2', 'a_', 'plus_', 'b', 'equals', '_180'],
+          '3': [
+            {
+              bottomComment: [
+                ['_2', 'a_', 'plus_', 'b'],
+                ['minus', '_2_', 'a__'],
+                null,
+                0.1,
+              ],
+            },
+            'equals',
+            {
+              bottomComment: ['_180', ['minus_', '_2__', 'a'], null, 0.1],
+            },
+          ],
+        },
+        formSeries: ['0', '1', '2', '3'],
+      },
+    },
+  ];
   return layout;
 }

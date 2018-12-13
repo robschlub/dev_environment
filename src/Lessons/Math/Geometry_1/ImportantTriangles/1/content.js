@@ -55,6 +55,7 @@ class Content extends LessonContent {
       ]),
       setSteadyState: () => {
         iso.show();
+        iso._eqnNav.showForm('0');
         // iso._isoEqn.showAll();
         // iso.eqns.isoEqn.showForm('3');
         // iso._testEqn.setPosition(-1, 1);
@@ -303,6 +304,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         iso.setScenario(iTri, layout.iso.scenario.bottom);
         iso.pulseAngle3();
+        iso._eqnNav.showForm('0');
       },
     });
 

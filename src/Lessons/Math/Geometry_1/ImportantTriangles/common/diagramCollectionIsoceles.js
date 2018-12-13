@@ -59,6 +59,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.setPosition(this.layout.iso.position);
     this.addGrid();
     this.diagram.addElements(this, this.layout.addElements);
+    this.diagram.addElements(this, this.layout.addEquation);
     // this.addTri();
     // this.addLeftRightTris();
     this.addSplitLines();

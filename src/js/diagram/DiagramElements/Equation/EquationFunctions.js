@@ -17,6 +17,7 @@ import SuperSub from './Elements/SuperSub';
 import { Brackets, Bar } from './Elements/Brackets';
 import EquationForm from './EquationForm';
 import { Annotation, AnnotationInformation } from './Elements/Annotation';
+import Padding from './Elements/Padding';
 
 export function getDiagramElement(
   elementsObject: { [string: string]: DiagramElementPrimative |
@@ -82,6 +83,7 @@ export type TypeEquationPhrase =
   | { annotate: TypeAnnotateObject } | TypeAnnotateArray
   | { topComment: TypeCommentObject } | TypeCommentArray
   | { bottomComment: TypeCommentObject } | TypeCommentArray
+  | { padding: TypePaddingObject } | TypePaddingArray
   | [
     TypeEquationPhrase,
     TypeEquationPhrase,
@@ -197,6 +199,20 @@ export type TypeCommentArray = [
   TypeEquationPhrase,
   TypeEquationPhrase,
   string,
+  ?number,
+  ?number,
+  ?number,
+];
+export type TypePaddingObject = {
+  content: TypeEquationPhrase;
+  top?: number,
+  right?: number,
+  bottom?: number,
+  left?: number,
+};
+export type TypePaddingArray = [
+  TypeEquationPhrase,
+  ?number,
   ?number,
   ?number,
   ?number,
@@ -353,6 +369,8 @@ export class EquationFunctions {
     if (name === 'topStrike') { return this.topStrike(params); }
     // $FlowFixMe
     if (name === 'bottomStrike') { return this.bottomStrike(params); }
+    // $FlowFixMe
+    if (name === 'pad') { return this.pad(params); }
     return null;
   }
 
@@ -685,6 +703,47 @@ export class EquationFunctions {
     );
   }
 
+  pad(
+    optionsOrContent: TypePaddingObject | TypePaddingArray
+                      | TypeEquationPhrase,
+    topPad: number | null = null,
+    rightPad: number | null = null,
+    bottomPad: number | null = null,
+    leftPad: number | null = null,
+  ) {
+    let content;
+    let top;
+    let right;
+    let bottom;
+    let left;
+    if (!(topPad == null
+          && rightPad == null
+          && leftPad == null
+          && bottomPad == null)
+    ) {
+      content = optionsOrContent;
+      top = topPad;
+      left = leftPad;
+      right = rightPad;
+      bottom = bottomPad;
+    } else if (Array.isArray(optionsOrContent)) {
+      [                                                    // $FlowFixMe
+        content, top, right, bottom, left,
+      ] = optionsOrContent;
+    } else {
+      ({                                                   // $FlowFixMe
+        content, top, right, bottom, left,
+      } = optionsOrContent);
+    }
+    return new Padding(                                   // $FlowFixMe
+      this.contentToElement(content),                     // $FlowFixMe
+      top,                                                // $FlowFixMe
+      right,                                              // $FlowFixMe
+      bottom,                                             // $FlowFixMe
+      left,
+    );
+  }
+
   brac(
     optionsOrContent: TypeBracketObject | TypeBracketArray | TypeEquationPhrase,
     leftBracketString: string | null = null,
@@ -810,61 +869,6 @@ export class EquationFunctions {
     );
   }
 
-  // bottomBar(options: TypeBarObject | TypeBarArray) {
-  //   let content;
-  //   let symbol;
-  //   let space;
-  //   if (Array.isArray(options)) {
-  //     [content, symbol, space] = options;
-  //   } else {
-  //     ({
-  //       content, symbol, space,
-  //     } = options);
-  //   }
-  //   let spaceToUse = 0.03;
-  //   if (space != null) {
-  //     spaceToUse = space;
-  //   }
-  //   return new Bar(
-  //     this.contentToElement(content),
-  //     getDiagramElement(this.elements, symbol),
-  //     spaceToUse,
-  //     0.03,
-  //     'bottom',
-  //   );
-  // }
-  // bottomBar(
-  //   optionsOrContent: TypeBracketObject | TypeBracketArray | TypeEquationPhrase,
-  //   sym: string | null = null,
-  //   insideSpace: number | null = null,
-  // ) {
-  //   let content;
-  //   let symbol;
-  //   let space;
-  //   if (!(sym == null && insideSpace == null)) {
-  //     content = optionsOrContent;
-  //     symbol = sym;
-  //     space = insideSpace;
-  //   } else if (Array.isArray(optionsOrContent)) {
-  //     [content, symbol, space] = optionsOrContent;
-  //   } else {
-  //     ({                                                    // $FlowFixMe
-  //       content, symbol, space,
-  //     } = optionsOrContent);
-  //   }
-  //   let spaceToUse = 0.03;
-  //   if (space != null) {
-  //     spaceToUse = space;
-  //   }
-  //   return new Bar(                                         // $FlowFixMe
-  //     this.contentToElement(content),                       // $FlowFixMe
-  //     getDiagramElement(this.elements, symbol),             // $FlowFixMe
-  //     spaceToUse,
-  //     0.03,
-  //     'bottom',
-  //   );
-  // }
-
   // eslint-disable-next-line class-methods-use-this
   processComment(
     optionsOrContent: TypeBracketObject | TypeBracketArray | TypeEquationPhrase,
@@ -933,7 +937,9 @@ export class EquationFunctions {
         'bottom',
       );
     } else {
-      contentToUse = content;
+      contentToUse = this.pad(                               // $FlowFixMe
+        content, 0, 0, contentSpaceToUse + commentSpaceToUse,
+      );
     }
     return this.annotate({                                   // $FlowFixMe
       content: contentToUse,
@@ -964,7 +970,9 @@ export class EquationFunctions {
         'top',
       );
     } else {
-      contentToUse = content;
+      contentToUse = this.pad(                               // $FlowFixMe
+        content, contentSpaceToUse + commentSpaceToUse,
+      );
     }
     return this.annotate({                                   // $FlowFixMe
       content: contentToUse,
