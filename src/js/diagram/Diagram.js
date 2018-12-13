@@ -18,7 +18,7 @@ import DiagramPrimatives from './DiagramPrimatives/DiagramPrimatives';
 import DiagramEquation from './DiagramEquation/DiagramEquation';
 import DiagramObjects from './DiagramObjects/DiagramObjects';
 import addElements from './DiagramAddElements/addElements';
-import type { TypeAddElementObject } from './DiagramAddElements/DiagramAddElements';
+import type { TypeAddElementObject } from './DiagramAddElements/addElements';
 // There are several coordinate spaces that need to be considered for a
 // diagram.
 //
