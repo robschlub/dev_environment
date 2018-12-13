@@ -23,9 +23,9 @@ function addElements(
   layout: { addElements?: TypeAddElementObject },
   addElementsKey: string,
 ) {
-  const getPath = (e, remainingPath, index) => {
+  const getPath = (e: {}, remainingPath: Array<string>, index: number) => {
     if (!(remainingPath[0] in e)) {
-      throw new Error(`Layout addElement at index ${index}: collection or method ${remainingPath} does not exist`);
+      throw new Error(`Layout addElement at index ${index}: collection or method ${remainingPath[0]} does not exist`);
     }
     if (remainingPath.length === 1) {          // $FlowFixMe
       return e[remainingPath[0]];
@@ -50,7 +50,7 @@ function addElements(
     };
     const splitMethod = method.split('/');
     const methodToUse = getPath(diagram, splitMethod, 0)
-      .bind(getPath(diagram, splitMethod.slice(0, -1)));
+      .bind(getPath(diagram, splitMethod.slice(0, -1), 0));
     return methodToUse;
   };
 
@@ -83,17 +83,6 @@ function addElements(
         methodPathToUse = elementDefinition.method;
       }
 
-      // const getPath = (e, remainingPath) => {
-      //   if (!(remainingPath[0] in e)) {
-      //     throw new Error(`Layout addElement at index ${index}: collection or method ${remainingPath} does not exist`);
-      //   }
-      //   if (remainingPath.length === 1) {          // $FlowFixMe
-      //     return e[remainingPath[0]];
-      //   }                                          // $FlowFixMe
-      //   return getPath(e[remainingPath[0]], remainingPath.slice(1));
-      // };
-
-      console.log(rootCollection, elementDefinition, nameToUse)
       let collectionPath;
       if (pathToUse == null || pathToUse === '') {
         collectionPath = rootCollection;
@@ -101,7 +90,6 @@ function addElements(
         const path = elementDefinition.path.split('/');
         collectionPath = getPath(rootCollection, path, index);
       }
-      console.log(collectionPath)
 
       // Check for critical errors
       if (nameToUse == null || nameToUse === '') {
@@ -117,9 +105,7 @@ function addElements(
       const methodPath = methodPathToUse.split('/');
 
       const method = getMethod(methodPathToUse);
-      // if (typeof method === 'string') {
-      //   method = getPath(this, methodPath).bind(getPath(this, methodPath.slice(0, -1)));
-      // }
+
       if (typeof method !== 'function') {
         return;
       }
@@ -146,12 +132,11 @@ function addElements(
       }
       if (`_${nameToUse}` in rootCollection
           && addElementsKey in elementDefinition
-      ) {                                                     // $FlowFixMe
+      ) {
         addElements(
-          // diagramElements,
           shapes,
           equation,
-          objects,
+          objects,                                            // $FlowFixMe
           rootCollection[`_${nameToUse}`],
           addElementsToUse,
           addElementsKey,
