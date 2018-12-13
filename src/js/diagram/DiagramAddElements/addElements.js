@@ -69,16 +69,6 @@ function addElements(
 
       // Extract the parameters from the layout object
       if (Array.isArray(elementDefinition)) {
-        // if (elementDefinition.length <= 4) {
-        //   [
-        //     nameToUse, methodPathToUse, optionsToUse, addElementsToUse,
-        //   ] = elementDefinition;
-        // } else {
-        //   [
-        //     pathToUse, nameToUse, methodPathToUse, optionsToUse,
-        //     addElementsToUse,
-        //   ] = elementDefinition;
-        // }
         [
           pathToUse, nameToUse, methodPathToUse, optionsToUse,
           addElementsToUse,

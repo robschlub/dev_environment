@@ -105,6 +105,68 @@ describe('Diagram Equations From Object', () => {
           },
         ]);
       },
+      examples: () => {
+        const triPoints = [
+          new Point(-0.8, -1),
+          new Point(0.8, -1),
+          new Point(0, 1),
+        ];
+        const tri = {
+          points: triPoints,
+          width: 0.015,
+          close: true,
+          borderToPoint: 'alwaysOn',
+          position: new Point(0, 0),
+          color: [1, 0, 0, 1],
+        };
+        const sideLength = {
+          color: [0, 0, 1, 1],
+          offset: 0.2,
+          label: {
+            text: 'A',
+            location: 'outside',
+            orientation: 'horizontal',
+          },
+          showLine: false,
+        };
+        const side12 = {
+          p1: triPoints[1],
+          p2: triPoints[0],
+          label: { text: 'B' },
+        };
+        const side23 = {
+          p1: triPoints[2],
+          p2: triPoints[1],
+        };
+        diagram.addElements(diagram.elements, [
+          {
+            name: 'testEqn',
+            method: 'equation/addEquation',
+            options: {
+              elements: {
+                a: 'a',
+                b: 'b',
+                c: 'c',
+              },
+              forms: {
+                '0': ['a', 'b', 'c'],
+              },
+            },
+          },
+          {
+            name: 'tri',
+            method: 'shapes/collection',
+            options: {
+              transform: new Transform('iso').translate(0, 0),
+            },
+            addElements: [
+              ['', 'line', 'polyLine', tri],
+              ['', 'side12', 'line', [sideLength, side12]],
+              ['', 'side23', 'line', [sideLength, side23]],
+            ],
+          },
+        ]);
+      },
     };
   });
   test('Diagram instantiation', () => {
@@ -129,6 +191,16 @@ describe('Diagram Equations From Object', () => {
     expect(group).toHaveProperty('_group3');
     expect(group).toHaveProperty('_group4');
     expect(group).toHaveProperty('_group5');
+  });
+  test('Examples', () => {
+    ways.examples();
+    const { elements } = diagram;
+    expect(elements).toHaveProperty('_testEqn');
+    expect(elements).toHaveProperty('_tri');
+    const tri = elements._tri;
+    expect(tri).toHaveProperty('_line');
+    expect(tri).toHaveProperty('_side12');
+    expect(tri).toHaveProperty('_side23');
   });
   // describe('Equation Creation', () => {
   //   test('Simple', () => {
