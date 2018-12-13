@@ -54,8 +54,7 @@ class Content extends LessonContent {
         'Being able to |identify| these types of triangle can make |understanding| a problem |quicker and easier|.',
       ]),
       setSteadyState: () => {
-        iso.show();
-        iso._eqnNav.showForm('0');
+        // iso.show();
         // iso._isoEqn.showAll();
         // iso.eqns.isoEqn.showForm('3');
         // iso._testEqn.setPosition(-1, 1);
@@ -119,8 +118,33 @@ class Content extends LessonContent {
 
 
     common = {
-      setContent: 'Start by drawing a |line| from the |point| between the equal sides to the |middle| of the opposite side.',
+      setContent: 'Start by |drawing_a_line| from the |point| between the equal sides to the |middle| of the opposite side.',
+      modifiers: {
+        drawing_a_line: click(iso._split.grow, [iso._split, 0, 1], colors.lines),
+        point: click(iso.pulseTopPoint, [iso], colors.points),
+        middle: click(iso.pulseMidPoint, [iso], colors.points),
+      },
       showOnly: [iso, iTri, iTri._line],
+      show: [iTri._side12, iTri._side23, iTri._side31],
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.center);
+      },
+    };
+    this.addSection(common);
+    this.addSection(common, {
+      show: [iTri._side12, iTri._side23, iTri._side31, iso._split],
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.center);
+        iso._split.grow(0, 1);
+      },
+    });
+
+    common = {
+      setContent: 'This line will have some length, which we can label |C|.',
+      showOnly: [
+        iso, iTri, iTri._line, left,
+        left, left._line, right, right._line,
+      ],
       show: [iTri._side12, iTri._side23, iTri._side31],
       setSteadyState: () => {
         iso.setScenario(left, layout.iso.left.scenario.center);
@@ -130,10 +154,7 @@ class Content extends LessonContent {
     };
     this.addSection(common);
     this.addSection(common, {
-      showOnly: [
-        iso, iTri, iTri._line,
-        left, left._line, right, right._line,
-      ],
+      show: [iTri._side12, iTri._side23, iTri._side31, left._side31],
     });
     // this.addSection(common, {
     //   showOnly: [
@@ -193,7 +214,7 @@ class Content extends LessonContent {
 
 
     common = {
-      setContent: 'The |Side_Side_Side| triangle congruency test says that if two triangles share the same sides, then their |angles| are the |equal|.',
+      setContent: 'The |Side_Side_Side| triangle congruency test says that if two triangles share the same side lengths, then their |angles| are also |equal|.',
       modifiers: {
         Side_Side_Side: click(qr._sss.show, [qr._sss], colors.diagram.action),
       },
@@ -281,12 +302,14 @@ class Content extends LessonContent {
 
 
     common = {
-      setContent: 'We start by labelling the third angle and recalling all the angles in a triangle add to |_180|.',
+      setContent: 'We start by labelling the third angle and recalling all the angles in a triangle add to |_180|. If we know |b| we can find |a|.',
       modifiers: {
         _180: clickWord(
           '180º', 'id_important_triangles_sum1',
           qr._tri.show, [qr._tri], colors.diagram.action,
         ),
+        b: highlight(colors.angles),
+        a: highlight(colors.angles),
       },
       showOnly: [iso, iTri, iTri._line, qr],
       show: [
@@ -304,8 +327,46 @@ class Content extends LessonContent {
       setSteadyState: () => {
         iso.setScenario(iTri, layout.iso.scenario.bottom);
         iso.pulseAngle3();
-        iso._eqnNav.showForm('0');
+        iso._eqnANav.showForm('0');
       },
+    });
+    this.addSection(common, {
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.bottom);
+        iso._eqnANav.showForm('5');
+      },
+    });
+
+    common = {
+      setContent: 'Similarly, if we know |a| we can find |b|.',
+      modifiers: {
+        b: highlight(colors.angles),
+        a: highlight(colors.angles),
+      },
+      showOnly: [iso, iTri, iTri._line, qr],
+      show: [
+        iTri._angle1, iTri._angle2, iTri._angle3,
+        iTri._side12, iTri._side23, iTri._side31,
+      ],
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.bottom);
+      },
+    };
+    this.addSection(common, {
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.bottom);
+        iso._eqnBNav.showForm('0');
+      },
+    });
+    this.addSection(common, {
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.bottom);
+        iso._eqnBNav.showForm('9');
+      },
+    });
+
+    this.addSection({
+      setContent: centerV(['Therefore, if we have an |isoceles triangle|, and we know |any angle|, we can |calculate| the other |two angles|.']),
     });
 
     // eslint-disable-next-line

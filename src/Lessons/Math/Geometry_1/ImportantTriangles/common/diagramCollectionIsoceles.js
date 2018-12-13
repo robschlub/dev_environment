@@ -1,13 +1,13 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Rect, Point,
+  Transform, Rect, // Point,
 } from '../../../../../js/diagram/tools/g2';
 import DiagramObjectAngle from '../../../../../js/diagram/DiagramObjects/Angle';
 import { DiagramObjectLine } from '../../../../../js/diagram/DiagramObjects/Line';
 // import { joinObjects } from '../../../../../js/tools/tools';
 import {
-  DiagramElementCollection,
+  DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
@@ -22,6 +22,10 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     _side23: DiagramObjectLine;
     _side31: DiagramObjectLine;
   }
+
+  _split: DiagramObjectLine;
+  _topPoint: DiagramElementPrimative;
+  _midPoint: DiagramElementPrimative;
 
   _splitLine1: DiagramObjectLine;
   _splitLine2: DiagramObjectLine;
@@ -44,11 +48,11 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   //   this.diagram.addElements(this, this.layout.addElements);
   // }
 
-  addSplitLines() {
-    const lay = this.layout.iso;
-    this.add('splitLine1', this.diagram.objects.line(lay.splitLine1));
-    this.add('splitLine2', this.diagram.objects.line(lay.splitLine2));
-  }
+  // addSplitLines() {
+  //   const lay = this.layout.iso;
+  //   this.add('splitLine1', this.diagram.objects.line(lay.splitLine1));
+  //   this.add('splitLine2', this.diagram.objects.line(lay.splitLine2));
+  // }
 
   constructor(
     diagram: LessonDiagram,
@@ -59,10 +63,11 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.setPosition(this.layout.iso.position);
     this.addGrid();
     this.diagram.addElements(this, this.layout.addElements);
-    this.diagram.addElements(this, this.layout.addEquation);
+    this.diagram.addElements(this, this.layout.addEquationA);
+    this.diagram.addElements(this, this.layout.addEquationB);
     // this.addTri();
     // this.addLeftRightTris();
-    this.addSplitLines();
+    // this.addSplitLines();
     // this.addEquations();
     // eslint-disable-next-line
     console.log(this)
@@ -115,27 +120,39 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
-  toggleSplitLines(index: number | null) {
-    const line1 = this._splitLine1;
-    const line2 = this._splitLine2;
-    let indexToUse = 1;
-    if (index === null) {
-      if (line1.isShown) {
-        indexToUse = 2;
-      } else {
-        indexToUse = 1;
-      }
-    } else {
-      indexToUse = index;
-    }
-
-    if (indexToUse === 1) {
-      line1.showAll();
-      line2.hideAll();
-    } else {
-      line1.hideAll();
-      line2.showAll();
-    }
+  pulseTopPoint() {
+    this._topPoint.show();
+    this._topPoint.pulseScaleNow(1, 100, 0, () => { this._topPoint.hide(); });
     this.diagram.animateNextFrame();
   }
+
+  pulseMidPoint() {
+    this._midPoint.show();
+    this._midPoint.pulseScaleNow(1, 100, 0, () => { this._midPoint.hide(); });
+    this.diagram.animateNextFrame();
+  }
+
+  // toggleSplitLines(index: number | null) {
+  //   const line1 = this._splitLine1;
+  //   const line2 = this._splitLine2;
+  //   let indexToUse = 1;
+  //   if (index === null) {
+  //     if (line1.isShown) {
+  //       indexToUse = 2;
+  //     } else {
+  //       indexToUse = 1;
+  //     }
+  //   } else {
+  //     indexToUse = index;
+  //   }
+
+  //   if (indexToUse === 1) {
+  //     line1.showAll();
+  //     line2.hideAll();
+  //   } else {
+  //     line1.hideAll();
+  //     line2.showAll();
+  //   }
+  //   this.diagram.animateNextFrame();
+  // }
 }

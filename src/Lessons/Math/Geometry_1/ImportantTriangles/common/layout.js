@@ -10,6 +10,7 @@ const cssColorNames = [
   'lines',
   'angles',
   'equalLength',
+  'points',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -231,17 +232,24 @@ export default function commonLessonLayout() {
       curve: { radius: 0.3 },
       label: { text: 'b', radius: 0.28 },
     },
-    splitLine1: {
-      p1: isoPoints[1],
-      p2: new Line(isoPoints[2], isoPoints[0]).midpoint(),
+    splitLine: {
+      p1: isoPoints[2].sub(0, 0.04),
+      p2: new Line(isoPoints[0], isoPoints[1]).midpoint(),
       width: 0.015,
       color: layout.colors.lines,
     },
-    splitLine2: {
-      p1: isoPoints[0],
-      p2: new Line(isoPoints[1], isoPoints[2]).midpoint(),
-      width: 0.015,
-      color: layout.colors.lines,
+    point: {
+      sides: 100,
+      radius: 0.001,
+      fill: true,
+      color: layout.colors.points,
+    },
+    topPoint: {
+      transform: new Transform('topPoint').translate(isoPoints[2]),
+    },
+    midPoint: {
+      transform: new Transform('midPoint')
+        .translate(new Line(isoPoints[0], isoPoints[1]).midpoint()),
     },
   };
 
@@ -285,6 +293,9 @@ export default function commonLessonLayout() {
         ['', 'angle3', 'angle', [iso.angle, iso.angle3]],
       ],
     },
+    ['', 'split', 'line', [iso.splitLine]],
+    ['', 'topPoint', 'polygon', [iso.point, iso.topPoint]],
+    ['', 'midPoint', 'polygon', [iso.point, iso.midPoint]],
     {
       name: 'left',
       method: 'collection',
@@ -338,14 +349,15 @@ export default function commonLessonLayout() {
     x_: { symbol: 'xStrike', color: layout.colors.diagram.disabled },
     x__: { symbol: 'xStrike', color: layout.colors.diagram.disabled },
   };
-  layout.addEquation = [
+  layout.addEquationA = [
     {
       // path: '',
-      name: 'eqn',
+      name: 'eqnA',
       method: 'equation/addNavigator',
       options: {
         color: layout.colors.diagram.text.base,
-        scale: 0.8,
+        scale: 1,
+        position: [-0.15, 0.7],
         defaultFormAlignment: {
           fixTo: 'equals',
         },
@@ -388,8 +400,30 @@ export default function commonLessonLayout() {
             'equals',
             '_180', 'minus_', '_2__', 'a',
           ],
-
-          '3a': [
+        },
+        formSeries: ['0', '1', '2', '3', '4', '5'],
+      },
+    },
+  ];
+  layout.addEquationB = [
+    {
+      // path: '',
+      name: 'eqnB',
+      method: 'equation/addNavigator',
+      options: {
+        color: layout.colors.diagram.text.base,
+        scale: 1,
+        position: [-0.15, 0.7],
+        defaultFormAlignment: {
+          fixTo: 'equals',
+        },
+        elements,
+        forms: {
+          '0': ['a', 'plus', 'a_', 'plus_', 'b', 'equals', '_180'],
+          '1': [
+            { strike: ['a', 'x'] }, 'plus', '_2', 'a_', 'plus_', 'b', 'equals', '_180'],
+          '2': ['_2', 'a_', 'plus_', 'b', 'equals', '_180'],
+          '3': [
             {
               bottomComment: [
                 ['_2', 'a_', 'plus_', 'b'],
@@ -403,7 +437,7 @@ export default function commonLessonLayout() {
               bottomComment: ['_180', ['minus_', 'b__'], null, 0.1],
             },
           ],
-          '4a': [
+          '4': [
             {
               bottomComment: [
                 ['_2', 'a_', 'plus_', { strike: ['b', 'x'] }],
@@ -417,12 +451,12 @@ export default function commonLessonLayout() {
               bottomComment: ['_180', ['minus_', 'b__'], null, 0.1],
             },
           ],
-          '5a': [
+          '5': [
             '_2', 'a_',
             'equals',
             '_180', 'minus_', 'b__',
           ],
-          '6a': [
+          '6': [
             {
               bottomComment: [['_2', 'a_'], ['div', '_2_'], null, 0.1],
             },
@@ -431,7 +465,7 @@ export default function commonLessonLayout() {
               bottomComment: [['_180', 'minus_', 'b__'], ['div_', '_2__'], null, 0.1],
             },
           ],
-          '7a': [
+          '7': [
             {
               frac: [['_2', 'a_'], '_2_', 'v'],
             },
@@ -440,7 +474,7 @@ export default function commonLessonLayout() {
               frac: [['_180', 'minus_', 'b__'], '_2__', 'v_'],
             },
           ],
-          '8a': [
+          '8': [
             {
               frac: [
                 [{ strike: ['_2', 'x'] }, 'a_'],
@@ -453,7 +487,7 @@ export default function commonLessonLayout() {
               frac: [['_180', 'minus_', 'b__'], '_2__', 'v_'],
             },
           ],
-          '9a': [
+          '9': [
             'a_',
             'equals',
             {
@@ -461,7 +495,7 @@ export default function commonLessonLayout() {
             },
           ],
         },
-        formSeries: ['0', '1', '2', '3a', '4a', '5a', '6a', '7a', '8a', '9a'],
+        formSeries: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
       },
     },
   ];

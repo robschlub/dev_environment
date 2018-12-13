@@ -35,11 +35,15 @@ function addElements(
 
   const getMethod = (method: string) => {
     const methods = {
+      collection: shapes.collection.bind(shapes),
       polyLine: shapes.polyLine.bind(shapes),
+      polygon: shapes.polygon.bind(shapes),
+      //
       line: objects.line.bind(objects),
       angle: objects.angle.bind(objects),
-      collection: shapes.collection.bind(shapes),
+      //
       addEquation: equation.addEquation.bind(equation),
+      addNavigator: equation.addNavigator.bind(equation),
     };
     if (method in methods) {
       return methods[method];

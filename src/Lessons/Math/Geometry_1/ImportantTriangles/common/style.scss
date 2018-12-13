@@ -4,6 +4,7 @@ $colors: (
   lines:             map-get($geometry_colors, lines),
   angles:            color('diagram', 'construction8'),
   equalLength:       color('diagram', 'construction9'),
+  points:            color('diagram', 'construction9'),
   height:            color('diagram', 'construction8'),
   //
   // height:            color('diagram', 'construction7'),

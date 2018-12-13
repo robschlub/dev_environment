@@ -15,7 +15,7 @@ import Strike from './Elements/Strike';
 // import DiagramPrimatives from '../../DiagramPrimatives/DiagramPrimatives';
 import SuperSub from './Elements/SuperSub';
 import { Brackets, Bar } from './Elements/Brackets';
-import EquationForm from './EquationForm';
+// import EquationForm from './EquationForm';
 import { Annotation, AnnotationInformation } from './Elements/Annotation';
 import Padding from './Elements/Padding';
 
