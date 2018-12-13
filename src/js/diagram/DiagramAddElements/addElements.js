@@ -23,9 +23,9 @@ function addElements(
   layout: { addElements?: TypeAddElementObject },
   addElementsKey: string,
 ) {
-  const getPath = (e: {}, remainingPath: Array<string>, index: number) => {
+  const getPath = (e: {}, remainingPath: Array<string>) => {
     if (!(remainingPath[0] in e)) {
-      throw new Error(`Layout addElement at index ${index}: collection or method ${remainingPath[0]} does not exist`);
+      return null;
     }
     if (remainingPath.length === 1) {          // $FlowFixMe
       return e[remainingPath[0]];
@@ -49,8 +49,12 @@ function addElements(
       equation,
     };
     const splitMethod = method.split('/');
-    const methodToUse = getPath(diagram, splitMethod, 0)
-      .bind(getPath(diagram, splitMethod.slice(0, -1), 0));
+    let methodToUse = getPath(diagram, splitMethod);
+    if (methodToUse == null) {
+      // throw new Error(`Diagram addElements ERROR: Cannot find method ${method}`);
+      return null;
+    }
+    methodToUse = methodToUse.bind(getPath(diagram, splitMethod.slice(0, -1)));
     return methodToUse;
   };
 
@@ -88,18 +92,18 @@ function addElements(
         collectionPath = rootCollection;
       } else {
         const path = elementDefinition.path.split('/');
-        collectionPath = getPath(rootCollection, path, index);
+        collectionPath = getPath(rootCollection, path);
       }
 
       // Check for critical errors
       if (nameToUse == null || nameToUse === '') {
-        throw new Error(`Layout addElement at index ${index} in collection ${rootCollection.name}: missing name property`);
+        throw new Error(`Diagram addElement ERROR  at index ${index} in collection ${rootCollection.name}: missing name property`);
       }
       if (methodPathToUse == null || methodPathToUse === '') {
-        throw new Error(`Layout addElement at index ${index} in collection ${rootCollection.name}: missing method property`);
+        throw new Error(`Diagram addElement ERROR  at index ${index} in collection ${rootCollection.name}: missing method property`);
       }
       if (!(collectionPath instanceof DiagramElementCollection)) {
-        throw new Error(`Layout addElement at index ${index} in collection ${rootCollection.name}: missing or incorrect path property`);
+        throw new Error(`Diagram addElement ERROR at index ${index} in collection ${rootCollection.name}: missing or incorrect path property`);
       }
 
       const methodPath = methodPathToUse.split('/');
