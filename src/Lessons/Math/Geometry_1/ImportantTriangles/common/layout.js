@@ -314,6 +314,30 @@ export default function commonLessonLayout() {
       ],
     },
   ];
+  const elements = {
+    a: { text: 'a', color: layout.colors.angles },
+    a_: { text: 'a', color: layout.colors.angles },
+    a__: { text: 'a', color: layout.colors.angles },
+    b: { text: 'b', color: layout.colors.angles },
+    b_: { text: 'b', color: layout.colors.angles },
+    b__: { text: 'b', color: layout.colors.angles },
+    _2: '2',
+    _2_: '2',
+    _2__: '2',
+    _180: '180º',
+    plus: ' + ',
+    plus_: ' + ',
+    minus: ' \u2212 ',
+    minus_: ' \u2212 ',
+    'equals': '  =  ',
+    div: ' \u00F7 ',
+    div_: ' \u00F7 ',
+    v: { symbol: 'vinculum' },
+    v_: { symbol: 'vinculum' },
+    x: { symbol: 'xStrike', color: layout.colors.diagram.disabled },
+    x_: { symbol: 'xStrike', color: layout.colors.diagram.disabled },
+    x__: { symbol: 'xStrike', color: layout.colors.diagram.disabled },
+  };
   layout.addEquation = [
     {
       // path: '',
@@ -325,26 +349,7 @@ export default function commonLessonLayout() {
         defaultFormAlignment: {
           fixTo: 'equals',
         },
-        elements: {
-          a: { text: 'a', color: layout.colors.angles },
-          a_: { text: 'a', color: layout.colors.angles },
-          a__: { text: 'a', color: layout.colors.angles },
-          b: { text: 'b', color: layout.colors.angles },
-          b_: { text: 'b', color: layout.colors.angles },
-          _2: '2',
-          _2_: '2',
-          _2__: '2',
-          _180: '180º',
-          plus: ' + ',
-          plus_: ' + ',
-          minus: ' \u2212 ',
-          minus_: ' \u2212 ',
-          'equals': '  =  ',
-          v: { symbol: 'vinculum' },
-          v_: { symbol: 'vinculum' },
-          x: { symbol: 'xStrike', color: layout.colors.diagram.disabled },
-          x_: { symbol: 'xStrike', color: layout.colors.diagram.disabled },
-        },
+        elements,
         forms: {
           '0': ['a', 'plus', 'a_', 'plus_', 'b', 'equals', '_180'],
           '1': [
@@ -364,8 +369,99 @@ export default function commonLessonLayout() {
               bottomComment: ['_180', ['minus_', '_2__', 'a'], null, 0.1],
             },
           ],
+          '4': [
+            {
+              bottomComment: [
+                [{ strike: [['_2', 'a_'], 'x'] }, 'plus_', 'b'],
+                ['minus', { strike: [['_2_', 'a__'], 'x_'] }],
+                null,
+                0.1,
+              ],
+            },
+            'equals',
+            {
+              bottomComment: ['_180', ['minus_', '_2__', 'a'], null, 0.1],
+            },
+          ],
+          '5': [
+            'b',
+            'equals',
+            '_180', 'minus_', '_2__', 'a',
+          ],
+
+          '3a': [
+            {
+              bottomComment: [
+                ['_2', 'a_', 'plus_', 'b'],
+                ['minus', 'b_'],
+                null,
+                0.1,
+              ],
+            },
+            'equals',
+            {
+              bottomComment: ['_180', ['minus_', 'b__'], null, 0.1],
+            },
+          ],
+          '4a': [
+            {
+              bottomComment: [
+                ['_2', 'a_', 'plus_', { strike: ['b', 'x'] }],
+                ['minus', { strike: ['b_', 'x_'] }],
+                null,
+                0.1,
+              ],
+            },
+            'equals',
+            {
+              bottomComment: ['_180', ['minus_', 'b__'], null, 0.1],
+            },
+          ],
+          '5a': [
+            '_2', 'a_',
+            'equals',
+            '_180', 'minus_', 'b__',
+          ],
+          '6a': [
+            {
+              bottomComment: [['_2', 'a_'], ['div', '_2_'], null, 0.1],
+            },
+            'equals',
+            {
+              bottomComment: [['_180', 'minus_', 'b__'], ['div_', '_2__'], null, 0.1],
+            },
+          ],
+          '7a': [
+            {
+              frac: [['_2', 'a_'], '_2_', 'v'],
+            },
+            'equals',
+            {
+              frac: [['_180', 'minus_', 'b__'], '_2__', 'v_'],
+            },
+          ],
+          '8a': [
+            {
+              frac: [
+                [{ strike: ['_2', 'x'] }, 'a_'],
+                { strike: ['_2_', 'x_'] },
+                'v',
+              ],
+            },
+            'equals',
+            {
+              frac: [['_180', 'minus_', 'b__'], '_2__', 'v_'],
+            },
+          ],
+          '9a': [
+            'a_',
+            'equals',
+            {
+              frac: [['_180', 'minus_', 'b__'], '_2__', 'v_'],
+            },
+          ],
         },
-        formSeries: ['0', '1', '2', '3'],
+        formSeries: ['0', '1', '2', '3a', '4a', '5a', '6a', '7a', '8a', '9a'],
       },
     },
   ];
