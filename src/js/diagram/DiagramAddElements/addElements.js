@@ -37,6 +37,7 @@ function addElements(
     const methods = {
       polyLine: shapes.polyLine.bind(shapes),
       line: objects.line.bind(objects),
+      angle: objects.angle.bind(objects),
       collection: shapes.collection.bind(shapes),
       addEquation: equation.addEquation.bind(equation),
     };

@@ -280,6 +280,10 @@ export default function commonLessonLayout() {
         ['', 'line', 'polyLine', layout.iso.tri],
         ['', 'side12', 'line', [layout.iso.sideLength, layout.iso.side12]],
         ['', 'side23', 'line', [layout.iso.sideLength, layout.iso.side23]],
+        ['', 'side31', 'line', [layout.iso.sideLength, layout.iso.side31]],
+        ['', 'angle1', 'angle', [layout.iso.angle, layout.iso.angle1]],
+        ['', 'angle2', 'angle', [layout.iso.angle, layout.iso.angle2]],
+        ['', 'angle3', 'angle', [layout.iso.angle, layout.iso.angle3]],
       ],
     },
     // {
@@ -300,12 +304,12 @@ export default function commonLessonLayout() {
     //   method: 'diagram/objects/line',
     //   options: [layout.iso.sideLength, layout.iso.side23],
     // },
-    {
-      path: '_tri',
-      name: 'side31',
-      method: 'objects/line',
-      options: [layout.iso.sideLength, layout.iso.side31],
-    },
+    // {
+    //   path: '_tri',
+    //   name: 'side31',
+    //   method: 'objects/line',
+    //   options: [layout.iso.sideLength, layout.iso.side31],
+    // },
   ];
   // layout.equation = {
   //   elements: {

@@ -44,23 +44,23 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.diagram.addElements(this, this.layout.addElements);
     // const iso = this.diagram.shapes.collection(new Transform('iso')
     //   .translate(0, 0));
-    const iso = this._tri;
+    // const iso = this._tri;
     // tri
     // const line = this.diagram.shapes.polyLine(this.layout.iso.tri);
     // iso.add('line', line);
 
     // Angles
-    let lay = this.layout.iso;
-    iso.add('angle1', this.diagram.objects.angle(lay.angle, lay.angle1));
-    iso.add('angle2', this.diagram.objects.angle(lay.angle, lay.angle2));
-    iso.add('angle3', this.diagram.objects.angle(lay.angle, lay.angle3));
+    // let lay = this.layout.iso;
+    // iso.add('angle1', this.diagram.objects.angle(lay.angle, lay.angle1));
+    // iso.add('angle2', this.diagram.objects.angle(lay.angle, lay.angle2));
+    // iso.add('angle3', this.diagram.objects.angle(lay.angle, lay.angle3));
 
     // Sides
-    lay = this.layout.iso;
+    // lay = this.layout.iso;
     // iso.add('side12', this.diagram.objects.line(lay.sideLength, lay.side12));
     // iso.add('side23', this.diagram.objects.line(lay.sideLength, lay.side23));
     // iso.add('side31', this.diagram.objects.line(lay.sideLength, lay.side31));
-    this.add('tri', iso);
+    // this.add('tri', iso);
   }
 
   addSplitLines() {

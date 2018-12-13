@@ -166,7 +166,7 @@ describe('Diagram Equations From Object', () => {
               transform: new Transform('iso').translate(0, 0),
             },
             addElements: [
-              ['', 'line', 'polyLine', tri],
+              ['', 'line', 'polyLine', tri, { isTouchable: true }],
               ['', 'side12', 'line', [sideLength, side12]],
               ['', 'side23', 'line', [sideLength, side23]],
             ],
