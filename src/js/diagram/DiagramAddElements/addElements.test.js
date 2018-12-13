@@ -46,6 +46,9 @@ describe('Diagram Equations From Object', () => {
             options: {
               transform: new Transform('group'),
             },
+            mods: {
+              isTouchable: true,
+            },
           },
           // 1. Don't need path if adding to root collection
           // 2. Method can be simplified if shortcut is defined in addElements
@@ -55,15 +58,18 @@ describe('Diagram Equations From Object', () => {
             options: {
               transform: new Transform('group'),
             },
+            mods: {
+              isTouchable: true,
+            },
           },
           // Can use array form definition for simplicity
-          ['', 'group3', 'collection', { transform: new Transform('group') }],
+          ['', 'group3', 'collection', { transform: new Transform('group') }, { isTouchable: true }],
           // Multiple option objects are allowed where later objects overwrite
           // earlier objects
           ['', 'group4', 'collection', [
             { transform: new Transform('group1') },
             { transform: new Transform('group') },
-          ]],
+          ], { isTouchable: true }],
         ]);
       },
       nesting: () => {
@@ -180,6 +186,10 @@ describe('Diagram Equations From Object', () => {
     expect(elements).toHaveProperty('_group3');
     expect(elements).toHaveProperty('_group4');
     expect(elements._group4.transform.name).toBe('group');
+    expect(elements._group1.isTouchable).toBe(true);
+    expect(elements._group2.isTouchable).toBe(true);
+    expect(elements._group3.isTouchable).toBe(true);
+    expect(elements._group4.isTouchable).toBe(true);
   });
   test('Nesting', () => {
     ways.nesting();
@@ -202,21 +212,4 @@ describe('Diagram Equations From Object', () => {
     expect(tri).toHaveProperty('_side12');
     expect(tri).toHaveProperty('_side23');
   });
-  // describe('Equation Creation', () => {
-  //   test('Simple', () => {
-  //     ways.simple();
-  //     expect(collection).toHaveProperty('_eqn');
-  //     expect(collection._eqn).toHaveProperty('_a');
-  //     expect(collection._eqn).toHaveProperty('_b');
-  //     expect(collection._eqn).toHaveProperty('_c');
-  //     expect(collection._eqn).toHaveProperty('__2');
-  //     expect(collection._eqn).toHaveProperty('_v');
-
-  //     tools.cleanUIDs(collection._eqn);
-  //     expect(round(collection._eqn._a.transform.mat)).toMatchSnapshot();
-  //     expect(round(collection._eqn.__2.transform.mat)).toMatchSnapshot();
-  //     expect(round(collection._eqn._c.transform.mat)).toMatchSnapshot();
-  //     expect(round(collection._eqn._v.transform.mat)).toMatchSnapshot();
-  //   });
-  // });
 });

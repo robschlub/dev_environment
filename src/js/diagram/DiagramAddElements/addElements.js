@@ -65,13 +65,14 @@ function addElements(
       let nameToUse;
       let pathToUse;
       let optionsToUse;
+      let elementModsToUse;
       let addElementsToUse;
 
       // Extract the parameters from the layout object
       if (Array.isArray(elementDefinition)) {
         [
           pathToUse, nameToUse, methodPathToUse, optionsToUse,
-          addElementsToUse,
+          elementModsToUse, addElementsToUse,
         ] = elementDefinition;
       } else {
         nameToUse = elementDefinition.name;
@@ -79,6 +80,7 @@ function addElements(
         optionsToUse = elementDefinition.options;
         addElementsToUse = elementDefinition[addElementsKey];
         methodPathToUse = elementDefinition.method;
+        elementModsToUse = elementDefinition.mods;
       }
 
       let collectionPath;
@@ -123,6 +125,9 @@ function addElements(
         }
         if (element == null) {
           return;
+        }
+        if (elementModsToUse != null && elementModsToUse !== {}) {
+          element.setProperties(elementModsToUse);
         }
         if (collectionPath instanceof DiagramElementCollection) {
           collectionPath.add(nameToUse, element);
