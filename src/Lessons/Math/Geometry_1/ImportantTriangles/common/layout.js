@@ -16,11 +16,7 @@ const cssColorNames = [
 export default function commonLessonLayout() {
   const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
-  // const equilPoints = [
-  //   new Point(-1, -1),
-  //   new Point(1, -1),
-  //   new Point(0, 0.732),
-  // ];
+
   const isoPoints = [
     new Point(-0.8, -1),
     new Point(0.8, -1),
@@ -249,27 +245,30 @@ export default function commonLessonLayout() {
     },
   };
 
+  const { iso } = layout;
+  const isoL = iso.left;
+  const isoR = iso.right;
   layout.addElements = [
-    {
-      // path: '',
-      name: 'testEqn',
-      method: 'equation/addEquation',
-      options: {
-        color: [1, 0, 1, 1],
-        elements: {
-          a: 'a',
-          b: 'b',
-          c: 'c',
-          _2: '2',
-          v: { symbol: 'vinculum' },
-        },
-        forms: {
-          '0': ['a', 'b', 'c'],
-          '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
-        },
-        formSeries: ['0', '1'],
-      },
-    },
+    // {
+    //   // path: '',
+    //   name: 'testEqn',
+    //   method: 'equation/addEquation',
+    //   options: {
+    //     color: [1, 0, 1, 1],
+    //     elements: {
+    //       a: 'a',
+    //       b: 'b',
+    //       c: 'c',
+    //       _2: '2',
+    //       v: { symbol: 'vinculum' },
+    //     },
+    //     forms: {
+    //       '0': ['a', 'b', 'c'],
+    //       '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
+    //     },
+    //     formSeries: ['0', '1'],
+    //   },
+    // },
     {
       name: 'tri',
       method: 'shapes/collection',
@@ -277,143 +276,43 @@ export default function commonLessonLayout() {
         transform: new Transform('iso').translate(0, 0),
       },
       addElements: [
-        ['', 'line', 'polyLine', layout.iso.tri],
-        ['', 'side12', 'line', [layout.iso.sideLength, layout.iso.side12]],
-        ['', 'side23', 'line', [layout.iso.sideLength, layout.iso.side23]],
-        ['', 'side31', 'line', [layout.iso.sideLength, layout.iso.side31]],
-        ['', 'angle1', 'angle', [layout.iso.angle, layout.iso.angle1]],
-        ['', 'angle2', 'angle', [layout.iso.angle, layout.iso.angle2]],
-        ['', 'angle3', 'angle', [layout.iso.angle, layout.iso.angle3]],
+        ['', 'line', 'polyLine', iso.tri],
+        ['', 'side12', 'line', [iso.sideLength, iso.side12]],
+        ['', 'side23', 'line', [iso.sideLength, iso.side23]],
+        ['', 'side31', 'line', [iso.sideLength, iso.side31]],
+        ['', 'angle1', 'angle', [iso.angle, iso.angle1]],
+        ['', 'angle2', 'angle', [iso.angle, iso.angle2]],
+        ['', 'angle3', 'angle', [iso.angle, iso.angle3]],
       ],
     },
-    // {
-    //   path: '_tri',
-    //   name: 'line',
-    //   method: 'diagram/shapes/polyLine',
-    //   options: layout.iso.tri,
-    // },
-    // {
-    //   path: '_tri',
-    //   name: 'side12',
-    //   method: 'diagram/objects/line',
-    //   options: [layout.iso.sideLength, layout.iso.side12],
-    // },
-    // {
-    //   path: '_tri',
-    //   name: 'side23',
-    //   method: 'diagram/objects/line',
-    //   options: [layout.iso.sideLength, layout.iso.side23],
-    // },
-    // {
-    //   path: '_tri',
-    //   name: 'side31',
-    //   method: 'objects/line',
-    //   options: [layout.iso.sideLength, layout.iso.side31],
-    // },
+    {
+      name: 'left',
+      method: 'collection',
+      options: new Transform('left').translate(0, 0),
+      addElements: [
+        ['', 'line', 'polyLine', isoL.tri],
+        ['', 'angle1', 'angle', [iso.angle, isoL.angle1]],
+        ['', 'angle2', 'angle', [iso.angle, isoL.angle2]],
+        ['', 'angle3', 'angle', [iso.angle, isoL.angle3]],
+        ['', 'side12', 'line', [iso.sideLength, isoL.side12]],
+        ['', 'side23', 'line', [iso.sideLength, isoL.side23]],
+        ['', 'side31', 'line', [iso.sideLength, isoL.side31]],
+      ],
+    },
+    {
+      name: 'right',
+      method: 'collection',
+      options: new Transform('right').translate(0, 0),
+      addElements: [
+        ['', 'line', 'polyLine', isoR.tri],
+        ['', 'angle1', 'angle', [iso.angle, isoR.angle1]],
+        ['', 'angle2', 'angle', [iso.angle, isoR.angle2]],
+        ['', 'angle3', 'angle', [iso.angle, isoR.angle3]],
+        ['', 'side12', 'line', [iso.sideLength, isoR.side12]],
+        ['', 'side23', 'line', [iso.sideLength, isoR.side23]],
+        ['', 'side31', 'line', [iso.sideLength, isoR.side31]],
+      ],
+    },
   ];
-  // layout.equation = {
-  //   elements: {
-  //     a: 'a',
-  //     b: {
-  //       text: 'b',
-  //       color: [1, 0, 0, 1],
-  //     },
-  //     equals: '  =  ',
-  //     plus: ' + ',
-  //     _2: '2',
-  //     _180: '180º',
-  //   },
-  //   forms: {
-  //     '1': [
-  //       '_2', 'a', 'plus', 'b', 'equals', '_180',
-  //     ],
-  //     '2': {
-  //       'deg': [
-  //         '_2', 'frac', {
-
-  //         },
-  //       ],
-  //       'rad': [
-  //       ],
-  //     },
-  //   },
-  // };
-
-  // layout.equation = {
-  //   color: [1, 0, 1, 1],
-  //   position: new Point(0, 0),
-  //   currentForm: 'form2',
-  //   formAlignment: {
-  //     fixTo: 'equals',
-  //     hAlign: 'center',
-  //     vAlign: 'baseline',
-  //     scale: 1,
-  //   },
-  //   elements: {},
-  //   forms: {
-  //     form1: [],
-  //     form2: [],
-  //     form3: [],
-  //   },
-  //   formSeries: {
-  //     'series1': ['form1', 'form2'],
-  //     'series2': ['form1', 'form3'],
-  //   },
-  // };
-
-  // layout.equation.elements = {
-  //   a: 'a',
-  //   b: {
-  //     text: 'b',
-  //     color: [1, 0, 0, 1],
-  //   },
-  //   equals: '  =  ',
-  //   plus: ' + ',
-  //   _2: '2',
-  //   _180: '180º',
-  //   pi: 'π',
-  //   v: { obj: 'vinculum', color: [1, 0, 0, 1] },
-  // };
-
-  // layout.equation.forms['1'] = [
-  //   '_2', 'a', 'plus', 'b', 'equals', '_180',
-  // ];
-
-  // // layout.equation.forms['2'] = {
-  // //   'deg': [
-  // //     '_2', 'a', 'plus', 'b', 'equals', '_180',
-  // //   ],
-  // //   'rad': [
-  // //     '_2', 'a', 'plus', 'b', 'equals', 'pi',
-  // //   ],
-  // // };
-
-  // layout.equation.forms['3'] = [
-  //   '.frac', ['_2', 'a', 'v'], 'plus', 'b', 'equals', '_180',
-  // ];
-
-  // layout.equation.forms['4'] = [
-  //   'frac', {
-  //     numerator: '_2',
-  //     demonimator: 'a',
-  //     vinculum: 'v',
-  //   }, 'plus', 'b', 'equals', '_180',
-  // ];
-
-  // layout.equation.forms['5'] = {
-  //   content: [
-  //     '_2', 'a', 'plus', 'b', 'equals', '_180',
-  //   ],
-  //   elementMods: {
-  //     _2: {
-  //       style: 'linear',
-  //     },
-  //   },
-  //   animationTime: {
-  //     fromPrev: 1,
-  //     fromNext: 2,
-  //     fromAny: 1.5,
-  //   },
-  // };
   return layout;
 }
