@@ -17,7 +17,7 @@ import DrawContext2D from './DrawContext2D';
 import DiagramPrimatives from './DiagramPrimatives/DiagramPrimatives';
 import DiagramEquation from './DiagramEquation/DiagramEquation';
 import DiagramObjects from './DiagramObjects/DiagramObjects';
-import DiagramAddElements from './DiagramAddElements/DiagramAddElements';
+import addElements from './DiagramAddElements/addElements';
 import type { TypeAddElementObject } from './DiagramAddElements/DiagramAddElements';
 // There are several coordinate spaces that need to be considered for a
 // diagram.
@@ -69,9 +69,9 @@ class Diagram {
   objects: DiagramObjects;
   objectsLow: DiagramObjects;
   objectsHigh: DiagramObjects;
-  addElements: DiagramAddElements;
-  addElementsLow: DiagramAddElements;
-  addElementsHigh: DiagramAddElements;
+  // addElements: DiagramAddElements;
+  // addElementsLow: DiagramAddElements;
+  // addElementsHigh: DiagramAddElements;
 
   backgroundColor: Array<number>;
   fontScale: number;
@@ -192,8 +192,8 @@ class Diagram {
     this.objectsLow = this.getObjects(false);
     this.objectsHigh = this.getObjects(true);
     this.objects = this.objectsLow;
-    this.addElementsLow = this.getAddElements(false);
-    this.addElementsHigh = this.getAddElements(true);
+    // this.addElementsLow = this.getAddElements(false);
+    // this.addElementsHigh = this.getAddElements(true);
     // this.addElements = this.getAddElements();
     this.createDiagramElements();
     if (this.elements.name === '') {
@@ -210,8 +210,16 @@ class Diagram {
   addElements(
     rootCollection: DiagramElementCollection,
     layout: { addElements?: TypeAddElementObject },
+    addElementsKey: string = 'addElements',
   ) {
-    this.addElementsLow.addElements(rootCollection, layout);
+    addElements(
+      this.shapes,
+      this.equation,
+      this.objects,
+      rootCollection,
+      layout,
+      addElementsKey,
+    );
   }
 
   getShapes(high: boolean = false) {
