@@ -28,14 +28,42 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       _angle1: DiagramObjectAngle;
       _angle1R: DiagramObjectAngle;
       _angle2: DiagramObjectAngle;
+      _side12: DiagramObjectLine;
+      _side31: DiagramObjectLine;
+      _line: DiagramElementPrimative;
+      _closeLine: DiagramObjectLine;
     };
 
     _tri2: {
       _angle1: DiagramObjectAngle;
       _angle1R: DiagramObjectAngle;
       _angle2: DiagramObjectAngle;
+      _side12: DiagramObjectLine;
+      _side31: DiagramObjectLine;
+      _line: DiagramElementPrimative;
+      _closeLine: DiagramObjectLine;
     };
   };
+
+  _left: {
+    _line: DiagramElementPrimative;
+    _angle1: DiagramObjectAngle;
+    _angle2: DiagramObjectAngle;
+    _angle3: DiagramObjectAngle;
+    _side12: DiagramObjectLine;
+    _side23: DiagramObjectLine;
+    _side31: DiagramObjectLine;
+  };
+
+  _right: {
+    _line: DiagramElementPrimative;
+    _angle1: DiagramObjectAngle;
+    _angle2: DiagramObjectAngle;
+    _angle3: DiagramObjectAngle;
+    _side12: DiagramObjectLine;
+    _side23: DiagramObjectLine;
+    _side31: DiagramObjectLine;
+  }
 
   _split: DiagramObjectLine;
   _topPoint: DiagramElementPrimative;
@@ -68,38 +96,8 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.diagram.addElements(this, this.layout.addElements);
     this.diagram.addElements(this, this.layout.addEquationA);
     this.diagram.addElements(this, this.layout.addEquationB);
-    // this.addTri();
-    // this.addLeftRightTris();
-    // this.addSplitLines();
-    // this.addEquations();
-    // eslint-disable-next-line
     console.log(this)
-    // this.setTransformCallback = () => {
-    //   const r = this.transform.r();
-    //   // console.log(r)
-    //   if (r != null) {
-    //     this._angle1.update(r);
-    //     this._angle2.update(r);
-    //     this._angle3.update(r);
-    //   }
-    // };
-    // this._angle1.setAngle({p1: new Point(1, 0), p2: new Point(0, 0), p3: new Point(1, 1)});
     this.hasTouchableElements = true;
-    // this.touchInBoundingRect = true;
-    // this.isTouchable = true;
-    // this.isMovable = true;
-    // this.move.type = 'rotation';
-    // this._angle1.hasTouchableElements = true;
-    // this._angle1._side2.isTouchable = true;
-    // this._angle1._side2.isMovable = true;
-    // this._angle1._side2.move.type = 'rotation';
-    // this._angle1._side2.setTransformCallback = () => {
-    //   const r = this._angle1._side2.transform.r();
-    //   if (r != null) {
-    //     this._angle1.setAngle({angle: r})
-    //     this._angle1.update();
-    //   }
-    // }
   }
 
   pulseEqualSides() {
@@ -165,8 +163,12 @@ export default class IsocelesCollection extends CommonDiagramCollection {
   }
 
   pulseRectHeight() {
-    this._rect._tri1._side12._label.pulseScaleNow(1, 2);
-    this._rect._tri2._side12._label.pulseScaleNow(1, 2);
+    if (this._rect._tri1._side12._label) {
+      this._rect._tri1._side12._label.pulseScaleNow(1, 2);
+    }
+    if (this._rect._tri2._side12._label) {
+      this._rect._tri2._side12._label.pulseScaleNow(1, 2);
+    }
     this.diagram.animateNextFrame();
   }
 
@@ -177,34 +179,4 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this._rect._tri2._closeLine.pulseWidth();
     this.diagram.animateNextFrame();
   }
-
-  // pulseHeight() {
-  //   this._rect._tri1._side31._label.pulseScaleNow(1, 1.5);
-  //   this._rect._tri2._side31._label.pulseScaleNow(1, 1.5);
-  //   this.diagram.animateNextFrame();
-  // }
-
-  // toggleSplitLines(index: number | null) {
-  //   const line1 = this._splitLine1;
-  //   const line2 = this._splitLine2;
-  //   let indexToUse = 1;
-  //   if (index === null) {
-  //     if (line1.isShown) {
-  //       indexToUse = 2;
-  //     } else {
-  //       indexToUse = 1;
-  //     }
-  //   } else {
-  //     indexToUse = index;
-  //   }
-
-  //   if (indexToUse === 1) {
-  //     line1.showAll();
-  //     line2.hideAll();
-  //   } else {
-  //     line1.hideAll();
-  //     line2.showAll();
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
 }
