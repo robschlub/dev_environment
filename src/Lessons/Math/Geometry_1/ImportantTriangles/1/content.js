@@ -352,7 +352,7 @@ class Content extends LessonContent {
     ];
     this.addSection(common);
 
-    common.setContent = 'The |vertical sides| of the |rectanlge| are the same as the |height| of the triangle, so we can label them.';
+    common.setContent = 'The |vertical sides| of the |rectangle| are the same as the |height| of the triangle, so we can label them.';
     this.addSection(common);
     common.show = [
       iTri._angle1, iTri._angle2, iTri._side12,
@@ -378,7 +378,12 @@ class Content extends LessonContent {
     ];
     this.addSection(common);
 
-
+    common.setContent = 'The sides of |rectangle| are parallel, so we can use |Alternate_Angles| to calculate two top angles.';
+    common.modifiers = {
+      Alternate_Angles: click(qr._alt.show, [qr._alt], colors.diagram.action),
+      rectangle: click(qr._rect.show, [qr._rect], colors.diagram.action),
+    };
+    this.addSection(common);
     // this.addSection(common, {
     //   show: [iTri._angle1, iTri._angle2, iTri._side12, iso._split],
     //   setSteadyState: () => {
