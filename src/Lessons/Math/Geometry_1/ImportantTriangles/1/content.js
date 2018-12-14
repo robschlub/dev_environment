@@ -453,14 +453,21 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: centerV([
-        'So you |only| need to show a triangle has |two_equal_angles| |OR| |two_equal_sides| to show it is an |isosceles| triangle.',
-        'Then, once you know a triangle is an |isosceles| triangle, you also know it has |two_equal_sides| |AND| |two_equal_angles|. ',
+        'If you know a triangle has |two_equal_sides|, then you know it is an |isosceles triangle| and also has |two_equal_angles|.',
+        'Similarly, if you know a triangle has |two_equal_angles|, then you know it also has |two_equal_sides| and is an |isosceles triangle|.',
       ]),
       modifiers: {
         two_equal_sides: highlight(colors.equalLength),
         two_equal_angles: highlight(colors.angles),
       },
     });
+
+    this.addSection({
+      setContent: centerV([
+        'We can now use the knowledge that |two angles are the same| to consider the relationship between all the angles in an |isosceles| triangle.',
+      ]),
+    });
+
     common.setSteadyState = () => {
       iso.setScenario(iTri, layout.iso.scenario.bottom);
     };
