@@ -579,8 +579,12 @@ class Content extends LessonContent {
       ],
     });
 
-    common.setContent = 'An |equilateral| triangle is a special case of an |isosceles| triangle.';
-    this.addSection(common);
+    common.setContent = 'As |any| two sides are equal, an |equilateral| triangle is a special case of an |isosceles| triangle.';
+    this.addSection(common, {
+      modifiers: {
+        any: click(equil.toggleIsoOrientation, [equil, null, false], colors.equalLength),
+      },
+    });
 
     common.setContent = 'We know for an isosceles triangle that the two angles not between the two equal sides are equal.';
     this.addSection(common);

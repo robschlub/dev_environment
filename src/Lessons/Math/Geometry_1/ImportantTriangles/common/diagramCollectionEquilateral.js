@@ -38,37 +38,46 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     this.isoOrientation = 1;
   }
 
-  toggleIsoOrientation(orientation: number | null = null) {
+  toggleIsoOrientation(
+    orientation: number | null = null,
+    showAngle: boolean = false,
+  ) {
     if (orientation === null) {
       this.isoOrientation = (this.isoOrientation + 1) % 3;
     } else {
       this.isoOrientation = orientation;
     }
 
+    this._tri._isoLines.stopAnimatingColor(true, true);
+    this._tri._isoLines.pulseThickNow(0.5, 1.02, 5, () => {
+      this._tri._isoLines.disolveOutWithDelay(0.5, 1);
+    });
     const angle = Math.PI / 3 * 2 * this.isoOrientation;
     this._tri._isoLines.show();
     this._tri._isoLines.transform.updateRotation(angle);
-    if (this.isoOrientation === 0) {
-      this._tri._angle1.showAll();
-      this._tri._angle2.hide();
-      this._tri._angle3.showAll();
-      // this._tri._angle1.setColor(this.layout.colors.angles);
-      // this._tri._angle2.setColor(this.layout.colors.diagram.disabledDark);
-      // this._tri._angle3.setColor(this.layout.colors.angles);
-    } else if (this.isoOrientation === 1) {
-      this._tri._angle1.showAll();
-      this._tri._angle2.showAll();
-      this._tri._angle3.hide();
-      // this._tri._angle1.setColor(this.layout.colors.angles);
-      // this._tri._angle2.setColor(this.layout.colors.angles);
-      // this._tri._angle3.setColor(this.layout.colors.diagram.disabledDark);
-    } else {
-      this._tri._angle1.hide();
-      this._tri._angle2.showAll();
-      this._tri._angle3.showAll();
-      // this._tri._angle1.setColor(this.layout.colors.diagram.disabledDark);
-      // this._tri._angle2.setColor(this.layout.colors.angles);
-      // this._tri._angle3.setColor(this.layout.colors.angles);
+    if (showAngle) {
+      if (this.isoOrientation === 0) {
+        this._tri._angle1.showAll();
+        this._tri._angle2.hide();
+        this._tri._angle3.showAll();
+        // this._tri._angle1.setColor(this.layout.colors.angles);
+        // this._tri._angle2.setColor(this.layout.colors.diagram.disabledDark);
+        // this._tri._angle3.setColor(this.layout.colors.angles);
+      } else if (this.isoOrientation === 1) {
+        this._tri._angle1.showAll();
+        this._tri._angle2.showAll();
+        this._tri._angle3.hide();
+        // this._tri._angle1.setColor(this.layout.colors.angles);
+        // this._tri._angle2.setColor(this.layout.colors.angles);
+        // this._tri._angle3.setColor(this.layout.colors.diagram.disabledDark);
+      } else {
+        this._tri._angle1.hide();
+        this._tri._angle2.showAll();
+        this._tri._angle3.showAll();
+        // this._tri._angle1.setColor(this.layout.colors.diagram.disabledDark);
+        // this._tri._angle2.setColor(this.layout.colors.angles);
+        // this._tri._angle3.setColor(this.layout.colors.angles);
+      }
     }
     this.diagram.animateNextFrame();
   }
