@@ -265,10 +265,16 @@ export default function commonLessonLayout() {
             isoPoints[2],
           ],
           width: 0.01,
-          close: true,
+          close: false,
           borderToPoint: 'alwaysOn',
           position: new Point(0, 0),
           color: layout.colors.construction,
+        },
+        closeLine: {
+          p1: isoPoints[2],
+          p2: isoPoints[0],
+          color: layout.colors.construction,
+          width: 0.01,
         },
         angle1: {
           p1: isoPoints[2],
@@ -308,15 +314,21 @@ export default function commonLessonLayout() {
       tri2: {
         line: {
           points: [
+            isoPoints[2],
             new Point(isoPoints[1].x, isoPoints[2].y),
             isoPoints[1],
-            isoPoints[2],
           ],
           width: 0.01,
-          close: true,
+          close: false,
           borderToPoint: 'alwaysOn',
           position: new Point(0, 0),
           color: layout.colors.construction,
+        },
+        closeLine: {
+          p1: isoPoints[1],
+          p2: isoPoints[2],
+          color: layout.colors.construction,
+          width: 0.01,
         },
         angle1: {
           p1: new Point(isoPoints[1].x, isoPoints[2].y),

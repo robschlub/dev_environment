@@ -33,6 +33,7 @@ class Content extends LessonContent {
     const iTri = iso._tri;
     const left = iso._left;
     const right = iso._right;
+    const rec = iso._rect;
 
     let common = {
       setContent: '',
@@ -50,15 +51,15 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Introduction',
       setContent: centerV([
-        // 'There are several |types of triangle| commonly found in many applications.',
-        // 'Being able to |identify| these types of triangle can make |understanding| a problem |quicker and easier|.',
+        'There are several |types of triangle| commonly found in many applications.',
+        'Being able to |identify| these types of triangle can make |understanding| a problem |quicker and easier|.',
       ]),
       setSteadyState: () => {
         iso.show();
         // iso._tri.showAll();
-        iso._rect.showAll();
-        iso._rect._tri1._angle2.update();
-        iso._rect._tri2._angle2.update();
+        // iso._rect.showAll();
+        // iso._rect._tri1._angle2.update();
+        // iso._rect._tri2._angle2.update();
         // iso._isoEqn.showAll();
         // iso.eqns.isoEqn.showForm('3');
         // iso._testEqn.setPosition(-1, 1);
@@ -315,6 +316,7 @@ class Content extends LessonContent {
 
     common = {
       setContent: 'If instead we start knowing a triangle has |two equal angles|, we can also show that it will have |two equal sides|.',
+      modifiers: {},
       showOnly: [iso, iTri, iTri._line],
       show: [iTri._angle1, iTri._angle2],
       setSteadyState: () => {
@@ -328,7 +330,7 @@ class Content extends LessonContent {
       },
     });
 
-    common.setContent = 'We can start by |labeling| the side between the equal angles, then |splitting| the triangle as before.';
+    common.setContent = 'We can start by |labeling| the side between the equal angles.';
     this.addSection(common);
     common.show = [iTri._angle1, iTri._angle2, iTri._side12];
     this.addSection(common, {
@@ -337,45 +339,75 @@ class Content extends LessonContent {
         done();
       },
     });
-    this.addSection(common, {
-      show: [iTri._angle1, iTri._angle2, iTri._side12, iso._split],
-      setSteadyState: () => {
-        iso.setScenario(iTri, layout.iso.scenario.center);
-        iso.growSplit();
-      },
-    });
-    common.showOnly = [iso, iTri, iTri._line, left, right];
+
+    common.setContent = 'Then draw a |rectangle| around the triangle.';
+    common.modifiers = {
+      rectangle: click(qr._rect.show, [qr._rect], colors.diagram.action),
+    };
+    common.showOnly = [iso, iTri, iTri._line, rec, rec._tri1, rec._tri2, qr];
+    this.addSection(common);
     common.show = [
-      iTri._angle1, iTri._angle2, iTri._side12, iso._split, left._side23,
+      iTri._angle1, iTri._angle2, iTri._side12,
+      rec._tri1._line, rec._tri2._line,
     ];
     this.addSection(common);
-    this.addSection(common, {
-      show: [
-        iTri._angle1, iTri._angle2, iTri._side12, iso._split,
-        left._side23, left._side12, right._side12,
-      ],
-    });
-    this.addSection(common, {
-      showOnly: [
-        iso, qr,
-        left, left._line,
-        right, right._line,
-      ],
-      show: [
-        left._side23,
-        left._angle1, right._angle2,
-        left._side12, right._side12,
-      ],
-      transitionFromPrev: (done) => {
-        iso.moveToScenario(left, layout.iso.left.scenario.left, 1, done);
-        iso.moveToScenario(right, layout.iso.right.scenario.right, 1);
-      },
-      setSteadyState: () => {
-        iso.setScenario(left, layout.iso.left.scenario.left);
-        iso.setScenario(right, layout.iso.right.scenario.right);
-        right._side31.showAll();
-      },
-    });
+
+    common.setContent = 'The |vertical sides| of the |rectanlge| are the same as the |height| of the triangle, so we can label them.';
+    this.addSection(common);
+    common.show = [
+      iTri._angle1, iTri._angle2, iTri._side12,
+      rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
+    ];
+    this.addSection(common);
+
+    common.setContent = 'The |angles| of the |rectanlge| are all |right angles| and so we can label them.';
+    this.addSection(common);
+    common.show = [
+      iTri._angle1, iTri._angle2, iTri._side12,
+      rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
+      rec._tri1._angle2, rec._tri2._angle2,
+    ];
+    this.addSection(common);
+
+    // this.addSection(common, {
+    //   show: [iTri._angle1, iTri._angle2, iTri._side12, iso._split],
+    //   setSteadyState: () => {
+    //     iso.setScenario(iTri, layout.iso.scenario.center);
+    //     iso.growSplit();
+    //   },
+    // });
+    // common.showOnly = [iso, iTri, iTri._line, left, right];
+    // common.show = [
+    //   iTri._angle1, iTri._angle2, iTri._side12, iso._split, left._side23,
+    // ];
+    // this.addSection(common);
+    // this.addSection(common, {
+    //   show: [
+    //     iTri._angle1, iTri._angle2, iTri._side12, iso._split,
+    //     left._side23, left._side12, right._side12,
+    //   ],
+    // });
+    // this.addSection(common, {
+    //   showOnly: [
+    //     iso, qr,
+    //     left, left._line,
+    //     right, right._line,
+    //   ],
+    //   show: [
+    //     left._side23,
+    //     left._angle1, right._angle2,
+    //     left._side12, right._side12,
+    //   ],
+    //   transitionFromPrev: (done) => {
+    //     iso.moveToScenario(left, layout.iso.left.scenario.left, 1, done);
+    //     iso.moveToScenario(right, layout.iso.right.scenario.right, 1);
+    //   },
+    //   setSteadyState: () => {
+    //     iso.setScenario(left, layout.iso.left.scenario.left);
+    //     iso.setScenario(right, layout.iso.right.scenario.right);
+    //     right._side31.showAll();
+    //   },
+    // });
 
     common.setSteadyState = () => {
       iso.setScenario(iTri, layout.iso.scenario.bottom);

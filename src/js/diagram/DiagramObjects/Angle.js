@@ -725,6 +725,11 @@ class DiagramObjectAngle extends DiagramElementCollection {
       _side2.transform.updateScale(side2.length, 1);
     }
   }
+
+  showAll() {
+    super.showAll();
+    this.update();
+  }
 }
 
 export default DiagramObjectAngle;
