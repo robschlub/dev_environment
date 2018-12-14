@@ -50,13 +50,14 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Introduction',
       setContent: centerV([
-        'There are several |types of triangle| commonly found in many applications.',
-        'Being able to |identify| these types of triangle can make |understanding| a problem |quicker and easier|.',
+        // 'There are several |types of triangle| commonly found in many applications.',
+        // 'Being able to |identify| these types of triangle can make |understanding| a problem |quicker and easier|.',
       ]),
       setSteadyState: () => {
         iso.show();
         iso._tri.showAll();
         iso._rect.showAll();
+        iso._rect._angle2.update();
         // iso._isoEqn.showAll();
         // iso.eqns.isoEqn.showForm('3');
         // iso._testEqn.setPosition(-1, 1);

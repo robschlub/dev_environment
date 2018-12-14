@@ -274,8 +274,41 @@ export default function commonLessonLayout() {
         p1: isoPoints[2],
         p2: isoPoints[0],
         p3: new Point(isoPoints[0].x, isoPoints[2].y),
-        curve: { radius: 0.7 },
-        label: { text: '90º-a', radius: 0.6 },
+        curve: { radius: 0.3 },
+        label: {
+          text: '90º - a',
+          radius: 0.25,
+          textScale: 0.7,
+          curvePosition: 2.5,
+        },
+      },
+      angle2: {
+        p1: isoPoints[0],
+        p2: new Point(isoPoints[0].x, isoPoints[2].y),
+        p3: isoPoints[2],
+        autoRightAngle: true,
+        curve: { radius: 0.2 },
+        label: { text: '' },
+      },
+      angle3: {
+        p1: isoPoints[2],
+        p2: new Point(isoPoints[1].x, isoPoints[2].y),
+        p3: isoPoints[1],
+        autoRightAngle: true,
+        curve: { radius: 0.2 },
+        label: { text: '' },
+      },
+      angle4: {
+        p1: new Point(isoPoints[1].x, isoPoints[2].y),
+        p2: isoPoints[1],
+        p3: isoPoints[2],
+        curve: { radius: 0.3 },
+        label: {
+          text: '90º - a',
+          radius: 0.25,
+          textScale: 0.7,
+          curvePosition: -1.5,
+        },
       },
     },
   };
@@ -295,6 +328,9 @@ export default function commonLessonLayout() {
       addElements: [
         ['', 'line', 'polyLine', rec.line],
         ['', 'angle1', 'angle', [main.angle, rec.angle1]],
+        ['', 'angle2', 'angle', [main.angle, rec.angle2]],
+        ['', 'angle3', 'angle', [main.angle, rec.angle3]],
+        ['', 'angle4', 'angle', [main.angle, rec.angle4]],
       ],
     },
     {

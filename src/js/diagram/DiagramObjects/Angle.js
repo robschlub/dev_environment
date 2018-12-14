@@ -65,6 +65,7 @@ export type TypeAngleOptions = {
     realAngleDecimals?: number,     // Num decimal places if using angle label
     orientation?: TypeAngleLabelOrientation,  // horiztonal or tangent
     autoHide?: number,              // Auto hide label at this threshold
+    textScale?: number,             // Text scale
   },
   //
   // Sides
@@ -125,8 +126,9 @@ class AngleLabel extends EquationLabel {
     realAngleDecimals: number = 0,
     autoHide: number = -1,
     orientation: TypeAngleLabelOrientation = 'horizontal',
+    scale: number = 0.7,
   ) {
-    super(equation, { label: labelText, color });
+    super(equation, { label: labelText, color, scale });
     this.radius = radius;
     this.curvePosition = curvePosition;
     this.showRealAngle = showRealAngle;
@@ -393,7 +395,8 @@ class DiagramObjectAngle extends DiagramElementCollection {
     showRealAngle?: boolean,
     realAngleDecimals?: number,
     orientation?: TypeAngleLabelOrientation,
-    autoHide?: number
+    autoHide?: number,
+    textScale?: number,
   } = {}) {
     const defaultLabelOptions = {
       text: '',
@@ -403,6 +406,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       realAngleDecimals: 0,
       orientation: 'horizontal',
       autoHide: -1,
+      textScale: 0.7,
     };
     if (this.curve) {
       defaultLabelOptions.radius = this.curve.radius;
@@ -419,6 +423,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       optionsToUse.realAngleDecimals,
       optionsToUse.autoHide,
       optionsToUse.orientation,
+      optionsToUse.textScale,
     );
     if (this.label != null) {
       this.add('label', this.label.eqn.collection);
