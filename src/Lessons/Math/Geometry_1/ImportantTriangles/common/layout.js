@@ -290,11 +290,25 @@ export default function commonLessonLayout() {
           curve: { radius: 0.2 },
           label: { text: '' },
         },
+        side12: {
+          p1: isoPoints[0],
+          p2: new Point(isoPoints[0].x, isoPoints[2].y),
+          color: layout.colors.construction,
+          label: { text: 'h' },
+          offset: 0.1,
+        },
+        side31: {
+          p1: isoPoints[0],
+          p2: isoPoints[2],
+          color: layout.colors.equalLength,
+          label: { text: 'A' },
+          offset: 0.1,
+        },
       },
       tri2: {
         line: {
           points: [
-            new Point(isoPoints[0].x, isoPoints[2].y),
+            new Point(isoPoints[1].x, isoPoints[2].y),
             isoPoints[1],
             isoPoints[2],
           ],
@@ -324,6 +338,20 @@ export default function commonLessonLayout() {
           curve: { radius: 0.2 },
           label: { text: '' },
         },
+        side12: {
+          p1: new Point(isoPoints[1].x, isoPoints[2].y),
+          p2: isoPoints[1],
+          color: layout.colors.construction,
+          label: { text: 'h' },
+          offset: 0.1,
+        },
+        side31: {
+          p1: isoPoints[2],
+          p2: isoPoints[1],
+          color: layout.colors.equalLength,
+          label: { text: 'A' },
+          offset: 0.1,
+        },
       },
     },
   };
@@ -345,11 +373,15 @@ export default function commonLessonLayout() {
           ['', 'line', 'polyLine', rec.tri1.line],
           ['', 'angle1', 'angle', [main.angle, rec.tri1.angle1]],
           ['', 'angle2', 'angle', [main.angle, rec.tri1.angle2]],
+          ['', 'side12', 'line', [main.sideLength, rec.tri1.side12]],
+          ['', 'side31', 'line', [main.sideLength, rec.tri1.side31]],
         ]],
         ['', 'tri2', 'collection', {}, {}, [
           ['', 'line', 'polyLine', rec.tri2.line],
           ['', 'angle1', 'angle', [main.angle, rec.tri2.angle1]],
           ['', 'angle2', 'angle', [main.angle, rec.tri2.angle2]],
+          ['', 'side12', 'line', [main.sideLength, rec.tri2.side12]],
+          ['', 'side31', 'line', [main.sideLength, rec.tri2.side31]],
         ]],
       ],
     },
