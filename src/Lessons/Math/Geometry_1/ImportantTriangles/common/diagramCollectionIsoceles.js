@@ -156,6 +156,34 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
+  pulseRectAngles() {
+    this._rect._tri1._angle1.pulseScaleNow(1, 1.5);
+    this._rect._tri1._angle2.pulseScaleNow(1, 1.5);
+    this._rect._tri2._angle1.pulseScaleNow(1, 1.5);
+    this._rect._tri2._angle2.pulseScaleNow(1, 1.5);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseRectHeight() {
+    this._rect._tri1._side12._label.pulseScaleNow(1, 2);
+    this._rect._tri2._side12._label.pulseScaleNow(1, 2);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseRectTriangles() {
+    this._rect._tri1._line.pulseThickNow(1, 1.012, 5);
+    this._rect._tri2._line.pulseThickNow(1, 1.012, 5);
+    this._rect._tri1._closeLine.pulseWidth();
+    this._rect._tri2._closeLine.pulseWidth();
+    this.diagram.animateNextFrame();
+  }
+
+  // pulseHeight() {
+  //   this._rect._tri1._side31._label.pulseScaleNow(1, 1.5);
+  //   this._rect._tri2._side31._label.pulseScaleNow(1, 1.5);
+  //   this.diagram.animateNextFrame();
+  // }
+
   // toggleSplitLines(index: number | null) {
   //   const line1 = this._splitLine1;
   //   const line2 = this._splitLine2;

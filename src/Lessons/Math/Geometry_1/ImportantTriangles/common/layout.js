@@ -50,7 +50,7 @@ export default function commonLessonLayout() {
       },
       sideLength: {
         color: layout.colors.lines,
-        offset: 0.2,
+        offset: 0.15,
         label: {
           text: 'A',
           location: 'outside',
@@ -307,16 +307,16 @@ export default function commonLessonLayout() {
         side12: {
           p1: isoPoints[0],
           p2: new Point(isoPoints[0].x, isoPoints[2].y),
-          color: layout.colors.construction,
+          color: layout.colors.lines,
           label: { text: 'h' },
-          offset: 0.1,
+          offset: 0.15,
         },
         side31: {
           p1: isoPoints[0],
           p2: isoPoints[2],
           color: layout.colors.equalLength,
           label: { text: 'A' },
-          offset: 0.1,
+          offset: 0.15,
         },
       },
       tri2: {
@@ -362,16 +362,16 @@ export default function commonLessonLayout() {
         side12: {
           p1: new Point(isoPoints[1].x, isoPoints[2].y),
           p2: isoPoints[1],
-          color: layout.colors.construction,
+          color: layout.colors.lines,
           label: { text: 'h' },
-          offset: 0.1,
+          offset: 0.15,
         },
         side31: {
           p1: isoPoints[2],
           p2: isoPoints[1],
           color: layout.colors.equalLength,
           label: { text: 'A' },
-          offset: 0.1,
+          offset: 0.15,
         },
       },
     },

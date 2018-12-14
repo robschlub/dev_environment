@@ -82,7 +82,7 @@ class Content extends LessonContent {
       },
     };
     this.addSection(common, {
-      title: 'Isosceles',
+      title: 'Equal Sides',
       setContent: [
         'A triangle with |two_sides| of |equal_length| is called an |Isosceles| triangle.',
         `${new Definition('Isosceles', 'Greek', ['isoskeles', '', 'isos', 'equal', 'skelos', 'leg']).html('id_lesson__isosceles_definition')}`,
@@ -318,6 +318,15 @@ class Content extends LessonContent {
       setContent: 'However, if we |only know| a triangle has two |equal_angles|, can we also show it has two equal sides?',
       modifiers: {
         equal_angles: click(iso.pulseEqualAngles, [iso], colors.angles),
+        rectangle: click(qr._rect.show, [qr._rect], colors.construction),
+        right_angles: highlight(colors.angles),
+        Alternate_Angles: click(qr._alt.show, [qr._alt], colors.diagram.action),
+        Angle_Angle_Side: click(qr._aas.show, [qr._aas], colors.diagram.action),
+        two_angles: click(iso.pulseEqualAngles, [iso], colors.angles),
+        two_sides: click(iso.pulseEqualSides, [iso], colors.equalLength),
+        triangles_: click(iso.pulseRectTriangles, [iso], colors.construction),
+        side_: click(iso.pulseRectHeight, [iso], colors.lines),
+        two_angles_: click(iso.pulseRectAngles, [iso], colors.angles),
       },
       showOnly: [iso, iTri, iTri._line],
       show: [iTri._angle1, iTri._angle2],
@@ -326,7 +335,7 @@ class Content extends LessonContent {
       },
     };
     this.addSection(common, {
-      title: 'Start With Equal Angles',
+      title: 'Equal Angles',
       transitionFromNext: (done) => {
         iso.moveToScenario(iTri, layout.iso.scenario.center, 1, done);
       },
@@ -343,9 +352,9 @@ class Content extends LessonContent {
     // });
 
     common.setContent = 'Start by drawing a |rectangle| around the triangle.';
-    common.modifiers = {
-      rectangle: click(qr._rect.show, [qr._rect], colors.construction),
-    };
+    // common.modifiers = {
+    //   rectangle: click(qr._rect.show, [qr._rect], colors.construction),
+    // };
     common.showOnly = [iso, iTri, iTri._line, rec, rec._tri1, rec._tri2, qr];
     this.addSection(common);
     common.show = [
@@ -364,15 +373,9 @@ class Content extends LessonContent {
 
 
     common.setContent = 'The |angles| of the |rectangle| are all |right_angles| and so we can label them.';
-    common.modifiers = {
-      right_angles: highlight(colors.angles),
-      rectangle: click(qr._rect.show, [qr._rect], colors.construction),
-    };
+    common.modifiers.right_angles = highlight(colors.angles);
     this.addSection(common);
-    common.modifiers = {
-      right_angles: click(iso.pulseRectRightAngles, [iso], colors.angles),
-      rectangle: click(qr._rect.show, [qr._rect], colors.diagram.action),
-    };
+    common.modifiers.right_angles = click(qr._rect.show, [qr._rect], colors.diagram.action);
     common.show = [
       iTri._angle1, iTri._angle2,
       rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
@@ -381,10 +384,6 @@ class Content extends LessonContent {
     this.addSection(common);
 
     common.setContent = 'As the sides of |rectangle| are parallel, we can use |Alternate_Angles| to find two top angles.';
-    common.modifiers = {
-      Alternate_Angles: click(qr._alt.show, [qr._alt], colors.diagram.action),
-      rectangle: click(qr._rect.show, [qr._rect], colors.diagram.action),
-    };
     this.addSection(common);
     common.show = [...common.show, rec._tri1._angle1];
     this.addSection(common, {
@@ -413,14 +412,11 @@ class Content extends LessonContent {
       rec._tri1._closeLine, rec._tri2._closeLine,
     ];
     this.addSection(common);
-    common.setContent = 'We can the triangles have the same |two angles| and |side|.';
+    common.setContent = 'We can see the triangles have the same |two_angles_| and |side_|.';
     this.addSection(common);
-    common.setContent = 'The |Angle_Angle_Side| triangle congruency test can therefore be used to say that these two triangles are the |same|.';
-    common.modifiers = {
-      Angle_Angle_Side: click(qr._aas.show, [qr._aas], colors.diagram.action),
-    };
+    common.setContent = 'The |Angle_Angle_Side| triangle congruency test can therefore be used to say that these two |triangles_| are the |same|.';
     this.addSection(common);
-    common.setContent = 'As these triangles are the same, then their |side lengths| are also |equal|.';
+    common.setContent = 'As these |triangles_| are the |same|, then their |sides| are also |equal|.';
     this.addSection(common);
     common.show = [
       rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
@@ -441,26 +437,30 @@ class Content extends LessonContent {
     this.addSection(common);
     common.showOnly = [iso, iTri, iTri._line, rec, rec._tri1, rec._tri2, qr];
     common.show = [
-      iTri._angle1, iTri._angle2,
+      iTri._angle1, iTri._angle2, iTri._side23, iTri._side31,
       rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
       rec._tri1._angle2, rec._tri2._angle2,
       rec._tri1._angle1, rec._tri2._angle1,
-      rec._tri1._side31, rec._tri2._side31,
     ];
     this.addSection(common);
     common.show = [
-      iTri._angle1, iTri._angle2,
-      rec._tri1._side31, rec._tri2._side31,
+      iTri._angle1, iTri._angle2, iTri._side23, iTri._side31,
     ];
     this.addSection(common);
 
-    common.setContent = 'So, if a triangle has two |angles| that are the same, then the two |sides| not between the angles must also be the same';
-    common.modifiers = {
-      angles: click(iso.pulseEqualAngles, [iso], colors.angles),
-      sides: click(iso.pulseEqualSides, [iso], colors.equalLength),
-    };
+    common.setContent = 'So, if a triangle has |two_angles| that are the |same|, then the |two_sides| not between the angles must also be the same';
     this.addSection(common);
 
+    this.addSection({
+      setContent: centerV([
+        'So you |only| need to show a triangle has |two_equal_angles| |OR| |two_equal_sides| to show it is an |isosceles| triangle.',
+        'Then, once you know a triangle is an |isosceles| triangle, you also know it has |two_equal_sides| |AND| |two_equal_angles|. ',
+      ]),
+      modifiers: {
+        two_equal_sides: highlight(colors.equalLength),
+        two_equal_angles: highlight(colors.angles),
+      },
+    });
     common.setSteadyState = () => {
       iso.setScenario(iTri, layout.iso.scenario.bottom);
     };
