@@ -43,17 +43,6 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.add('grid', grid);
   }
 
-  // addTri() {
-  //   // this.addLayout();
-  //   this.diagram.addElements(this, this.layout.addElements);
-  // }
-
-  // addSplitLines() {
-  //   const lay = this.layout.iso;
-  //   this.add('splitLine1', this.diagram.objects.line(lay.splitLine1));
-  //   this.add('splitLine2', this.diagram.objects.line(lay.splitLine2));
-  // }
-
   constructor(
     diagram: LessonDiagram,
     layout: Object,

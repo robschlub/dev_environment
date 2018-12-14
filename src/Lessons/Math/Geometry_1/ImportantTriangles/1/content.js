@@ -54,7 +54,9 @@ class Content extends LessonContent {
         'Being able to |identify| these types of triangle can make |understanding| a problem |quicker and easier|.',
       ]),
       setSteadyState: () => {
-        // iso.show();
+        iso.show();
+        iso._tri.showAll();
+        iso._rect.showAll();
         // iso._isoEqn.showAll();
         // iso.eqns.isoEqn.showForm('3');
         // iso._testEqn.setPosition(-1, 1);

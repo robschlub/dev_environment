@@ -11,6 +11,7 @@ const cssColorNames = [
   'angles',
   'equalLength',
   'points',
+  'construction',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -38,47 +39,78 @@ export default function commonLessonLayout() {
       center: { position: new Point(0, 0) },
       bottom: { position: new Point(0, -0.5) },
     },
-    tri: {
-      points: isoPoints,
-      width: 0.015,
-      close: true,
-      borderToPoint: 'alwaysOn',
-      position: new Point(0, 0),
-      color: layout.colors.lines,
-    },
-    sideLength: {
-      color: layout.colors.lines,
-      offset: 0.2,
-      label: {
-        text: 'A',
-        location: 'outside',
-        orientation: 'horizontal',
+    main: {
+      tri: {
+        points: isoPoints,
+        width: 0.015,
+        close: true,
+        borderToPoint: 'alwaysOn',
+        position: new Point(0, 0),
+        color: layout.colors.lines,
       },
-      showLine: false,
-    },
-    side12: {
-      p1: isoPoints[1],
-      p2: isoPoints[0],
-      label: { text: 'B' },
-      // offset: 0.5,
-    },
-    side23: {
-      p1: isoPoints[2],
-      p2: isoPoints[1],
-      color: layout.colors.equalLength,
-    },
-    side31: {
-      p1: isoPoints[0],
-      p2: isoPoints[2],
-      color: layout.colors.equalLength,
-    },
-    sideH: {
-      p1: isoPoints[2],
-      p2: mid,
-      color: layout.colors.height,
-      offset: 0.1,
-      label: {
-        linePosition: 0.6,
+      sideLength: {
+        color: layout.colors.lines,
+        offset: 0.2,
+        label: {
+          text: 'A',
+          location: 'outside',
+          orientation: 'horizontal',
+        },
+        showLine: false,
+      },
+      side12: {
+        p1: isoPoints[1],
+        p2: isoPoints[0],
+        label: { text: 'B' },
+        // offset: 0.5,
+      },
+      side23: {
+        p1: isoPoints[2],
+        p2: isoPoints[1],
+        color: layout.colors.equalLength,
+      },
+      side31: {
+        p1: isoPoints[0],
+        p2: isoPoints[2],
+        color: layout.colors.equalLength,
+      },
+      sideH: {
+        p1: isoPoints[2],
+        p2: mid,
+        color: layout.colors.height,
+        offset: 0.1,
+        label: {
+          linePosition: 0.6,
+        },
+      },
+      angle: {
+        curve: {
+          radius: 0.2,
+          sides: 150,
+          width: 0.02,
+        },
+        label: {
+          text: 'a',
+          radius: 0.18,
+        },
+        color: layout.colors.angles,
+      },
+      angle1: {
+        p1: isoPoints[1],
+        p2: isoPoints[0],
+        p3: isoPoints[2],
+      },
+      angle2: {
+        p1: isoPoints[2],
+        p2: isoPoints[1],
+        p3: isoPoints[0],
+      },
+      angle3: {
+        p1: isoPoints[0],
+        p2: isoPoints[2],
+        p3: isoPoints[1],
+        curve: { radius: 0.3 },
+        label: { text: 'b', radius: 0.28 },
       },
     },
     left: {
@@ -205,35 +237,6 @@ export default function commonLessonLayout() {
         label: { text: 'C', linePosition: 0.4 },
       },
     },
-    angle: {
-      curve: {
-        radius: 0.2,
-        sides: 150,
-        width: 0.02,
-      },
-      label: {
-        text: 'a',
-        radius: 0.18,
-      },
-      color: layout.colors.angles,
-    },
-    angle1: {
-      p1: isoPoints[1],
-      p2: isoPoints[0],
-      p3: isoPoints[2],
-    },
-    angle2: {
-      p1: isoPoints[2],
-      p2: isoPoints[1],
-      p3: isoPoints[0],
-    },
-    angle3: {
-      p1: isoPoints[0],
-      p2: isoPoints[2],
-      p3: isoPoints[1],
-      curve: { radius: 0.3 },
-      label: { text: 'b', radius: 0.28 },
-    },
     splitLine: {
       p1: isoPoints[2].sub(0, 0.04),
       p2: new Line(isoPoints[0], isoPoints[1]).midpoint(),
@@ -253,32 +256,47 @@ export default function commonLessonLayout() {
       transform: new Transform('midPoint')
         .translate(new Line(isoPoints[0], isoPoints[1]).midpoint()),
     },
+    rect: {
+      line: {
+        points: [
+          isoPoints[0],
+          new Point(isoPoints[0].x, isoPoints[2].y),
+          new Point(isoPoints[1].x, isoPoints[2].y),
+          isoPoints[1],
+        ],
+        width: 0.01,
+        close: false,
+        borderToPoint: 'alwaysOn',
+        position: new Point(0, 0),
+        color: layout.colors.construction,
+      },
+      angle1: {
+        p1: isoPoints[2],
+        p2: isoPoints[0],
+        p3: new Point(isoPoints[0].x, isoPoints[2].y),
+        curve: { radius: 0.7 },
+        label: { text: '90º-a', radius: 0.6 },
+      },
+    },
   };
 
   const { iso } = layout;
   const isoL = iso.left;
   const isoR = iso.right;
+  const { main } = layout.iso;
+  const rec = iso.rect;
   layout.addElements = [
-    // {
-    //   // path: '',
-    //   name: 'testEqn',
-    //   method: 'equation/addEquation',
-    //   options: {
-    //     color: [1, 0, 1, 1],
-    //     elements: {
-    //       a: 'a',
-    //       b: 'b',
-    //       c: 'c',
-    //       _2: '2',
-    //       v: { symbol: 'vinculum' },
-    //     },
-    //     forms: {
-    //       '0': ['a', 'b', 'c'],
-    //       '1': [{ frac: ['a', '_2', 'v'] }, 'c'],
-    //     },
-    //     formSeries: ['0', '1'],
-    //   },
-    // },
+    {
+      name: 'rect',
+      method: 'collection',
+      options: {
+        transform: new Transform('rect').translate(0, 0),
+      },
+      addElements: [
+        ['', 'line', 'polyLine', rec.line],
+        ['', 'angle1', 'angle', [main.angle, rec.angle1]],
+      ],
+    },
     {
       name: 'tri',
       method: 'shapes/collection',
@@ -286,13 +304,13 @@ export default function commonLessonLayout() {
         transform: new Transform('iso').translate(0, 0),
       },
       addElements: [
-        ['', 'line', 'polyLine', iso.tri],
-        ['', 'side12', 'line', [iso.sideLength, iso.side12]],
-        ['', 'side23', 'line', [iso.sideLength, iso.side23]],
-        ['', 'side31', 'line', [iso.sideLength, iso.side31]],
-        ['', 'angle1', 'angle', [iso.angle, iso.angle1]],
-        ['', 'angle2', 'angle', [iso.angle, iso.angle2]],
-        ['', 'angle3', 'angle', [iso.angle, iso.angle3]],
+        ['', 'line', 'polyLine', main.tri],
+        ['', 'side12', 'line', [main.sideLength, main.side12]],
+        ['', 'side23', 'line', [main.sideLength, main.side23]],
+        ['', 'side31', 'line', [main.sideLength, main.side31]],
+        ['', 'angle1', 'angle', [main.angle, main.angle1]],
+        ['', 'angle2', 'angle', [main.angle, main.angle2]],
+        ['', 'angle3', 'angle', [main.angle, main.angle3]],
       ],
     },
     ['', 'split', 'line', [iso.splitLine]],
@@ -304,12 +322,12 @@ export default function commonLessonLayout() {
       options: new Transform('left').translate(0, 0),
       addElements: [
         ['', 'line', 'polyLine', isoL.tri],
-        ['', 'angle1', 'angle', [iso.angle, isoL.angle1]],
-        ['', 'angle2', 'angle', [iso.angle, isoL.angle2]],
-        ['', 'angle3', 'angle', [iso.angle, isoL.angle3]],
-        ['', 'side12', 'line', [iso.sideLength, isoL.side12]],
-        ['', 'side23', 'line', [iso.sideLength, isoL.side23]],
-        ['', 'side31', 'line', [iso.sideLength, isoL.side31]],
+        ['', 'angle1', 'angle', [main.angle, isoL.angle1]],
+        ['', 'angle2', 'angle', [main.angle, isoL.angle2]],
+        ['', 'angle3', 'angle', [main.angle, isoL.angle3]],
+        ['', 'side12', 'line', [main.sideLength, isoL.side12]],
+        ['', 'side23', 'line', [main.sideLength, isoL.side23]],
+        ['', 'side31', 'line', [main.sideLength, isoL.side31]],
       ],
     },
     {
@@ -318,12 +336,12 @@ export default function commonLessonLayout() {
       options: new Transform('right').translate(0, 0),
       addElements: [
         ['', 'line', 'polyLine', isoR.tri],
-        ['', 'angle1', 'angle', [iso.angle, isoR.angle1]],
-        ['', 'angle2', 'angle', [iso.angle, isoR.angle2]],
-        ['', 'angle3', 'angle', [iso.angle, isoR.angle3]],
-        ['', 'side12', 'line', [iso.sideLength, isoR.side12]],
-        ['', 'side23', 'line', [iso.sideLength, isoR.side23]],
-        ['', 'side31', 'line', [iso.sideLength, isoR.side31]],
+        ['', 'angle1', 'angle', [main.angle, isoR.angle1]],
+        ['', 'angle2', 'angle', [main.angle, isoR.angle2]],
+        ['', 'angle3', 'angle', [main.angle, isoR.angle3]],
+        ['', 'side12', 'line', [main.sideLength, isoR.side12]],
+        ['', 'side23', 'line', [main.sideLength, isoR.side23]],
+        ['', 'side31', 'line', [main.sideLength, isoR.side31]],
       ],
     },
   ];
