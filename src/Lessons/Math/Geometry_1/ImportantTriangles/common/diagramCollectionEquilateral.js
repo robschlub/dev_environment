@@ -38,6 +38,26 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     this.isoOrientation = 1;
   }
 
+  pulseSides() {
+    if (this._tri._side12._label) {
+      this._tri._side12._label.pulseScaleNow(1, 2);
+    }
+    if (this._tri._side23._label) {
+      this._tri._side23._label.pulseScaleNow(1, 2);
+    }
+    if (this._tri._side31._label) {
+      this._tri._side31._label.pulseScaleNow(1, 2);
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  pulseAngles() {
+    this._tri._angle1.pulseScaleNow(1, 1.5);
+    this._tri._angle2.pulseScaleNow(1, 1.5);
+    this._tri._angle3.pulseScaleNow(1, 1.5);
+    this.diagram.animateNextFrame();
+  }
+
   toggleIsoOrientation(
     orientation: number | null = null,
     showAngle: boolean = false,
@@ -49,9 +69,10 @@ export default class EquilateralCollection extends CommonDiagramCollection {
     }
 
     this._tri._isoLines.stopAnimatingColor(true, true);
-    this._tri._isoLines.pulseThickNow(0.5, 1.02, 5, () => {
-      this._tri._isoLines.disolveOutWithDelay(0.5, 1);
-    });
+    // this._tri._angle1.stopAnimatingColor(true, true);
+    // this._tri._angle2.stopAnimatingColor(true, true);
+    // this._tri._angle3.stopAnimatingColor(true, true);
+
     const angle = Math.PI / 3 * 2 * this.isoOrientation;
     this._tri._isoLines.show();
     this._tri._isoLines.transform.updateRotation(angle);
@@ -79,6 +100,20 @@ export default class EquilateralCollection extends CommonDiagramCollection {
         // this._tri._angle3.setColor(this.layout.colors.angles);
       }
     }
+
+    this._tri._isoLines.pulseThickNow(0.5, 1.02, 5, () => {
+      this._tri._isoLines.disolveOutWithDelay(0.5, 1);
+      // if (this._tri._angle1.isShown) {
+      //   this._tri._angle1.disolveOutWithDelay(0.5, 1);
+      // }
+      // if (this._tri._angle2.isShown) {
+      //   this._tri._angle2.disolveOutWithDelay(0.5, 1);
+      // }
+      // if (this._tri._angle3.isShown) {
+      //   this._tri._angle3.disolveOutWithDelay(0.5, 1);
+      // }
+    });
+
     this.diagram.animateNextFrame();
   }
   // pulseEqualSides() {

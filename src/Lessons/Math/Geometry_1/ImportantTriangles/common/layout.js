@@ -680,6 +680,7 @@ export default function commonLessonLayout() {
       p1: equilPoints[1],
       p2: equilPoints[0],
       p3: equilPoints[2],
+      // label: { text: ['a', '60º'] },
     },
     angle2: {
       p1: equilPoints[2],
