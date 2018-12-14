@@ -55,9 +55,10 @@ class Content extends LessonContent {
       ]),
       setSteadyState: () => {
         iso.show();
-        iso._tri.showAll();
+        // iso._tri.showAll();
         iso._rect.showAll();
-        iso._rect._angle2.update();
+        iso._rect._tri1._angle2.update();
+        iso._rect._tri2._angle2.update();
         // iso._isoEqn.showAll();
         // iso.eqns.isoEqn.showForm('3');
         // iso._testEqn.setPosition(-1, 1);

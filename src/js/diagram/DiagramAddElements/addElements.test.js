@@ -111,6 +111,19 @@ describe('Diagram Equations From Object', () => {
           },
         ]);
       },
+      deepNest: () => {
+        diagram.addElements(diagram.elements, [
+          {
+            name: 'group',
+            method: 'collection',
+            addElements: [
+              ['', 'group1', 'collection', {}, {}, [
+                ['', 'group2', 'collection'],
+              ]],
+            ],
+          },
+        ]);
+      },
       examples: () => {
         const triPoints = [
           new Point(-0.8, -1),
@@ -201,6 +214,13 @@ describe('Diagram Equations From Object', () => {
     expect(group).toHaveProperty('_group3');
     expect(group).toHaveProperty('_group4');
     expect(group).toHaveProperty('_group5');
+  });
+  test('Deep Nest', () => {
+    ways.deepNest();
+    const { elements } = diagram;
+    expect(elements).toHaveProperty('_group');
+    expect(elements._group).toHaveProperty('_group1');
+    expect(elements._group._group1).toHaveProperty('_group2');
   });
   test('Examples', () => {
     ways.examples();

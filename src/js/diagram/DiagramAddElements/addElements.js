@@ -139,7 +139,7 @@ function addElements(
         }
       }
       if (`_${nameToUse}` in rootCollection
-          && addElementsKey in elementDefinition
+          && (addElementsToUse != null && addElementsToUse !== {})
       ) {
         addElements(
           shapes,
