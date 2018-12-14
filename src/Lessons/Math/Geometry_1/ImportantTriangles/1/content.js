@@ -296,8 +296,41 @@ class Content extends LessonContent {
         sides: click(iso.pulseEqualSides, [iso], colors.equalLength),
         angles: click(iso.pulseEqualAngles, [iso], colors.angles),
       },
+    });
+
+    common.showOnly = [iso, iTri, iTri._line, qr];
+    common.show = [
+      iTri._angle1, iTri._angle2,
+      iTri._side12, iTri._side23, iTri._side31,
+    ];
+    common.setSteadyState = () => {
+      iso.setScenario(left, layout.iso.left.scenario.center);
+      iso.setScenario(right, layout.iso.right.scenario.center);
+      iso.setScenario(iTri, layout.iso.scenario.center);
+    };
+
+    common = {
+      setContent: 'If instead we start knowing a triangle has |two equal angles|, we can also show that it will have |two equal sides|.',
+      showOnly: [iso, iTri, iTri._line],
+      show: [iTri._angle1, iTri._angle2],
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.center);
+      },
+    };
+    this.addSection(common, {
+      title: 'Start With Equal Angles',
       transitionFromNext: (done) => {
         iso.moveToScenario(iTri, layout.iso.scenario.center, 1, done);
+      },
+    });
+
+    common.setContent = 'We can start by |labeling| the side between the equal angles.';
+    this.addSection(common);
+    common.show = [iTri._angle1, iTri._angle2, iTri._side12];
+    this.addSection(common, {
+      transitionFromPrev: (done) => {
+        iTri._side12._label.pulseScaleNow(1, 2);
+        done();
       },
     });
 
@@ -305,16 +338,28 @@ class Content extends LessonContent {
       iso.setScenario(iTri, layout.iso.scenario.bottom);
     };
     this.addSection(common, {
-      title: 'Third Angle',
-      setContent: 'Now, if two angles are the same, it makes it easier to calculate all the angles when only one is known.'
+      title: 'Angle Relationships',
+      setContent: [
+        'We know |angles| in a triangle are related: their |sum| always equals |_180|. Therefore to calculate |all| angles, |two must be known|.',
+      ],
+      modifiers: {
+        _180: clickWord(
+          '180º', 'id_important_triangles_sum1',
+          qr._tri.show, [qr._tri], colors.diagram.action,
+        ),
+        angles: highlight(colors.angles),
+      },
       transitionFromPrev: (done) => {
         iso.moveToScenario(iTri, layout.iso.scenario.bottom, 1, done);
       },
     });
 
+    this.addSection(common, {
+      setContent: 'But, if we |also know that two angles are equal|, then actually we only need to know |one angle| to calculate all three.',
+    });
 
     common = {
-      setContent: 'We start by labelling the |third angle| as |b| and recalling all the angles in a triangle add to |_180|. If we know |b| we can find |a|.',
+      setContent: 'We start by labelling the |third angle| as |b| and adding all the angles to |_180|.',
       modifiers: {
         _180: clickWord(
           '180º', 'id_important_triangles_sum1',
@@ -322,6 +367,7 @@ class Content extends LessonContent {
         ),
         b: highlight(colors.angles),
         a: highlight(colors.angles),
+        rearrange: click(iso._eqnANav.clickNext, [iso._eqnANav], colors.diagram.action),
       },
       showOnly: [iso, iTri, iTri._line, qr],
       show: [
@@ -340,6 +386,15 @@ class Content extends LessonContent {
         iso.setScenario(iTri, layout.iso.scenario.bottom);
         iso.pulseAngle3();
         iso._eqnANav.showForm('0');
+        iso._eqnAEqn.isTouchable = false;
+      },
+    });
+    common.setContent = 'We can now |rearrange| for either |a| or |b|. We will start by rearranging for |b|.';
+    this.addSection(common, {
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.bottom);
+        iso._eqnANav.showForm('0');
+        iso._eqnAEqn.isTouchable = true;
       },
     });
     this.addSection(common, {
@@ -350,10 +405,11 @@ class Content extends LessonContent {
     });
 
     common = {
-      setContent: 'Similarly, if we know |a| we can find |b|.',
+      setContent: 'Similarly, if we know |a| we can |rearrange| to find |b|.',
       modifiers: {
         b: highlight(colors.angles),
         a: highlight(colors.angles),
+        rearrange: click(iso._eqnANav.clickNext, [iso._eqnBNav], colors.diagram.action),
       },
       showOnly: [iso, iTri, iTri._line, qr],
       show: [
@@ -378,7 +434,12 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: centerV(['Therefore, if we have an |isoceles triangle|, and we know |any angle|, we can |calculate| the other |two angles|.']),
+      setContent: centerV([
+        'An |isoceles triangle| has |two equal sides| and |two equal angles|.',
+        'A triangle with |two equal sides|, must also have |two equal angles|.',
+        'A triangle has |two equal angles|, must also have |two equal sides|.',
+        '|All| angles in an |isoceles triangle| can be calculated from just |one| angle.',
+      ]),
     });
 
     // eslint-disable-next-line

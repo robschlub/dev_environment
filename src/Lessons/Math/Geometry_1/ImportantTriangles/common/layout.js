@@ -359,7 +359,7 @@ export default function commonLessonLayout() {
       options: {
         color: layout.colors.diagram.text.base,
         scale: 1,
-        position: [-0.15, 0.7],
+        position: [-0.15, 0.8],
         defaultFormAlignment: {
           fixTo: 'equals',
         },
@@ -415,7 +415,7 @@ export default function commonLessonLayout() {
       options: {
         color: layout.colors.diagram.text.base,
         scale: 1,
-        position: [-0.15, 0.7],
+        position: [-0.15, 0.8],
         defaultFormAlignment: {
           fixTo: 'equals',
         },
