@@ -473,7 +473,7 @@ class DiagramObjectAngle extends DiagramElementCollection {
       ));
       right.add('line2', this.shapes.horizontalLine(
         new Point(0, rightLength),
-        rightLength + optionsToUse.width / 2, optionsToUse.width,
+        rightLength - optionsToUse.width / 2, optionsToUse.width,
         0, this.color,
       ));
       this.add('curveRight', right);

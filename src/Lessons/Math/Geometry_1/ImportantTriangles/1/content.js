@@ -360,14 +360,24 @@ class Content extends LessonContent {
     ];
     this.addSection(common);
 
-    common.setContent = 'The |angles| of the |rectanlge| are all |right angles| and so we can label them.';
+
+    common.setContent = 'The |angles| of the |rectangle| are all |right_angles| and so we can label them.';
+    common.modifiers = {
+      right_angles: highlight(colors.angles),
+      rectangle: click(qr._rect.show, [qr._rect], colors.diagram.action),
+    };
     this.addSection(common);
+    common.modifiers = {
+      right_angles: click(iso.pulseRectRightAngles, [iso], colors.angles),
+      rectangle: click(qr._rect.show, [qr._rect], colors.diagram.action),
+    };
     common.show = [
       iTri._angle1, iTri._angle2, iTri._side12,
       rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
       rec._tri1._angle2, rec._tri2._angle2,
     ];
     this.addSection(common);
+
 
     // this.addSection(common, {
     //   show: [iTri._angle1, iTri._angle2, iTri._side12, iso._split],

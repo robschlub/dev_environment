@@ -296,6 +296,14 @@ export default function commonLessonLayout() {
           curve: { radius: 0.2 },
           label: { text: '' },
         },
+        angle1R: {
+          p1: isoPoints[1],
+          p2: isoPoints[0],
+          p3: new Point(isoPoints[0].x, isoPoints[2].y),
+          autoRightAngle: true,
+          curve: { radius: 0.2 },
+          label: { text: '' },
+        },
         side12: {
           p1: isoPoints[0],
           p2: new Point(isoPoints[0].x, isoPoints[2].y),
@@ -342,6 +350,14 @@ export default function commonLessonLayout() {
             curvePosition: -1.5,
           },
         },
+        angle1R: {
+          p1: new Point(isoPoints[1].x, isoPoints[2].y),
+          p2: isoPoints[1],
+          p3: isoPoints[0],
+          autoRightAngle: true,
+          curve: { radius: 0.2 },
+          label: { text: '' },
+        },
         angle2: {
           p1: isoPoints[2],
           p2: new Point(isoPoints[1].x, isoPoints[2].y),
@@ -384,6 +400,7 @@ export default function commonLessonLayout() {
         ['', 'tri1', 'collection', {}, {}, [
           ['', 'line', 'polyLine', rec.tri1.line],
           ['', 'angle1', 'angle', [main.angle, rec.tri1.angle1]],
+          ['', 'angle1R', 'angle', [main.angle, rec.tri1.angle1R]],
           ['', 'angle2', 'angle', [main.angle, rec.tri1.angle2]],
           ['', 'side12', 'line', [main.sideLength, rec.tri1.side12]],
           ['', 'side31', 'line', [main.sideLength, rec.tri1.side31]],
@@ -391,6 +408,7 @@ export default function commonLessonLayout() {
         ['', 'tri2', 'collection', {}, {}, [
           ['', 'line', 'polyLine', rec.tri2.line],
           ['', 'angle1', 'angle', [main.angle, rec.tri2.angle1]],
+          ['', 'angle1R', 'angle', [main.angle, rec.tri2.angle1R]],
           ['', 'angle2', 'angle', [main.angle, rec.tri2.angle2]],
           ['', 'side12', 'line', [main.sideLength, rec.tri2.side12]],
           ['', 'side31', 'line', [main.sideLength, rec.tri2.side31]],

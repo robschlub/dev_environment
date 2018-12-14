@@ -21,7 +21,21 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     _side12: DiagramObjectLine;
     _side23: DiagramObjectLine;
     _side31: DiagramObjectLine;
-  }
+  };
+
+  _rect: {
+    _tri1: {
+      _angle1: DiagramObjectAngle;
+      _angle1R: DiagramObjectAngle;
+      _angle2: DiagramObjectAngle;
+    };
+
+    _tri2: {
+      _angle1: DiagramObjectAngle;
+      _angle1R: DiagramObjectAngle;
+      _angle2: DiagramObjectAngle;
+    };
+  };
 
   _split: DiagramObjectLine;
   _topPoint: DiagramElementPrimative;
@@ -123,6 +137,22 @@ export default class IsocelesCollection extends CommonDiagramCollection {
 
   growSplit() {
     this._split.grow(0, 1);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseRectRightAngles() {
+    this._rect._tri1._angle1R.stopAnimatingColor(true, true);
+    this._rect._tri2._angle1R.stopAnimatingColor(true, true);
+    this._rect._tri1._angle1R.showAll();
+    this._rect._tri2._angle1R.showAll();
+    this._rect._tri2._angle1R.pulseScaleNow(1, 1.5);
+    this._rect._tri2._angle2.pulseScaleNow(1, 1.5);
+    this._rect._tri1._angle2.pulseScaleNow(1, 1.5);
+    this._rect._tri1._angle1R.pulseScaleNow(1, 1.5, 0, () => {
+      this._rect._tri1._angle1R.disolveOut(1);
+      this._rect._tri2._angle1R.disolveOut(1);
+      this.diagram.animateNextFrame();
+    });
     this.diagram.animateNextFrame();
   }
 
