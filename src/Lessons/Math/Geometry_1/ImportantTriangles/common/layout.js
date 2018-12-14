@@ -277,16 +277,16 @@ export default function commonLessonLayout() {
           width: 0.01,
         },
         angle1: {
-          p1: isoPoints[2],
-          p2: isoPoints[0],
-          p3: new Point(isoPoints[0].x, isoPoints[2].y),
-          curve: { radius: 0.3 },
-          label: {
-            text: '90º - a',
-            radius: 0.25,
-            textScale: 0.7,
-            curvePosition: 2.5,
-          },
+          p1: new Point(isoPoints[0].x, isoPoints[2].y),
+          p2: isoPoints[2],
+          p3: isoPoints[0],
+          // curve: { radius: 0.3 },
+          // label: {
+          //   text: '90º - a',
+          //   radius: 0.25,
+          //   textScale: 0.7,
+          //   curvePosition: 2.5,
+          // },
         },
         angle2: {
           p1: isoPoints[0],
@@ -339,16 +339,9 @@ export default function commonLessonLayout() {
           width: 0.01,
         },
         angle1: {
-          p1: new Point(isoPoints[1].x, isoPoints[2].y),
-          p2: isoPoints[1],
-          p3: isoPoints[2],
-          curve: { radius: 0.3 },
-          label: {
-            text: '90º - a',
-            radius: 0.25,
-            textScale: 0.7,
-            curvePosition: -1.5,
-          },
+          p1: isoPoints[1],
+          p2: isoPoints[2],
+          p3: new Point(isoPoints[1].x, isoPoints[2].y),
         },
         angle1R: {
           p1: new Point(isoPoints[1].x, isoPoints[2].y),
@@ -399,6 +392,7 @@ export default function commonLessonLayout() {
       addElements: [
         ['', 'tri1', 'collection', {}, {}, [
           ['', 'line', 'polyLine', rec.tri1.line],
+          ['', 'closeLine', 'line', rec.tri1.closeLine],
           ['', 'angle1', 'angle', [main.angle, rec.tri1.angle1]],
           ['', 'angle1R', 'angle', [main.angle, rec.tri1.angle1R]],
           ['', 'angle2', 'angle', [main.angle, rec.tri1.angle2]],
@@ -407,6 +401,7 @@ export default function commonLessonLayout() {
         ]],
         ['', 'tri2', 'collection', {}, {}, [
           ['', 'line', 'polyLine', rec.tri2.line],
+          ['', 'closeLine', 'line', rec.tri2.closeLine],
           ['', 'angle1', 'angle', [main.angle, rec.tri2.angle1]],
           ['', 'angle1R', 'angle', [main.angle, rec.tri2.angle1R]],
           ['', 'angle2', 'angle', [main.angle, rec.tri2.angle2]],

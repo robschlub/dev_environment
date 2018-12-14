@@ -315,8 +315,10 @@ class Content extends LessonContent {
     };
 
     common = {
-      setContent: 'If instead we start knowing a triangle has |two equal angles|, we can also show that it will have |two equal sides|.',
-      modifiers: {},
+      setContent: 'However, if we |only know| a triangle has two |equal_angles|, can we also show it has two equal sides?',
+      modifiers: {
+        equal_angles: click(iso.pulseEqualAngles, [iso], colors.angles),
+      },
       showOnly: [iso, iTri, iTri._line],
       show: [iTri._angle1, iTri._angle2],
       setSteadyState: () => {
@@ -330,24 +332,24 @@ class Content extends LessonContent {
       },
     });
 
-    common.setContent = 'We can start by |labeling| the side between the equal angles.';
-    this.addSection(common);
-    common.show = [iTri._angle1, iTri._angle2, iTri._side12];
-    this.addSection(common, {
-      transitionFromPrev: (done) => {
-        iTri._side12._label.pulseScaleNow(1, 2);
-        done();
-      },
-    });
+    // common.setContent = 'We can start by |labeling| the side between the equal angles.';
+    // this.addSection(common);
+    // common.show = [iTri._angle1, iTri._angle2, iTri._side12];
+    // this.addSection(common, {
+    //   transitionFromPrev: (done) => {
+    //     iTri._side12._label.pulseScaleNow(1, 2);
+    //     done();
+    //   },
+    // });
 
-    common.setContent = 'Then draw a |rectangle| around the triangle.';
+    common.setContent = 'Start by drawing a |rectangle| around the triangle.';
     common.modifiers = {
-      rectangle: click(qr._rect.show, [qr._rect], colors.diagram.action),
+      rectangle: click(qr._rect.show, [qr._rect], colors.construction),
     };
     common.showOnly = [iso, iTri, iTri._line, rec, rec._tri1, rec._tri2, qr];
     this.addSection(common);
     common.show = [
-      iTri._angle1, iTri._angle2, iTri._side12,
+      iTri._angle1, iTri._angle2,
       rec._tri1._line, rec._tri2._line,
     ];
     this.addSection(common);
@@ -355,7 +357,7 @@ class Content extends LessonContent {
     common.setContent = 'The |vertical sides| of the |rectangle| are the same as the |height| of the triangle, so we can label them.';
     this.addSection(common);
     common.show = [
-      iTri._angle1, iTri._angle2, iTri._side12,
+      iTri._angle1, iTri._angle2,
       rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
     ];
     this.addSection(common);
@@ -364,7 +366,7 @@ class Content extends LessonContent {
     common.setContent = 'The |angles| of the |rectangle| are all |right_angles| and so we can label them.';
     common.modifiers = {
       right_angles: highlight(colors.angles),
-      rectangle: click(qr._rect.show, [qr._rect], colors.diagram.action),
+      rectangle: click(qr._rect.show, [qr._rect], colors.construction),
     };
     this.addSection(common);
     common.modifiers = {
@@ -372,57 +374,92 @@ class Content extends LessonContent {
       rectangle: click(qr._rect.show, [qr._rect], colors.diagram.action),
     };
     common.show = [
-      iTri._angle1, iTri._angle2, iTri._side12,
+      iTri._angle1, iTri._angle2,
       rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
       rec._tri1._angle2, rec._tri2._angle2,
     ];
     this.addSection(common);
 
-    common.setContent = 'The sides of |rectangle| are parallel, so we can use |Alternate_Angles| to calculate two top angles.';
+    common.setContent = 'As the sides of |rectangle| are parallel, we can use |Alternate_Angles| to find two top angles.';
     common.modifiers = {
       Alternate_Angles: click(qr._alt.show, [qr._alt], colors.diagram.action),
       rectangle: click(qr._rect.show, [qr._rect], colors.diagram.action),
     };
     this.addSection(common);
-    // this.addSection(common, {
-    //   show: [iTri._angle1, iTri._angle2, iTri._side12, iso._split],
-    //   setSteadyState: () => {
-    //     iso.setScenario(iTri, layout.iso.scenario.center);
-    //     iso.growSplit();
-    //   },
-    // });
-    // common.showOnly = [iso, iTri, iTri._line, left, right];
-    // common.show = [
-    //   iTri._angle1, iTri._angle2, iTri._side12, iso._split, left._side23,
-    // ];
-    // this.addSection(common);
-    // this.addSection(common, {
-    //   show: [
-    //     iTri._angle1, iTri._angle2, iTri._side12, iso._split,
-    //     left._side23, left._side12, right._side12,
-    //   ],
-    // });
-    // this.addSection(common, {
-    //   showOnly: [
-    //     iso, qr,
-    //     left, left._line,
-    //     right, right._line,
-    //   ],
-    //   show: [
-    //     left._side23,
-    //     left._angle1, right._angle2,
-    //     left._side12, right._side12,
-    //   ],
-    //   transitionFromPrev: (done) => {
-    //     iso.moveToScenario(left, layout.iso.left.scenario.left, 1, done);
-    //     iso.moveToScenario(right, layout.iso.right.scenario.right, 1);
-    //   },
-    //   setSteadyState: () => {
-    //     iso.setScenario(left, layout.iso.left.scenario.left);
-    //     iso.setScenario(right, layout.iso.right.scenario.right);
-    //     right._side31.showAll();
-    //   },
-    // });
+    common.show = [...common.show, rec._tri1._angle1];
+    this.addSection(common, {
+      transitionFromPrev: (done) => {
+        rec._tri1._angle1.pulseScaleNow(1, 1.5);
+        iTri._angle1.pulseScaleNow(1, 1.5);
+        done();
+      },
+    });
+    common.show = [...common.show, rec._tri2._angle1];
+    this.addSection(common, {
+      transitionFromPrev: (done) => {
+        rec._tri2._angle1.pulseScaleNow(1, 1.5);
+        iTri._angle2.pulseScaleNow(1, 1.5);
+        done();
+      },
+    });
+
+    common.setContent = 'Let\'s |simplify| the diagram to consider just the two outside triangles.';
+    this.addSection(common);
+    common.showOnly = [iso, rec, rec._tri1, rec._tri2, qr];
+    common.show = [
+      rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
+      rec._tri1._angle2, rec._tri2._angle2,
+      rec._tri1._angle1, rec._tri2._angle1,
+      rec._tri1._closeLine, rec._tri2._closeLine,
+    ];
+    this.addSection(common);
+    common.setContent = 'We can the triangles have the same |two angles| and |side|.';
+    this.addSection(common);
+    common.setContent = 'The |Angle_Angle_Side| triangle congruency test can therefore be used to say that these two triangles are the |same|.';
+    common.modifiers = {
+      Angle_Angle_Side: click(qr._aas.show, [qr._aas], colors.diagram.action),
+    };
+    this.addSection(common);
+    common.setContent = 'As these triangles are the same, then their |side lengths| are also |equal|.';
+    this.addSection(common);
+    common.show = [
+      rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
+      rec._tri1._angle2, rec._tri2._angle2,
+      rec._tri1._angle1, rec._tri2._angle1,
+      rec._tri1._closeLine, rec._tri2._closeLine,
+      rec._tri1._side31, rec._tri2._side31,
+    ];
+    this.addSection(common, {
+      transitionFromPrev: (done) => {
+        rec._tri1._side31._label.pulseScaleNow(1, 1.5);
+        rec._tri2._side31._label.pulseScaleNow(1, 1.5);
+        done();
+      },
+    });
+
+    common.setContent = 'Let\'s show the |original triangle|, and remove the rectangle.';
+    this.addSection(common);
+    common.showOnly = [iso, iTri, iTri._line, rec, rec._tri1, rec._tri2, qr];
+    common.show = [
+      iTri._angle1, iTri._angle2,
+      rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
+      rec._tri1._angle2, rec._tri2._angle2,
+      rec._tri1._angle1, rec._tri2._angle1,
+      rec._tri1._side31, rec._tri2._side31,
+    ];
+    this.addSection(common);
+    common.show = [
+      iTri._angle1, iTri._angle2,
+      rec._tri1._side31, rec._tri2._side31,
+    ];
+    this.addSection(common);
+
+    common.setContent = 'So, if a triangle has two |angles| that are the same, then the two |sides| not between the angles must also be the same';
+    common.modifiers = {
+      angles: click(iso.pulseEqualAngles, [iso], colors.angles),
+      sides: click(iso.pulseEqualSides, [iso], colors.equalLength),
+    };
+    this.addSection(common);
 
     common.setSteadyState = () => {
       iso.setScenario(iTri, layout.iso.scenario.bottom);
