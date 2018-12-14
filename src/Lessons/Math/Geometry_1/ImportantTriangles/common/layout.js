@@ -24,6 +24,7 @@ export default function commonLessonLayout() {
     new Point(0.8, -1),
     new Point(0, 1),
   ];
+
   layout.grid = {
     position: new Point(0, 0),
     smallPosition: new Point(0, 0),
@@ -632,5 +633,103 @@ export default function commonLessonLayout() {
       },
     },
   ];
+
+  // **********************************************************************
+  // **********************************************************************
+  // **********************************************************************
+  // **********************************************************************
+  // **********************************************************************
+  // **********************************************************************
+  const equilPoints = [
+    new Point(-1, -1).add(0, 1 - Math.tan(Math.PI / 6)),
+    new Point(1, -1).add(0, 1 - Math.tan(Math.PI / 6)),
+    new Point(0, 0.732050).add(0, 1 - Math.tan(Math.PI / 6)),
+  ];
+
+  layout.equil = {
+    position: new Point(0, 0),
+    scenario: {
+      center: { position: new Point(0, -(1 - Math.tan(Math.PI / 6))) },
+    },
+    tri: {
+      points: equilPoints,
+      width: 0.015,
+      close: true,
+      borderToPoint: 'alwaysOn',
+      position: new Point(0, 0),
+      color: layout.colors.lines,
+    },
+    sideLength: layout.iso.main.sideLength,
+    side12: {
+      p1: equilPoints[1],
+      p2: equilPoints[0],
+      color: layout.colors.lines,
+    },
+    side23: {
+      p1: equilPoints[2],
+      p2: equilPoints[1],
+      color: layout.colors.lines,
+    },
+    side31: {
+      p1: equilPoints[0],
+      p2: equilPoints[2],
+      color: layout.colors.lines,
+    },
+    angle: layout.iso.main.angle,
+    angle1: {
+      p1: equilPoints[1],
+      p2: equilPoints[0],
+      p3: equilPoints[2],
+    },
+    angle2: {
+      p1: equilPoints[2],
+      p2: equilPoints[1],
+      p3: equilPoints[0],
+    },
+    angle3: {
+      p1: equilPoints[0],
+      p2: equilPoints[2],
+      p3: equilPoints[1],
+    },
+    // iso1: {
+    //   p1: equilPoints[2],
+    //   p2: equilPoints[0],
+    //   color: layout.colors.equalLength,
+    // },
+    // iso2: {
+    //   p1: equilPoints[1],
+    //   p2: equilPoints[2],
+    //   color: layout.colors.equalLength,
+    // },
+    iso: {
+      close: false,
+      color: layout.colors.equalLength,
+      width: 0.03,
+      borderToPoint: 'never',
+      transform: new Transform('iso').rotate(0).translate(0, 0),
+    },
+  };
+
+  const { equil } = layout;
+  layout.addEquilateralElements = [
+    {
+      name: 'tri',
+      method: 'collection',
+      options: {
+        transform: new Transform('equil').translate(0, 0),
+      },
+      addElements: [
+        ['', 'line', 'polyLine', equil.tri],
+        ['', 'side12', 'line', [equil.sideLength, equil.side12]],
+        ['', 'side23', 'line', [equil.sideLength, equil.side23]],
+        ['', 'side31', 'line', [equil.sideLength, equil.side31]],
+        ['', 'angle1', 'angle', [equil.angle, equil.angle1]],
+        ['', 'angle2', 'angle', [equil.angle, equil.angle2]],
+        ['', 'angle3', 'angle', [equil.angle, equil.angle3]],
+        ['', 'isoLines', 'polyLine', [equil.tri, equil.iso]],
+      ],
+    },
+  ];
+
   return layout;
 }

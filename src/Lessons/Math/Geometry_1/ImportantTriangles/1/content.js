@@ -34,6 +34,7 @@ class Content extends LessonContent {
     const left = iso._left;
     const right = iso._right;
     const rec = iso._rect;
+    const equil = diag._equil;
 
     let common = {
       setContent: '',
@@ -54,8 +55,9 @@ class Content extends LessonContent {
         'There are several |types of triangle| commonly found in many applications.',
         'Being able to |identify| these types of triangle can make |understanding| a problem |quicker and easier|.',
       ]),
-      setSteadyState: () => {
-        iso.show();
+      // setSteadyState: () => {
+        // iso.show();
+        // equil.showAll();
         // iso._tri.showAll();
         // iso._rect.showAll();
         // iso._rect._tri1._angle2.update();
@@ -66,7 +68,7 @@ class Content extends LessonContent {
         // iso._testEqn.showForm('1');
         // iso._testNav.setPosition(-1, 1);
         // iso._testNav.showForm('0');
-      },
+      // },
     });
 
     this.addSection({
@@ -550,6 +552,49 @@ class Content extends LessonContent {
       ]),
     });
 
+
+    // ***************************************************************
+    // ***************************************************************
+    // ***************************************************************
+    // ***************************************************************
+    // ***************************************************************
+    // ***************************************************************
+    common = {
+      setContent: '',
+      showOnly: [equil, equil._tri],
+      show: [
+        equil._tri._line,
+        // equil._tri._angle1, equil._tri._angle2, equil._tri._angle3,
+        equil._tri._side12, equil._tri._side23, equil._tri._side31,
+      ],
+      setSteadyState: () => {
+        equil.setScenario(equil._tri, layout.equil.scenario.center);
+      },
+    };
+    this.addSection(common, {
+      title: 'Equilateral',
+      setContent: [
+        'A triangle that has all |three sides| the |same length| is called an |equilateral| triangle.',
+        `${new Definition('Equilateral', 'Latin', ['aequilateralis', '', 'aequi', 'equal', 'lateralis', 'side']).html('id_lesson__eqiuilateral_definition')}`,
+      ],
+    });
+
+    common.setContent = 'An |equilateral| triangle is a special case of an |isosceles| triangle.';
+    this.addSection(common);
+
+    common.setContent = 'We know for an isosceles triangle that the two angles not between the two equal sides are equal.';
+    this.addSection(common);
+
+    this.addSection({
+      
+      setContent: '|test|',
+      modifiers: {
+        test: click(equil.toggleIsoOrientation, [equil, null], colors.diagram.action),
+      },
+      setSteadyState: () => {
+        equil.showAll();
+      },
+    });
     // eslint-disable-next-line
     // common.setContent = 'If instead the line is drawn from a |different| triangle point, this same procedure can be used to show the |third angle| is the |same| as the other two.';
     // common.modifiers = {
