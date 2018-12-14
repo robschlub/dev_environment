@@ -324,13 +324,20 @@ class Content extends LessonContent {
       },
     });
 
-    common.setContent = 'We can start by |labeling| the side between the equal angles.';
+    common.setContent = 'We can start by |labeling| the side between the equal angles, then splitting the triangle as before.';
     this.addSection(common);
     common.show = [iTri._angle1, iTri._angle2, iTri._side12];
     this.addSection(common, {
       transitionFromPrev: (done) => {
         iTri._side12._label.pulseScaleNow(1, 2);
         done();
+      },
+    });
+    this.addSection(common, {
+      show: [iTri._angle1, iTri._angle2, iTri._side12, iso._split],
+      setSteadyState: () => {
+        iso.setScenario(iTri, layout.iso.scenario.center);
+        iso.growSplit();
       },
     });
 
