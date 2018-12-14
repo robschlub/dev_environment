@@ -77,10 +77,10 @@ class Content extends LessonContent {
       },
     };
     this.addSection(common, {
-      title: 'Isoceles',
+      title: 'Isosceles',
       setContent: [
-        'A triangle with |two_sides| of |equal_length| is called an |Isoceles| triangle.',
-        `${new Definition('Isoceles', 'Greek', ['isoskeles', '', 'isos', 'equal', 'skelos', 'leg']).html('id_lesson__isoceles_definition')}`,
+        'A triangle with |two_sides| of |equal_length| is called an |Isosceles| triangle.',
+        `${new Definition('Isosceles', 'Greek', ['isoskeles', '', 'isos', 'equal', 'skelos', 'leg']).html('id_lesson__isosceles_definition')}`,
       ],
       modifiers: {
         two_sides: click(iso.pulseEqualSides, [iso], colors.equalLength),
@@ -239,7 +239,7 @@ class Content extends LessonContent {
     });
 
     common = {
-      setContent: 'Angles |b| and |c|, and side |C_| were not part of the original isoceles triangles, so we can remove them.',
+      setContent: 'Angles |b| and |c|, and side |C_| were not part of the original isosceles triangles, so we can remove them.',
       modifiers: {
         b: highlight(colors.angles),
         c: highlight(colors.angles),
@@ -324,7 +324,7 @@ class Content extends LessonContent {
       },
     });
 
-    common.setContent = 'We can start by |labeling| the side between the equal angles, then splitting the triangle as before.';
+    common.setContent = 'We can start by |labeling| the side between the equal angles, then |splitting| the triangle as before.';
     this.addSection(common);
     common.show = [iTri._angle1, iTri._angle2, iTri._side12];
     this.addSection(common, {
@@ -338,6 +338,38 @@ class Content extends LessonContent {
       setSteadyState: () => {
         iso.setScenario(iTri, layout.iso.scenario.center);
         iso.growSplit();
+      },
+    });
+    common.showOnly = [iso, iTri, iTri._line, left, right];
+    common.show = [
+      iTri._angle1, iTri._angle2, iTri._side12, iso._split, left._side23,
+    ];
+    this.addSection(common);
+    this.addSection(common, {
+      show: [
+        iTri._angle1, iTri._angle2, iTri._side12, iso._split,
+        left._side23, left._side12, right._side12,
+      ],
+    });
+    this.addSection(common, {
+      showOnly: [
+        iso, qr,
+        left, left._line,
+        right, right._line,
+      ],
+      show: [
+        left._side23,
+        left._angle1, right._angle2,
+        left._side12, right._side12,
+      ],
+      transitionFromPrev: (done) => {
+        iso.moveToScenario(left, layout.iso.left.scenario.left, 1, done);
+        iso.moveToScenario(right, layout.iso.right.scenario.right, 1);
+      },
+      setSteadyState: () => {
+        iso.setScenario(left, layout.iso.left.scenario.left);
+        iso.setScenario(right, layout.iso.right.scenario.right);
+        right._side31.showAll();
       },
     });
 
@@ -442,10 +474,10 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: centerV([
-        'An |isoceles triangle| has |two equal sides| and |two equal angles|.',
+        'An |isosceles triangle| has |two equal sides| and |two equal angles|.',
         'A triangle with |two equal sides|, must also have |two equal angles|.',
         'A triangle has |two equal angles|, must also have |two equal sides|.',
-        '|All| angles in an |isoceles triangle| can be calculated from just |one| angle.',
+        '|All| angles in an |isosceles triangle| can be calculated from just |one| angle.',
       ]),
     });
 
