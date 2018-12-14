@@ -84,28 +84,18 @@ class Content extends LessonContent {
     this.addSection(common, {
       title: 'Equal Sides',
       setContent: [
-        'A triangle with |two_sides| of |equal_length| is called an |Isosceles| triangle.',
+        'A triangle with |two_sides| of |equal length| is called an |Isosceles| triangle.',
         `${new Definition('Isosceles', 'Greek', ['isoskeles', '', 'isos', 'equal', 'skelos', 'leg']).html('id_lesson__isosceles_definition')}`,
       ],
       modifiers: {
         two_sides: click(iso.pulseEqualSides, [iso], colors.equalLength),
-        equal_length: click(iso.pulseEqualSides, [iso], colors.equalLength),
+        // equal_length: click(iso.pulseEqualSides, [iso], colors.equalLength),
       },
       showOnly: [iso, iTri, iTri._line],
       show: [iTri._side12, iTri._side23, iTri._side31],
     });
 
 
-    // common = {
-    //   showOnly: [iso, iTri, iTri._line, qr],
-    //   show: [
-    //     iTri._side12, iTri._side23, iTri._side31,
-    //     iTri._angle1, iTri._angle2,
-    //   ],
-    //   setSteadyState: () => {
-    //     iso.setScenario(iTri, layout.iso.scenario.center);
-    //   },
-    // };
     this.addSection(common, {
       setContent: 'When |two sides| of a triangle are |equal|, the triangle\'s |angles| have a special relationship.',
       showOnly: [iso, iTri, iTri._line],
@@ -114,26 +104,12 @@ class Content extends LessonContent {
         iso.setScenario(iTri, layout.iso.scenario.center);
       },
     });
-    // this.addSection(common, {
-    //   setContent: [
-    //     'An |Isoceles| triangle also has |two_equal_angles|.',
-    //   ],
-    //   modifiers: {
-    //     two_equal_angles: click(iso.pulseEqualAngles, [iso], colors.angles),
-    //   },
-    // });
-    // this.addSection(common, {
-    //   setContent: [
-    //     'This can be shown using |Side_Side_Side| triangle congruency.',
-    //   ],
-    //   modifiers: { Side_Side_Side: click(qr._sss.show, [qr._sss], colors.diagram.action) },
-    // });
-
+   
 
     common = {
       setContent: 'We can show this by |drawing_a_line| from the |point| between the equal sides to the |middle| of the opposite side.',
       modifiers: {
-        drawing_a_line: highlight(colors.diagram.lines),
+        drawing_a_line: highlight(colors.lines),
         point: click(iso.pulseTopPoint, [iso], colors.points),
         middle: click(iso.pulseMidPoint, [iso], colors.points),
       },
@@ -145,7 +121,7 @@ class Content extends LessonContent {
     };
     this.addSection(common);
     common.modifiers = {
-      drawing_a_line: click(iso.growSplit, [iso], colors.diagram.lines),
+      drawing_a_line: click(iso.growSplit, [iso], colors.lines),
       point: click(iso.pulseTopPoint, [iso], colors.points),
       middle: click(iso.pulseMidPoint, [iso], colors.points),
     };
@@ -320,6 +296,7 @@ class Content extends LessonContent {
         equal_angles: click(iso.pulseEqualAngles, [iso], colors.angles),
         rectangle: click(qr._rect.show, [qr._rect], colors.construction),
         right_angles: highlight(colors.angles),
+        right_angles_: click(iso.pulseRectRightAngles, [iso], colors.angles),
         Alternate_Angles: click(qr._alt.show, [qr._alt], colors.diagram.action),
         Angle_Angle_Side: click(qr._aas.show, [qr._aas], colors.diagram.action),
         two_angles: click(iso.pulseEqualAngles, [iso], colors.angles),
@@ -327,6 +304,7 @@ class Content extends LessonContent {
         triangles_: click(iso.pulseRectTriangles, [iso], colors.construction),
         side_: click(iso.pulseRectHeight, [iso], colors.lines),
         two_angles_: click(iso.pulseRectAngles, [iso], colors.angles),
+        angles: highlight(colors.angles),
       },
       showOnly: [iso, iTri, iTri._line],
       show: [iTri._angle1, iTri._angle2],
@@ -373,9 +351,8 @@ class Content extends LessonContent {
 
 
     common.setContent = 'The |angles| of the |rectangle| are all |right_angles| and so we can label them.';
-    common.modifiers.right_angles = highlight(colors.angles);
     this.addSection(common);
-    common.modifiers.right_angles = click(qr._rect.show, [qr._rect], colors.diagram.action);
+    common.setContent = 'The |angles| of the |rectangle| are all |right_angles_| and so we can label them.';
     common.show = [
       iTri._angle1, iTri._angle2,
       rec._tri1._line, rec._tri2._line, rec._tri1._side12, rec._tri2._side12,
@@ -506,7 +483,7 @@ class Content extends LessonContent {
       showOnly: [iso, iTri, iTri._line, qr],
       show: [
         iTri._angle1, iTri._angle2, iTri._angle3,
-        iTri._side12, iTri._side23, iTri._side31,
+        iTri._side23, iTri._side31,
       ],
       setSteadyState: () => {
         iso.setScenario(iTri, layout.iso.scenario.bottom);
@@ -548,7 +525,7 @@ class Content extends LessonContent {
       showOnly: [iso, iTri, iTri._line, qr],
       show: [
         iTri._angle1, iTri._angle2, iTri._angle3,
-        iTri._side12, iTri._side23, iTri._side31,
+        iTri._side23, iTri._side31,
       ],
       setSteadyState: () => {
         iso.setScenario(iTri, layout.iso.scenario.bottom);
@@ -569,10 +546,7 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: centerV([
-        'An |isosceles triangle| has |two equal sides| and |two equal angles|.',
-        'A triangle with |two equal sides|, must also have |two equal angles|.',
-        'A triangle has |two equal angles|, must also have |two equal sides|.',
-        '|All| angles in an |isosceles triangle| can be calculated from just |one| angle.',
+        'And so we have found that only |one angle| is needed in an |isosceles triangle| to |calculate all three|.',
       ]),
     });
 
