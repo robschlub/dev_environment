@@ -338,6 +338,28 @@ function isTouchDevice() {
   return mq(query);
 }
 
+function loadRemote(
+  scriptId: string,
+  url: string,
+  callback: null | (string, string) => void = null,
+) {
+  const existingScript = document.getElementById(scriptId);
+  if (!existingScript) {
+    const script = document.createElement('script');
+    script.src = url;
+    script.id = scriptId; // e.g., googleMaps or stripe
+    if (document.body) {
+      document.body.appendChild(script);
+    }
+    script.onload = () => {
+      if (callback != null) {
+        callback(scriptId, url);
+      }
+    };
+  } else if (callback != null) {
+    callback(scriptId, url);
+  }
+}
 
 const cleanUIDs = (objectToClean: Object) => {
   const genericUID = '0000000000';
@@ -374,5 +396,5 @@ export {
   classify, extractFrom, ObjectKeyPointer, getElement,
   RGBToArray, HexToArray, cssColorToArray, colorArrayToRGB,
   colorArrayToRGBA, addToObject, duplicateFromTo, isTouchDevice,
-  generateUniqueId, joinObjects, cleanUIDs,
+  generateUniqueId, joinObjects, cleanUIDs, loadRemote,
 };

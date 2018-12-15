@@ -102,6 +102,20 @@ export default function getLessonIndex() {
     true,
   ));
   lessonIndex.push(new LessonDescription(
+    'Equilateral Triangle',
+    '/Lessons/Math/Geometry_1/Equilateral',
+    'equilateral_triangles',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'isosceles_triangles',
+    ],
+    true,
+  ));
+  lessonIndex.push(new LessonDescription(
     'Important Angles',
     '/Lessons/Math/Geometry_1/ImportantAngles',
     'important_angles',
@@ -114,20 +128,6 @@ export default function getLessonIndex() {
     true,
   ));
   lessonIndex.push(new LessonDescription(
-    'Important Triangles',
-    '/Lessons/Math/Geometry_1/ImportantTriangles',
-    'important_triangles',
-    [
-      '1',
-      'quiz',
-      'summary',
-    ],
-    [
-      'congruent_triangles',
-    ],
-    true,
-  ));
-  lessonIndex.push(new LessonDescription(
     'Why Study Shapes?',
     '/Lessons/Math/Geometry_1/Introduction',
     'why_study_shapes',
@@ -135,6 +135,20 @@ export default function getLessonIndex() {
       '1',
     ],
     [
+    ],
+    true,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Isosceles Triangle',
+    '/Lessons/Math/Geometry_1/Isosceles',
+    'isosceles_triangles',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'quadrangles',
     ],
     true,
   ));
