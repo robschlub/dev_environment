@@ -9,7 +9,7 @@ import details from '../details';
 import MeasureCollection from '../common/diagramCollectionMeasure';
 import RectAreaCollection from '../common/diagramCollectionRect';
 
-
+const remoteTest1 = {hello: 'there1'};
 export class QRArea extends PopupBoxCollection {
   _collection: MeasureCollection;
 

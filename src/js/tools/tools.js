@@ -345,6 +345,7 @@ function loadRemote(
 ) {
   const existingScript = document.getElementById(scriptId);
   if (!existingScript) {
+    console.log('does not exist')
     const script = document.createElement('script');
     script.src = url;
     script.id = scriptId; // e.g., googleMaps or stripe
@@ -360,6 +361,16 @@ function loadRemote(
     callback(scriptId, url);
   }
 }
+
+// function remoteLoadToObject(
+//   scriptId: string,
+//   url: string,
+//   toObject: {},
+//   callback: null | (string, string) => void = null,
+// ) {
+//   loadRemote(scriptId, url, callback);
+
+// }
 
 const cleanUIDs = (objectToClean: Object) => {
   const genericUID = '0000000000';

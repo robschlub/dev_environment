@@ -16,6 +16,8 @@ export default function getLessonIndex() {
       'important_angles',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Angles',
@@ -28,6 +30,8 @@ export default function getLessonIndex() {
       'circles',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Area and Rectangles',
@@ -43,6 +47,8 @@ export default function getLessonIndex() {
       'quadrangles',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Area of a Circle',
@@ -58,6 +64,8 @@ export default function getLessonIndex() {
       'area_triangle',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Area of a Triangle',
@@ -73,6 +81,8 @@ export default function getLessonIndex() {
       'area_introduction',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Circles',
@@ -85,6 +95,8 @@ export default function getLessonIndex() {
       'why_study_shapes',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Congruent Triangles',
@@ -100,6 +112,8 @@ export default function getLessonIndex() {
       'triangle_introduction',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Equilateral Triangle',
@@ -114,6 +128,8 @@ export default function getLessonIndex() {
       'isosceles_triangles',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Important Angles',
@@ -126,6 +142,8 @@ export default function getLessonIndex() {
       'measuring_angles',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Why Study Shapes?',
@@ -137,6 +155,9 @@ export default function getLessonIndex() {
     [
     ],
     true,
+    {
+      test: 'temp',
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Isosceles Triangle',
@@ -151,6 +172,8 @@ export default function getLessonIndex() {
       'quadrangles',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Measuring Angles',
@@ -163,6 +186,8 @@ export default function getLessonIndex() {
       'angles',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Parallel Lines',
@@ -177,6 +202,8 @@ export default function getLessonIndex() {
       'adjacent_angles',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Quadrangles',
@@ -192,6 +219,8 @@ export default function getLessonIndex() {
       'congruent_triangles',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Related Angles',
@@ -207,6 +236,8 @@ export default function getLessonIndex() {
       'parallel_lines',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Calculating Pi',
@@ -219,6 +250,8 @@ export default function getLessonIndex() {
       'right_angle_triangles',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Pythagorean Theorm',
@@ -231,6 +264,8 @@ export default function getLessonIndex() {
       'right_angle_triangles',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Right Angle Triangles',
@@ -244,6 +279,8 @@ export default function getLessonIndex() {
       'area_triangle',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Similar Triangles',
@@ -256,6 +293,8 @@ export default function getLessonIndex() {
       'congruent_triangles',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Triangles',
@@ -271,6 +310,8 @@ export default function getLessonIndex() {
       'related_angles',
     ],
     true,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Chord',
@@ -283,6 +324,8 @@ export default function getLessonIndex() {
       'sine_introduction',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Cosecant',
@@ -295,6 +338,8 @@ export default function getLessonIndex() {
       'secant_introduction',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Cosine',
@@ -307,6 +352,8 @@ export default function getLessonIndex() {
       'sine_introduction',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Cotangent',
@@ -319,6 +366,8 @@ export default function getLessonIndex() {
       'pythagorean_identity',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Law of Cosines',
@@ -331,6 +380,8 @@ export default function getLessonIndex() {
       'law_of_sines',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Law of Sines',
@@ -343,6 +394,8 @@ export default function getLessonIndex() {
       'pythagorean_identity',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Pythagorean Identity',
@@ -355,6 +408,8 @@ export default function getLessonIndex() {
       'tangent_introduction',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Secant',
@@ -367,6 +422,8 @@ export default function getLessonIndex() {
       'pythagorean_identity',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Sine',
@@ -379,6 +436,8 @@ export default function getLessonIndex() {
       'unit_circle',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Tangent',
@@ -391,6 +450,8 @@ export default function getLessonIndex() {
       'chord',
     ],
     false,
+    {
+    },
   ));
   lessonIndex.push(new LessonDescription(
     'Unit Circle',
@@ -403,6 +464,8 @@ export default function getLessonIndex() {
       'quadrangles',
     ],
     false,
+    {
+    },
   ));
   return lessonIndex;
 }

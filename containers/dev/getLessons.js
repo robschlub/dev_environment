@@ -21,11 +21,16 @@ function walkSync(currentDirPath, fileIdentifier, callback) {
   });
 }
 
-function getAllPaths(lessonsPath, buildMode) {
+function getAllPaths(
+  lessonsPath,
+  prodPaths,
+  devPaths,
+  buildMode,
+) {
   const lessons = [];
-  let fileId = 'lesson.js';
+  let fileId = prodPaths;
   if (buildMode === 'development') {
-    fileId = ['lesson.js', 'lesson-dev.js'];
+    fileId = [...prodPaths, ...devPaths];
   }
   walkSync(lessonsPath, fileId, (lessonPath, fileName) => {
     if (!lessonPath.includes('boilerplate')) {
@@ -49,7 +54,12 @@ function entryPoints(buildMode) {
   const points = {
     main: ['whatwg-fetch', '@babel/polyfill', './src/js/main.js'],
   };
-  const lessons = getAllPaths('./src/Lessons', buildMode);
+  const lessons = getAllPaths(
+    './src/Lessons',
+    ['lesson.js'],
+    ['lesson-dev.js', 'quickReference.js'],
+    buildMode,
+  );
   lessons.forEach((lesson) => {
     const p = lesson.path.replace(/src\/Lessons\//, '');
     points[`Lessons/${p}/lesson`] = `./${lesson.path}/${lesson.name}`;
@@ -74,7 +84,13 @@ export default function getLessonIndex() {
     let dependencies = [];
     let uid = '';
     let enabled = true;
-    const lessonPaths = getAllPaths(lessonPath, buildMode);
+    let qr = {};
+    const lessonPaths = getAllPaths(
+      lessonPath,
+      ['lesson.js'],
+      ['lesson-dev.js'],
+      buildMode,
+    );
     if (fs.existsSync(detailsPath)) {
       // const detailsPath = `./${lessonPath}/details.js`;
       // eslint-disable-next-line global-require, import/no-dynamic-require
@@ -83,6 +99,7 @@ export default function getLessonIndex() {
       ({ dependencies } = details.details);
       ({ uid } = details.details);
       ({ enabled } = details.details);
+      ({ qr } = details.details);
       if (enabled != null && enabled === false) {
         enabled = false;
       } else {
@@ -108,6 +125,13 @@ export default function getLessonIndex() {
       }
       outStr = `${outStr}\n    ],`;
       outStr = `${outStr}\n    ${enabled},`;
+      outStr = `${outStr}\n    {`;
+      if (qr != null) {
+        Object.keys(qr).forEach((key) => {
+          outStr = `${outStr}\n      ${key}: '${qr[key]}',`;
+        });
+      }
+      outStr = `${outStr}\n    },`;
       outStr = `${outStr}\n  ));`;
     }
   });

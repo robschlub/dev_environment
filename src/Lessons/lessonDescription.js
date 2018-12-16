@@ -12,6 +12,9 @@ export default class LessonDescription {
   dependencies: Array<string>;
   paths: Array<string>;
   enabled: boolean;
+  qr: {
+    [qrName: string]: string;
+  };
 
   constructor(
     name: string,
@@ -20,6 +23,7 @@ export default class LessonDescription {
     paths: Array<string> = [],
     dependencies: Array<string> = [],
     enabled: boolean = true,
+    qr: { [qrName: string]: string },
     id: string = '',
   ) {
     this.name = name;
@@ -37,6 +41,7 @@ export default class LessonDescription {
     this.uid = uid;
     this.paths = paths;
     this.enabled = enabled;
+    this.qr = qr;
   }
 }
 
