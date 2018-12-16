@@ -107,8 +107,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     loadRemote('qrScript', '/static/dist/Lessons/Math/Geometry_1/Introduction/quickReference/lesson.js', () => {
       // const area = new QRArea(this.diagram);
       // area.show();
-      console.log('done')
-      console.log(remoteTest2)
+      // console.log('done')
+      // console.log(remoteTest2)
+      console.log(window.quickReference);
     });
     loadRemote('testScript', '/static/test.js', () => { console.log(remoteTest) });
     // // Get the first script element on the page

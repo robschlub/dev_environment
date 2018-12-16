@@ -612,6 +612,9 @@ class LessonContent {
     this.setTitle();
 
     this.animationEnd = whichAnimationEvent();
+    if (window.quickReference == null) {
+      window.quickReference = {};
+    }
   }
 
   initialize() {
