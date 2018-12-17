@@ -103,8 +103,8 @@ export default class MeasureCollection extends CommonDiagramCollection {
   addLengthMeasure() {
     const lay = this.layout.lengthMeasure;
     const col = this.layout.colors;
-    const lengthMeasure = this.diagram.shapes.collection(new Transform('lengthMeasure')
-      .translate(lay.position));
+    const lengthMeasure = this.diagram.shapes.collection({ transform: new Transform('lengthMeasure')
+      .translate(lay.position) });
 
     const makeL = (position, length, labelText, name, labelPos, color, width) => {
       const line = this.diagram.objects.line({
@@ -143,8 +143,8 @@ export default class MeasureCollection extends CommonDiagramCollection {
 
   addAngleMeasure() {
     const lay = this.layout.angleMeasure;
-    const angleMeasure = this.diagram.shapes.collection(new Transform('angleM')
-      .translate(lay.position));
+    const angleMeasure = this.diagram.shapes.collection({ transform: new Transform('angleM')
+      .translate(lay.position) });
     const col = this.layout.colors;
     const line = this.diagram.shapes.polyLineLegacy([
       new Point(lay.length, 0),
@@ -266,7 +266,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
       height / sideLength, sideLength, lay.sideLength,
     );
 
-    const group = this.diagram.shapes.collection(new Transform().translate(0, 0));
+    const group = this.diagram.shapes.collection({ transform: new Transform().translate(0, 0) });
     group.add('vLines', vLines);
     group.add('hLines', hLines);
     return group;
@@ -344,7 +344,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
     const lay = this.layout.cross;
     const col = this.layout.colors.cross;
     const makeCross = (position) => {
-      const cross = this.diagram.shapes.collection(new Transform().translate(0, 0));
+      const cross = this.diagram.shapes.collection({ transform: new Transform().translate(0, 0) });
       const line1 = this.diagram.objects.line({
         vertexSpaceStart: 'center',
         length: lay.length,

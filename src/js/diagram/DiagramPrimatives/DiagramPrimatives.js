@@ -507,7 +507,11 @@ export default class DiagramPrimatives {
       transformOrPointOrOptions instanceof Transform,
       transformOrPointOrOptions,
       transformOrPointOrOptions.__proto__,
-      Transform.prototype)
+      Transform.prototype,
+      transformOrPointOrOptions.__proto__ === Transform.prototype,
+      transformOrPointOrOptions.__proto__ == Transform.prototype,
+      Transform.prototype.isPrototypeOf(transformOrPointOrOptions)
+    )
     let transform = new Transform();
     if (transformOrPointOrOptions instanceof Point) {
       transform = transform.translate(transformOrPointOrOptions.x, transformOrPointOrOptions.y);
@@ -560,7 +564,7 @@ export default class DiagramPrimatives {
     )
     console.log(ab.__proto__)
     console.log(ab._dup())
-    const group = this.collection(ab);
+    const group = this.collection({transform: ab});
     let t = element.transform.t();
     let transformToUse = element.transform._dup();
     if (t === null) {
