@@ -502,12 +502,17 @@ export default class DiagramPrimatives {
       position?: Point,
     }>
   ) {
+    console.log(
+      'test',
+      transformOrPointOrOptions instanceof Transform,
+      transformOrPointOrOptions,
+      transformOrPointOrOptions.__proto__,
+      Transform.prototype)
     let transform = new Transform();
     if (transformOrPointOrOptions instanceof Point) {
       transform = transform.translate(transformOrPointOrOptions.x, transformOrPointOrOptions.y);
       // console.log('type point')
-    } else if (transformOrPointOrOptions.__proto__ === (new Transform()).__proto__) {
-      console.log('bv', transformOrPointOrOptions.__proto__)
+    } else if (transformOrPointOrOptions instanceof Transform) {
       transform = transformOrPointOrOptions._dup();
       // console.log('type transform')
     } else {
@@ -530,6 +535,7 @@ export default class DiagramPrimatives {
     //   transformOrPointOrOptions.prototype === Transform.prototype,
     // )
     console.log(transform)
+    console.log('qwertyuiop')
     return new DiagramElementCollection(transform, this.limits);
   }
 
