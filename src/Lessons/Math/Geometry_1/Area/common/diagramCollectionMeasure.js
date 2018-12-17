@@ -103,8 +103,10 @@ export default class MeasureCollection extends CommonDiagramCollection {
   addLengthMeasure() {
     const lay = this.layout.lengthMeasure;
     const col = this.layout.colors;
-    const lengthMeasure = this.diagram.shapes.collection({ transform: new Transform('lengthMeasure')
-      .translate(lay.position) });
+    const lengthMeasure = this.diagram.shapes.collection({
+      transform: new Transform('lengthMeasure')
+        .translate(lay.position),
+    });
 
     const makeL = (position, length, labelText, name, labelPos, color, width) => {
       const line = this.diagram.objects.line({
@@ -143,8 +145,12 @@ export default class MeasureCollection extends CommonDiagramCollection {
 
   addAngleMeasure() {
     const lay = this.layout.angleMeasure;
-    const angleMeasure = this.diagram.shapes.collection({ transform: new Transform('angleM')
-      .translate(lay.position) });
+    const angleMeasure = this.diagram.shapes.collection(
+      {
+        transform: new Transform('angleM')
+          .translate(lay.position),
+      },
+    );
     const col = this.layout.colors;
     const line = this.diagram.shapes.polyLineLegacy([
       new Point(lay.length, 0),
@@ -180,18 +186,10 @@ export default class MeasureCollection extends CommonDiagramCollection {
       color: col,
       point: new Point(-length / 2, -height / 2),
     });
-    const a = new Transform().translate(0, 0);
-    a.bm = 'asdf';
-    console.log(
-      'qrt',
-      a instanceof Transform,
-      // Transform.prototype,
-      a.__proto__ === Transform.prototype,
-    )
     const circles = this.diagram.shapes.repeatPattern(
       circle,
       xNum, yNum,
-      radius * 2, radius * 2, a,
+      radius * 2, radius * 2, new Transform().translate(0, 0),
     );
     return circles;
   }
@@ -391,6 +389,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
       'lesson__area_intro__area_label', new Point(0, 0), 'middle', 'center',
     );
     triLabelMeters.setPosition(tri.position.add(new Point(0, tri.labelOffset)));
+    console.log(triLabelMeters.transform)
     this.add('triLabelMeters', triLabelMeters);
 
     const square = this.layout.squareA;

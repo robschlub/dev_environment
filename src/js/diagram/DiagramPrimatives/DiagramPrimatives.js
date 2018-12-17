@@ -248,6 +248,7 @@ export default class DiagramPrimatives {
       [1, 1, 1, 1],
       this.limits,
     );
+    // console.log('html', diagramElement.transform.mat, location)
     // diagramElement.setFirstTransform();
     return diagramElement;
   }
@@ -502,23 +503,11 @@ export default class DiagramPrimatives {
       position?: Point,
     }>
   ) {
-    console.log(
-      'test',
-      transformOrPointOrOptions instanceof Transform,
-      transformOrPointOrOptions,
-      transformOrPointOrOptions.__proto__,
-      Transform.prototype,
-      transformOrPointOrOptions.__proto__ === Transform.prototype,
-      transformOrPointOrOptions.__proto__ == Transform.prototype,
-      Transform.prototype.isPrototypeOf(transformOrPointOrOptions)
-    )
     let transform = new Transform();
     if (transformOrPointOrOptions instanceof Point) {
       transform = transform.translate(transformOrPointOrOptions.x, transformOrPointOrOptions.y);
-      // console.log('type point')
     } else if (transformOrPointOrOptions instanceof Transform) {
       transform = transformOrPointOrOptions._dup();
-      // console.log('type transform')
     } else {
       const optionsToUse = joinObjects(transformOrPointOrOptions, ...moreOptions);
       if (optionsToUse.position != null) {
@@ -530,16 +519,7 @@ export default class DiagramPrimatives {
       if (optionsToUse.transform != null) {
         ({ transform } = optionsToUse);
       }
-      // console.log('type options')
     }
-    // console.log(
-    //   transformOrPointOrOptions,
-    //   transformOrPointOrOptions instanceof Transform,
-    //   transformOrPointOrOptions.prototype === (new Transform()).prototype,
-    //   transformOrPointOrOptions.prototype === Transform.prototype,
-    // )
-    console.log(transform)
-    console.log('qwertyuiop')
     return new DiagramElementCollection(transform, this.limits);
   }
 
@@ -549,22 +529,9 @@ export default class DiagramPrimatives {
     yNum: number,
     xStep: number,
     yStep: number,
-    ab: Transform | Point = new Transform(),
+    transform: Transform | Point = new Transform(),
   ) {
-    console.log('repeat', ab, ab.bm, Transform.prototype)
-    console.log(
-      ab instanceof Transform,
-      ab.prototype === (new Transform()).prototype,
-      ab.__proto__ === Transform.prototype,
-      (new Transform()) instanceof Transform, 
-      (new Transform().translate(0, 0)) instanceof Transform,
-      ab.__proto__ === (new Transform()).__proto__,
-      ab._dup(),
-
-    )
-    console.log(ab.__proto__)
-    console.log(ab._dup())
-    const group = this.collection({transform: ab});
+    const group = this.collection({ transform });
     let t = element.transform.t();
     let transformToUse = element.transform._dup();
     if (t === null) {

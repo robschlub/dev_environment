@@ -12,6 +12,9 @@ import {
 } from '../../../../../js/diagram/Element';
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
+import * as tools from '../../../../../dd';
+// const tools = require('../../../../../dd');
+// import { mathtools } from 'dd';
 
 export default class IsocelesCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -98,6 +101,7 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.diagram.addElements(this, this.layout.addEquationA);
     this.diagram.addElements(this, this.layout.addEquationB);
     console.log(this)
+    console.log("here", tools.mathTools.round(5.2312, 2));
     this.loadJS();
     this.hasTouchableElements = true;
   }
@@ -124,8 +128,14 @@ export default class IsocelesCollection extends CommonDiagramCollection {
           'areaScript',
           '/static/dist/Lessons/Math/Geometry_1/Area/quickReference/lesson.js',
           () => {
-            const a = new window.quickReference.area(this.diagram);
-            a.show();
+            const qrArea = new window.quickReference.area(this.diagram);
+            this.diagram.elements.add('qr', qrArea);
+            // qrArea.setFirstTransform();
+            this.diagram.elements._qr.hideAll();
+            console.log(qrArea)
+            // this.diagram.elements.showOnly(this.diagram.elements._qr);
+            // this.diagram.elements._qr.show();
+            qrArea.show();
           },
         );
       },
