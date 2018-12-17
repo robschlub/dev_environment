@@ -9,7 +9,6 @@ import details from '../details';
 import MeasureCollection from '../common/diagramCollectionMeasure';
 import RectAreaCollection from '../common/diagramCollectionRect';
 
-const remoteTest1 = {hello: 'there1'};
 export class QRArea extends PopupBoxCollection {
   _collection: MeasureCollection;
 
@@ -145,3 +144,13 @@ export class QRSquare extends PopupBoxCollection {
     this.diagram.animateNextFrame();
   }
 }
+
+function abc() {
+  console.log('hello from area');
+  if (window.quickReference == null) {
+    window.quickReference = {};
+  }
+  window.quickReference.area = QRArea;
+}
+
+abc();

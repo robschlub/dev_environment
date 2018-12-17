@@ -347,6 +347,7 @@ function loadRemote(
   if (!existingScript) {
     console.log('does not exist')
     const script = document.createElement('script');
+    script.type = 'text/javascript';
     script.src = url;
     script.id = scriptId; // e.g., googleMaps or stripe
     if (document.body) {
@@ -359,6 +360,32 @@ function loadRemote(
     };
   } else if (callback != null) {
     callback(scriptId, url);
+  }
+}
+
+function loadRemoteCSS(
+  id: string,
+  url: string,
+  callback: null | (string, string) => void = null,
+) {
+  const existingScript = document.getElementById(id);
+  if (!existingScript) {
+    console.log('does not exist')
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = url;
+    link.id = id; // e.g., googleMaps or stripe
+    if (document.body) {
+      document.body.appendChild(link);
+    }
+    link.onload = () => {
+      if (callback != null) {
+        callback(id, url);
+      }
+    };
+  } else if (callback != null) {
+    callback(id, url);
   }
 }
 
@@ -407,5 +434,5 @@ export {
   classify, extractFrom, ObjectKeyPointer, getElement,
   RGBToArray, HexToArray, cssColorToArray, colorArrayToRGB,
   colorArrayToRGBA, addToObject, duplicateFromTo, isTouchDevice,
-  generateUniqueId, joinObjects, cleanUIDs, loadRemote,
+  generateUniqueId, joinObjects, cleanUIDs, loadRemote, loadRemoteCSS,
 };

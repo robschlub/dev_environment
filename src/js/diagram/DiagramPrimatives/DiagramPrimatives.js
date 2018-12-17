@@ -505,8 +505,11 @@ export default class DiagramPrimatives {
     let transform = new Transform();
     if (transformOrPointOrOptions instanceof Point) {
       transform = transform.translate(transformOrPointOrOptions.x, transformOrPointOrOptions.y);
-    } else if (transformOrPointOrOptions instanceof Transform) {
+      // console.log('type point')
+    } else if (transformOrPointOrOptions.__proto__ === (new Transform()).__proto__) {
+      console.log('bv', transformOrPointOrOptions.__proto__)
       transform = transformOrPointOrOptions._dup();
+      // console.log('type transform')
     } else {
       const optionsToUse = joinObjects(transformOrPointOrOptions, ...moreOptions);
       if (optionsToUse.position != null) {
@@ -518,7 +521,15 @@ export default class DiagramPrimatives {
       if (optionsToUse.transform != null) {
         ({ transform } = optionsToUse);
       }
+      // console.log('type options')
     }
+    // console.log(
+    //   transformOrPointOrOptions,
+    //   transformOrPointOrOptions instanceof Transform,
+    //   transformOrPointOrOptions.prototype === (new Transform()).prototype,
+    //   transformOrPointOrOptions.prototype === Transform.prototype,
+    // )
+    console.log(transform)
     return new DiagramElementCollection(transform, this.limits);
   }
 
@@ -528,9 +539,22 @@ export default class DiagramPrimatives {
     yNum: number,
     xStep: number,
     yStep: number,
-    transform: Transform | Point = new Transform(),
+    ab: Transform | Point = new Transform(),
   ) {
-    const group = this.collection(transform);
+    console.log('repeat', ab, ab.bm, Transform.prototype)
+    console.log(
+      ab instanceof Transform,
+      ab.prototype === (new Transform()).prototype,
+      ab.__proto__ === Transform.prototype,
+      (new Transform()) instanceof Transform, 
+      (new Transform().translate(0, 0)) instanceof Transform,
+      ab.__proto__ === (new Transform()).__proto__,
+      ab._dup(),
+
+    )
+    console.log(ab.__proto__)
+    console.log(ab._dup())
+    const group = this.collection(ab);
     let t = element.transform.t();
     let transformToUse = element.transform._dup();
     if (t === null) {

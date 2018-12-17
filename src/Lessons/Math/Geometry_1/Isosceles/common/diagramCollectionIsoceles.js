@@ -1,6 +1,6 @@
 // @flow
 import LessonDiagram from './diagram';
-import { loadRemote } from '../../../../../js/tools/tools';
+import { loadRemote, loadRemoteCSS } from '../../../../../js/tools/tools';
 import {
   Transform, Rect, // Point,
 } from '../../../../../js/diagram/tools/g2';
@@ -112,6 +112,25 @@ export default class IsocelesCollection extends CommonDiagramCollection {
       console.log(window.quickReference);
     });
     loadRemote('testScript', '/static/test.js', () => { console.log(remoteTest) });
+    console.log('xzcvxcv',
+      (new Transform()) instanceof Transform,
+      (new Transform().translate(0, 0)) instanceof Transform,
+      )
+    loadRemoteCSS(
+      'areaCSS',
+      '/static/dist/Lessons/Math/Geometry_1/Area/quickReference/lesson.css',
+      () => {
+        loadRemote(
+          'areaScript',
+          '/static/dist/Lessons/Math/Geometry_1/Area/quickReference/lesson.js',
+          () => {
+            const a = new window.quickReference.area(this.diagram);
+            a.show();
+          },
+        );
+      },
+    );
+    
     // // Get the first script element on the page
     // const ref = window.document.getElementsByTagName('script')[0];
 

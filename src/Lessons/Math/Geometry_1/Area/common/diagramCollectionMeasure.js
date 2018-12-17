@@ -180,10 +180,18 @@ export default class MeasureCollection extends CommonDiagramCollection {
       color: col,
       point: new Point(-length / 2, -height / 2),
     });
+    const a = new Transform().translate(0, 0);
+    a.bm = 'asdf';
+    console.log(
+      'qrt',
+      a instanceof Transform,
+      // Transform.prototype,
+      a.__proto__ === Transform.prototype,
+    )
     const circles = this.diagram.shapes.repeatPattern(
       circle,
       xNum, yNum,
-      radius * 2, radius * 2, new Transform().translate(0, 0),
+      radius * 2, radius * 2, a,
     );
     return circles;
   }
