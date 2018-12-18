@@ -1,4 +1,5 @@
 // @flow
+import diagramLib from '../../../../../diagramLib/diagramLib';
 import LessonDiagram from './diagram';
 import { loadRemote, loadRemoteCSS } from '../../../../../js/tools/tools';
 import {
@@ -12,7 +13,7 @@ import {
 } from '../../../../../js/diagram/Element';
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import * as tools from '../../../../../dd';
+
 // const tools = require('../../../../../dd');
 // import { mathtools } from 'dd';
 
@@ -101,8 +102,9 @@ export default class IsocelesCollection extends CommonDiagramCollection {
     this.diagram.addElements(this, this.layout.addEquationA);
     this.diagram.addElements(this, this.layout.addEquationB);
     console.log(this)
-    console.log("here", tools.mathTools.round(5.2312, 2));
-    this.loadJS();
+    console.log('here', diagramLib.tools.math.round(6.372234, 2));
+    // console.log('here', diagramLib)
+    // this.loadJS();
     this.hasTouchableElements = true;
   }
 

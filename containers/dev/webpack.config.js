@@ -151,7 +151,7 @@ module.exports = (env) => {
     externals = {
       react: 'React',
       'react-dom': 'ReactDOM',
-      // dd: 'dd',
+      '../../../../../diagramLib/diagramLib': 'diagramLib',
     };
   }
   return {

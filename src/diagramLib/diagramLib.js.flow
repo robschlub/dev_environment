@@ -1,0 +1,33 @@
+// @flow
+
+// import homePage from './views/home/home';
+// // import aboutPage from './views/about/about';
+// // import introPage from './views/introduction/introduction';
+// // import lessonSinglePage from './views/lessonSinglePage/lessonSinglePage';
+// // import lessonMultiPage from './views/lessonMultiPage/lessonMultiPage';
+// homePage();
+// // introPage();
+// // aboutPage();
+
+import * as g2 from './diagram/tools/g2';
+import * as mathTools from './diagram/tools/mathtools';
+import * as diagram from './diagram/Diagram';
+import * as element from './diagram/Element';
+
+
+const tools = {
+  math: mathTools,
+  d2: g2,
+};
+
+const diagramLib = {
+  tools,
+  diagram,
+  element,
+};
+
+export default diagramLib;
+
+// module.exports = {
+//   mathTools, d2Tools,
+// };
